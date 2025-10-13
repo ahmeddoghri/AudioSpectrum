@@ -98,19 +98,32 @@ class CircularSpectrumVisualizer:
         # Get magnitude for this frame
         frame_magnitudes = self.magnitude_norm[:, frame_idx]
 
-        # Group frequencies into bars
-        freqs_per_bar = len(frame_magnitudes) // self.num_bars
+        # Use logarithmic spacing for more perceptually accurate frequency distribution
+        # This focuses more bars on lower frequencies where music has more energy
+        total_freqs = len(frame_magnitudes)
+
+        # Only use the lower 60% of frequencies (where most music energy is)
+        # and distribute them across all bars
+        useful_freqs = int(total_freqs * 0.6)
+
         bar_magnitudes = []
-
         for i in range(self.num_bars):
-            start_idx = i * freqs_per_bar
-            end_idx = start_idx + freqs_per_bar
+            # Logarithmic distribution: more bars for lower frequencies
+            t = i / self.num_bars
+            # Exponential mapping to focus on lower frequencies
+            freq_pos = int(useful_freqs * (t ** 1.5))
 
-            if end_idx > len(frame_magnitudes):
-                end_idx = len(frame_magnitudes)
+            # Get a small window around this frequency
+            window_size = max(1, useful_freqs // (self.num_bars * 2))
+            start_idx = max(0, freq_pos - window_size // 2)
+            end_idx = min(useful_freqs, freq_pos + window_size // 2)
 
-            # Average the frequencies in this band
-            avg_magnitude = np.mean(frame_magnitudes[start_idx:end_idx])
+            # Average the frequencies in this window
+            if start_idx < end_idx:
+                avg_magnitude = np.mean(frame_magnitudes[start_idx:end_idx])
+            else:
+                avg_magnitude = frame_magnitudes[freq_pos] if freq_pos < len(frame_magnitudes) else 0
+
             bar_magnitudes.append(avg_magnitude)
 
         bar_magnitudes = np.array(bar_magnitudes)
@@ -132,8 +145,11 @@ class CircularSpectrumVisualizer:
             # Calculate angle for this bar (start from left, go clockwise)
             angle = np.deg2rad(i * angle_step)
 
-            # Calculate bar height based on magnitude
-            bar_height = int(magnitude * (self.max_radius - self.inner_radius))
+            # Calculate bar height based on magnitude with minimum height
+            min_bar_height = 5  # Minimum visible bar height
+            max_bar_height = self.max_radius - self.inner_radius
+            bar_height = int(magnitude * max_bar_height)
+            bar_height = max(min_bar_height, bar_height)  # Ensure minimum visibility
 
             # Calculate start and end points of the bar
             start_x = int(self.center_x + self.inner_radius * np.cos(angle))

@@ -217,24 +217,18 @@ class CircularSpectrumVisualizer:
         # Determine output format and codec based on file extension
         ext = Path(self.output_path).suffix.lower()
 
-        # Force .mp4 if .mov was specified (to avoid color space issues)
-        if ext == '.mov':
-            print("Warning: .mov format can cause color issues. Changing to .mp4")
-            self.output_path = str(Path(self.output_path).with_suffix('.mp4'))
-            ext = '.mp4'
+        # For transparency support, we'll create the video with WebM or MOV format
+        # MP4 doesn't support alpha channel, so we'll use ffmpeg to create a proper transparent video
 
-        # Use mp4v codec which is most compatible
-        if ext == '.mp4':
-            fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # MPEG-4 codec
-        elif ext == '.avi':
-            fourcc = cv2.VideoWriter_fourcc(*'XVID')  # Xvid codec for AVI
-        else:
-            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-            print(f"Warning: Using default codec for {ext}. Recommended: .mp4")
+        # First, create a temporary video without transparency
+        temp_no_audio = str(Path(self.output_path).with_suffix('')) + '_temp_no_audio.mp4'
+
+        # Use mp4v codec for temporary file
+        fourcc = cv2.VideoWriter_fourcc(*'mp4v')
 
         # Create video writer
         video_writer = cv2.VideoWriter(
-            self.output_path,
+            temp_no_audio,
             fourcc,
             self.fps,
             (self.width, self.height),
@@ -242,7 +236,7 @@ class CircularSpectrumVisualizer:
         )
 
         if not video_writer.isOpened():
-            raise RuntimeError("Failed to open video writer. Try output format: .mov or .avi")
+            raise RuntimeError("Failed to open video writer")
 
         # Generate frames
         total_frames = int(self.duration * self.fps)
@@ -267,38 +261,82 @@ class CircularSpectrumVisualizer:
                 print(f"Progress: {progress:.1f}% ({frame_idx + 1}/{total_frames} frames)")
 
         video_writer.release()
-        print(f"\nVideo generation complete (silent): {self.output_path}")
+        print(f"\nVideo generation complete (silent): {temp_no_audio}")
 
-        # Add audio to the video using ffmpeg
-        print("Adding audio track...")
-        temp_video = str(Path(self.output_path).with_suffix('')) + '_temp' + Path(self.output_path).suffix
+        # Now use ffmpeg to:
+        # 1. Add audio
+        # 2. Convert black pixels to transparent (using colorkey filter)
+        # 3. Output to final format with alpha channel
+        print("Adding audio and transparency...")
         import subprocess
 
         try:
-            # Use ffmpeg to combine video and audio
+            # Check if output should be .mov (supports alpha) or .webm (also supports alpha)
+            # If user wants .mp4, we'll create .webm or .mov instead since MP4 doesn't support transparency
+            if ext == '.mp4':
+                print("Note: MP4 doesn't support transparency. Converting to .mov with alpha channel.")
+                final_output = str(Path(self.output_path).with_suffix('.mov'))
+            else:
+                final_output = self.output_path
+
+            # Use ffmpeg to:
+            # - Add audio
+            # - Convert black (0,0,0) to transparent using colorkey filter
+            # - Use ProRes 4444 codec which supports alpha channel
             result = subprocess.run([
                 'ffmpeg', '-y',
-                '-i', self.output_path,  # Video input
-                '-i', self.audio_path,    # Audio input
-                '-c:v', 'copy',           # Copy video codec
-                '-c:a', 'aac',            # AAC audio codec
-                '-shortest',              # Match shortest stream
-                temp_video
+                '-i', temp_no_audio,      # Video input
+                '-i', self.audio_path,     # Audio input
+                '-filter_complex',
+                '[0:v]colorkey=0x000000:0.01:0.1[ckout];[ckout]format=yuva420p[video]',
+                '-map', '[video]',         # Use filtered video
+                '-map', '1:a',             # Use audio from second input
+                '-c:v', 'prores_ks',       # ProRes codec with alpha support
+                '-profile:v', '4444',      # ProRes 4444 profile (supports alpha)
+                '-c:a', 'aac',             # AAC audio codec
+                '-shortest',               # Match shortest stream
+                final_output
             ], capture_output=True, text=True)
 
+            # Clean up temp file
+            Path(temp_no_audio).unlink()
+
             if result.returncode == 0:
-                # Replace original with audio version
-                Path(self.output_path).unlink()
-                Path(temp_video).rename(self.output_path)
-                print(f"✓ Audio added successfully")
+                self.output_path = final_output
+                print(f"✓ Video with transparency and audio created successfully")
+                print(f"✓ Output: {final_output}")
             else:
-                print(f"Warning: Could not add audio. Video saved without audio.")
-                print(f"You can manually add audio using: ffmpeg -i {self.output_path} -i {self.audio_path} -c:v copy -c:a aac output_with_audio{Path(self.output_path).suffix}")
+                # Fallback: just add audio without transparency
+                print(f"Warning: Could not create transparent video. Creating standard video instead.")
+                print(f"FFmpeg error: {result.stderr}")
+
+                result = subprocess.run([
+                    'ffmpeg', '-y',
+                    '-i', temp_no_audio,
+                    '-i', self.audio_path,
+                    '-c:v', 'copy',
+                    '-c:a', 'aac',
+                    '-shortest',
+                    self.output_path
+                ], capture_output=True, text=True)
+
+                Path(temp_no_audio).unlink()
+
+                if result.returncode == 0:
+                    print(f"✓ Standard video created: {self.output_path}")
+                else:
+                    print(f"Error: Could not create video")
+
         except FileNotFoundError:
-            print("Warning: ffmpeg not found. Video saved without audio.")
-            print("Install ffmpeg with: brew install ffmpeg")
+            print("Error: ffmpeg not found. Please install ffmpeg:")
+            print("  brew install ffmpeg")
+            Path(temp_no_audio).unlink()
+            raise
         except Exception as e:
-            print(f"Warning: Could not add audio: {e}")
+            print(f"Error: Could not process video: {e}")
+            if Path(temp_no_audio).exists():
+                Path(temp_no_audio).unlink()
+            raise
 
         print(f"Duration: {self.duration:.2f}s, Resolution: {self.width}x{self.height}, FPS: {self.fps}")
 

@@ -201,16 +201,20 @@ class CircularSpectrumVisualizer:
         # Determine output format and codec based on file extension
         ext = Path(self.output_path).suffix.lower()
 
-        # Use mp4v codec which is most compatible
+        # Force .mp4 if .mov was specified (to avoid color space issues)
         if ext == '.mov':
-            fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # MPEG-4 codec for MOV
-        elif ext == '.mp4':
+            print("Warning: .mov format can cause color issues. Changing to .mp4")
+            self.output_path = str(Path(self.output_path).with_suffix('.mp4'))
+            ext = '.mp4'
+
+        # Use mp4v codec which is most compatible
+        if ext == '.mp4':
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')  # MPEG-4 codec
         elif ext == '.avi':
             fourcc = cv2.VideoWriter_fourcc(*'XVID')  # Xvid codec for AVI
         else:
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-            print(f"Warning: Using default codec for {ext}. Recommended: .mov or .mp4")
+            print(f"Warning: Using default codec for {ext}. Recommended: .mp4")
 
         # Create video writer
         video_writer = cv2.VideoWriter(
@@ -247,7 +251,39 @@ class CircularSpectrumVisualizer:
                 print(f"Progress: {progress:.1f}% ({frame_idx + 1}/{total_frames} frames)")
 
         video_writer.release()
-        print(f"\nVideo generation complete: {self.output_path}")
+        print(f"\nVideo generation complete (silent): {self.output_path}")
+
+        # Add audio to the video using ffmpeg
+        print("Adding audio track...")
+        temp_video = str(Path(self.output_path).with_suffix('')) + '_temp' + Path(self.output_path).suffix
+        import subprocess
+
+        try:
+            # Use ffmpeg to combine video and audio
+            result = subprocess.run([
+                'ffmpeg', '-y',
+                '-i', self.output_path,  # Video input
+                '-i', self.audio_path,    # Audio input
+                '-c:v', 'copy',           # Copy video codec
+                '-c:a', 'aac',            # AAC audio codec
+                '-shortest',              # Match shortest stream
+                temp_video
+            ], capture_output=True, text=True)
+
+            if result.returncode == 0:
+                # Replace original with audio version
+                Path(self.output_path).unlink()
+                Path(temp_video).rename(self.output_path)
+                print(f"✓ Audio added successfully")
+            else:
+                print(f"Warning: Could not add audio. Video saved without audio.")
+                print(f"You can manually add audio using: ffmpeg -i {self.output_path} -i {self.audio_path} -c:v copy -c:a aac output_with_audio{Path(self.output_path).suffix}")
+        except FileNotFoundError:
+            print("Warning: ffmpeg not found. Video saved without audio.")
+            print("Install ffmpeg with: brew install ffmpeg")
+        except Exception as e:
+            print(f"Warning: Could not add audio: {e}")
+
         print(f"Duration: {self.duration:.2f}s, Resolution: {self.width}x{self.height}, FPS: {self.fps}")
 
 
@@ -270,8 +306,8 @@ Examples:
     parser.add_argument('--fps', type=int, default=30, help='Frames per second (default: 30)')
     parser.add_argument('--num-bars', type=int, default=120, help='Number of frequency bars (default: 120)')
     parser.add_argument('--color', nargs=3, type=int, default=[0, 255, 255],
-                       metavar=('R', 'G', 'B'), help='RGB color for bars (default: 0 255 255 = cyan)')
-    parser.add_argument('--gradient', action='store_true', help='Enable gradient color mode')
+                       metavar=('R', 'G', 'B'), help='RGB color for bars (used only with --no-gradient)')
+    parser.add_argument('--no-gradient', action='store_true', help='Disable gradient mode (use single color)')
     parser.add_argument('--gradient-color1', nargs=3, type=int, default=[0, 180, 255],
                        metavar=('R', 'G', 'B'), help='Left side gradient color RGB (default: 0 180 255 = cyan)')
     parser.add_argument('--gradient-color2', nargs=3, type=int, default=[255, 0, 180],
@@ -292,6 +328,9 @@ Examples:
     gradient_color1_bgr = (args.gradient_color1[2], args.gradient_color1[1], args.gradient_color1[0])
     gradient_color2_bgr = (args.gradient_color2[2], args.gradient_color2[1], args.gradient_color2[0])
 
+    # Gradient is enabled by default unless --no-gradient is specified
+    use_gradient = not args.no_gradient
+
     # Create visualizer
     visualizer = CircularSpectrumVisualizer(
         audio_path=args.input,
@@ -304,7 +343,7 @@ Examples:
         inner_radius=args.inner_radius,
         bar_width_multiplier=args.bar_width,
         smoothing=args.smoothing,
-        gradient=args.gradient,
+        gradient=use_gradient,
         gradient_color1=gradient_color1_bgr,
         gradient_color2=gradient_color2_bgr
     )

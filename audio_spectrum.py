@@ -24,7 +24,6 @@ Examples:
 
   # With different visualization mode
   python audio_spectrum.py '/Users/ahmeddoghri/Desktop/RÜFÜS DU SOL - New Sky (Lyrics).mp3' '/Users/ahmeddoghri/Desktop/output.mov' --mode 6
-
 """
 
 import sys

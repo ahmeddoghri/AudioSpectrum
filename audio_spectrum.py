@@ -3,11 +3,22 @@
 Circular Audio Spectrum Visualizer
 Generates a transparent video with circular audio spectrum animation
 
-Example (YouTube regular - 1920x1080, auto for .mov):
-python audio_spectrum.py '/Users/ahmeddoghri/Desktop/RÜFÜS DU SOL - New Sky (Lyrics).mp3' '/Users/ahmeddoghri/Desktop/output.mov'
+Visualization Modes:
+  --mode 1: Bars (default) - Classic radial bars extending from center
+  --mode 2: Waves/Layers - Concentric circular waves that pulse with music
+  --mode 3: Particles - Circular particle system with glow effects
+  --mode 4: Waveform - Smooth continuous filled waveform
+  --mode 5: Polygon - Dynamic morphing polygon shapes
 
-Example (YouTube Shorts - 1080x1920, auto for .mp4):
-python audio_spectrum.py '/Users/ahmeddoghri/Desktop/RÜFÜS DU SOL - New Sky (Lyrics).mp3' '/Users/ahmeddoghri/Desktop/output.mp4'
+Examples:
+  # YouTube regular - 1920x1080, auto for .mov
+  python audio_spectrum.py '/Users/ahmeddoghri/Desktop/RÜFÜS DU SOL - New Sky (Lyrics).mp3' '/Users/ahmeddoghri/Desktop/output.mov'
+
+  # YouTube Shorts - 1080x1920, auto for .mp4
+  python audio_spectrum.py '/Users/ahmeddoghri/Desktop/RÜFÜS DU SOL - New Sky (Lyrics).mp3' '/Users/ahmeddoghri/Desktop/output.mp4'
+
+  # With different visualization mode
+  python audio_spectrum.py '/Users/ahmeddoghri/Desktop/RÜFÜS DU SOL - New Sky (Lyrics).mp3' '/Users/ahmeddoghri/Desktop/output.mov' --mode 3
 
 """
 
@@ -23,7 +34,7 @@ class CircularSpectrumVisualizer:
     def __init__(self, audio_path, output_path, width=1080, height=1080,
                  fps=30, num_bars=120, color=(0, 255, 255), inner_radius=150,
                  bar_width_multiplier=1.5, smoothing=0.7, gradient=False,
-                 gradient_color1=None, gradient_color2=None):
+                 gradient_color1=None, gradient_color2=None, mode=1):
         """
         Initialize the circular spectrum visualizer
 
@@ -41,6 +52,7 @@ class CircularSpectrumVisualizer:
             gradient: Enable gradient mode (left to right color transition)
             gradient_color1: Left side color (BGR format)
             gradient_color2: Right side color (BGR format)
+            mode: Visualization mode (1-5)
         """
         self.audio_path = audio_path
         self.output_path = output_path
@@ -55,6 +67,7 @@ class CircularSpectrumVisualizer:
         self.gradient = gradient
         self.gradient_color1 = gradient_color1
         self.gradient_color2 = gradient_color2
+        self.mode = mode
 
         self.center_x = width // 2
         self.center_y = height // 2
@@ -140,75 +153,264 @@ class CircularSpectrumVisualizer:
 
         return bar_magnitudes
 
-    def draw_circular_spectrum(self, frame, magnitudes):
-        """Draw the circular spectrum on a frame"""
+    def get_color_for_position(self, index, magnitude):
+        """Get color for a given position with optional gradient and magnitude intensity"""
+        angle_step = 360 / self.num_bars
+
+        if self.gradient and self.gradient_color1 and self.gradient_color2:
+            # Calculate gradient position based on angle
+            angle_normalized = (index * angle_step) / 360.0
+
+            # Create a smooth transition: left (0.5) to right (0 or 1)
+            if angle_normalized <= 0.5:
+                blend = 0.5 - angle_normalized
+            else:
+                blend = angle_normalized - 0.5
+
+            blend = blend * 2  # Scale to 0-1 range
+
+            # Interpolate between colors
+            bar_color = (
+                int(self.gradient_color1[0] * (1 - blend) + self.gradient_color2[0] * blend),
+                int(self.gradient_color1[1] * (1 - blend) + self.gradient_color2[1] * blend),
+                int(self.gradient_color1[2] * (1 - blend) + self.gradient_color2[2] * blend)
+            )
+
+            # Add brightness based on magnitude
+            intensity = int(80 * magnitude)
+            bar_color = (
+                min(255, bar_color[0] + intensity),
+                min(255, bar_color[1] + intensity),
+                min(255, bar_color[2] + intensity)
+            )
+        else:
+            # Single color mode with intensity
+            intensity = int(255 * magnitude)
+            bar_color = (
+                min(255, self.color[0] + intensity // 3),
+                min(255, self.color[1] + intensity // 3),
+                min(255, self.color[2] + intensity // 3)
+            )
+
+        return bar_color
+
+    def draw_mode_1_bars(self, frame, magnitudes):
+        """Mode 1: Classic radial bars (original mode)"""
         angle_step = 360 / self.num_bars
 
         for i, magnitude in enumerate(magnitudes):
-            # Calculate angle for this bar (start from left, go clockwise)
             angle = np.deg2rad(i * angle_step)
 
-            # Calculate bar height based on magnitude with minimum height
-            min_bar_height = 5  # Minimum visible bar height
+            # Calculate bar height
+            min_bar_height = 5
             max_bar_height = self.max_radius - self.inner_radius
             bar_height = int(magnitude * max_bar_height)
-            bar_height = max(min_bar_height, bar_height)  # Ensure minimum visibility
+            bar_height = max(min_bar_height, bar_height)
 
-            # Calculate start and end points of the bar
+            # Calculate start and end points
             start_x = int(self.center_x + self.inner_radius * np.cos(angle))
             start_y = int(self.center_y + self.inner_radius * np.sin(angle))
-
             end_x = int(self.center_x + (self.inner_radius + bar_height) * np.cos(angle))
             end_y = int(self.center_y + (self.inner_radius + bar_height) * np.sin(angle))
 
             # Calculate bar thickness
             thickness = max(1, int(self.bar_width_multiplier * angle_step / 2))
 
-            # Determine bar color
-            if self.gradient and self.gradient_color1 and self.gradient_color2:
-                # Calculate gradient position based on angle
-                # Left side (180°) = color1 (blue), Right side (0°/360°) = color2 (pink)
-                # Normalize angle to 0-1 where 0.5 is left (180°) and 0/1 is right (0°/360°)
-                angle_normalized = (i * angle_step) / 360.0
-
-                # Create a smooth transition: left (0.5) to right (0 or 1)
-                # Map so that 180° = 0 (full color1) and 0° = 1 (full color2)
-                if angle_normalized <= 0.5:
-                    # Top-left quadrant: 0 to 0.5 -> blend from 0.5 to 0
-                    blend = 0.5 - angle_normalized
-                else:
-                    # Bottom-right quadrant: 0.5 to 1 -> blend from 0 to 0.5
-                    blend = angle_normalized - 0.5
-
-                blend = blend * 2  # Scale to 0-1 range
-
-                # Interpolate between colors
-                bar_color = (
-                    int(self.gradient_color1[0] * (1 - blend) + self.gradient_color2[0] * blend),
-                    int(self.gradient_color1[1] * (1 - blend) + self.gradient_color2[1] * blend),
-                    int(self.gradient_color1[2] * (1 - blend) + self.gradient_color2[2] * blend)
-                )
-
-                # Add brightness based on magnitude
-                intensity = int(80 * magnitude)
-                bar_color = (
-                    min(255, bar_color[0] + intensity),
-                    min(255, bar_color[1] + intensity),
-                    min(255, bar_color[2] + intensity)
-                )
-            else:
-                # Single color mode with intensity
-                intensity = int(255 * magnitude)
-                bar_color = (
-                    min(255, self.color[0] + intensity // 3),
-                    min(255, self.color[1] + intensity // 3),
-                    min(255, self.color[2] + intensity // 3)
-                )
+            # Get color
+            bar_color = self.get_color_for_position(i, magnitude)
 
             cv2.line(frame, (start_x, start_y), (end_x, end_y),
                     bar_color, thickness, lineType=cv2.LINE_AA)
 
         return frame
+
+    def draw_mode_2_waves(self, frame, magnitudes):
+        """Mode 2: Concentric circular waves/layers"""
+        num_layers = 5
+        angle_step = 360 / self.num_bars
+
+        for layer in range(num_layers):
+            points = []
+            layer_progress = layer / num_layers
+
+            for i, magnitude in enumerate(magnitudes):
+                angle = np.deg2rad(i * angle_step)
+
+                # Each layer has a different base radius and responds to audio
+                base_radius = self.inner_radius + (self.max_radius - self.inner_radius) * layer_progress
+                wave_amplitude = magnitude * (self.max_radius - self.inner_radius) * 0.15
+                radius = int(base_radius + wave_amplitude)
+
+                x = int(self.center_x + radius * np.cos(angle))
+                y = int(self.center_y + radius * np.sin(angle))
+                points.append([x, y])
+
+            points = np.array(points, dtype=np.int32)
+
+            # Get color for this layer (use average magnitude)
+            avg_magnitude = np.mean(magnitudes)
+            layer_color = self.get_color_for_position(layer * (self.num_bars // num_layers), avg_magnitude)
+
+            # Make outer layers slightly transparent by reducing intensity
+            alpha = 1.0 - (layer * 0.15)
+            layer_color = tuple(int(c * alpha) for c in layer_color)
+
+            # Draw the wave
+            thickness = max(1, 3 - layer // 2)
+            cv2.polylines(frame, [points], isClosed=True, color=layer_color,
+                         thickness=thickness, lineType=cv2.LINE_AA)
+
+        return frame
+
+    def draw_mode_3_particles(self, frame, magnitudes):
+        """Mode 3: Particle rings with varying sizes"""
+        angle_step = 360 / self.num_bars
+
+        for i, magnitude in enumerate(magnitudes):
+            angle = np.deg2rad(i * angle_step)
+
+            # Calculate position
+            max_bar_height = self.max_radius - self.inner_radius
+            bar_height = int(magnitude * max_bar_height)
+            radius = self.inner_radius + bar_height
+
+            x = int(self.center_x + radius * np.cos(angle))
+            y = int(self.center_y + radius * np.sin(angle))
+
+            # Particle size based on magnitude
+            particle_size = max(2, int(8 * magnitude + 2))
+
+            # Get color
+            particle_color = self.get_color_for_position(i, magnitude)
+
+            # Draw circle particle
+            cv2.circle(frame, (x, y), particle_size, particle_color, -1, lineType=cv2.LINE_AA)
+
+            # Add a glow effect for high magnitudes
+            if magnitude > 0.6:
+                glow_size = particle_size + 3
+                glow_color = tuple(int(c * 0.5) for c in particle_color)
+                cv2.circle(frame, (x, y), glow_size, glow_color, 1, lineType=cv2.LINE_AA)
+
+        return frame
+
+    def draw_mode_4_waveform(self, frame, magnitudes):
+        """Mode 4: Radial waveform (smooth continuous wave)"""
+        angle_step = 360 / self.num_bars
+        points_outer = []
+        points_inner = []
+
+        for i, magnitude in enumerate(magnitudes):
+            angle = np.deg2rad(i * angle_step)
+
+            # Calculate radius based on magnitude
+            max_bar_height = self.max_radius - self.inner_radius
+            bar_height = int(magnitude * max_bar_height)
+            radius = self.inner_radius + bar_height
+
+            x = int(self.center_x + radius * np.cos(angle))
+            y = int(self.center_y + radius * np.sin(angle))
+            points_outer.append([x, y])
+
+            # Inner point for filled area
+            x_inner = int(self.center_x + self.inner_radius * np.cos(angle))
+            y_inner = int(self.center_y + self.inner_radius * np.sin(angle))
+            points_inner.append([x_inner, y_inner])
+
+        points_outer = np.array(points_outer, dtype=np.int32)
+        points_inner = np.array(points_inner, dtype=np.int32)
+
+        # Create filled polygon between inner and outer waves
+        # Combine outer and reversed inner points
+        all_points = np.concatenate([points_outer, points_inner[::-1]])
+
+        # Get average color
+        avg_magnitude = np.mean(magnitudes)
+        fill_color = self.get_color_for_position(0, avg_magnitude)
+        # Reduce intensity for fill
+        fill_color = tuple(int(c * 0.6) for c in fill_color)
+
+        # Draw filled area
+        cv2.fillPoly(frame, [all_points], fill_color, lineType=cv2.LINE_AA)
+
+        # Draw outer outline with varying colors
+        for i in range(len(points_outer)):
+            next_i = (i + 1) % len(points_outer)
+            line_color = self.get_color_for_position(i, magnitudes[i])
+            cv2.line(frame, tuple(points_outer[i]), tuple(points_outer[next_i]),
+                    line_color, 2, lineType=cv2.LINE_AA)
+
+        return frame
+
+    def draw_mode_5_polygon(self, frame, magnitudes):
+        """Mode 5: Dynamic polygon morph"""
+        # Use fewer points for polygon effect
+        polygon_points = 36
+        step = self.num_bars // polygon_points
+        angle_step = 360 / polygon_points
+
+        points = []
+        for i in range(polygon_points):
+            angle = np.deg2rad(i * angle_step)
+
+            # Get magnitude for this section (average nearby bars)
+            mag_idx = i * step
+            magnitude = np.mean(magnitudes[mag_idx:mag_idx + step]) if mag_idx < len(magnitudes) else magnitudes[-1]
+
+            # Calculate radius
+            max_bar_height = self.max_radius - self.inner_radius
+            bar_height = int(magnitude * max_bar_height)
+            radius = self.inner_radius + bar_height
+
+            x = int(self.center_x + radius * np.cos(angle))
+            y = int(self.center_y + radius * np.sin(angle))
+            points.append([x, y])
+
+        points = np.array(points, dtype=np.int32)
+
+        # Draw multiple concentric polygons with different colors
+        num_layers = 4
+        for layer in range(num_layers):
+            layer_progress = (layer + 1) / num_layers
+            layer_points = []
+
+            for i, point in enumerate(points):
+                # Interpolate between center and outer point
+                x = int(self.center_x + (point[0] - self.center_x) * layer_progress)
+                y = int(self.center_y + (point[1] - self.center_y) * layer_progress)
+                layer_points.append([x, y])
+
+            layer_points = np.array(layer_points, dtype=np.int32)
+
+            # Get color for this layer
+            avg_magnitude = np.mean(magnitudes)
+            layer_color = self.get_color_for_position(layer * 30, avg_magnitude)
+
+            # Varying thickness and opacity
+            thickness = max(1, 4 - layer)
+            alpha = 0.6 + (layer * 0.1)
+            layer_color = tuple(int(c * alpha) for c in layer_color)
+
+            cv2.polylines(frame, [layer_points], isClosed=True, color=layer_color,
+                         thickness=thickness, lineType=cv2.LINE_AA)
+
+        return frame
+
+    def draw_circular_spectrum(self, frame, magnitudes):
+        """Draw the circular spectrum based on selected mode"""
+        if self.mode == 1:
+            return self.draw_mode_1_bars(frame, magnitudes)
+        elif self.mode == 2:
+            return self.draw_mode_2_waves(frame, magnitudes)
+        elif self.mode == 3:
+            return self.draw_mode_3_particles(frame, magnitudes)
+        elif self.mode == 4:
+            return self.draw_mode_4_waveform(frame, magnitudes)
+        elif self.mode == 5:
+            return self.draw_mode_5_polygon(frame, magnitudes)
+        else:
+            # Default to mode 1
+            return self.draw_mode_1_bars(frame, magnitudes)
 
     def generate_video(self):
         """Generate the final video with transparent background"""
@@ -269,18 +471,13 @@ class CircularSpectrumVisualizer:
         # Now use ffmpeg to:
         # 1. Add audio
         # 2. Convert black pixels to transparent (using colorkey filter)
-        # 3. Output to final format with alpha channel
+        # 3. Output to .mov with alpha channel
         print("Adding audio and transparency...")
         import subprocess
 
         try:
-            # Check if output should be .mov (supports alpha) or .webm (also supports alpha)
-            # If user wants .mp4, we'll create .webm or .mov instead since MP4 doesn't support transparency
-            if ext == '.mp4':
-                print("Note: MP4 doesn't support transparency. Converting to .mov with alpha channel.")
-                final_output = str(Path(self.output_path).with_suffix('.mov'))
-            else:
-                final_output = self.output_path
+            # Always output to .mov since it supports transparency
+            final_output = str(Path(self.output_path).with_suffix('.mov'))
 
             # Use ffmpeg to:
             # - Add audio
@@ -320,13 +517,13 @@ class CircularSpectrumVisualizer:
                     '-c:v', 'copy',
                     '-c:a', 'aac',
                     '-shortest',
-                    self.output_path
+                    final_output
                 ], capture_output=True, text=True)
 
                 Path(temp_no_audio).unlink()
 
                 if result.returncode == 0:
-                    print(f"✓ Standard video created: {self.output_path}")
+                    print(f"✓ Standard video created: {final_output}")
                 else:
                     print(f"Error: Could not create video")
 
@@ -356,6 +553,10 @@ Examples:
   # YouTube Shorts (1080x1920, auto for .mp4)
   python audio_spectrum.py input.mp3 output.mp4
 
+  # With different visualization modes
+  python audio_spectrum.py input.mp3 output.mov --mode 2
+  python audio_spectrum.py input.mp3 output.mov --mode 3
+
   # Square format (1080x1080)
   python audio_spectrum.py song.wav video.mov --resolution square
 
@@ -372,6 +573,8 @@ Examples:
 
     parser.add_argument('input', help='Input audio file (.mp3 or .wav)')
     parser.add_argument('output', help='Output video file (.mp4 or .mov recommended)')
+    parser.add_argument('--mode', type=int, choices=[1, 2, 3, 4, 5], default=1,
+                       help='Visualization mode: 1=Bars (default), 2=Waves/Layers, 3=Particles, 4=Waveform, 5=Polygon')
     parser.add_argument('--resolution', type=str, choices=['square', 'shorts', 'hd', 'custom'],
                        default='auto',
                        help='Resolution preset: square (1080x1080), shorts (1080x1920 for YouTube Shorts), hd (1920x1080 for YouTube), custom (use --width/--height). Default: auto (.mov -> hd, .mp4 -> shorts)')
@@ -433,6 +636,16 @@ Examples:
     # Gradient is enabled by default unless --no-gradient is specified
     use_gradient = not args.no_gradient
 
+    # Print selected mode
+    mode_names = {
+        1: "Bars (radial bars)",
+        2: "Waves/Layers (concentric circular waves)",
+        3: "Particles (particle rings with glow)",
+        4: "Waveform (smooth continuous wave)",
+        5: "Polygon (dynamic polygon morph)"
+    }
+    print(f"Selected visualization mode: {args.mode} - {mode_names.get(args.mode, 'Unknown')}")
+
     # Create visualizer
     visualizer = CircularSpectrumVisualizer(
         audio_path=args.input,
@@ -447,7 +660,8 @@ Examples:
         smoothing=args.smoothing,
         gradient=use_gradient,
         gradient_color1=gradient_color1_bgr,
-        gradient_color2=gradient_color2_bgr
+        gradient_color2=gradient_color2_bgr,
+        mode=args.mode
     )
 
     # Generate video

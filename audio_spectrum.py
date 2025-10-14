@@ -3,8 +3,11 @@
 Circular Audio Spectrum Visualizer
 Generates a transparent video with circular audio spectrum animation
 
-
+Example (YouTube regular - 1920x1080, auto for .mov):
 python audio_spectrum.py '/Users/ahmeddoghri/Desktop/RÜFÜS DU SOL - New Sky (Lyrics).mp3' '/Users/ahmeddoghri/Desktop/output.mov'
+
+Example (YouTube Shorts - 1080x1920, auto for .mp4):
+python audio_spectrum.py '/Users/ahmeddoghri/Desktop/RÜFÜS DU SOL - New Sky (Lyrics).mp3' '/Users/ahmeddoghri/Desktop/output.mp4'
 
 """
 
@@ -347,16 +350,33 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
+  # YouTube regular video (1920x1080, auto for .mov)
   python audio_spectrum.py input.mp3 output.mov
-  python audio_spectrum.py song.wav video.mov --width 1920 --height 1080
-  python audio_spectrum.py audio.mp3 spectrum.mov --color 255 0 255 --num-bars 180
+
+  # YouTube Shorts (1080x1920, auto for .mp4)
+  python audio_spectrum.py input.mp3 output.mp4
+
+  # Square format (1080x1080)
+  python audio_spectrum.py song.wav video.mov --resolution square
+
+  # Force Shorts format for .mov file
+  python audio_spectrum.py audio.mp3 spectrum.mov --resolution shorts
+
+  # Custom resolution (2000x2000)
+  python audio_spectrum.py audio.mp3 spectrum.mov --resolution custom --width 2000 --height 2000
+
+  # With color and bar customization
+  python audio_spectrum.py audio.mp3 spectrum.mov --color 255 0 255 --num-bars 180 --no-gradient
         """
     )
 
     parser.add_argument('input', help='Input audio file (.mp3 or .wav)')
     parser.add_argument('output', help='Output video file (.mp4 or .mov recommended)')
-    parser.add_argument('--width', type=int, default=1080, help='Video width (default: 1080)')
-    parser.add_argument('--height', type=int, default=1080, help='Video height (default: 1080)')
+    parser.add_argument('--resolution', type=str, choices=['square', 'shorts', 'hd', 'custom'],
+                       default='auto',
+                       help='Resolution preset: square (1080x1080), shorts (1080x1920 for YouTube Shorts), hd (1920x1080 for YouTube), custom (use --width/--height). Default: auto (.mov -> hd, .mp4 -> shorts)')
+    parser.add_argument('--width', type=int, default=None, help='Video width (used with --resolution custom)')
+    parser.add_argument('--height', type=int, default=None, help='Video height (used with --resolution custom)')
     parser.add_argument('--fps', type=int, default=30, help='Frames per second (default: 30)')
     parser.add_argument('--num-bars', type=int, default=120, help='Number of frequency bars (default: 120)')
     parser.add_argument('--color', nargs=3, type=int, default=[0, 255, 255],
@@ -377,6 +397,34 @@ Examples:
         print(f"Error: Input file not found: {args.input}")
         sys.exit(1)
 
+    # Determine resolution based on preset or custom values
+    resolution_presets = {
+        'square': (1080, 1080),
+        'shorts': (1080, 1920),
+        'hd': (1920, 1080)
+    }
+
+    # Auto-detect resolution based on output file extension
+    resolution = args.resolution
+    if resolution == 'auto':
+        ext = Path(args.output).suffix.lower()
+        if ext == '.mov':
+            resolution = 'hd'  # .mov -> 1920x1080 for YouTube regular videos
+            print(f"Auto-detected resolution: hd (1920x1080) for .mov file")
+        else:
+            resolution = 'shorts'  # .mp4 -> 1080x1920 for YouTube Shorts
+            print(f"Auto-detected resolution: shorts (1080x1920) for .mp4 file")
+
+    if resolution == 'custom':
+        if args.width is None or args.height is None:
+            print("Error: --width and --height must be specified when using --resolution custom")
+            sys.exit(1)
+        width, height = args.width, args.height
+    else:
+        width, height = resolution_presets[resolution]
+        if args.width is not None or args.height is not None:
+            print(f"Warning: --width/--height ignored when using --resolution {resolution}")
+
     # Convert RGB to BGR for OpenCV
     color_bgr = (args.color[2], args.color[1], args.color[0])
     gradient_color1_bgr = (args.gradient_color1[2], args.gradient_color1[1], args.gradient_color1[0])
@@ -389,8 +437,8 @@ Examples:
     visualizer = CircularSpectrumVisualizer(
         audio_path=args.input,
         output_path=args.output,
-        width=args.width,
-        height=args.height,
+        width=width,
+        height=height,
         fps=args.fps,
         num_bars=args.num_bars,
         color=color_bgr,

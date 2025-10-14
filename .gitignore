@@ -11,3 +11,7 @@
 *.m4a
 *.aac
 *.ogg
+
+
+*.DS_Store
+*__pycache__/

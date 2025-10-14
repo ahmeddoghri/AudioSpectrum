@@ -9,6 +9,11 @@ Visualization Modes:
   --mode 3: Particles - Circular particle system with glow effects
   --mode 4: Waveform - Smooth continuous filled waveform
   --mode 5: Polygon - Dynamic morphing polygon shapes
+  --mode 6: Spiral - Hypnotic spiral arms rotating with audio
+  --mode 7: DNA Helix - Double helix strands wrapping around the center
+  --mode 8: Kaleidoscope - Symmetrical mirrored patterns with radial symmetry
+  --mode 9: Pulse Rings - Expanding concentric rings that burst from center
+  --mode 10: Star Burst - Dynamic star with points that expand and contract
 
 Examples:
   # YouTube regular - 1920x1080, auto for .mov
@@ -18,7 +23,7 @@ Examples:
   python audio_spectrum.py '/Users/ahmeddoghri/Desktop/RÜFÜS DU SOL - New Sky (Lyrics).mp3' '/Users/ahmeddoghri/Desktop/output.mp4'
 
   # With different visualization mode
-  python audio_spectrum.py '/Users/ahmeddoghri/Desktop/RÜFÜS DU SOL - New Sky (Lyrics).mp3' '/Users/ahmeddoghri/Desktop/output.mov' --mode 3
+  python audio_spectrum.py '/Users/ahmeddoghri/Desktop/RÜFÜS DU SOL - New Sky (Lyrics).mp3' '/Users/ahmeddoghri/Desktop/output.mov' --mode 6
 
 """
 
@@ -52,7 +57,7 @@ class CircularSpectrumVisualizer:
             gradient: Enable gradient mode (left to right color transition)
             gradient_color1: Left side color (BGR format)
             gradient_color2: Right side color (BGR format)
-            mode: Visualization mode (1-5)
+            mode: Visualization mode (1-10)
         """
         self.audio_path = audio_path
         self.output_path = output_path
@@ -194,6 +199,25 @@ class CircularSpectrumVisualizer:
 
         return bar_color
 
+    def draw_center_circle(self, frame, magnitudes):
+        """Draw a consistent center circle with subtle glow"""
+        # Get average magnitude for center circle glow
+        avg_magnitude = np.mean(magnitudes)
+
+        # Base circle color (use gradient or single color)
+        circle_color = (180, 180, 180)  # self.get_color_for_position(0, avg_magnitude * 0.5)
+
+        # Draw outer glow ring (subtle)
+        glow_color = tuple(int(c * 0.3) for c in circle_color)
+        cv2.circle(frame, (self.center_x, self.center_y), self.inner_radius + 2,
+                  glow_color, 1, lineType=cv2.LINE_AA)
+
+        # Draw main center circle outline
+        cv2.circle(frame, (self.center_x, self.center_y), self.inner_radius,
+                  circle_color, 1, lineType=cv2.LINE_AA)
+
+        return frame
+
     def draw_mode_1_bars(self, frame, magnitudes):
         """Mode 1: Classic radial bars (original mode)"""
         angle_step = 360 / self.num_bars
@@ -221,6 +245,9 @@ class CircularSpectrumVisualizer:
 
             cv2.line(frame, (start_x, start_y), (end_x, end_y),
                     bar_color, thickness, lineType=cv2.LINE_AA)
+
+        # Draw center circle
+        self.draw_center_circle(frame, magnitudes)
 
         return frame
 
@@ -260,6 +287,9 @@ class CircularSpectrumVisualizer:
             cv2.polylines(frame, [points], isClosed=True, color=layer_color,
                          thickness=thickness, lineType=cv2.LINE_AA)
 
+        # Draw center circle
+        self.draw_center_circle(frame, magnitudes)
+
         return frame
 
     def draw_mode_3_particles(self, frame, magnitudes):
@@ -291,6 +321,9 @@ class CircularSpectrumVisualizer:
                 glow_size = particle_size + 3
                 glow_color = tuple(int(c * 0.5) for c in particle_color)
                 cv2.circle(frame, (x, y), glow_size, glow_color, 1, lineType=cv2.LINE_AA)
+
+        # Draw center circle
+        self.draw_center_circle(frame, magnitudes)
 
         return frame
 
@@ -339,6 +372,9 @@ class CircularSpectrumVisualizer:
             line_color = self.get_color_for_position(i, magnitudes[i])
             cv2.line(frame, tuple(points_outer[i]), tuple(points_outer[next_i]),
                     line_color, 2, lineType=cv2.LINE_AA)
+
+        # Draw center circle
+        self.draw_center_circle(frame, magnitudes)
 
         return frame
 
@@ -394,6 +430,285 @@ class CircularSpectrumVisualizer:
             cv2.polylines(frame, [layer_points], isClosed=True, color=layer_color,
                          thickness=thickness, lineType=cv2.LINE_AA)
 
+        # Draw center circle
+        self.draw_center_circle(frame, magnitudes)
+
+        return frame
+
+    def draw_mode_6_spiral(self, frame, magnitudes):
+        """Mode 6: Hypnotic spiral arms"""
+        num_arms = 5  # Number of spiral arms
+        angle_step = 360 / self.num_bars
+
+        for arm in range(num_arms):
+            points = []
+            arm_offset = (360 / num_arms) * arm
+
+            for i, magnitude in enumerate(magnitudes):
+                angle = np.deg2rad(i * angle_step + arm_offset)
+
+                # Create spiral effect - radius increases with angle
+                progress = i / self.num_bars
+                max_bar_height = self.max_radius - self.inner_radius
+
+                # Spiral outward effect
+                spiral_radius = self.inner_radius + (progress * max_bar_height * 0.7)
+                # Add magnitude variation
+                radius_variation = magnitude * max_bar_height * 0.3
+                radius = int(spiral_radius + radius_variation)
+
+                x = int(self.center_x + radius * np.cos(angle))
+                y = int(self.center_y + radius * np.sin(angle))
+                points.append([x, y])
+
+            points = np.array(points, dtype=np.int32)
+
+            # Get color for this arm
+            avg_magnitude = np.mean(magnitudes)
+            arm_color = self.get_color_for_position(arm * (self.num_bars // num_arms), avg_magnitude)
+
+            # Draw spiral arm with varying thickness
+            for i in range(len(points) - 1):
+                thickness = max(1, int(3 - (i / len(points)) * 2))
+                cv2.line(frame, tuple(points[i]), tuple(points[i + 1]),
+                        arm_color, thickness, lineType=cv2.LINE_AA)
+
+        # Draw center circle
+        self.draw_center_circle(frame, magnitudes)
+
+        return frame
+
+    def draw_mode_7_dna_helix(self, frame, magnitudes):
+        """Mode 7: DNA double helix strands"""
+        angle_step = 360 / self.num_bars
+        max_bar_height = self.max_radius - self.inner_radius
+
+        # Wave offset proportional to available space (10% of max height)
+        wave_amplitude = max_bar_height * 0.1
+
+        # Two strands
+        for strand in range(2):
+            points = []
+            strand_phase = strand * np.pi  # 180 degree offset for second strand
+
+            for i, magnitude in enumerate(magnitudes):
+                angle = np.deg2rad(i * angle_step)
+
+                # Create helix wave pattern
+                progress = i / self.num_bars
+                wave_offset = np.sin(progress * 4 * np.pi + strand_phase) * wave_amplitude
+
+                base_radius = self.inner_radius + max_bar_height * 0.5
+                radius_variation = magnitude * max_bar_height * 0.2
+                radius = int(base_radius + wave_offset + radius_variation)
+
+                x = int(self.center_x + radius * np.cos(angle))
+                y = int(self.center_y + radius * np.sin(angle))
+                points.append([x, y])
+
+            points = np.array(points, dtype=np.int32)
+
+            # Color for strand
+            avg_magnitude = np.mean(magnitudes)
+            strand_color = self.get_color_for_position(strand * self.num_bars // 2, avg_magnitude)
+
+            # Draw the strand
+            cv2.polylines(frame, [points], isClosed=True, color=strand_color,
+                         thickness=3, lineType=cv2.LINE_AA)
+
+            # Draw connecting "rungs" between strands (every 10th bar)
+            if strand == 1:
+                for i in range(0, len(points), 10):
+                    # Draw line to opposite strand
+                    opposite_angle = np.deg2rad((i + self.num_bars // 2) * angle_step)
+
+                    progress = i / self.num_bars
+                    wave_offset_2 = np.sin(progress * 4 * np.pi) * wave_amplitude
+
+                    magnitude_2 = magnitudes[(i + self.num_bars // 2) % len(magnitudes)]
+                    base_radius = self.inner_radius + max_bar_height * 0.5
+                    radius_2 = int(base_radius + wave_offset_2 + magnitude_2 * max_bar_height * 0.2)
+
+                    x2 = int(self.center_x + radius_2 * np.cos(opposite_angle))
+                    y2 = int(self.center_y + radius_2 * np.sin(opposite_angle))
+
+                    rung_color = self.get_color_for_position(i, magnitudes[i])
+                    rung_color = tuple(int(c * 0.5) for c in rung_color)
+                    cv2.line(frame, tuple(points[i]), (x2, y2), rung_color, 1, lineType=cv2.LINE_AA)
+
+        # Draw center circle
+        self.draw_center_circle(frame, magnitudes)
+
+        return frame
+
+    def draw_mode_8_kaleidoscope(self, frame, magnitudes):
+        """Mode 8: Kaleidoscope with radial symmetry"""
+        num_segments = 8  # Number of kaleidoscope segments
+        segment_angle = 360 / num_segments
+        angle_step = 360 / self.num_bars
+        bars_per_segment = self.num_bars // num_segments
+
+        for segment in range(num_segments):
+            segment_offset = segment * segment_angle
+
+            # Draw mirrored pattern in each segment
+            for i in range(bars_per_segment):
+                magnitude = magnitudes[i % len(magnitudes)]
+
+                # Forward direction
+                angle1 = np.deg2rad(segment_offset + (i * angle_step))
+                # Mirrored direction
+                angle2 = np.deg2rad(segment_offset + segment_angle - (i * angle_step))
+
+                max_bar_height = self.max_radius - self.inner_radius
+                bar_height = int(magnitude * max_bar_height)
+                radius = self.inner_radius + bar_height
+
+                # Forward point
+                x1 = int(self.center_x + radius * np.cos(angle1))
+                y1 = int(self.center_y + radius * np.sin(angle1))
+
+                # Mirrored point
+                x2 = int(self.center_x + radius * np.cos(angle2))
+                y2 = int(self.center_y + radius * np.sin(angle2))
+
+                # Get color
+                bar_color = self.get_color_for_position(segment * bars_per_segment + i, magnitude)
+
+                # Draw both mirrored elements
+                inner_x1 = int(self.center_x + self.inner_radius * np.cos(angle1))
+                inner_y1 = int(self.center_y + self.inner_radius * np.sin(angle1))
+                inner_x2 = int(self.center_x + self.inner_radius * np.cos(angle2))
+                inner_y2 = int(self.center_y + self.inner_radius * np.sin(angle2))
+
+                thickness = max(1, int(self.bar_width_multiplier * segment_angle / bars_per_segment))
+                cv2.line(frame, (inner_x1, inner_y1), (x1, y1), bar_color, thickness, lineType=cv2.LINE_AA)
+                cv2.line(frame, (inner_x2, inner_y2), (x2, y2), bar_color, thickness, lineType=cv2.LINE_AA)
+
+        # Draw center circle
+        self.draw_center_circle(frame, magnitudes)
+
+        return frame
+
+    def draw_mode_9_pulse_rings(self, frame, magnitudes):
+        """Mode 9: Expanding pulse rings from center"""
+        # Group magnitudes into rings
+        num_rings = 12
+        bars_per_ring = self.num_bars // num_rings
+        max_bar_height = self.max_radius - self.inner_radius
+
+        # Pulse expansion proportional to available space (8% of max height)
+        max_pulse = max_bar_height * 0.08
+
+        for ring_idx in range(num_rings):
+            # Calculate average magnitude for this ring
+            start_idx = ring_idx * bars_per_ring
+            end_idx = start_idx + bars_per_ring
+            ring_magnitude = np.mean(magnitudes[start_idx:end_idx])
+
+            # Ring expands based on its position and magnitude
+            ring_progress = ring_idx / num_rings
+            base_radius = self.inner_radius + (ring_progress * max_bar_height)
+
+            # Pulse effect - rings expand with magnitude (proportional)
+            pulse_expansion = ring_magnitude * max_pulse
+            radius = int(base_radius + pulse_expansion)
+
+            # Get color for this ring
+            ring_color = self.get_color_for_position(start_idx, ring_magnitude)
+
+            # Thickness varies with magnitude
+            thickness = max(1, int(2 + ring_magnitude * 5))
+
+            # Make outer rings slightly more transparent
+            alpha = 1.0 - (ring_progress * 0.3)
+            ring_color = tuple(int(c * alpha) for c in ring_color)
+
+            # Draw the ring
+            cv2.circle(frame, (self.center_x, self.center_y), radius, ring_color,
+                      thickness, lineType=cv2.LINE_AA)
+
+            # Add glow for high magnitude rings
+            if ring_magnitude > 0.7:
+                glow_radius = radius + 3
+                glow_color = tuple(int(c * 0.4) for c in ring_color)
+                cv2.circle(frame, (self.center_x, self.center_y), glow_radius, glow_color,
+                          1, lineType=cv2.LINE_AA)
+
+        # Draw center circle
+        self.draw_center_circle(frame, magnitudes)
+
+        return frame
+
+    def draw_mode_10_star_burst(self, frame, magnitudes):
+        """Mode 10: Dynamic star with expanding/contracting points"""
+        num_points = 16  # Number of star points
+        angle_step = 360 / num_points
+        bars_per_point = self.num_bars // num_points
+
+        star_points_outer = []
+        star_points_inner = []
+
+        for point_idx in range(num_points):
+            angle = np.deg2rad(point_idx * angle_step)
+
+            # Get average magnitude for this star point
+            start_idx = point_idx * bars_per_point
+            end_idx = start_idx + bars_per_point
+            point_magnitude = np.mean(magnitudes[start_idx:end_idx])
+
+            # Outer points (tips of star) - extend based on magnitude
+            max_bar_height = self.max_radius - self.inner_radius
+            bar_height = int(point_magnitude * max_bar_height)
+            outer_radius = self.inner_radius + bar_height
+
+            x_outer = int(self.center_x + outer_radius * np.cos(angle))
+            y_outer = int(self.center_y + outer_radius * np.sin(angle))
+            star_points_outer.append([x_outer, y_outer])
+
+            # Inner points (between star tips) - smaller radius
+            inner_angle = np.deg2rad((point_idx * angle_step) + (angle_step / 2))
+            inner_magnitude = magnitudes[(start_idx + bars_per_point // 2) % len(magnitudes)]
+            inner_radius = int(self.inner_radius + (inner_magnitude * max_bar_height * 0.4))
+
+            x_inner = int(self.center_x + inner_radius * np.cos(inner_angle))
+            y_inner = int(self.center_y + inner_radius * np.sin(inner_angle))
+            star_points_inner.append([x_inner, y_inner])
+
+        # Interleave outer and inner points to create star shape
+        star_points = []
+        for i in range(num_points):
+            star_points.append(star_points_outer[i])
+            star_points.append(star_points_inner[i])
+
+        star_points = np.array(star_points, dtype=np.int32)
+
+        # Draw filled star with gradient
+        avg_magnitude = np.mean(magnitudes)
+        fill_color = self.get_color_for_position(0, avg_magnitude)
+        fill_color = tuple(int(c * 0.5) for c in fill_color)
+        cv2.fillPoly(frame, [star_points], fill_color, lineType=cv2.LINE_AA)
+
+        # Draw star outline with varying colors
+        for i in range(len(star_points)):
+            next_i = (i + 1) % len(star_points)
+            segment_magnitude = magnitudes[(i * bars_per_point // 2) % len(magnitudes)]
+            line_color = self.get_color_for_position(i * (self.num_bars // len(star_points)), segment_magnitude)
+
+            cv2.line(frame, tuple(star_points[i]), tuple(star_points[next_i]),
+                    line_color, 2, lineType=cv2.LINE_AA)
+
+        # Add glow effect to star tips
+        for i in range(0, len(star_points), 2):  # Only outer points
+            point_magnitude = magnitudes[(i // 2 * bars_per_point) % len(magnitudes)]
+            if point_magnitude > 0.6:
+                glow_color = self.get_color_for_position(i * (self.num_bars // len(star_points)), point_magnitude)
+                glow_color = tuple(int(c * 0.6) for c in glow_color)
+                cv2.circle(frame, tuple(star_points[i]), 5, glow_color, -1, lineType=cv2.LINE_AA)
+
+        # Draw center circle
+        self.draw_center_circle(frame, magnitudes)
+
         return frame
 
     def draw_circular_spectrum(self, frame, magnitudes):
@@ -408,6 +723,16 @@ class CircularSpectrumVisualizer:
             return self.draw_mode_4_waveform(frame, magnitudes)
         elif self.mode == 5:
             return self.draw_mode_5_polygon(frame, magnitudes)
+        elif self.mode == 6:
+            return self.draw_mode_6_spiral(frame, magnitudes)
+        elif self.mode == 7:
+            return self.draw_mode_7_dna_helix(frame, magnitudes)
+        elif self.mode == 8:
+            return self.draw_mode_8_kaleidoscope(frame, magnitudes)
+        elif self.mode == 9:
+            return self.draw_mode_9_pulse_rings(frame, magnitudes)
+        elif self.mode == 10:
+            return self.draw_mode_10_star_burst(frame, magnitudes)
         else:
             # Default to mode 1
             return self.draw_mode_1_bars(frame, magnitudes)
@@ -573,8 +898,8 @@ Examples:
 
     parser.add_argument('input', help='Input audio file (.mp3 or .wav)')
     parser.add_argument('output', help='Output video file (.mp4 or .mov recommended)')
-    parser.add_argument('--mode', type=int, choices=[1, 2, 3, 4, 5], default=1,
-                       help='Visualization mode: 1=Bars (default), 2=Waves/Layers, 3=Particles, 4=Waveform, 5=Polygon')
+    parser.add_argument('--mode', type=int, choices=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10], default=1,
+                       help='Visualization mode: 1=Bars (default), 2=Waves/Layers, 3=Particles, 4=Waveform, 5=Polygon, 6=Spiral, 7=DNA Helix, 8=Kaleidoscope, 9=Pulse Rings, 10=Star Burst')
     parser.add_argument('--resolution', type=str, choices=['square', 'shorts', 'hd', 'custom'],
                        default='auto',
                        help='Resolution preset: square (1080x1080), shorts (1080x1920 for YouTube Shorts), hd (1920x1080 for YouTube), custom (use --width/--height). Default: auto (.mov -> hd, .mp4 -> shorts)')
@@ -642,7 +967,12 @@ Examples:
         2: "Waves/Layers (concentric circular waves)",
         3: "Particles (particle rings with glow)",
         4: "Waveform (smooth continuous wave)",
-        5: "Polygon (dynamic polygon morph)"
+        5: "Polygon (dynamic polygon morph)",
+        6: "Spiral (hypnotic spiral arms)",
+        7: "DNA Helix (double helix strands)",
+        8: "Kaleidoscope (symmetrical mirrored patterns)",
+        9: "Pulse Rings (expanding concentric rings)",
+        10: "Star Burst (dynamic star points)"
     }
     print(f"Selected visualization mode: {args.mode} - {mode_names.get(args.mode, 'Unknown')}")
 

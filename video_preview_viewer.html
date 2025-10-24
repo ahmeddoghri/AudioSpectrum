@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Spectrum Visualizer - Video Preview Gallery (100+ Modes!)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 3s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px 30px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4ecdc4;
+        }
+
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-color: transparent;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            padding: 20px;
+        }
+
+        .preview-card {
+            background: rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            border: 2px solid transparent;
+        }
+
+        .preview-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            border-color: rgba(78, 205, 196, 0.5);
+        }
+
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            background: #000;
+            overflow: hidden;
+        }
+
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .preview-card:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .play-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(78, 205, 196, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .card-info {
+            padding: 20px;
+        }
+
+        .mode-number {
+            display: inline-block;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .mode-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .mode-desc {
+            opacity: 0.8;
+            font-size: 0.95em;
+            line-height: 1.4;
+        }
+
+        .loader {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2em;
+        }
+
+        .hypnotic {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .search-box {
+            max-width: 600px;
+            margin: 0 auto 30px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 25px;
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.1em;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #4ecdc4;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            margin-right: 5px;
+            margin-top: 5px;
+        }
+
+        .new-badge {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a6f);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-left: 8px;
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px rgba(255, 107, 107, 0.5); }
+            50% { box-shadow: 0 0 20px rgba(255, 107, 107, 0.8), 0 0 30px rgba(255, 107, 107, 0.6); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="hypnotic">🎵 Audio Spectrum Visualizer 🎵</h1>
+        <p>Interactive Video Preview Gallery - 3 Second Samples</p>
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-number">100</div>
+                <div>Creative Modes</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">20</div>
+                <div>Classic Modes</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">120+</div>
+                <div>Total Visualizations</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="🔍 Search visualizations... (e.g., 'hypnotic', 'fractal', 'neon')">
+    </div>
+
+    <div class="filters">
+        <button class="filter-btn active" data-filter="all">All (120+)</button>
+        <button class="filter-btn" data-filter="creative">Creative (100) <span class="new-badge">NEW!</span></button>
+        <button class="filter-btn" data-filter="classic">Classic (10)</button>
+        <button class="filter-btn" data-filter="lines">Lines (10)</button>
+        <button class="filter-btn" data-filter="hypnotic">Hypnotic 51-100 <span class="new-badge">NEW!</span></button>
+    </div>
+
+    <div class="gallery" id="gallery">
+        <div class="loader">Loading video previews...</div>
+    </div>
+
+    <script>
+        // Mode data with descriptions
+        const modes = {
+            creative: [
+                {num: 1, name: "Vinyl Grooves", desc: "Rotating circular grooves like a vinyl record", tags: ["lofi", "retro"]},
+                {num: 2, name: "Neon Rain", desc: "Cyberpunk neon droplets cascading down", tags: ["cyberpunk", "lofi"]},
+                {num: 3, name: "Jazzy Fireworks", desc: "Bursting particles from center", tags: ["jazz", "explosive"]},
+                {num: 4, name: "Retro Cassette", desc: "VU meters and tape reel animation", tags: ["vintage", "lofi"]},
+                {num: 5, name: "Soul Aura", desc: "Pulsing organic blob with soul vibes", tags: ["soul", "rnb"]},
+                {num: 6, name: "Frequency Flowers", desc: "Blooming petals that grow with music", tags: ["dreamy", "lofi"]},
+                {num: 7, name: "Electric Heartbeat", desc: "EKG-style waveform with emotional glow", tags: ["emotional", "jazz"]},
+                {num: 8, name: "Pixel Clouds", desc: "8-bit style floating clouds", tags: ["retro", "lofi"]},
+                {num: 9, name: "Liquid Mercury", desc: "Flowing metallic waves", tags: ["smooth", "jazz"]},
+                {num: 10, name: "Cosmic Dust", desc: "Swirling galaxy particles with trails", tags: ["ambient", "lofi"]},
+                {num: 11, name: "Quantum Strings", desc: "Vibrating strings with interference", tags: ["experimental", "physics"]},
+                {num: 12, name: "Lava Lamp", desc: "Rising and morphing organic blobs", tags: ["psychedelic", "lofi"]},
+                {num: 13, name: "DNA Helix", desc: "Double helix twisting with music", tags: ["scientific", "bio"]},
+                {num: 14, name: "Lightning Strikes", desc: "Electric bolts connecting peaks", tags: ["intense", "energy"]},
+                {num: 15, name: "Morphing Geometry", desc: "Shifting 3D wireframe shapes", tags: ["abstract", "modern"]},
+                {num: 16, name: "Ink Drops", desc: "Organic ink dispersing in water", tags: ["artistic", "lofi"]},
+                {num: 17, name: "Aurora Waves", desc: "Northern lights flowing ribbons", tags: ["ethereal", "ambient"]},
+                {num: 18, name: "Fractal Bloom", desc: "Self-similar mathematical patterns", tags: ["mathematical", "art"]},
+                {num: 19, name: "Plasma Storm", desc: "Swirling energy vortex", tags: ["chaotic", "energy"]},
+                {num: 20, name: "Crystal Growth", desc: "Geometric crystals forming", tags: ["elegant", "minimal"]},
+                // Modes 21-50
+                {num: 21, name: "Gravitational Lens", desc: "Spacetime warping light", tags: ["cosmic", "scifi"]},
+                {num: 22, name: "Magnetic Fields", desc: "Iron filing patterns", tags: ["scientific", "art"]},
+                {num: 23, name: "Tribal Drums", desc: "Concentric ethnic shockwaves", tags: ["world", "music"]},
+                {num: 24, name: "Neon Cityscape", desc: "Scrolling city with reactive buildings", tags: ["synthwave", "urban"]},
+                {num: 25, name: "Heartbeat Monitor", desc: "Medical vital signs", tags: ["dramatic", "tension"]},
+                {num: 26, name: "Ocean Depths", desc: "Bioluminescent creatures", tags: ["underwater", "mystery"]},
+                {num: 27, name: "Fire Dance", desc: "Realistic flames dancing", tags: ["primal", "energy"]},
+                {num: 28, name: "Particle Collider", desc: "High-energy physics", tags: ["science", "physics"]},
+                {num: 29, name: "Rainbow Prism", desc: "Light refraction", tags: ["optical", "colorful"]},
+                {num: 30, name: "Seismic Waves", desc: "Earthquake readings", tags: ["geological", "drama"]},
+                {num: 31, name: "Origami Unfold", desc: "Paper geometric folding", tags: ["japanese", "art"]},
+                {num: 32, name: "Storm Clouds", desc: "Thunder and lightning", tags: ["epic", "weather"]},
+                {num: 33, name: "Binary Matrix", desc: "Matrix-style code", tags: ["hacker", "cyber"]},
+                {num: 34, name: "Kaleidoscope", desc: "Mirrored symmetric patterns", tags: ["psychedelic", "symmetry"]},
+                {num: 35, name: "Laser Show", desc: "Concert laser beams", tags: ["edm", "concert"]},
+                {num: 36, name: "Sandstorm", desc: "Desert particles in wind", tags: ["natural", "chaos"]},
+                {num: 37, name: "Ice Shatter", desc: "Cracking ice surface", tags: ["dramatic", "tension"]},
+                {num: 38, name: "Cellular Division", desc: "Cells splitting", tags: ["biology", "organic"]},
+                {num: 39, name: "Neon Tubes", desc: "Glowing tubes bending", tags: ["futuristic", "minimal"]},
+                {num: 40, name: "Cosmic Strings", desc: "Universe-scale energy", tags: ["theoretical", "physics"]},
+                {num: 41, name: "Paint Splatter", desc: "Pollock drip painting", tags: ["abstract", "expressionism"]},
+                {num: 42, name: "Quantum Foam", desc: "Bubbling spacetime", tags: ["extreme", "physics"]},
+                {num: 43, name: "Aztec Sun", desc: "Ancient calendar rotating", tags: ["ancient", "civilization"]},
+                {num: 44, name: "Fiber Optics", desc: "Light through cables", tags: ["tech", "modern"]},
+                {num: 45, name: "Tornado Funnel", desc: "Swirling debris vortex", tags: ["natural", "disaster"]},
+                {num: 46, name: "Hologram Glitch", desc: "Futuristic projection errors", tags: ["cyberpunk", "tech"]},
+                {num: 47, name: "Starfield Warp", desc: "Hyperspace jump", tags: ["scifi", "space"]},
+                {num: 48, name: "Mandala Growth", desc: "Sacred geometry forming", tags: ["spiritual", "art"]},
+                {num: 49, name: "Neon Sign Flicker", desc: "Vintage neon buzzing", tags: ["retro", "urban"]},
+                {num: 50, name: "Black Hole", desc: "Event horizon lensing", tags: ["cosmic", "destruction"]},
+                // NEW MODES 51-100 - HYPNOTIC EDITION!
+                {num: 51, name: "Fractal Tree", desc: "Generative tree that grows with branches on bass, blooms on treble", tags: ["hypnotic", "generative", "nature"], new: true},
+                {num: 52, name: "Cityscape Extrusion", desc: "3D city blocks extruding with frequency", tags: ["hypnotic", "3d", "urban"], new: true},
+                {num: 53, name: "Gravity Well", desc: "Particles pulled by pulsing bass center, pushed by treble", tags: ["hypnotic", "physics", "particles"], new: true},
+                {num: 54, name: "Metaball Fluid", desc: "Lava lamp metaballs pulsing with frequencies", tags: ["hypnotic", "fluid", "psychedelic"], new: true},
+                {num: 55, name: "Aurora Borealis", desc: "Northern lights curtains with shimmering treble", tags: ["hypnotic", "nature", "ethereal"], new: true},
+                {num: 56, name: "Stained Glass", desc: "Glowing church window panes", tags: ["hypnotic", "artistic", "glow"], new: true},
+                {num: 57, name: "Neon Nerve Network", desc: "Neural synapses firing with music", tags: ["hypnotic", "biological", "neon"], new: true},
+                {num: 58, name: "Glitch Artifact", desc: "Datamosh corruption on transients", tags: ["hypnotic", "glitch", "corrupt"], new: true},
+                {num: 59, name: "Warp Tunnel", desc: "Hyperspace rings pulsing with depth", tags: ["hypnotic", "scifi", "tunnel"], new: true},
+                {num: 60, name: "Conway's Life", desc: "Cellular automaton modulated by audio", tags: ["hypnotic", "algorithmic", "life"], new: true},
+                {num: 61, name: "ASCII Art", desc: "Text character visualizer bars", tags: ["hypnotic", "retro", "ascii"], new: true},
+                {num: 62, name: "Rippling Water", desc: "Interference patterns from frequency raindrops", tags: ["hypnotic", "water", "ripples"], new: true},
+                {num: 63, name: "Terrain Flyover", desc: "3D wireframe landscape from waveform", tags: ["hypnotic", "3d", "landscape"], new: true},
+                {num: 64, name: "String Art", desc: "Geometric lines connecting points", tags: ["hypnotic", "geometric", "lines"], new: true},
+                {num: 65, name: "Fire & Embers", desc: "Central flames with sparks on treble", tags: ["hypnotic", "fire", "primal"], new: true},
+                {num: 66, name: "Radial Kaleidoscope", desc: "Mirrored segments with bass pulse", tags: ["hypnotic", "kaleidoscope", "radial"], new: true},
+                {num: 67, name: "Pulsing Jellyfish", desc: "Bell pulses with bass, tentacle waveforms", tags: ["hypnotic", "aquatic", "organic"], new: true},
+                {num: 68, name: "Orbital System", desc: "Sun with orbiting planets and moons", tags: ["hypnotic", "space", "orbital"], new: true},
+                {num: 69, name: "Spectrum Cube", desc: "Rotating 3D cube with visualizers on faces", tags: ["hypnotic", "3d", "cube"], new: true},
+                {num: 70, name: "Typographic Flow", desc: "Floating words with wavy treble", tags: ["hypnotic", "typography", "words"], new: true},
+                {num: 71, name: "Sonar Ping", desc: "Radar sweep with frequency blips", tags: ["hypnotic", "radar", "sonar"], new: true},
+                {num: 72, name: "VU Meters", desc: "Analog needle physics meters", tags: ["hypnotic", "analog", "retro"], new: true},
+                {num: 73, name: "Lightning Cloud", desc: "Storm cloud with treble lightning", tags: ["hypnotic", "storm", "lightning"], new: true},
+                {num: 74, name: "Bouncing Balls", desc: "Physics-based ball bouncing per frequency", tags: ["hypnotic", "physics", "bouncing"], new: true},
+                {num: 75, name: "Liquid Ink", desc: "Ink blooms in water - bass & treble", tags: ["hypnotic", "ink", "liquid"], new: true},
+                {num: 76, name: "Stereo Landscape", desc: "L/R channel mountains in 3D perspective", tags: ["hypnotic", "stereo", "landscape"], new: true},
+                {num: 77, name: "AI Latent Walk", desc: "Generative dream-like morphing", tags: ["hypnotic", "ai", "generative"], new: true},
+                {num: 78, name: "Pixel Storm", desc: "8-bit blizzard with stereo wind", tags: ["hypnotic", "8bit", "storm"], new: true},
+                {num: 79, name: "Growing Vine", desc: "Organic vine with leaves on beats", tags: ["hypnotic", "organic", "growth"], new: true},
+                {num: 80, name: "Haunted Faces", desc: "Ghostly faces with glowing eyes on bass", tags: ["hypnotic", "spooky", "faces"], new: true},
+                {num: 81, name: "Connecting Constellations", desc: "Stars that shine and connect", tags: ["hypnotic", "stars", "network"], new: true},
+                {num: 82, name: "Matrix Rain", desc: "Falling code with treble brightness", tags: ["hypnotic", "matrix", "code"], new: true},
+                {num: 83, name: "Voxel World", desc: "3D voxel shockwave emanating", tags: ["hypnotic", "voxel", "3d"], new: true},
+                {num: 84, name: "DNA Helix Rungs", desc: "Genetic code with glowing rungs", tags: ["hypnotic", "dna", "biological"], new: true},
+                {num: 85, name: "Audio-Reactive Shader", desc: "Procedural noise patterns", tags: ["hypnotic", "shader", "procedural"], new: true},
+                {num: 86, name: "Spirograph", desc: "Mathematical curves from frequencies", tags: ["hypnotic", "spirograph", "curves"], new: true},
+                {num: 87, name: "Equalizer Tower", desc: "Stacked glowing rings in 3D", tags: ["hypnotic", "3d", "tower"], new: true},
+                {num: 88, name: "Audio-Driven Doodles", desc: "Generative doodle bot art", tags: ["hypnotic", "generative", "doodle"], new: true},
+                {num: 89, name: "Firework Show", desc: "Bass launches rockets that explode", tags: ["hypnotic", "fireworks", "explosive"], new: true},
+                {num: 90, name: "Microscopic View", desc: "Cells jiggling and dividing", tags: ["hypnotic", "microscopic", "cells"], new: true},
+                {num: 91, name: "Burning Paper", desc: "Flame bars with embers and curling", tags: ["hypnotic", "fire", "burning"], new: true},
+                {num: 92, name: "Swarm Intelligence", desc: "Boid flocking with audio forces", tags: ["hypnotic", "swarm", "flock"], new: true},
+                {num: 93, name: "Pendulum Wave", desc: "Multiple pendulums with different periods", tags: ["hypnotic", "pendulum", "wave"], new: true},
+                {num: 94, name: "Retro Scanlines", desc: "CRT monitor with static", tags: ["hypnotic", "crt", "retro"], new: true},
+                {num: 95, name: "Pulsing Polygon", desc: "Central shape with pushed vertices", tags: ["hypnotic", "polygon", "geometric"], new: true},
+                {num: 96, name: "Chromatic Orb", desc: "3D sphere with moving light source", tags: ["hypnotic", "3d", "chromatic"], new: true},
+                {num: 97, name: "Textured Bars", desc: "Bars with scrolling animated patterns", tags: ["hypnotic", "textured", "scrolling"], new: true},
+                {num: 98, name: "Voronoi Tessellation", desc: "Cellular diagram with moving seeds", tags: ["hypnotic", "voronoi", "tessellation"], new: true},
+                {num: 99, name: "Shattering Glass", desc: "Glass pane cracking on beats", tags: ["hypnotic", "glass", "shatter"], new: true},
+                {num: 100, name: "Sunrise/Sunset", desc: "Gradient sky with pulsing sun and stars", tags: ["hypnotic", "sky", "gradient"], new: true}
+            ],
+            classic: [
+                {num: 1, name: "Bars", desc: "Classic vertical bars", tags: ["classic", "simple"]},
+                {num: 2, name: "Waves & Layers", desc: "Layered wave patterns", tags: ["classic", "waves"]},
+                {num: 3, name: "Particles", desc: "Particle system", tags: ["classic", "particles"]},
+                {num: 4, name: "Waveform", desc: "Traditional waveform", tags: ["classic", "waveform"]},
+                {num: 5, name: "Polygon", desc: "Geometric polygon", tags: ["classic", "geometric"]},
+                {num: 6, name: "Spiral", desc: "Spiral pattern", tags: ["classic", "spiral"]},
+                {num: 7, name: "DNA Helix", desc: "Helix structure", tags: ["classic", "dna"]},
+                {num: 8, name: "Kaleidoscope", desc: "Mirror symmetry", tags: ["classic", "kaleidoscope"]},
+                {num: 9, name: "Pulse Rings", desc: "Pulsing rings", tags: ["classic", "rings"]},
+                {num: 10, name: "Star Burst", desc: "Starburst effect", tags: ["classic", "burst"]}
+            ],
+            lines: [
+                {num: 1, name: "Classic Bars", desc: "Traditional vertical bars", tags: ["lines", "classic"]},
+                {num: 2, name: "Mirror Symmetry", desc: "Mirrored visualization", tags: ["lines", "mirror"]},
+                {num: 3, name: "Waterfall", desc: "Cascading effect", tags: ["lines", "waterfall"]},
+                {num: 4, name: "Converging Lines", desc: "Lines meeting at center", tags: ["lines", "converging"]},
+                {num: 5, name: "Wave Morph", desc: "Morphing wave patterns", tags: ["lines", "wave"]},
+                {num: 6, name: "Staggered Pulse", desc: "Offset pulsing bars", tags: ["lines", "pulse"]},
+                {num: 7, name: "Geometric Tunnel", desc: "3D tunnel effect", tags: ["lines", "3d"]},
+                {num: 8, name: "Dancing Ribbons", desc: "Flowing ribbons", tags: ["lines", "ribbons"]},
+                {num: 9, name: "Particle Stream", desc: "Particle streams", tags: ["lines", "particles"]},
+                {num: 10, name: "Glitch Art", desc: "Glitch aesthetic", tags: ["lines", "glitch"]}
+            ]
+        };
+
+        // Generate gallery HTML
+        function generateGallery(filter = 'all', searchTerm = '') {
+            const gallery = document.getElementById('gallery');
+            gallery.innerHTML = '';
+
+            let allModes = [];
+
+            if (filter === 'all' || filter === 'creative') {
+                allModes = allModes.concat(modes.creative.map(m => ({...m, type: 'creative', script: 'audio_spectrum_creative'})));
+            }
+            if (filter === 'all' || filter === 'classic') {
+                allModes = allModes.concat(modes.classic.map(m => ({...m, type: 'classic', script: 'audio_spectrum'})));
+            }
+            if (filter === 'all' || filter === 'lines') {
+                allModes = allModes.concat(modes.lines.map(m => ({...m, type: 'lines', script: 'audio_spectrum_lines'})));
+            }
+            if (filter === 'hypnotic') {
+                allModes = modes.creative.filter(m => m.num >= 51 && m.num <= 100).map(m => ({...m, type: 'creative', script: 'audio_spectrum_creative'}));
+            }
+
+            // Filter by search term
+            if (searchTerm) {
+                const term = searchTerm.toLowerCase();
+                allModes = allModes.filter(m =>
+                    m.name.toLowerCase().includes(term) ||
+                    m.desc.toLowerCase().includes(term) ||
+                    m.tags.some(tag => tag.includes(term))
+                );
+            }
+
+            if (allModes.length === 0) {
+                gallery.innerHTML = '<div class="loader">No visualizations found matching your search.</div>';
+                return;
+            }
+
+            allModes.forEach(mode => {
+                const videoPath = `catalog/video_previews/${mode.script}_mode_${String(mode.num).padStart(3, '0')}.mov`;
+
+                const card = document.createElement('div');
+                card.className = 'preview-card';
+                card.innerHTML = `
+                    <div class="video-container">
+                        <video
+                            loop
+                            muted
+                            playsinline
+                            onmouseover="this.play()"
+                            onmouseout="this.pause(); this.currentTime=0;"
+                        >
+                            <source src="${videoPath}" type="video/quicktime">
+                            Your browser does not support the video tag.
+                        </video>
+                        <div class="play-overlay">
+                            <div class="play-icon">▶</div>
+                        </div>
+                    </div>
+                    <div class="card-info">
+                        <div class="mode-number">Mode ${mode.num}${mode.new ? '<span class="new-badge">NEW!</span>' : ''}</div>
+                        <div class="mode-name">${mode.name}</div>
+                        <div class="mode-desc">${mode.desc}</div>
+                        <div>
+                            ${mode.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+                gallery.appendChild(card);
+            });
+        }
+
+        // Filter buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const filter = btn.dataset.filter;
+                const searchTerm = document.getElementById('searchInput').value;
+                generateGallery(filter, searchTerm);
+            });
+        });
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const activeFilter = document.querySelector('.filter-btn.active').dataset.filter;
+            generateGallery(activeFilter, e.target.value);
+        });
+
+        // Initialize gallery
+        generateGallery('all');
+    </script>
+</body>
+</html>

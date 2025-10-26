@@ -8,6 +8,9 @@ NOW WITH 100 HYPNOTIC VISUALIZATION MODES!
 Modes 1-50: Original creative visualizations
 Modes 51-100: NEW! Inspired by fractals, physics, nature, and hypnotic patterns
 
+
+
+
 Visualization Modes:
   --mode 1: Vinyl Grooves - Rotating circular grooves like a vinyl record (perfect for lofi)
   --mode 2: Neon Rain - Vertical neon droplets cascading down (cyberpunk lofi aesthetic)
@@ -172,11 +175,15 @@ python audio_spectrum_creative.py '/Users/ahmeddoghri/Desktop/turkish-national-a
 """
 
 import sys
+import os
 import numpy as np
 import cv2
 import librosa
 import argparse
 from pathlib import Path
+
+# Import mode registry for modular visualization modes
+from modes import register_modes, get_mode_method
 
 
 class CreativeSpectrumVisualizer:
@@ -319,6 +326,279 @@ class CreativeSpectrumVisualizer:
         self.glass_cracks = []
         self.sun_position = 0
 
+        # Modes 101-150 state - ULTIMATE HYPNOTIC EDITION
+        self.neural_nodes = []
+        self.neural_connections = []
+        self.liquid_mercury_particles = []
+        self.cosmic_strings = []
+        self.particle_swarm = []
+        self.crystal_lattice_nodes = []
+        self.aurora_wave_points = []
+        self.dna_helix_rotation = 0
+        self.fractal_bloom_petals = []
+        self.circuit_board_traces = []
+        self.quantum_field_particles = []
+        self.origami_fold_state = 0
+        self.galaxy_spiral_stars = []
+        self.rubber_bands = []
+        self.ink_diffusion_particles = []
+        self.geo_kaleidoscope_rotation = 0
+        self.lightning_bolts = []
+        self.cellular_growth_cells = []
+        self.sound_ribbons = []
+        self.matrix_rain_columns = []
+        self.fire_mandala_flames = []
+        self.tessellation_state = 0
+        self.seismic_wave_data = []
+        self.neon_city_buildings = []
+        self.magnetic_field_lines = []
+        self.bubble_fusion_bubbles = []
+        self.tribal_drum_patterns = []
+        self.glass_shatter_fragments = []
+        self.bioluminescent_creatures = []
+        self.sound_architecture_blocks = []
+        self.plasma_ball_arcs = []
+        self.sand_mandala_grains = []
+        self.laser_show_beams = []
+        self.coral_reef_polyps = []
+        self.wireframe_morph_vertices = []
+        self.sound_garden_plants = []
+        self.hologram_glitch_panels = []
+        self.pendulum_wave_pendulums = []
+        self.volcano_lava_particles = []
+        self.butterfly_attractor_trail = []
+        self.silk_weaving_threads = []
+        self.clock_gears = []
+        self.smoke_signal_particles = []
+        self.stained_glass_rays = []
+        self.string_theory_strings = []
+        self.paper_craft_folds = []
+        self.aurora_sky_bands = []
+        self.cellular_automata_grid = []
+        self.dragon_curve_points = []
+        self.rain_circle_ripples = []
+        self.fourier_epicycles = []
+
+        # Modes 151-200 state - ULTIMATE CREATIVE HYPNOTIC EDITION
+        self.neon_halo_rings = []
+        self.twin_orbiters = []
+        self.bar_spiral_rotation = 0
+        self.ribbon_wave_points = []
+        self.voxel_city_grid = []
+        self.sunburst_ticks = []
+        self.waterline_surface = []
+        self.laser_tunnel_rings = []
+        self.vector_field_particles = []
+        self.orbit_ring_dots = []
+        self.stitch_bars_grid = []
+        self.aurora_curtain_points = []
+        self.helix_bars_state = 0
+        self.polygon_echo_waves = []
+        self.confetti_particles = []
+        self.wireframe_dome_vertices = []
+        self.pulse_dashes = []
+        self.terrain_sweep_rows = []
+        self.chromatic_bars_flash = 0
+        self.bubble_choir_bubbles = []
+        self.starfield_grid_cells = []
+        self.dna_ladder_rungs = []
+        self.arc_meter_values = [0, 0, 0]
+        self.ink_splatter_splats = []
+        self.hex_cell_states = []
+        self.sonic_orbit_satellites = []
+        self.liquid_bar_velocities = []
+        self.clockwork_gears_state = []
+        self.petal_resonator_petals = []
+        self.kaleido_scope_rotation = 0
+        self.runway_lights_sweep = 0
+        self.constellation_points = []
+        self.quake_grid_tiles = []
+        self.sonic_rain_streaks = []
+        self.halo_typo_glow = 0
+        self.wormhole_depth_particles = []
+        self.fractal_leaves_branches = []
+        self.tape_analyzer_reels = 0
+        self.slinky_circle_coils = []
+        self.meteor_swarm_meteors = []
+        self.piano_roll_bars = []
+        self.ring_rainbows_state = []
+        self.origami_fan_angle = 0
+        self.circuit_pulse_nodes = []
+        self.sphere_harmonics_points = []
+        self.split_screen_flash = 0
+        self.equalizer_rings_sectors = []
+        self.liquid_bokeh_circles = []
+        self.gooey_droplets = []
+        self.arcade_histogram_palette = 0
+        # setB modes 176-200
+        self.serpentine_chain_segments = []
+        self.pendulum_array_pendulums = []
+        self.hologram_pyramid_rotation = 0
+        self.sonic_snow_flakes = []
+        self.rail_scanner_position = 0
+        self.nebula_fog_density = []
+        self.tri_arc_weave_state = []
+        self.pixel_fountain_pixels = []
+        self.time_ruler_markers = []
+        self.moire_rings_offset = 0
+        self.comet_wheel_comets = []
+        self.sliced_donut_tilt = 0
+        self.crosshair_pulse_spacing = 0
+        self.sonar_sweep_angle = 0
+        self.paper_strip_bends = []
+        self.ripple_grid_emitters = []
+        self.orbit_text_kerning = 0
+        self.triangulated_points = []
+        self.slinky_stairs_heights = []
+        self.orbital_rings_flung = []
+        self.hatching_shader_density = 0
+        self.spectrum_curtain_state = 0
+        self.spiral_sand_grains = []
+        self.iso_bars_cube_rotation = 0
+        self.spectrum_waterfall_columns = []
+        self.magnetic_lines_field = []
+        self.tiled_portals_grid = []
+        self.crown_peaks_spikes = []
+        self.silhouette_aura_sparks = []
+        self.sine_quilt_tiles = []
+        self.radial_barcode_rotation = 0
+        self.drum_orbit_markers_list = []
+        self.spline_comet_path = []
+        self.crystal_shards_pieces = []
+        self.metaball_ring_blobs = []
+        self.bezier_bouquet_stems = []
+        self.pulse_grid_columns = []
+        self.stacked_ribbons_layers = []
+        self.compass_needles_angles = []
+        self.rippled_donut_waveform = []
+        self.neon_spirograph_path = []
+        self.gated_squares_grid = []
+        self.strobe_lattice_state = 0
+        self.sand_pendulum_trail = []
+        self.tornado_columns_twist = 0
+        self.led_matrix_glyphs = []
+        self.chromatic_beads_positions = []
+        self.echo_circles_rings = []
+        self.stacked_area_bands_state = []
+        self.laser_lattice_3d_grid = []
+        self.polygon_shimmer_clock_ticks = []
+        self.feather_plume_strands = []
+
+        # Modes 201-225 state - NEW CREATIVE SET
+        self.event_horizon_grid = []
+        self.comet_conveyor_belt = []
+        self.foam_bubbles = []
+        self.aurora_crown_ribbons = []
+        self.asteroid_dust = []
+        self.hyperloop_cars = []
+        self.pinball_entities = []
+        self.inkblot_noise = 0
+        self.telemetry_rings = []
+        self.wormhole_folds = []
+        self.jellyfish_tentacles_holo = []
+        self.moon_crane_bins = []
+        self.constellation_letters = []
+        self.cryo_crystals = []
+        self.blueprint_callouts = []
+        self.tide_caustics = []
+        self.barcode_slicer_bars = []
+        self.satellites_swarm = []
+        self.pulse_weave_phase = 0.0
+        self.paint_spheres = []
+        self.supernova_state = { 'energy': 0.0, 'blasting': False, 'filaments': [] }
+        self.martian_harp_strings = []
+        self.teleporting_bars = []
+        self.vinyl_halo_grooves = []
+        self.photon_slits = []
+        self.meteor_net_nodes = []
+        self.space_hose_droplets = []
+        self.horizon_monoliths = []
+        self.slingshot_probes = []
+        self.solar_notches = []
+        self.tesseract_edges = []
+        self.postcard_tiles = []
+        self.cosmic_braille_dots = []
+        self.harpoon_line = []
+        self.galaxy_ticker_chars = []
+        self.antimatter_chessboard = []
+        self.star_nursery_stations = []
+        self.magnetar_lines = []
+        self.zero_kelvin_diamonds = []
+        self.time_garden_planets = []
+        self.ribbon_printer_points = []
+        self.dark_matter_drops = []
+        self.meteor_choir_cones = []
+        self.folded_map_folds = []
+        self.ion_thruster_particles = []
+        self.dominoes_tiles = []
+        self.suit_hud_state = { 'flash': 0 }
+        self.pulsar_beam_angle = 0.0
+        self.astro_terrarium_entities = []
+        self.spark_curtain_particles = []
+        self.transit_plot_points = []
+        self.cryo_pod_mist = []
+        self.boomerangs = []
+        self.solar_sails = []
+        self.dark_nebula_mask = []
+
+        # Modes 226-275 state - HYPNOTIC SET D
+        self.phyllotaxis_angle = 137.5
+        self.phyllotaxis_breath = 0.0
+        self.mandala_weave_phase = 0.0
+        self.lissajous_t = 0.0
+        self.lotus_phase = 0.0
+        self.hypno_pendula = []
+        self.moire_angle_a = 0.0
+        self.moire_angle_b = 0.0
+        self.shepard_zoom = 1.0
+        self.plasma_shift = 0.0
+        self.pulse_timer = 0
+        self.serpents_trail = []
+        self.orb_choir = []
+        self.sufi_spin_angle = 0.0
+        self.helmholtz_phase = 0.0
+        self.slinky_depth = 0.0
+        self.fern_points = []
+        self.binaural_phase_l = 0.0
+        self.binaural_phase_r = 0.0
+        self.chakric_phase = 0.0
+        self.hypersphere_phase = 0.0
+        self.phi_kaleidos_phase = 0.0
+        self.cycloid_phase = 0.0
+        self.ocean_swell = 0.0
+        self.harmonograph_t = 0.0
+        self.ink_veins = []
+        self.breath_vortex = 0.0
+        self.meteor_carousel = []
+        self.ripple_glass_phase = 0.0
+        self.theta_lanterns = []
+        self.iso_weave_phase = 0.0
+        self.orbiting_eye_angle = 0.0
+        self.ribbon_stair_phase = 0.0
+        self.toroidal_flow = 0.0
+        self.hypno_shell_twist = 0.0
+        self.tide_clock_phase = 0.0
+        self.kaleidofish_school = []
+        self.compass_wave_phase = 0.0
+        self.glacial_bloom = []
+        self.helix_lanterns = []
+        self.soft_grid_phase = 0.0
+        self.ripple_dome_phase = 0.0
+        self.spirocloud_traces = []
+        self.mosaic_cells = []
+        self.bamboo_stalks = []
+        self.nesting_circles_phase = 0.0
+        self.paper_cranes = []
+        self.pulse_hologrid_phase = 0.0
+        self.ribbon_canopy = []
+        self.auroral_gate_phase = 0.0
+        self.satin_ladder_phase = 0.0
+        self.opaline_orb_t = 0.0
+        self.quilt_loom_phase = 0.0
+
+        # Register all visualization modes from the modes/ directory
+        register_modes(self)
+
     def load_audio(self):
         """Load and process audio file"""
         print(f"Loading audio from: {self.audio_path}")
@@ -433,6 +713,1336 @@ class CreativeSpectrumVisualizer:
 
         cv2.line(frame, (x1, y1), (x2, y2), (180, 160, 120), 1, lineType=cv2.LINE_AA)
 
+        return frame
+
+    def draw_mode_226_golden_phyllotaxis_bloom(self, frame, magnitudes):
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        highs = float(np.mean(magnitudes[3*len(magnitudes)//4:]))
+        self.phyllotaxis_breath = 0.98*self.phyllotaxis_breath + 0.02*(0.8 + bass*0.6)
+        dot_count = 1200
+        angle_deg = self.phyllotaxis_angle
+        scale = 2.0 * self.phyllotaxis_breath
+        jitter = highs * 2.0
+        for i in range(dot_count):
+            a = np.radians(i*angle_deg)
+            r = scale*np.sqrt(i)
+            x = int(self.center_x + (r*np.cos(a)) + np.random.uniform(-jitter, jitter))
+            y = int(self.center_y + (r*np.sin(a)) + np.random.uniform(-jitter, jitter))
+            if 0 <= x < self.width and 0 <= y < self.height:
+                frame[y, x] = (150, 180, 255)
+        return frame
+
+    def draw_mode_227_breathing_mandala_weave(self, frame, magnitudes):
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        tempo = float(np.mean(magnitudes))
+        self.mandala_weave_phase += 0.01 + tempo*0.02
+        segments = 12
+        radius = int(120 + bass*120)
+        for i in range(segments):
+            ang = (i/segments)*2*np.pi + self.mandala_weave_phase
+            x1 = int(self.center_x + np.cos(ang)*radius)
+            y1 = int(self.center_y + np.sin(ang)*radius)
+            ang2 = ang + np.pi/segments
+            x2 = int(self.center_x + np.cos(ang2)*radius)
+            y2 = int(self.center_y + np.sin(ang2)*radius)
+            cv2.line(frame,(x1,y1),(x2,y2),(200,180,255),2, lineType=cv2.LINE_AA)
+        return frame
+
+    def draw_mode_228_infinite_tunnel_lissajous(self, frame, magnitudes):
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        mids = float(np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4]))
+        self.lissajous_t += 0.02
+        for i in range(100):
+            t = self.lissajous_t + i*0.1
+            x = int(self.center_x + (120 + bass*100)*np.sin(t*1.0))
+            y = int(self.center_y + (80 + mids*80)*np.sin(t*1.3))
+            s = max(1, 6 - i//20)
+            cv2.circle(frame,(x,y),s,(160,160,200),-1)
+        return frame
+
+    def draw_mode_229_lotus_bloom_cascade(self, frame, magnitudes):
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        highs = float(np.mean(magnitudes[3*len(magnitudes)//4:]))
+        rings = 8
+        self.lotus_phase += 0.02
+        for r in range(rings):
+            phase = self.lotus_phase - r*0.1
+            rad = int(40 + r*22 + bass*60*np.sin(phase))
+            petals = 10
+            for p in range(petals):
+                ang = (p/petals)*2*np.pi
+                x = int(self.center_x + np.cos(ang)*rad)
+                y = int(self.center_y + np.sin(ang)*rad)
+                color = (180, 200, 255)
+                if highs>0.6 and p%3==0:
+                    color = (220, 220, 255)
+                cv2.circle(frame,(x,y),2,color,-1)
+        return frame
+
+    def draw_mode_230_orbital_hypno_pendula(self, frame, magnitudes):
+        tempo = float(np.mean(magnitudes))
+        count = 24
+        if not self.hypno_pendula:
+            for i in range(count):
+                self.hypno_pendula.append({'phase':i*0.2})
+        for i, p in enumerate(self.hypno_pendula):
+            p['phase'] += 0.02 + tempo*0.02
+            ang = p['phase']
+            r = 160
+            x = int(self.center_x + np.cos(ang+i*0.1)*r)
+            y = int(self.center_y + np.sin(ang+i*0.1)*r)
+            cv2.circle(frame,(x,y),3,(200,200,255),-1)
+        return frame
+
+    def draw_mode_231_moire_breathing_nets(self, frame, magnitudes):
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        self.moire_angle_a += 0.01
+        self.moire_angle_b -= 0.012
+        scale = 1.0 + bass*0.3
+        step = 24
+        for y in range(0, self.height, step):
+            x1 = int(self.center_x + np.cos(self.moire_angle_a)*scale*(y-self.center_y))
+            cv2.line(frame,(0,y),(self.width,y),(80,80,120),1)
+            if 0 <= x1 < self.width:
+                frame[y, x1] = (120, 120, 200)
+        for x in range(0, self.width, step):
+            y1 = int(self.center_y + np.sin(self.moire_angle_b)*scale*(x-self.center_x))
+            cv2.line(frame,(x,0),(x,self.height),(80,80,120),1)
+            if 0 <= y1 < self.height:
+                frame[y1, x] = (120, 120, 200)
+        return frame
+
+    def draw_mode_232_spiral_shepard_rings(self, frame, magnitudes):
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        self.shepard_zoom *= 1.0 + (bass-0.5)*0.002
+        for i in range(12):
+            r = int((i+1)*20*self.shepard_zoom) % 240
+            cv2.circle(frame,(self.center_x,self.center_y),r,(140,140,200),1)
+        return frame
+
+    def draw_mode_233_velvet_plasma_pool(self, frame, magnitudes):
+        highs = float(np.mean(magnitudes[3*len(magnitudes)//4:]))
+        self.plasma_shift += 0.01
+        for y in range(0, self.height, 4):
+            for x in range(0, self.width, 4):
+                v = np.sin(x*0.01 + self.plasma_shift) + np.cos(y*0.01 - self.plasma_shift)
+                c = int(120 + 40*v + highs*50)
+                frame[y:y+4, x:x+4] = (c, c, 200)
+        return frame
+
+    def draw_mode_234_radial_pulse_cathedral(self, frame, magnitudes):
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        self.pulse_timer += 1
+        if self.pulse_timer % int(max(5, 30 - bass*20)) == 0:
+            for r in range(30, 260, 20):
+                cv2.circle(frame,(self.center_x,self.center_y),r,(160,160,220),1)
+        return frame
+
+    def draw_mode_235_s_curve_serpents(self, frame, magnitudes):
+        mids = float(np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4]))
+        amp = 60 + int(mids*120)
+        points = []
+        for t in range(0, 360, 4):
+            x = int(self.center_x + t - 180)
+            y = int(self.center_y + np.sin((t/30)+self.frame_counter*0.05)*amp)
+            points.append((x,y))
+        for i in range(1,len(points)):
+            cv2.line(frame, points[i-1], points[i], (200,180,255), 2, lineType=cv2.LINE_AA)
+        return frame
+
+    def draw_mode_236_orb_choir_orbitals(self, frame, magnitudes):
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        if not self.orb_choir:
+            for i in range(20):
+                self.orb_choir.append({'ang':i*0.3})
+        for i, o in enumerate(self.orb_choir):
+            o['ang'] += 0.01
+            a = o['ang']
+            r = 120 + int(bass*80)
+            x = int(self.center_x + np.cos(a+i*0.1)*r)
+            y = int(self.center_y + np.sin(a+i*0.13)*r*0.8)
+            cv2.circle(frame,(x,y),3,(180,200,255),-1)
+        return frame
+
+    def draw_mode_237_sufi_spin_carpet(self, frame, magnitudes):
+        self.sufi_spin_angle += 0.01
+        for i in range(12):
+            ang = self.sufi_spin_angle + i*0.5
+            x1 = int(self.center_x + np.cos(ang)*180)
+            y1 = int(self.center_y + np.sin(ang)*180)
+            cv2.line(frame,(self.center_x,self.center_y),(x1,y1),(160,160,220),1)
+        return frame
+
+    def draw_mode_238_helmholtz_rings(self, frame, magnitudes):
+        tempo = float(np.mean(magnitudes))
+        self.helmholtz_phase += 0.01 + tempo*0.01
+        for i in range(12):
+            r = int(40 + i*16 + np.sin(self.helmholtz_phase + i*0.2)*12)
+            cv2.circle(frame,(self.center_x,self.center_y),r,(180,180,240),1)
+        return frame
+
+    def draw_mode_239_hypno_slinky_stairwell(self, frame, magnitudes):
+        self.slinky_depth += 0.6
+        for i in range(40):
+            t = (self.slinky_depth + i*12) % (self.height+80)
+            y = int(t - 40)
+            x = int(self.center_x + (i-20)*6)
+            cv2.rectangle(frame,(x-20,y-6),(x+20,y+6),(120,120,180),1)
+        return frame
+
+    def draw_mode_240_fractal_fern_drift(self, frame, magnitudes):
+        if len(self.fern_points) < 4000:
+            x, y = 0.0, 0.0
+            for _ in range(1000):
+                r = np.random.random()
+                if r < 0.01:
+                    x, y = 0.0, 0.16*y
+                elif r < 0.86:
+                    x, y = 0.85*x + 0.04*y, -0.04*x + 0.85*y + 1.6
+                elif r < 0.93:
+                    x, y = 0.2*x - 0.26*y, 0.23*x + 0.22*y + 1.6
+                else:
+                    x, y = -0.15*x + 0.28*y, 0.26*x + 0.24*y + 0.44
+                self.fern_points.append((x,y))
+        for px, py in self.fern_points[::10]:
+            sx = int(self.center_x + px*60)
+            sy = int(self.height-80 - py*60)
+            if 0 <= sx < self.width and 0 <= sy < self.height:
+                frame[sy, sx] = (160, 200, 160)
+        return frame
+
+    def draw_mode_241_binaural_circles(self, frame, magnitudes):
+        left = float(np.mean(magnitudes[:len(magnitudes)//8]))
+        right = float(np.mean(magnitudes[len(magnitudes)//8:len(magnitudes)//4]))
+        self.binaural_phase_l += 0.02 + left*0.02
+        self.binaural_phase_r += 0.021 + right*0.02
+        rl = int(80 + np.sin(self.binaural_phase_l)*30)
+        rr = int(80 + np.sin(self.binaural_phase_r)*30)
+        cv2.circle(frame,(self.center_x-80,self.center_y),rl,(180,180,240),2)
+        cv2.circle(frame,(self.center_x+80,self.center_y),rr,(180,180,240),2)
+        return frame
+
+    def draw_mode_242_auric_chakric_wheel(self, frame, magnitudes):
+        self.chakric_phase += 0.01
+        for i, ry in enumerate(range(self.center_y-180, self.center_y+220, 60)):
+            r = int(30 + np.sin(self.chakric_phase + i*0.3)*20)
+            cv2.circle(frame,(self.center_x, ry), r, (160,160,220), 2)
+        return frame
+
+    def draw_mode_243_hypersphere_ribbon(self, frame, magnitudes):
+        self.hypersphere_phase += 0.02
+        for i in range(120):
+            t = i/120 * 2*np.pi
+            x = int(self.center_x + 160*np.cos(t)*np.cos(self.hypersphere_phase))
+            y = int(self.center_y + 90*np.sin(t)*np.sin(self.hypersphere_phase))
+            frame[y, x] = (180, 180, 255)
+        return frame
+
+    def draw_mode_244_phi_step_kaleidos(self, frame, magnitudes):
+        self.phi_kaleidos_phase += 0.02
+        seg = 8
+        for i in range(seg):
+            ang = self.phi_kaleidos_phase + i*(2*np.pi/seg)
+            x = int(self.center_x + np.cos(ang)*180)
+            y = int(self.center_y + np.sin(ang)*180)
+            cv2.line(frame,(self.center_x,self.center_y),(x,y),(160,160,220),1)
+        return frame
+
+    def draw_mode_245_silk_ribbon_cycloid(self, frame, magnitudes):
+        self.cycloid_phase += 0.02
+        for t in np.linspace(0, 4*np.pi, 200):
+            x = int(self.center_x + 120*(np.cos(t) + 0.5*np.cos(2*t+self.cycloid_phase)))
+            y = int(self.center_y + 80*(np.sin(t) - 0.5*np.sin(2*t+self.cycloid_phase)))
+            if 0 <= x < self.width and 0 <= y < self.height:
+                frame[y, x] = (200, 180, 255)
+        return frame
+
+    def draw_mode_246_oceanic_breather(self, frame, magnitudes):
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        self.ocean_swell = 0.98*self.ocean_swell + 0.02*(bass*60)
+        for x in range(0, self.width, 6):
+            y = int(self.center_y + np.sin(x*0.02 + self.frame_counter*0.04)* (20 + self.ocean_swell))
+            cv2.line(frame,(x,y),(x,y+2),(160,200,255),1)
+        return frame
+
+    def draw_mode_247_zen_sand_harmonograph(self, frame, magnitudes):
+        self.harmonograph_t += 0.02
+        for t in np.linspace(0, 4*np.pi, 200):
+            x = int(self.center_x + 140*np.sin(2*t + self.harmonograph_t))
+            y = int(self.center_y + 100*np.sin(3*t))
+            frame[y, x] = (200, 200, 255)
+        return frame
+
+    def draw_mode_248_magnetic_ink_veins(self, frame, magnitudes):
+        if len(self.ink_veins) < 400:
+            for _ in range(20):
+                self.ink_veins.append({'x':np.random.randint(0,self.width),'y':np.random.randint(0,self.height)})
+        for v in self.ink_veins:
+            v['x'] = (v['x'] + np.random.randint(-1,2)) % self.width
+            v['y'] = (v['y'] + np.random.randint(-1,2)) % self.height
+            frame[int(v['y']), int(v['x'])] = (180, 200, 220)
+        return frame
+
+    def draw_mode_249_breath_linked_vortex(self, frame, magnitudes):
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        self.breath_vortex = 0.98*self.breath_vortex + 0.02*(120 + bass*160)
+        for a in np.linspace(0, 2*np.pi, 180):
+            r = int(self.breath_vortex * (a/(2*np.pi)))
+            x = int(self.center_x + np.cos(a)*r)
+            y = int(self.center_y + np.sin(a)*r)
+            frame[y, x] = (180, 180, 240)
+        return frame
+
+    def draw_mode_250_slow_meteor_carousel(self, frame, magnitudes):
+        if not self.meteor_carousel:
+            for i in range(18):
+                self.meteor_carousel.append({'a':i*(2*np.pi/18)})
+        for m in self.meteor_carousel:
+            m['a'] += 0.005
+            x = int(self.center_x + 160*np.cos(m['a']))
+            y = int(self.center_y + 160*np.sin(m['a']))
+            cv2.circle(frame,(x,y),2,(200,200,255),-1)
+        return frame
+
+    def draw_mode_251_ripple_glass_cathedral(self, frame, magnitudes):
+        self.ripple_glass_phase += 0.02
+        for y in range(0, self.height, 8):
+            for x in range(0, self.width, 8):
+                dx = int(2*np.sin(self.ripple_glass_phase + y*0.05))
+                dy = int(2*np.cos(self.ripple_glass_phase + x*0.05))
+                xx = min(self.width-1, max(0, x+dx))
+                yy = min(self.height-1, max(0, y+dy))
+                frame[y:y+8, x:x+8] = frame[yy:yy+8, xx:xx+8]
+        return frame
+
+    def draw_mode_252_theta_lantern_field(self, frame, magnitudes):
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        if len(self.theta_lanterns) < 40 and np.random.random()<0.3:
+            self.theta_lanterns.append({'x':np.random.randint(40,self.width-40),'y':self.height+20,'vy':-1.0 - bass*1.5,'p':np.random.random()*2*np.pi})
+        for lan in self.theta_lanterns[:]:
+            lan['y'] += lan['vy']
+            if lan['y'] < -40:
+                self.theta_lanterns.remove(lan)
+                continue
+            r = int(10 + (np.sin(self.frame_counter*0.1 + lan['p'])+1)*4)
+            cv2.circle(frame,(int(lan['x']),int(lan['y'])),r,(200,180,140),-1)
+        return frame
+
+    def draw_mode_253_isochromatic_weaves(self, frame, magnitudes):
+        self.iso_weave_phase += 0.01
+        for i in range(0,self.width,20):
+            y = int(self.center_y + np.sin(i*0.03 + self.iso_weave_phase)*40)
+            cv2.line(frame,(i,y-10),(i,y+10),(200,180,255),1)
+        for j in range(0,self.height,20):
+            x = int(self.center_x + np.cos(j*0.03 + self.iso_weave_phase)*40)
+            cv2.line(frame,(x-10,j),(x+10,j),(180,200,255),1)
+        return frame
+
+    def draw_mode_254_orbiting_eye(self, frame, magnitudes):
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        self.orbiting_eye_angle += 0.01
+        r = int(60 + bass*60)
+        cv2.circle(frame,(self.center_x,self.center_y), r, (160,160,220), 2)
+        x = int(self.center_x + np.cos(self.orbiting_eye_angle)*r)
+        y = int(self.center_y + np.sin(self.orbiting_eye_angle)*r)
+        cv2.circle(frame,(x,y),4,(220,220,255),-1)
+        return frame
+
+    def draw_mode_255_endless_ribbon_stair(self, frame, magnitudes):
+        self.ribbon_stair_phase += 0.01
+        for i in range(40):
+            t = i/40
+            x = int(self.center_x + (t-0.5)*300)
+            y = int(self.center_y + np.sin(self.ribbon_stair_phase + t*6)*60)
+            cv2.rectangle(frame,(x-6,y-20),(x+6,y+20),(160,160,220),1)
+        return frame
+
+    def draw_mode_256_glassy_toroidal_river(self, frame, magnitudes):
+        self.toroidal_flow += 0.01
+        for i in range(160):
+            t = i/160
+            ang = t*2*np.pi
+            x = int(self.center_x + 160*np.cos(ang))
+            y = int(self.center_y + 80*np.sin(ang) + np.sin(self.toroidal_flow+t*8)*6)
+            frame[y, x] = (180, 200, 230)
+        return frame
+
+    def draw_mode_257_low_poly_hypno_shell(self, frame, magnitudes):
+        self.hypno_shell_twist += 0.01
+        for i in range(60):
+            t = i/60
+            r = int(40 + t*200)
+            ang = self.hypno_shell_twist + t*6*np.pi
+            x = int(self.center_x + np.cos(ang)*r)
+            y = int(self.center_y + np.sin(ang)*r)
+            cv2.circle(frame,(x,y),2,(200,200,240),-1)
+        return frame
+
+    def draw_mode_258_tide_clock_halo(self, frame, magnitudes):
+        self.tide_clock_phase += 0.01
+        r = int(120 + np.sin(self.tide_clock_phase)*20)
+        cv2.circle(frame,(self.center_x,self.center_y),r,(160,160,220),2)
+        ang = self.tide_clock_phase
+        x = int(self.center_x + np.cos(ang)*r)
+        y = int(self.center_y + np.sin(ang)*r)
+        cv2.circle(frame,(x,y),4,(220,220,255),-1)
+        return frame
+
+    def draw_mode_259_morphic_kaleidofish(self, frame, magnitudes):
+        if len(self.kaleidofish_school) < 50:
+            for _ in range(50 - len(self.kaleidofish_school)):
+                self.kaleidofish_school.append({'x':np.random.randint(0,self.width),'y':np.random.randint(0,self.height),'vx':np.random.uniform(-1,1),'vy':np.random.uniform(-1,1)})
+        for f in self.kaleidofish_school:
+            f['x'] = (f['x'] + f['vx']) % self.width
+            f['y'] = (f['y'] + f['vy']) % self.height
+            frame[int(f['y']), int(f['x'])] = (200, 200, 255)
+        return frame
+
+    def draw_mode_260_zen_compass_waves(self, frame, magnitudes):
+        self.compass_wave_phase += 0.01
+        for i in range(8):
+            ang = i*(np.pi/4)
+            for r in range(40, 220, 20):
+                x = int(self.center_x + np.cos(ang + self.compass_wave_phase)*r)
+                y = int(self.center_y + np.sin(ang + self.compass_wave_phase)*r)
+                cv2.circle(frame,(x,y),2,(180,180,230),-1)
+        return frame
+
+    def draw_mode_261_glacial_bloom(self, frame, magnitudes):
+        if len(self.glacial_bloom) < 200:
+            for _ in range(10):
+                self.glacial_bloom.append({'x':self.center_x,'y':self.center_y,'vx':np.random.uniform(-1,1),'vy':np.random.uniform(-1,1),'life':200})
+        for g in self.glacial_bloom[:]:
+            g['x'] += g['vx']; g['y'] += g['vy']; g['life'] -= 1
+            cv2.circle(frame,(int(g['x']),int(g['y'])),1,(200,220,255),-1)
+            if g['life']<=0: self.glacial_bloom.remove(g)
+        return frame
+
+    def draw_mode_262_double_helix_lanterns(self, frame, magnitudes):
+        if len(self.helix_lanterns) < 80:
+            for i in range(80):
+                self.helix_lanterns.append({'t':i*0.1})
+        for h in self.helix_lanterns:
+            h['t'] += 0.01
+            x = int(self.center_x + 120*np.cos(h['t']))
+            y = int(100 + (h['t']%(2*np.pi))/(2*np.pi) * (self.height-200))
+            cv2.circle(frame,(x,y),2,(220,200,160),-1)
+            x2 = int(self.center_x - 120*np.cos(h['t']))
+            cv2.circle(frame,(x2,y),2,(220,200,160),-1)
+        return frame
+
+    def draw_mode_263_soft_grid_phase_slide(self, frame, magnitudes):
+        self.soft_grid_phase += 0.01
+        step = 30
+        for y in range(0,self.height,step):
+            for x in range(0,self.width,step):
+                xx = x + int(4*np.sin(self.soft_grid_phase + y*0.05))
+                yy = y + int(4*np.cos(self.soft_grid_phase + x*0.05))
+                cv2.circle(frame,(xx,yy),1,(160,160,220),-1)
+        return frame
+
+    def draw_mode_264_ripple_dome_observatory(self, frame, magnitudes):
+        self.ripple_dome_phase += 0.02
+        for r in range(40, 260, 12):
+            jitter = int(4*np.sin(self.ripple_dome_phase + r*0.05))
+            cv2.circle(frame,(self.center_x,self.center_y), r+jitter, (160,160,230), 1)
+        return frame
+
+    def draw_mode_265_ethereal_spirocloud(self, frame, magnitudes):
+        if len(self.spirocloud_traces) < 200:
+            t = self.frame_counter*0.02
+            x = int(self.center_x + 120*np.cos(2*t) + 40*np.cos(6*t))
+            y = int(self.center_y + 80*np.sin(3*t) + 30*np.sin(5*t))
+            self.spirocloud_traces.append((x,y))
+        else:
+            self.spirocloud_traces.pop(0)
+        for i in range(1,len(self.spirocloud_traces)):
+            a = int(i/len(self.spirocloud_traces)*200 + 55)
+            cv2.line(frame,self.spirocloud_traces[i-1],self.spirocloud_traces[i],(a,a,255),1)
+        return frame
+
+    def draw_mode_266_mosaic_drizzle(self, frame, magnitudes):
+        if not self.mosaic_cells:
+            rows, cols = 18, 18
+            for r in range(rows):
+                for c in range(cols):
+                    self.mosaic_cells.append({'r':r,'c':c,'val':np.random.randint(120,200)})
+        for cell in self.mosaic_cells:
+            if np.random.random()<0.01:
+                cell['val'] = min(255, max(80, cell['val'] + np.random.randint(-5,6)))
+            x = int(cell['c']*self.width/18)
+            y = int(cell['r']*self.height/18)
+            w = self.width//18
+            h = self.height//18
+            frame[y:y+h, x:x+w] = (cell['val'], cell['val'], 220)
+        return frame
+
+    def draw_mode_267_whispering_bamboo(self, frame, magnitudes):
+        if not self.bamboo_stalks:
+            for x in range(60, self.width, 60):
+                self.bamboo_stalks.append({'x':x,'o':np.random.random()*6.28})
+        for b in self.bamboo_stalks:
+            sway = int(10*np.sin(self.frame_counter*0.03 + b['o']))
+            cv2.line(frame,(b['x']+sway, self.height-40),(b['x']+sway, 160),(120,180,120),3)
+        return frame
+
+    def draw_mode_268_nesting_circles_flow(self, frame, magnitudes):
+        self.nesting_circles_phase += 0.02
+        for i in range(10):
+            r = int(30 + i*18 + np.sin(self.nesting_circles_phase + i)*8)
+            cv2.circle(frame,(self.center_x,self.center_y),r,(160,160,220),1)
+        return frame
+
+    def draw_mode_269_drifting_paper_cranes(self, frame, magnitudes):
+        if not self.paper_cranes:
+            for _ in range(24):
+                self.paper_cranes.append({'x':np.random.randint(0,self.width),'y':np.random.randint(0,self.height),'vx':np.random.uniform(-0.6,0.6),'vy':np.random.uniform(-0.3,0.0)})
+        for c in self.paper_cranes:
+            c['x'] = (c['x'] + c['vx']) % self.width
+            c['y'] = (c['y'] + c['vy']) % self.height
+            cv2.circle(frame,(int(c['x']),int(c['y'])),2,(220,220,240),-1)
+        return frame
+
+    def draw_mode_270_pulse_weave_hologrid(self, frame, magnitudes):
+        self.pulse_hologrid_phase += 0.02
+        for i in range(0,self.width,24):
+            y = int(self.center_y + np.sin(self.pulse_hologrid_phase + i*0.05)*40)
+            cv2.line(frame,(i,y-6),(i,y+6),(160,160,230),1)
+        for j in range(0,self.height,24):
+            x = int(self.center_x + np.cos(self.pulse_hologrid_phase + j*0.05)*40)
+            cv2.line(frame,(x-6,j),(x+6,j),(160,160,230),1)
+        return frame
+
+    def draw_mode_271_serene_ribbon_canopy(self, frame, magnitudes):
+        if not self.ribbon_canopy:
+            for i in range(140):
+                self.ribbon_canopy.append({'x':np.random.randint(0,self.width),'y':np.random.randint(-self.height,0)})
+        for r in self.ribbon_canopy:
+            r['y'] += 1
+            if r['y'] > self.height:
+                r['y'] = -np.random.randint(0,self.height)
+            cv2.line(frame,(r['x'],r['y']),(r['x'],r['y']+8),(180,180,230),1)
+        return frame
+
+    def draw_mode_272_auroral_veil_gate(self, frame, magnitudes):
+        self.auroral_gate_phase += 0.02
+        for i in range(8):
+            ang = i*(2*np.pi/8)
+            for r in range(60, 220, 20):
+                x = int(self.center_x + np.cos(ang + self.auroral_gate_phase)*r)
+                y = int(self.center_y + np.sin(ang + self.auroral_gate_phase)*r)
+                frame[y, x] = (180, 200, 255)
+        return frame
+
+    def draw_mode_273_satin_spiral_ladder(self, frame, magnitudes):
+        self.satin_ladder_phase += 0.01
+        for i in range(80):
+            t = i/80
+            ang = self.satin_ladder_phase + t*4*np.pi
+            x = int(self.center_x + np.cos(ang)*140)
+            y = int(self.center_y + np.sin(ang)*100)
+            cv2.line(frame,(x-6,y),(x+6,y),(200,200,250),1)
+        return frame
+
+    def draw_mode_274_opaline_orb_drifter(self, frame, magnitudes):
+        self.opaline_orb_t += 0.01
+        x = int(self.center_x + np.sin(self.opaline_orb_t)*40)
+        y = int(self.center_y - 30 + np.cos(self.opaline_orb_t*0.7)*20)
+        cv2.circle(frame,(x,y), 60, (180, 200, 240), 2)
+        return frame
+
+    def draw_mode_275_hypno_quilt_loom(self, frame, magnitudes):
+        self.quilt_loom_phase += 0.02
+        step = 20
+        for y in range(200, self.height-200, step):
+            for x in range(100, self.width-100, step):
+                if (x//step + y//step) % 2 == 0:
+                    xx = int(x + 4*np.sin(self.quilt_loom_phase + y*0.05))
+                    yy = int(y + 4*np.cos(self.quilt_loom_phase + x*0.05))
+                    cv2.circle(frame,(xx,yy),1,(200,200,255),-1)
+        return frame
+
+    def draw_mode_176_event_horizon_lattice(self, frame, magnitudes):
+        """Mode 176: Event Horizon Lattice - warped grid bends toward a black hole; streaks on transients"""
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        highs = float(np.mean(magnitudes[3*len(magnitudes)//4:]))
+        warp_strength = 0.3 + bass * 1.2
+
+        rows = 16
+        cols = 16
+        for r in range(rows + 1):
+            y = int(r * self.height / rows)
+            prev_pt = None
+            for c in range(cols + 1):
+                x = int(c * self.width / cols)
+                dx = x - self.center_x
+                dy = y - self.center_y
+                dist = max(1.0, np.hypot(dx, dy))
+                pull = warp_strength * 20000.0 / dist
+                px = int(x - dx / dist * pull)
+                py = int(y - dy / dist * pull)
+                if prev_pt is not None:
+                    cv2.line(frame, prev_pt, (px, py), (60, 60, 90), 1, lineType=cv2.LINE_AA)
+                prev_pt = (px, py)
+
+        for c in range(cols + 1):
+            x = int(c * self.width / cols)
+            prev_pt = None
+            for r in range(rows + 1):
+                y = int(r * self.height / rows)
+                dx = x - self.center_x
+                dy = y - self.center_y
+                dist = max(1.0, np.hypot(dx, dy))
+                pull = warp_strength * 20000.0 / dist
+                px = int(x - dx / dist * pull)
+                py = int(y - dy / dist * pull)
+                if prev_pt is not None:
+                    cv2.line(frame, prev_pt, (px, py), (60, 60, 90), 1, lineType=cv2.LINE_AA)
+                prev_pt = (px, py)
+
+        # Time-dilation streaks on transients
+        transient_indices = np.where(np.abs(np.diff(magnitudes)) > 0.25)[0]
+        for idx in transient_indices[:20]:
+            angle = (idx / len(magnitudes)) * 2 * np.pi
+            r1 = int(self.max_radius * 0.2)
+            r2 = int(self.max_radius * (0.6 + highs * 0.3))
+            x1 = int(self.center_x + np.cos(angle) * r1)
+            y1 = int(self.center_y + np.sin(angle) * r1)
+            x2 = int(self.center_x + np.cos(angle) * r2)
+            y2 = int(self.center_y + np.sin(angle) * r2)
+            cv2.line(frame, (x1, y1), (x2, y2), (180, 180, 255), 1, lineType=cv2.LINE_AA)
+        return frame
+
+    def draw_mode_177_comet_conveyor(self, frame, magnitudes):
+        """Mode 177: Comet Conveyor - endless belt carries comets; tails shear on treble"""
+        energy = float(np.mean(magnitudes))
+        highs = float(np.mean(magnitudes[3*len(magnitudes)//4:]))
+
+        belt_y = int(self.center_y + np.sin(self.frame_counter * 0.03) * 30)
+        cv2.line(frame, (0, belt_y), (self.width, belt_y), (80, 80, 80), 2, lineType=cv2.LINE_AA)
+
+        # Spawn
+        if len(self.comet_conveyor_belt) < 40 and np.random.random() < 0.3:
+            band_idx = np.random.randint(0, len(magnitudes))
+            self.comet_conveyor_belt.append({
+                'x': -20,
+                'y': belt_y + np.random.randint(-20, 20),
+                'vx': 4 + energy * 8,
+                'size': int(4 + magnitudes[band_idx] * 18),
+                'shear': highs * 20
+            })
+
+        # Update/draw
+        for comet in self.comet_conveyor_belt[:]:
+            comet['x'] += comet['vx']
+            if comet['x'] > self.width + 40:
+                self.comet_conveyor_belt.remove(comet)
+                continue
+            cv2.circle(frame, (int(comet['x']), int(comet['y'])), comet['size'], (255, 255, 200), -1)
+            for t in range(1, 6):
+                px = int(comet['x'] - t * comet['vx'] * 2)
+                py = int(comet['y'] - t * comet['shear'] * 0.2)
+                alpha = max(20, 200 - t * 35)
+                cv2.circle(frame, (px, py), max(1, comet['size'] - t), (alpha, alpha, 180), -1)
+        return frame
+
+    def draw_mode_178_quantum_foam_micro(self, frame, magnitudes):
+        """Mode 178: Quantum Foam Micro - foamy micro-bubbles pop; cascades on peaks"""
+        energy = float(np.mean(magnitudes))
+        peak = np.max(magnitudes) > 0.8
+
+        # Spawn bubbles
+        if len(self.foam_bubbles) < 200:
+            for _ in range(3):
+                self.foam_bubbles.append({
+                    'x': np.random.randint(0, self.width),
+                    'y': np.random.randint(0, self.height),
+                    'r': np.random.randint(1, 5),
+                    'life': np.random.randint(20, 80)
+                })
+
+        for b in self.foam_bubbles[:]:
+            b['life'] -= 1
+            b['r'] = max(1, b['r'] + (np.random.random() - 0.5) * 0.5)
+            if peak and np.random.random() < 0.2:
+                # cascade: spawn smaller around
+                for _ in range(3):
+                    self.foam_bubbles.append({'x': b['x']+np.random.randint(-6,6), 'y': b['y']+np.random.randint(-6,6), 'r': 1, 'life': 20})
+            color = int(120 + energy * 135)
+            cv2.circle(frame, (int(b['x']), int(b['y'])), int(b['r']), (color, color, 255), 1, lineType=cv2.LINE_AA)
+            if b['life'] <= 0:
+                self.foam_bubbles.remove(b)
+        return frame
+
+    def draw_mode_179_aurora_crown(self, frame, magnitudes):
+        """Mode 179: Aurora Crown - polar aurora dome overhead; ribbons brighten by mids"""
+        mids = float(np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4]))
+        ribbon_count = 8
+        for i in range(ribbon_count):
+            angle = (i / ribbon_count) * 2 * np.pi
+            for r in range(60, 240, 10):
+                x = int(self.center_x + np.cos(angle + np.sin(self.frame_counter*0.02+i)*0.2) * r)
+                y = int(self.center_y - r * 0.6 + np.sin(i*0.7 + self.frame_counter*0.05) * 10)
+                color = (int(80 + mids * 175), int(120 + mids * 135), 255)
+                cv2.circle(frame, (x, y), 2, color, -1)
+        return frame
+
+    def draw_mode_180_asteroid_excavator(self, frame, magnitudes):
+        """Mode 180: Asteroid Excavator - drill depth increases with bass; debris size follows highs"""
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        highs = float(np.mean(magnitudes[3*len(magnitudes)//4:]))
+        center = (self.center_x, self.center_y)
+        cv2.circle(frame, center, 180, (60, 60, 60), -1)
+        depth = int(bass * 120)
+        cv2.line(frame, (self.center_x - 200, self.center_y - 100), (self.center_x - 40 - depth, self.center_y), (200, 200, 220), 3)
+        # debris
+        for _ in range(int(5 + highs * 25)):
+            dx = np.random.randint(-180, -40)
+            dy = np.random.randint(-10, 10)
+            size = max(1, int(2 + highs * 6))
+            cv2.circle(frame, (self.center_x + dx, self.center_y + dy), size, (180, 180, 180), -1)
+        return frame
+
+    def draw_mode_181_hyperloop_spectrotrain(self, frame, magnitudes):
+        """Mode 181: Hyperloop Spectrotrain - car length scales to energy; station lights strobe"""
+        energy = float(np.mean(magnitudes))
+        y = self.center_y
+        cv2.line(frame, (0, y+30), (self.width, y+30), (100,100,100), 4)
+        car_count = 6
+        base_x = int((self.frame_counter * (2 + energy*8)) % (self.width + 400)) - 200
+        for i in range(car_count):
+            cx = base_x - i * 70
+            w = int(40 + energy * 80)
+            cv2.rectangle(frame, (cx, y-20), (cx+w, y+20), (180, 200, 255), -1)
+            for k in range(4):
+                cv2.rectangle(frame, (cx+5+k*int(w/4), y-12), (cx+5+k*int(w/4)+10, y-2), (255, 255, 150), -1)
+        if np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4]) > 0.65:
+            for sx in range(0, self.width, 60):
+                cv2.circle(frame, (sx, y-40), 6, (255, 255, 200), -1)
+        return frame
+
+    def draw_mode_182_galactic_pinball(self, frame, magnitudes):
+        """Mode 182: Galactic Pinball - bumpers map to bands; ball boosts on peaks"""
+        if not self.pinball_entities:
+            self.pinball_entities = [{ 'x': self.center_x, 'y': self.center_y, 'vx': 3, 'vy': -2 }]
+        ball = self.pinball_entities[0]
+        peak = np.max(magnitudes) > 0.8
+        if peak:
+            ball['vx'] *= 1.2
+            ball['vy'] *= 1.2
+        ball['x'] += ball['vx']
+        ball['y'] += ball['vy']
+        if ball['x']<10 or ball['x']>self.width-10: ball['vx']*=-1
+        if ball['y']<10 or ball['y']>self.height-10: ball['vy']*=-1
+        cv2.circle(frame, (int(ball['x']), int(ball['y'])), 6, (255, 255, 255), -1)
+        # bumpers
+        for i in range(10):
+            angle = (i/10)*2*np.pi
+            r = 220
+            bx = int(self.center_x + np.cos(angle)*r)
+            by = int(self.center_y + np.sin(angle)*r)
+            mag = magnitudes[i*(len(magnitudes)//10)]
+            size = int(8 + mag*18)
+            cv2.circle(frame, (bx, by), size, (100, 150, 255), -1)
+        return frame
+
+    def draw_mode_183_nebula_inkblot(self, frame, magnitudes):
+        """Mode 183: Nebula Inkblot - mirrored volumetric smoke; hue by dominant band"""
+        dominant_idx = int(np.argmax(magnitudes))
+        hue = int((dominant_idx / max(1, len(magnitudes)-1)) * 180)
+        for _ in range(120):
+            x = np.random.randint(0, self.center_x)
+            y = np.random.randint(0, self.height)
+            jitter = int(np.random.randn()*6)
+            color_hsv = np.array([[[hue, 180, 200]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+            cv2.circle(frame, (x, y+jitter), 3, tuple(map(int, color)), -1)
+            cv2.circle(frame, (self.width-x, y+jitter), 3, tuple(map(int, color)), -1)
+        return frame
+
+    def draw_mode_184_satellite_telemetry_rings(self, frame, magnitudes):
+        """Mode 184: Satellite Telemetry Rings - rippling rings with dashed spectrum"""
+        energy = float(np.mean(magnitudes))
+        ring_count = 5
+        for i in range(ring_count):
+            radius = int(60 + i*40 + (self.frame_counter*3 + i*15) % 40)
+            dash_count = 48
+            for d in range(dash_count):
+                t = d/dash_count
+                ang = t*2*np.pi
+                idx = min(int(t*len(magnitudes)), len(magnitudes)-1)
+                h = magnitudes[idx]
+                x1 = int(self.center_x + np.cos(ang)*radius)
+                y1 = int(self.center_y + np.sin(ang)*radius)
+                x2 = int(self.center_x + np.cos(ang)*(radius+int(h*25)))
+                y2 = int(self.center_y + np.sin(ang)*(radius+int(h*25)))
+                cv2.line(frame, (x1,y1), (x2,y2), (120,120,200), 1, lineType=cv2.LINE_AA)
+        if energy < 0.15 and self.frame_counter % 6 == 0:
+            cv2.circle(frame, (np.random.randint(0,self.width), np.random.randint(0,self.height)), 2, (255,120,120), -1)
+        return frame
+
+    def draw_mode_185_wormhole_origami(self, frame, magnitudes):
+        """Mode 185: Wormhole Origami - sheet folds into portal; depth by bass"""
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        folds = 10 + int(np.mean(magnitudes[3*len(magnitudes)//4:]) * 10)
+        for i in range(folds):
+            t = i/folds
+            angle = t*np.pi
+            r = int(200 + bass*120 * np.cos(angle))
+            cv2.ellipse(frame, (self.center_x,self.center_y), (r,int(r*0.5)), 0, 0, 360, (160,160,255), 1, lineType=cv2.LINE_AA)
+        return frame
+
+    def draw_mode_186_holographic_jellyfish(self, frame, magnitudes):
+        """Mode 186: Holographic Jellyfish - bell pulsates with lows; tentacles sparkle with highs"""
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        highs = float(np.mean(magnitudes[3*len(magnitudes)//4:]))
+        r = int(60 + bass*120)
+        cv2.circle(frame, (self.center_x,self.center_y-60), r, (200,200,255), 2)
+        for t in range(20):
+            ang = (t/20)*np.pi
+            x = int(self.center_x + np.cos(ang)*r*0.6)
+            y = int(self.center_y-60 + np.sin(ang)*r*0.3)
+            ty = y
+            for k in range(8):
+                nx = int(x + np.sin(self.frame_counter*0.08+k+t)*4)
+                ny = int(ty + k*14)
+                cv2.circle(frame,(nx,ny),1,(255,255,180),-1)
+        for _ in range(int(highs*30)):
+            cv2.circle(frame,(np.random.randint(self.center_x-r,self.center_x+r),np.random.randint(self.center_y-60,self.center_y+r)),1,(255,255,200),-1)
+        return frame
+
+    def draw_mode_187_moon_quarry_crane(self, frame, magnitudes):
+        """Mode 187: Moon Quarry Crane - bins heights equal band magnitude; dust on kicks"""
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        bins = min(24, len(magnitudes))
+        gap = self.width // (bins+2)
+        for i in range(bins):
+            h = int(magnitudes[i]*220)
+            x = gap*(i+1)
+            cv2.rectangle(frame,(x,self.center_y-h),(x+10,self.center_y),(180,180,220),-1)
+        if bass>0.65:
+            for _ in range(40):
+                cv2.circle(frame,(np.random.randint(0,self.width), self.center_y-np.random.randint(0,80)),1,(220,220,220),-1)
+        return frame
+
+    def draw_mode_188_constellation_typoplot(self, frame, magnitudes):
+        """Mode 188: Constellation TypoPlot - letters as stars; lines draw when band is hot"""
+        cols = min(40, len(magnitudes))
+        pts = []
+        for i in range(cols):
+            t = i/cols
+            x = int(80 + t*(self.width-160))
+            y = int(160 + np.sin(self.frame_counter*0.02 + t*6)*60)
+            pts.append((x,y))
+            cv2.circle(frame,(x,y),2,(200,200,255),-1)
+        thr = 0.55
+        for i in range(1, cols):
+            if magnitudes[i]>thr:
+                cv2.line(frame, pts[i-1], pts[i], (255,255,255), 1, lineType=cv2.LINE_AA)
+        return frame
+
+    def draw_mode_189_cryo_crystal_garden(self, frame, magnitudes):
+        """Mode 189: Cryo Crystal Garden - crystals grow per frequency slice; flare on treble"""
+        highs = float(np.mean(magnitudes[3*len(magnitudes)//4:]))
+        slices = 18
+        for i in range(slices):
+            idx = min(int(i * len(magnitudes)/slices), len(magnitudes)-1)
+            mag = magnitudes[idx]
+            angle = (i/slices)*2*np.pi
+            length = int(40 + mag*180)
+            x1 = self.center_x
+            y1 = self.center_y
+            x2 = int(x1 + np.cos(angle)*length)
+            y2 = int(y1 + np.sin(angle)*length)
+            cv2.line(frame,(x1,y1),(x2,y2),(200,220,255),2, lineType=cv2.LINE_AA)
+        if highs>0.6:
+            cv2.circle(frame,(self.center_x,self.center_y),6,(255,255,255),-1)
+        return frame
+
+    def draw_mode_190_meteorite_blueprint(self, frame, magnitudes):
+        """Mode 190: Meteorite Blueprint - technical UI; callouts to bands; red stamp on peaks"""
+        for x in range(0,self.width,60):
+            cv2.line(frame,(x,0),(x,self.height),(40,40,70),1)
+        for y in range(0,self.height,60):
+            cv2.line(frame,(0,y),(self.width,y),(40,40,70),1)
+        for i in range(0, len(magnitudes), max(1,len(magnitudes)//20)):
+            mag = magnitudes[i]
+            x = 80 + int(i/len(magnitudes)*(self.width-160))
+            y = self.center_y
+            cv2.circle(frame,(x,y),4,(180,220,255),-1)
+            cv2.line(frame,(x,y),(x,int(y-80-mag*120)),(120,180,255),1)
+        if np.max(magnitudes)>0.85:
+            cv2.rectangle(frame,(self.width-140,40),(self.width-40,100),(0,0,200),-1)
+        return frame
+
+    def draw_mode_191_lunar_tide_pool(self, frame, magnitudes):
+        """Mode 191: Lunar Tide Pool - water level by bass; caustics sharpen with highs"""
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        highs = float(np.mean(magnitudes[3*len(magnitudes)//4:]))
+        level = int(self.center_y + 80 - bass*150)
+        cv2.rectangle(frame,(0,level),(self.width,self.height),(120,160,220),-1)
+        for x in range(0,self.width,10):
+            y = level + int(np.sin(self.frame_counter*0.1 + x*0.05)* (6+highs*12))
+            cv2.line(frame,(x,y),(x,y+3),(200,220,255),1)
+        return frame
+
+    def draw_mode_192_orbital_barcode_slicer(self, frame, magnitudes):
+        """Mode 192: Orbital Barcode Slicer - rings slice vertical barcode; brightness per band"""
+        bar_count = min(40, len(magnitudes))
+        bar_w = max(2, self.width//(bar_count*2))
+        for i in range(bar_count):
+            h = int(magnitudes[i]*(self.height//2))
+            x = int(self.center_x - bar_count*bar_w + i*2*bar_w)
+            cv2.rectangle(frame,(x,self.center_y-h),(x+bar_w,self.center_y+h),(80,80,120),-1)
+        ring_r = int(120 + (self.frame_counter*2 % 120))
+        cv2.circle(frame,(self.center_x,self.center_y), ring_r,(180,180,255),2)
+        return frame
+
+    def draw_mode_193_satellite_swarm_flocking(self, frame, magnitudes):
+        """Mode 193: Satellite Swarm Flocking - simple flock; thrust bursts on kick"""
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        if len(self.satellites_swarm) < 40:
+            for _ in range(40 - len(self.satellites_swarm)):
+                self.satellites_swarm.append({'x':np.random.randint(0,self.width),'y':np.random.randint(0,self.height),'vx':np.random.uniform(-1,1),'vy':np.random.uniform(-1,1)})
+        for s in self.satellites_swarm:
+            s['vx'] += (np.random.random()-0.5)*0.2
+            s['vy'] += (np.random.random()-0.5)*0.2
+            if bass>0.6:
+                s['vx'] *= 1.1; s['vy'] *= 1.1
+            s['x'] = (s['x'] + s['vx'])%self.width
+            s['y'] = (s['y'] + s['vy'])%self.height
+            cv2.circle(frame,(int(s['x']),int(s['y'])),2,(200,200,255),-1)
+        return frame
+
+    def draw_mode_194_astro_pulse_weave(self, frame, magnitudes):
+        """Mode 194: Astro Pulse Weave - two opposing spiral waves; brightness sum of bands"""
+        total = float(np.sum(magnitudes))
+        for i in range(180):
+            t = i/180
+            ang = t*4*np.pi + self.frame_counter*0.02
+            r = int(40 + t*260)
+            x1 = int(self.center_x + np.cos(ang)*r)
+            y1 = int(self.center_y + np.sin(ang)*r)
+            x2 = int(self.center_x + np.cos(-ang)*r)
+            y2 = int(self.center_y + np.sin(-ang)*r)
+            color = min(255, int(80 + total*60))
+            cv2.circle(frame,(x1,y1),1,(color, color, 255),-1)
+            cv2.circle(frame,(x2,y2),1,(color, color, 255),-1)
+        return frame
+
+    def draw_mode_195_zero_g_paint_spheres(self, frame, magnitudes):
+        """Mode 195: Zero-G Paint Spheres - spheres merge on peaks and split on highs"""
+        highs = float(np.mean(magnitudes[3*len(magnitudes)//4:]))
+        peak = np.max(magnitudes) > 0.85
+        if len(self.paint_spheres) < 12:
+            for _ in range(12 - len(self.paint_spheres)):
+                self.paint_spheres.append({'x':np.random.randint(100,self.width-100),'y':np.random.randint(100,self.height-100),'r':np.random.randint(10,30)})
+        if peak and len(self.paint_spheres)>1:
+            a = self.paint_spheres.pop(); b = self.paint_spheres.pop()
+            cx = int((a['x']+b['x'])/2); cy = int((a['y']+b['y'])/2)
+            cr = int(min(80, a['r']+b['r']))
+            self.paint_spheres.append({'x':cx,'y':cy,'r':cr})
+        if highs>0.65 and len(self.paint_spheres)<20:
+            self.paint_spheres.append({'x':np.random.randint(80,self.width-80),'y':np.random.randint(80,self.height-80),'r':12})
+        for s in self.paint_spheres:
+            cv2.circle(frame,(int(s['x']),int(s['y'])),int(s['r']),(160,200,255),-1)
+        return frame
+
+    def draw_mode_196_supernova_countdown(self, frame, magnitudes):
+        """Mode 196: Supernova Countdown - star swells with energy; blasts at threshold"""
+        self.supernova_state['energy'] += float(np.mean(magnitudes))*0.02
+        threshold = 1.0
+        if not self.supernova_state['blasting'] and self.supernova_state['energy']>threshold:
+            self.supernova_state['blasting'] = True
+            for i in range(80):
+                ang = (i/80)*2*np.pi
+                self.supernova_state['filaments'].append({'x':self.center_x,'y':self.center_y,'vx':np.cos(ang)*(2+np.random.random()*3),'vy':np.sin(ang)*(2+np.random.random()*3),'life':60})
+        if not self.supernova_state['blasting']:
+            r = int(40 + self.supernova_state['energy']*160)
+            cv2.circle(frame,(self.center_x,self.center_y),r,(255,220,150),-1)
+        else:
+            for f in self.supernova_state['filaments'][:]:
+                f['x'] += f['vx']; f['y'] += f['vy']; f['life'] -= 1
+                cv2.circle(frame,(int(f['x']),int(f['y'])),1,(255,200,150),-1)
+                if f['life']<=0:
+                    self.supernova_state['filaments'].remove(f)
+        return frame
+
+    def draw_mode_197_martian_wind_harp(self, frame, magnitudes):
+        """Mode 197: Martian Wind Harp - dunes as strings; ripples by mids; dust devils on snares"""
+        mids = float(np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4]))
+        for y in range(200, self.height, 40):
+            for x in range(0, self.width, 8):
+                dy = int(np.sin(x*0.05 + self.frame_counter*0.08)*mids*20)
+                frame[min(self.height-1,y+dy), min(self.width-1,x)] = (160,120,90)
+        if mids>0.65:
+            for _ in range(40):
+                cv2.circle(frame,(np.random.randint(0,self.width),np.random.randint(200,self.height)),2,(200,180,150),-1)
+        return frame
+
+    def draw_mode_198_teleporting_bar_choir(self, frame, magnitudes):
+        """Mode 198: Teleporting Bar Choir - bars pop at random radial positions; decay persists"""
+        if self.frame_counter % max(1, int(8 - np.mean(magnitudes[3*len(magnitudes)//4:]) * 6)) == 0:
+            idx = np.random.randint(0, len(magnitudes))
+            angle = np.random.random()*2*np.pi
+            radius = np.random.randint(40, self.max_radius)
+            x = int(self.center_x + np.cos(angle)*radius)
+            y = int(self.center_y + np.sin(angle)*radius)
+            self.teleporting_bars.append({'x':x,'y':y,'h':int(30 + magnitudes[idx]*160),'life':50})
+        for b in self.teleporting_bars[:]:
+            cv2.line(frame,(b['x'],b['y']), (b['x'], b['y']-b['h']), (200,200,255), 2)
+            b['life'] -= 1
+            b['h'] = max(0, b['h']-2)
+            if b['life']<=0: self.teleporting_bars.remove(b)
+        return frame
+
+    def draw_mode_199_cosmic_vinyl_halo(self, frame, magnitudes):
+        """Mode 199: Cosmic Vinyl Halo - record edge-on; grooves shimmer with spectrum"""
+        for i in range(12):
+            r = 40 + i*12
+            val = magnitudes[min(int(i/12*len(magnitudes)), len(magnitudes)-1)]
+            cv2.ellipse(frame,(self.center_x,self.center_y),(r,int(r*0.1)),90,0,360,(80,80,80),1)
+            cv2.ellipse(frame,(self.center_x,self.center_y),(r,int(r*0.1)),90,0,int(val*360),(160,160,255),2)
+        return frame
+
+    def draw_mode_200_photon_origination_chamber(self, frame, magnitudes):
+        """Mode 200: Photon Origination Chamber - photons exit slits; rate per band bucket"""
+        slit_count = 8
+        for s in range(slit_count):
+            x = int(self.center_x - 160 + s*(320//(slit_count-1)))
+            cv2.line(frame,(x,self.center_y-60),(x,self.center_y+60),(120,120,150),2)
+            idx = min(int(s/slit_count*len(magnitudes)), len(magnitudes)-1)
+            rate = int(magnitudes[idx]*6)
+            for _ in range(rate):
+                px = x + np.random.randint(-2,2)
+                py = self.center_y + np.random.randint(-2,2)
+                cv2.circle(frame,(px,py-70),1,(255,255,200),-1)
+        return frame
+
+    def draw_mode_201_meteor_net(self, frame, magnitudes):
+        """Mode 201: Meteor Net - hex net catches meteors; nodes glow by band"""
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        size = 24
+        for y in range(100, self.height-100, size):
+            for x in range(80, self.width-80, size):
+                idx = ((x+y)//size) % len(magnitudes)
+                glow = int(80 + magnitudes[idx]*175)
+                cv2.circle(frame,(x,y),3,(glow,glow,255),-1)
+        if np.max(magnitudes)>0.9:
+            cv2.circle(frame,(self.center_x,self.center_y),int(80 + bass*140),(255,255,255),1)
+        return frame
+
+    def draw_mode_202_deep_space_garden_hose(self, frame, magnitudes):
+        """Mode 202: Deep-Space Garden Hose - spray pressure by amplitude; droplets chime on highs"""
+        amp = float(np.mean(magnitudes))
+        highs = float(np.mean(magnitudes[3*len(magnitudes)//4:]))
+        for i in range(int(30 + amp*120)):
+            ang = -np.pi/6 + np.random.random()*np.pi/3
+            r = 10 + np.random.random()* (120 + amp*200)
+            x = int(self.center_x + np.cos(ang)*r)
+            y = int(self.center_y + np.sin(ang)*r)
+            cv2.circle(frame,(x,y),1,(200,200,255),-1)
+        if highs>0.6:
+            for _ in range(8):
+                cv2.circle(frame,(np.random.randint(self.center_x-80,self.center_x+80), np.random.randint(self.center_y-80,self.center_y+80)),1,(255,255,200),-1)
+        return frame
+
+    def draw_mode_203_horizon_monoliths(self, frame, magnitudes):
+        """Mode 203: Horizon Monoliths - distant monoliths rise with band; shadow sweeps on kicks"""
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        base_y = self.height-80
+        count = min(20, len(magnitudes))
+        gap = self.width//(count+1)
+        for i in range(count):
+            h = int(magnitudes[i]*220)
+            x = gap*(i+1)
+            cv2.rectangle(frame,(x, base_y-h),(x+10, base_y),(80,80,120),-1)
+        if bass>0.7:
+            cv2.rectangle(frame,(0,base_y-10),(self.width,base_y),(30,30,30),-1)
+        return frame
+
+    def draw_mode_204_gravity_slingshot_trails(self, frame, magnitudes):
+        """Mode 204: Gravity Slingshot Trails - probes slingshot around planet; trail length by highs"""
+        highs = float(np.mean(magnitudes[3*len(magnitudes)//4:]))
+        for i in range(10):
+            ang = self.frame_counter*0.02 + i*0.6
+            r = 120 + i*6
+            x = int(self.center_x + np.cos(ang)*r)
+            y = int(self.center_y + np.sin(ang)*r)
+            for t in range(int(10 + highs*30)):
+                px = int(self.center_x + np.cos(ang - t*0.02)*r)
+                py = int(self.center_y + np.sin(ang - t*0.02)*r)
+                cv2.circle(frame,(px,py),1,(140,140,255),-1)
+            cv2.circle(frame,(x,y),2,(255,255,255),-1)
+        return frame
+
+    def draw_mode_205_solar_flare_notches(self, frame, magnitudes):
+        """Mode 205: Solar Flare Notches - solar disc with notch flares per bin"""
+        cv2.circle(frame,(self.center_x,self.center_y),120,(200,180,140),-1)
+        bins = len(magnitudes)
+        for i in range(0,bins, max(1,bins//60)):
+            ang = (i/bins)*2*np.pi
+            flare = int(magnitudes[i]*100)
+            x1 = int(self.center_x + np.cos(ang)*120)
+            y1 = int(self.center_y + np.sin(ang)*120)
+            x2 = int(self.center_x + np.cos(ang)*(120+flare))
+            y2 = int(self.center_y + np.sin(ang)*(120+flare))
+            cv2.line(frame,(x1,y1),(x2,y2),(255,220,180),2, lineType=cv2.LINE_AA)
+        return frame
+
+    def draw_mode_206_tesseract_window(self, frame, magnitudes):
+        """Mode 206: Tesseract Window - 4D cube projection; face alpha by band energy"""
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        size = int(80 + bass*80)
+        for dz in (-1,1):
+            for dy in (-1,1):
+                for dx in (-1,1):
+                    x = self.center_x + dx*size
+                    y = self.center_y + dy*size
+                    cv2.circle(frame,(x+dz*20,y+dz*10),2,(200,200,255),-1)
+        for a in range(0,360,30):
+            x1 = int(self.center_x + np.cos(np.radians(a))*size)
+            y1 = int(self.center_y + np.sin(np.radians(a))*size)
+            x2 = int(self.center_x + np.cos(np.radians(a+30))*size)
+            y2 = int(self.center_y + np.sin(np.radians(a+30))*size)
+            cv2.line(frame,(x1,y1),(x2,y2),(180,180,255),1)
+        return frame
+
+    def draw_mode_207_interstellar_postcards(self, frame, magnitudes):
+        """Mode 207: Interstellar Postcards - tiles flip; each hosts tiny spectrum motif"""
+        rows, cols = 3, 4
+        tile_w = self.width//(cols+1)
+        tile_h = self.height//(rows+1)
+        for r in range(rows):
+            for c in range(cols):
+                x = (c+1)*tile_w - tile_w//2
+                y = (r+1)*tile_h - tile_h//2
+                cv2.rectangle(frame,(x-60,y-40),(x+60,y+40),(220,220,220),2)
+                for k in range(8):
+                    idx = (k*len(magnitudes)//8)
+                    h = int(magnitudes[idx]*30)
+                    cv2.line(frame,(x-50+k*12,y+20),(x-50+k*12,y+20-h),(150,200,255),2)
+        return frame
+
+    def draw_mode_208_cosmic_braille(self, frame, magnitudes):
+        """Mode 208: Cosmic Braille - raised dots scroll; dot height by band"""
+        for i in range(min(40,len(magnitudes))):
+            x = int((i/40)*self.width)
+            y = int(self.center_y + np.sin(self.frame_counter*0.05 + i)*40)
+            size = max(1,int(1 + magnitudes[i]*6))
+            cv2.circle(frame,(x,y),size,(200,200,255),-1)
+        return frame
+
+    def draw_mode_209_stellar_harpoon(self, frame, magnitudes):
+        """Mode 209: Stellar Harpoon - line tension by amplitude; vibrato with highs"""
+        amp = float(np.mean(magnitudes))
+        highs = float(np.mean(magnitudes[3*len(magnitudes)//4:]))
+        length = int(80 + amp*260)
+        wiggle = int(highs*20)
+        x2 = int(self.center_x + length)
+        y2 = int(self.center_y + np.sin(self.frame_counter*0.2)*wiggle)
+        cv2.line(frame,(self.center_x,self.center_y),(x2,y2),(220,220,255),2)
+        return frame
+
+    def draw_mode_210_galaxy_ticker_tape(self, frame, magnitudes):
+        """Mode 210: Galaxy Ticker Tape - ticker snakes; character scale by band"""
+        for i in range(min(30,len(magnitudes))):
+            x = int((self.frame_counter*2 + i*20) % (self.width+60)) - 60
+            y = int(self.center_y + np.sin(i*0.3 + self.frame_counter*0.05)*40)
+            s = int(6 + magnitudes[i]*16)
+            cv2.rectangle(frame,(x,y),(x+s,y+s),(200,200,255),-1)
+        return frame
+
+    def draw_mode_211_antimatter_chess(self, frame, magnitudes):
+        """Mode 211: Antimatter Chess - pieces phase in/out; height maps to band"""
+        size = 40
+        for r in range(8):
+            for c in range(8):
+                x = c*size+160
+                y = r*size+160
+                color = (40,40,60) if (r+c)%2==0 else (20,20,30)
+                cv2.rectangle(frame,(x,y),(x+size,y+size),color,-1)
+        for i in range(16):
+            idx = i*(len(magnitudes)//16)
+            h = int(magnitudes[idx]*30)
+            x = 160 + (i%8)*size + 10
+            y = 160 + (i//8)*size + 10
+            cv2.rectangle(frame,(x,y-h),(x+20,y),(200,200,255),-1)
+        return frame
+
+    def draw_mode_212_star_nursery_conveyor(self, frame, magnitudes):
+        """Mode 212: Star Nursery Conveyor - progression speed from energy"""
+        energy = float(np.mean(magnitudes))
+        for i in range(6):
+            x = int((self.frame_counter*(2+energy*8) + i*140) % (self.width+160)) - 80
+            for s in range(3):
+                r = 8 + s*6
+                cv2.circle(frame,(x, 220+s*40), r, (180,180,255), 2)
+        return frame
+
+    def draw_mode_213_magnetar_lines(self, frame, magnitudes):
+        """Mode 213: Magnetar Lines - field lines whip; gamma flashes on transients"""
+        for i in range(30):
+            ang = i/30*2*np.pi
+            k = np.sin(self.frame_counter*0.05 + i)*40
+            x1 = int(self.center_x + np.cos(ang)*80)
+            y1 = int(self.center_y + np.sin(ang)*80)
+            x2 = int(self.center_x + np.cos(ang)*(180+k))
+            y2 = int(self.center_y + np.sin(ang)*(180+k))
+            cv2.line(frame,(x1,y1),(x2,y2),(160,200,255),1)
+        if np.max(np.abs(np.diff(magnitudes)))>0.4:
+            cv2.rectangle(frame,(0,0),(self.width,self.height),(255,255,255),1)
+        return frame
+
+    def draw_mode_214_zero_kelvin_diamonds(self, frame, magnitudes):
+        """Mode 214: Zero-Kelvin Diamonds - refracted beams thickness tracks bands; spin with tempo"""
+        angle = self.frame_counter*0.02
+        for i in range(6):
+            t = i/6
+            r = int(40 + t*160)
+            x = int(self.center_x + np.cos(angle+t*2*np.pi)*r)
+            y = int(self.center_y + np.sin(angle+t*2*np.pi)*r)
+            cv2.polylines(frame,[np.array([(x,y-10),(x+10,y),(x,y+10),(x-10,y)],np.int32)],True,(200,220,255),2)
+        return frame
+
+    def draw_mode_215_orbital_time_garden(self, frame, magnitudes):
+        """Mode 215: Orbital Time Garden - planets are clock markers; orbits expand with bass"""
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        for h in range(12):
+            ang = h/12*2*np.pi - np.pi/2
+            r = int(120 + bass*60)
+            x = int(self.center_x + np.cos(ang)*r)
+            y = int(self.center_y + np.sin(ang)*r)
+            cv2.circle(frame,(x,y),6,(200,200,255),-1)
+        return frame
+
+    def draw_mode_216_subspace_ribbon_printer(self, frame, magnitudes):
+        """Mode 216: Subspace Ribbon Printer - ribbon thickness equals summed band energy at slice"""
+        total = float(np.sum(magnitudes))
+        y = int(120 + (self.frame_counter % (self.height-240)))
+        thickness = int(4 + total*8)
+        cv2.line(frame,(60,y),(self.width-60,y),(200,200,255),thickness)
+        return frame
+
+    def draw_mode_217_dark_matter_drizzle(self, frame, magnitudes):
+        """Mode 217: Dark-Matter Drizzle - invisible drizzle reveals when bands exceed threshold"""
+        thr = 0.5
+        for i in range(len(magnitudes)):
+            if magnitudes[i] > thr and np.random.random()<0.2:
+                x = np.random.randint(0,self.width)
+                y = np.random.randint(0,self.height)
+                cv2.circle(frame,(x,y),1,(200,200,255),-1)
+        if np.max(magnitudes)>0.9:
+            cv2.circle(frame,(self.center_x,self.center_y),100,(100,100,100),1)
+        return frame
+
+    def draw_mode_218_meteor_choir_cones(self, frame, magnitudes):
+        """Mode 218: Meteor Choir Cones - cone aperture by band; inner rings harmonics"""
+        count = 8
+        for i in range(count):
+            idx = i*(len(magnitudes)//count)
+            mag = magnitudes[idx]
+            ang = (i/count)*2*np.pi
+            x = int(self.center_x + np.cos(ang)*80)
+            y = int(self.center_y + np.sin(ang)*80)
+            rad = int(20 + mag*40)
+            cv2.circle(frame,(x,y),rad,(200,200,255),1)
+            cv2.circle(frame,(x,y),rad//2,(160,160,255),1)
+        return frame
+
+    def draw_mode_219_folded_galaxy_map(self, frame, magnitudes):
+        """Mode 219: Folded Galaxy Map - folds reveal bar clusters; refolds during breakdown"""
+        phase = (np.sin(self.frame_counter*0.03)+1)/2
+        cols = 12
+        for i in range(cols):
+            x = int(80 + i*(self.width-160)/cols)
+            h = int(magnitudes[min(i,len(magnitudes)-1)]*200*phase)
+            cv2.rectangle(frame,(x,self.center_y-h),(x+6,self.center_y+h),(200,200,255),-1)
+        return frame
+
+    def draw_mode_220_ion_thruster_plume(self, frame, magnitudes):
+        """Mode 220: Ion Thruster Plume - plume length maps to amplitude; shock diamonds on peaks"""
+        amp = float(np.mean(magnitudes))
+        length = int(60 + amp*260)
+        base = (120, self.center_y)
+        cv2.rectangle(frame,(base[0]-10,base[1]-10),(base[0],base[1]+10),(180,180,200),-1)
+        for i in range(10):
+            y = base[1] - 20 + i*4
+            cv2.line(frame,(base[0],y),(base[0]+length,y),(200,220,255),1)
+        if np.max(magnitudes)>0.85:
+            for i in range(5):
+                x = base[0] + int(length*(i+1)/6)
+                cv2.circle(frame,(x,base[1]),3,(255,255,255),-1)
+        return frame
+
+    def draw_mode_221_cosmic_dominoes(self, frame, magnitudes):
+        """Mode 221: Cosmic Dominoes - curved domino line; fall rate by energy; tiles display local bars"""
+        energy = float(np.mean(magnitudes))
+        n = 20
+        for i in range(n):
+            t = i/n
+            ang = t*np.pi
+            x = int(120 + t*(self.width-240))
+            y = int(self.center_y + np.sin(ang)*60)
+            tilt = int(np.sin(self.frame_counter*0.02 + t*6)*energy*30)
+            pts = np.array([(x-10,y-20),(x+10,y-20+tilt),(x+10,y+20+tilt),(x-10,y+20)],np.int32)
+            cv2.polylines(frame,[pts],True,(200,200,255),2)
+        return frame
+
+    def draw_mode_222_spacesuit_hud(self, frame, magnitudes):
+        """Mode 222: Spacesuit HUD - HUD overlays with spectrum wedges; warning flashes on peaks"""
+        wedges = 24
+        for i in range(wedges):
+            t = i/wedges
+            idx = min(int(t*len(magnitudes)), len(magnitudes)-1)
+            h = int(magnitudes[idx]*80)
+            ang1 = int(t*360)
+            ang2 = ang1 + 6
+            cv2.ellipse(frame,(self.center_x,self.center_y),(200,200),-90,ang1,ang2,(150,200,255),2)
+            cv2.ellipse(frame,(self.center_x,self.center_y),(200+h,200+h),-90,ang1,ang2,(200,220,255),2)
+        if np.max(magnitudes)>0.9:
+            cv2.circle(frame,(self.center_x,self.center_y),10,(0,0,255),-1)
+        return frame
+
+    def draw_mode_223_pulsar_barcode_beam(self, frame, magnitudes):
+        """Mode 223: Pulsar Barcode Beam - rotating beam; bar lengths by band; bloom on peaks"""
+        angle = (self.frame_counter*2) % 360
+        bars = 48
+        for i in range(bars):
+            t = i/bars
+            idx = min(int(t*len(magnitudes)), len(magnitudes)-1)
+            r = int(60 + magnitudes[idx]*200)
+            ang = np.radians(angle) + t*2*np.pi
+            x = int(self.center_x + np.cos(ang)*r)
+            y = int(self.center_y + np.sin(ang)*r)
+            cv2.circle(frame,(x,y),1,(200,200,255),-1)
+        if np.max(magnitudes)>0.85:
+            cv2.circle(frame,(self.center_x,self.center_y),40,(255,255,255),1)
+        return frame
+
+    def draw_mode_224_astro_terrarium(self, frame, magnitudes):
+        """Mode 224: Astro Terrarium - micro planet ecosystem; eruptions on kicks; biolume with highs"""
+        bass = float(np.mean(magnitudes[:len(magnitudes)//4]))
+        highs = float(np.mean(magnitudes[3*len(magnitudes)//4:]))
+        cv2.circle(frame,(self.center_x,self.center_y+60),90,(80,120,80),-1)
+        if bass>0.7:
+            for _ in range(30):
+                x = self.center_x + np.random.randint(-60,60)
+                y = self.center_y + 60 - np.random.randint(0,60)
+                cv2.circle(frame,(x,y),2,(160,80,60),-1)
+        for _ in range(int(highs*40)):
+            cv2.circle(frame,(np.random.randint(self.center_x-80,self.center_x+80), np.random.randint(self.center_y-20,self.center_y+120)),1,(120,220,200),-1)
+        return frame
+
+    def draw_mode_225_micrometeor_spark_curtain(self, frame, magnitudes):
+        """Mode 225: Micrometeor Spark Curtain - diagonal sparks; density with amplitude"""
+        amp = float(np.mean(magnitudes))
+        density = int(40 + amp*200)
+        for _ in range(density):
+            x = np.random.randint(0,self.width)
+            y = np.random.randint(0,self.height)
+            dx = 6; dy = 12
+            cv2.line(frame,(x,y),(x+dx,y+dy),(200,200,255),1)
         return frame
 
     def draw_mode_2_neon_rain(self, frame, magnitudes):
@@ -4322,7 +5932,7 @@ class CreativeSpectrumVisualizer:
                 alpha = word_obj['life']
                 color = (int(255 * alpha), int(200 * alpha), int(100 * alpha))
 
-                cv2.putText(frame, word_obj['word'], (x, y), cv2.FONT_HERSHEY_BOLD,
+                cv2.putText(frame, word_obj['word'], (x, y), cv2.FONT_HERSHEY_SIMPLEX,
                           word_obj['font_scale'], color, 3, lineType=cv2.LINE_AA)
 
                 new_words.append(word_obj)
@@ -4410,7 +6020,7 @@ class CreativeSpectrumVisualizer:
             cv2.circle(frame, (center_x, center_y), 10, (150, 150, 150), -1, lineType=cv2.LINE_AA)
 
             # Label
-            cv2.putText(frame, label, (center_x - 15, center_y + 80), cv2.FONT_HERSHEY_BOLD,
+            cv2.putText(frame, label, (center_x - 15, center_y + 80), cv2.FONT_HERSHEY_SIMPLEX,
                        2.0, (200, 200, 200), 3, lineType=cv2.LINE_AA)
 
         return frame
@@ -4894,10 +6504,10 @@ class CreativeSpectrumVisualizer:
                 noise_val = np.sin(u * 10 + self.shader_time + bass * 5) * np.cos(v * 10 + self.shader_time)
                 noise_val += np.sin(np.sqrt(u*u + v*v) * 20 - self.shader_time * 2) * treble
 
-                # Color mapping
-                hue = int((noise_val * 0.5 + 0.5) * 180)
-                saturation = 200 + int(treble * 55)
-                value = int((noise_val * 0.5 + 0.5) * 200 + bass * 55)
+                # Color mapping (clamp to valid uint8 range)
+                hue = np.clip(int((noise_val * 0.5 + 0.5) * 180), 0, 179)
+                saturation = np.clip(200 + int(treble * 55), 0, 255)
+                value = np.clip(int((noise_val * 0.5 + 0.5) * 200 + bass * 55), 0, 255)
                 color_hsv = np.array([[[hue, saturation, value]]], dtype=np.uint8)
                 color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
 
@@ -5587,213 +7197,2705 @@ class CreativeSpectrumVisualizer:
                 cv2.circle(frame, (star_x, star_y), 2, (brightness, brightness, brightness), -1, lineType=cv2.LINE_AA)
 
         return frame
+    def draw_mode_101_neural_pulse(self, frame, magnitudes):
+        """Mode 101: Neural network with pulsing nodes and lighting connections"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        # Initialize neural network nodes
+        if len(self.neural_nodes) == 0:
+            for i in range(30):
+                self.neural_nodes.append({
+                    'x': np.random.randint(100, self.width - 100),
+                    'y': np.random.randint(100, self.height - 100),
+                    'layer': i % 3,  # 3 layers
+                    'active': 0
+                })
+
+        # Update node activation based on frequency bands
+        for i, node in enumerate(self.neural_nodes):
+            if node['layer'] == 0:  # Bottom layer - bass
+                node['active'] = bass
+            elif node['layer'] == 1:  # Middle layer - mids
+                node['active'] = mids
+            else:  # Top layer - treble
+                node['active'] = treble
+
+        # Draw connections that flash with amplitude
+        for i, node1 in enumerate(self.neural_nodes):
+            for j, node2 in enumerate(self.neural_nodes[i+1:], i+1):
+                if abs(node1['layer'] - node2['layer']) == 1:  # Connect adjacent layers
+                    intensity = int((node1['active'] + node2['active']) * 127.5)
+                    if intensity > 50:
+                        color = (intensity, int(intensity * 0.5), intensity + 50)
+                        thickness = 1 if intensity < 150 else 2
+                        cv2.line(frame, (node1['x'], node1['y']), (node2['x'], node2['y']),
+                                color, thickness, lineType=cv2.LINE_AA)
+
+        # Draw pulsing nodes
+        for node in self.neural_nodes:
+            radius = int(8 + node['active'] * 20)
+            hue = int(140 + node['layer'] * 30)  # Purple to cyan
+            intensity = int(200 + node['active'] * 55)
+
+            color_hsv = np.array([[[hue, 255, intensity]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+
+            cv2.circle(frame, (node['x'], node['y']), radius, tuple(map(int, color)), -1, lineType=cv2.LINE_AA)
+            cv2.circle(frame, (node['x'], node['y']), radius + 3, (255, 255, 255), 1, lineType=cv2.LINE_AA)
+
+        return frame
+
+    def draw_mode_102_liquid_mercury(self, frame, magnitudes):
+        """Mode 102: Metallic liquid that ripples with physics"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        # Spawn mercury droplets on high treble
+        if treble > 0.5 and self.frame_counter % 3 == 0:
+            self.liquid_mercury_particles.append({
+                'x': np.random.randint(100, self.width - 100),
+                'y': 100,
+                'vx': np.random.uniform(-2, 2),
+                'vy': 0,
+                'radius': int(10 + treble * 20)
+            })
+
+        # Bass creates large waves
+        wave_offset = int(bass * 50)
+
+        # Update and draw mercury particles
+        for particle in self.liquid_mercury_particles[:]:
+            particle['vy'] += 0.5  # Gravity
+            particle['y'] += particle['vy']
+            particle['x'] += particle['vx']
+
+            # Boundary bouncing
+            if particle['y'] > self.height - 100:
+                particle['vy'] *= -0.7
+                particle['y'] = self.height - 100
+
+            if particle['x'] < 50 or particle['x'] > self.width - 50:
+                particle['vx'] *= -0.7
+
+            # Draw with metallic shading
+            cv2.circle(frame, (int(particle['x']), int(particle['y'])),
+                      particle['radius'], (200, 200, 200), -1, lineType=cv2.LINE_AA)
+            cv2.circle(frame, (int(particle['x']) - 5, int(particle['y']) - 5),
+                      particle['radius'] // 3, (255, 255, 255), -1, lineType=cv2.LINE_AA)  # Highlight
+
+        # Clean up old particles
+        self.liquid_mercury_particles = [p for p in self.liquid_mercury_particles if p['y'] < self.height]
+
+        # Mid-range creates surface ripples
+        for i in range(int(mids * 5)):
+            ripple_x = self.center_x + int(np.sin(self.frame_counter * 0.1 + i) * 200)
+            ripple_y = self.height - 100
+            ripple_radius = int(30 + i * 20 + mids * 30)
+            cv2.circle(frame, (ripple_x, ripple_y), ripple_radius, (150, 150, 150), 2, lineType=cv2.LINE_AA)
+
+        return frame
+
+    def draw_mode_103_cosmic_strings(self, frame, magnitudes):
+        """Mode 103: Vibrating strings in space like guitar strings"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        # Initialize strings
+        if len(self.cosmic_strings) == 0:
+            for i in range(12):
+                self.cosmic_strings.append({
+                    'y': 100 + i * (self.height - 200) // 12,
+                    'frequency': i + 1,
+                    'magnitude': 0
+                })
+
+        # Update string vibrations
+        for i, string in enumerate(self.cosmic_strings):
+            string['magnitude'] = magnitudes[min(i * 10, len(magnitudes) - 1)]
+
+        # Draw vibrating strings
+        for string in self.cosmic_strings:
+            points = []
+            amplitude = int(string['magnitude'] * 100)
+
+            for x in range(0, self.width, 10):
+                wave = np.sin(x * 0.02 * string['frequency'] + self.frame_counter * 0.1)
+                y = string['y'] + int(wave * amplitude)
+                points.append([x, y])
+
+            points = np.array(points, dtype=np.int32)
+
+            # Gold and white glowing strings
+            hue = 30  # Gold
+            intensity = int(200 + string['magnitude'] * 55)
+
+            color_hsv = np.array([[[hue, 200, intensity]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+
+            cv2.polylines(frame, [points], False, tuple(map(int, color)), 2, lineType=cv2.LINE_AA)
+
+            # Add glow
+            cv2.polylines(frame, [points], False, (255, 255, 255), 1, lineType=cv2.LINE_AA)
+
+        return frame
+
+    def draw_mode_104_particle_swarm(self, frame, magnitudes):
+        """Mode 104: Thousands of particles forming shapes"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        # Spawn particles
+        if len(self.particle_swarm) < 1000:
+            for _ in range(10):
+                angle = np.random.random() * 2 * np.pi
+                distance = np.random.random() * 200
+                self.particle_swarm.append({
+                    'x': self.center_x + np.cos(angle) * distance,
+                    'y': self.center_y + np.sin(angle) * distance,
+                    'vx': 0,
+                    'vy': 0,
+                    'trail': []
+                })
+
+        # Bass creates circular formations
+        target_radius = 150 + bass * 200
+
+        # Update particle positions
+        for particle in self.particle_swarm:
+            dx = self.center_x - particle['x']
+            dy = self.center_y - particle['y']
+            distance = np.sqrt(dx*dx + dy*dy)
+
+            if distance > 0:
+                angle = np.arctan2(dy, dx)
+
+                # Bass = circular, treble = scatter
+                if bass > 0.5:
+                    target_x = self.center_x + np.cos(angle) * target_radius
+                    target_y = self.center_y + np.sin(angle) * target_radius
+                else:
+                    target_x = self.center_x + np.cos(angle + treble * np.pi) * (distance + treble * 100)
+                    target_y = self.center_y + np.sin(angle + treble * np.pi) * (distance + treble * 100)
+
+                particle['vx'] = (target_x - particle['x']) * 0.05
+                particle['vy'] = (target_y - particle['y']) * 0.05
+
+            particle['x'] += particle['vx']
+            particle['y'] += particle['vy']
+
+            # Update trail
+            particle['trail'].append((int(particle['x']), int(particle['y'])))
+            if len(particle['trail']) > 5:
+                particle['trail'].pop(0)
+
+            # Velocity-based color
+            velocity = np.sqrt(particle['vx']**2 + particle['vy']**2)
+            hue = int(120 - min(velocity * 50, 120))  # Blue to red
+
+            color_hsv = np.array([[[hue, 255, 255]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+
+            # Draw trail
+            if len(particle['trail']) > 1:
+                pts = np.array(particle['trail'], dtype=np.int32)
+                cv2.polylines(frame, [pts], False, tuple(map(int, color)), 1, lineType=cv2.LINE_AA)
+
+            # Draw particle
+            cv2.circle(frame, (int(particle['x']), int(particle['y'])), 2, tuple(map(int, color)), -1)
+
+        return frame
+
+    def draw_mode_105_crystal_lattice(self, frame, magnitudes):
+        """Mode 105: 3D crystal structure with pulsing nodes"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+
+        # Initialize crystal lattice nodes
+        if len(self.crystal_lattice_nodes) == 0:
+            grid_size = 5
+            spacing = min(self.width, self.height) // (grid_size + 1)
+            for i in range(grid_size):
+                for j in range(grid_size):
+                    for k in range(grid_size):
+                        self.crystal_lattice_nodes.append({
+                            'x3d': (i - grid_size//2) * spacing,
+                            'y3d': (j - grid_size//2) * spacing,
+                            'z3d': (k - grid_size//2) * spacing,
+                            'magnitude': 0
+                        })
+
+        # Rotation angle
+        angle = self.frame_counter * 0.02
+
+        # Draw connections and nodes
+        for i, node in enumerate(self.crystal_lattice_nodes):
+            # Update magnitude from frequencies
+            node['magnitude'] = magnitudes[min(i * 2, len(magnitudes) - 1)]
+
+            # 3D rotation and projection
+            x = node['x3d']
+            y = node['y3d'] * np.cos(angle) - node['z3d'] * np.sin(angle)
+            z = node['y3d'] * np.sin(angle) + node['z3d'] * np.cos(angle)
+
+            x_rot = x * np.cos(angle) - z * np.sin(angle)
+            z_rot = x * np.sin(angle) + z * np.cos(angle)
+
+            # Perspective projection
+            scale = 300 / (300 + z_rot)
+            x_2d = int(self.center_x + x_rot * scale)
+            y_2d = int(self.center_y + y * scale)
+
+            node['x2d'] = x_2d
+            node['y2d'] = y_2d
+            node['z2d'] = z_rot
+
+            # Draw node
+            radius = int(5 + node['magnitude'] * 15)
+            hue = int((z_rot + 300) / 600 * 180)  # Rainbow based on depth
+
+            color_hsv = np.array([[[hue, 255, 255]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+
+            cv2.circle(frame, (x_2d, y_2d), radius, tuple(map(int, color)), -1, lineType=cv2.LINE_AA)
+            cv2.circle(frame, (x_2d, y_2d), radius + 2, (255, 255, 255), 1, lineType=cv2.LINE_AA)
+
+        # Draw connections between nearby nodes
+        for i, node1 in enumerate(self.crystal_lattice_nodes):
+            for node2 in self.crystal_lattice_nodes[i+1:i+10]:
+                dist = np.sqrt((node1['x3d'] - node2['x3d'])**2 +
+                             (node1['y3d'] - node2['y3d'])**2 +
+                             (node1['z3d'] - node2['z3d'])**2)
+
+                if dist < 250:  # Only connect nearby nodes
+                    intensity = int((node1['magnitude'] + node2['magnitude']) * 127.5)
+                    if intensity > 30:
+                        cv2.line(frame, (node1['x2d'], node1['y2d']),
+                                (node2['x2d'], node2['y2d']),
+                                (intensity, intensity, intensity + 50), 1, lineType=cv2.LINE_AA)
+
+        return frame
+
+    def draw_mode_106_aurora_waves(self, frame, magnitudes):
+        """Mode 106: Aurora borealis flowing curtains"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        # Multiple aurora curtains
+        num_curtains = 5
+        for curtain_idx in range(num_curtains):
+            offset = curtain_idx * 50
+
+            # Create flowing wave points
+            for x in range(0, self.width, 15):
+                wave1 = np.sin(x * 0.01 + self.frame_counter * 0.05 + offset) * bass * 100
+                wave2 = np.sin(x * 0.02 + self.frame_counter * 0.03 + offset) * mids * 80
+                y_base = self.height // 3 + curtain_idx * 30
+
+                # Color shifts with mids
+                hue = int(60 + mids * 60 + curtain_idx * 20)  # Green to purple to blue
+                saturation = int(200 + treble * 55)
+
+                color_hsv = np.array([[[hue, saturation, 255]]], dtype=np.uint8)
+                color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+
+                # Draw vertical curtain strands
+                for y_offset in range(0, 200, 10):
+                    y = int(y_base + wave1 + wave2 + y_offset)
+                    if 0 <= y < self.height:
+                        alpha = 1.0 - (y_offset / 200) * 0.7
+                        cv2.circle(frame, (x, y), 8,
+                                  tuple(int(c * alpha) for c in color), -1, lineType=cv2.LINE_AA)
+
+                # Sparkle effects on treble
+                if treble > 0.6 and np.random.random() < treble:
+                    sparkle_y = int(y_base + wave1 + np.random.randint(0, 100))
+                    if 0 <= sparkle_y < self.height:
+                        cv2.circle(frame, (x, sparkle_y), 3, (255, 255, 255), -1)
+
+        return frame
+
+    def draw_mode_107_dna_helix(self, frame, magnitudes):
+        """Mode 107: Rotating DNA double helix with pulsing base pairs"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        # Rotation speed increases with amplitude
+        self.dna_helix_rotation += 0.02 + bass * 0.05
+
+        # Draw double helix
+        for z in range(0, self.height, 10):
+            angle1 = z * 0.05 + self.dna_helix_rotation
+            angle2 = angle1 + np.pi
+
+            # Helix radius pulses with bass
+            radius = 100 + bass * 50
+
+            # Strand 1
+            x1 = int(self.center_x + np.cos(angle1) * radius)
+            y1 = z
+
+            # Strand 2
+            x2 = int(self.center_x + np.cos(angle2) * radius)
+            y2 = z
+
+            # Backbone color
+            cv2.circle(frame, (x1, y1), 5, (255, 100, 100), -1, lineType=cv2.LINE_AA)  # Blue
+            cv2.circle(frame, (x2, y2), 5, (100, 255, 100), -1, lineType=cv2.LINE_AA)  # Green
+
+            # Base pairs connecting strands
+            if z % 20 == 0:
+                freq_idx = (z // 20) % len(magnitudes)
+                magnitude = magnitudes[freq_idx]
+
+                if magnitude > 0.3:
+                    # Color based on frequency
+                    if freq_idx < len(magnitudes) // 4:
+                        color = (100, 100, 255)  # Red (bass)
+                    elif freq_idx < 3 * len(magnitudes) // 4:
+                        color = (100, 255, 255)  # Yellow (mids)
+                    else:
+                        color = (255, 100, 100)  # Blue (treble)
+
+                    thickness = 2 if magnitude > 0.6 else 1
+                    cv2.line(frame, (x1, y1), (x2, y2), color, thickness, lineType=cv2.LINE_AA)
+
+                    # Base pair nodes
+                    mid_x = (x1 + x2) // 2
+                    mid_y = (y1 + y2) // 2
+                    cv2.circle(frame, (mid_x, mid_y), int(3 + magnitude * 5), color, -1)
+
+        return frame
+
+    def draw_mode_108_fractal_bloom(self, frame, magnitudes):
+        """Mode 108: Fractal flower blooming and contracting"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        # Number of fractal iterations based on treble
+        iterations = int(3 + treble * 4)
+
+        # Draw recursive petals
+        def draw_fractal_petal(x, y, size, angle, depth):
+            if depth <= 0 or size < 5:
+                return
+
+            # Petal color based on depth
+            hue = int(300 - depth * 40) % 180  # Pink to orange
+            saturation = int(200 + mids * 55)
+            value = int(200 + bass * 55)
+
+            color_hsv = np.array([[[hue, saturation, value]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+
+            # Draw petal
+            petal_points = []
+            for i in range(8):
+                petal_angle = angle + (i / 8) * 2 * np.pi
+                px = int(x + np.cos(petal_angle) * size)
+                py = int(y + np.sin(petal_angle) * size)
+                petal_points.append([px, py])
+
+            petal_points = np.array(petal_points, dtype=np.int32)
+            cv2.fillPoly(frame, [petal_points], tuple(map(int, color)), lineType=cv2.LINE_AA)
+
+            # Recursive smaller petals
+            for i in range(5):
+                new_angle = angle + (i / 5) * 2 * np.pi
+                new_x = int(x + np.cos(new_angle) * size * 0.6)
+                new_y = int(y + np.sin(new_angle) * size * 0.6)
+                draw_fractal_petal(new_x, new_y, size * 0.4, new_angle, depth - 1)
+
+        # Blooming size controlled by bass
+        bloom_size = int(80 + bass * 150)
+        draw_fractal_petal(self.center_x, self.center_y, bloom_size, self.frame_counter * 0.05, iterations)
+
+        return frame
+
+    def draw_mode_109_circuit_board(self, frame, magnitudes):
+        """Mode 109: Electronic circuit with flowing electricity"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        # Green PCB background
+        frame[:] = (20, 50, 20)
+
+        # Initialize circuit traces
+        if len(self.circuit_board_traces) == 0:
+            for i in range(20):
+                self.circuit_board_traces.append({
+                    'points': [(np.random.randint(0, self.width), np.random.randint(0, self.height))
+                              for _ in range(10)],
+                    'active': 0,
+                    'freq_idx': i
+                })
+
+        # Draw traces and electricity
+        for trace in self.circuit_board_traces:
+            magnitude = magnitudes[min(trace['freq_idx'] * 6, len(magnitudes) - 1)]
+            trace['active'] = magnitude
+
+            # Draw trace path (golden)
+            for i in range(len(trace['points']) - 1):
+                cv2.line(frame, trace['points'][i], trace['points'][i + 1],
+                        (50, 150, 200), 3, lineType=cv2.LINE_AA)
+
+            # Electricity flows when active
+            if magnitude > 0.4:
+                flow_pos = int((self.frame_counter * 0.1) % len(trace['points']))
+
+                # Blue electricity spark
+                if flow_pos < len(trace['points']):
+                    x, y = trace['points'][flow_pos]
+                    intensity = int(200 + magnitude * 55)
+                    cv2.circle(frame, (x, y), int(8 + magnitude * 10),
+                              (intensity, intensity // 2, 0), -1, lineType=cv2.LINE_AA)
+
+                    # Glow
+                    cv2.circle(frame, (x, y), int(15 + magnitude * 15),
+                              (intensity // 2, intensity // 4, 0), 2, lineType=cv2.LINE_AA)
+
+        # Spark effects on high treble
+        if treble > 0.7:
+            for _ in range(int(treble * 10)):
+                sx = np.random.randint(0, self.width)
+                sy = np.random.randint(0, self.height)
+                cv2.circle(frame, (sx, sy), 2, (255, 200, 100), -1)
+
+        return frame
+
+    def draw_mode_110_quantum_field(self, frame, magnitudes):
+        """Mode 110: Quantum probability field with wave function collapse"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        # Spawn quantum particles
+        if len(self.quantum_field_particles) < 500:
+            for _ in range(5):
+                self.quantum_field_particles.append({
+                    'x': np.random.randint(0, self.width),
+                    'y': np.random.randint(0, self.height),
+                    'state': np.random.random(),  # Quantum state
+                    'collapsed': False
+                })
+
+        # Audio causes wave function collapse
+        collapse_threshold = 0.5 + mids * 0.4
+
+        # Update and draw particles
+        for particle in self.quantum_field_particles:
+            # Quantum fluctuation
+            particle['state'] += (np.random.random() - 0.5) * 0.1
+            particle['state'] = max(0, min(1, particle['state']))
+
+            # Collapse on high amplitude
+            if mids > collapse_threshold and not particle['collapsed']:
+                particle['collapsed'] = True
+            elif mids < 0.3:
+                particle['collapsed'] = False
+
+            # Interference patterns
+            wave_x = np.sin(particle['x'] * 0.02 + self.frame_counter * 0.1) * bass * 20
+            wave_y = np.sin(particle['y'] * 0.02 + self.frame_counter * 0.1) * bass * 20
+
+            draw_x = int(particle['x'] + wave_x)
+            draw_y = int(particle['y'] + wave_y)
+
+            # Heatmap color based on probability
+            if particle['collapsed']:
+                # Bright when collapsed
+                hue = 0  # Red
+                intensity = 255
+                radius = 4
+            else:
+                # Ghosted when in superposition
+                hue = int(120 * particle['state'])  # Blue to red
+                intensity = int(100 + particle['state'] * 155)
+                radius = 2
+
+            color_hsv = np.array([[[hue, 255, intensity]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+
+            if 0 <= draw_x < self.width and 0 <= draw_y < self.height:
+                cv2.circle(frame, (draw_x, draw_y), radius, tuple(map(int, color)), -1, lineType=cv2.LINE_AA)
+
+        return frame
+    def draw_mode_111_origami_unfold(self, frame, magnitudes):
+        """Mode 111: Geometric origami folding rhythmically"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        
+        fold_amount = bass * 0.8 + 0.2
+        num_segments = 8
+        
+        for i in range(num_segments):
+            angle = (i / num_segments) * 2 * np.pi + self.frame_counter * 0.02
+            size = 150 * fold_amount
+            
+            x1 = int(self.center_x + np.cos(angle) * size)
+            y1 = int(self.center_y + np.sin(angle) * size)
+            x2 = int(self.center_x + np.cos(angle + 0.5) * size * 0.7)
+            y2 = int(self.center_y + np.sin(angle + 0.5) * size * 0.7)
+            
+            hue = int((i / num_segments) * 180)
+            color_hsv = np.array([[[hue, int(200 + mids * 55), 255]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+            
+            points = np.array([[self.center_x, self.center_y], [x1, y1], [x2, y2]], dtype=np.int32)
+            cv2.fillPoly(frame, [points], tuple(map(int, color)), lineType=cv2.LINE_AA)
+            cv2.polylines(frame, [points], True, (50, 50, 50), 2, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_112_galaxy_spiral(self, frame, magnitudes):
+        """Mode 112: Spiral galaxy with pulsing stars"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        if len(self.galaxy_spiral_stars) < 500:
+            for _ in range(10):
+                angle = np.random.random() * 2 * np.pi
+                distance = np.random.random() * 300
+                self.galaxy_spiral_stars.append({'angle': angle, 'distance': distance, 'brightness': np.random.random()})
+        
+        spiral_tightness = 0.3 + bass * 0.2
+        rotation = self.frame_counter * 0.01
+        
+        for star in self.galaxy_spiral_stars:
+            spiral_angle = star['angle'] + star['distance'] * spiral_tightness + rotation
+            x = int(self.center_x + np.cos(spiral_angle) * star['distance'])
+            y = int(self.center_y + np.sin(spiral_angle) * star['distance'])
+            
+            brightness = int((star['brightness'] + mids) * 127.5)
+            hue = int(140 - star['distance'] / 3)
+            color_hsv = np.array([[[hue, 255, brightness]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+            
+            if 0 <= x < self.width and 0 <= y < self.height:
+                size = 1 if star['distance'] > 200 else 2
+                cv2.circle(frame, (x, y), size, tuple(map(int, color)), -1)
+        
+        cv2.circle(frame, (self.center_x, self.center_y), int(20 + bass * 30), (255, 255, 200), -1, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_113_rubber_bands(self, frame, magnitudes):
+        """Mode 113: Vibrating rubber bands with physics"""
+        if len(self.rubber_bands) == 0:
+            for i in range(10):
+                self.rubber_bands.append({
+                    'y': 100 + i * (self.height - 200) // 10,
+                    'tension': 0
+                })
+        
+        for i, band in enumerate(self.rubber_bands):
+            magnitude = magnitudes[min(i * 12, len(magnitudes) - 1)]
+            band['tension'] = magnitude
+            
+            points = []
+            for x in range(0, self.width, 10):
+                wave = np.sin(x * 0.05 + self.frame_counter * 0.15 * (i + 1)) * band['tension'] * 80
+                points.append([x, int(band['y'] + wave)])
+            
+            hue = int(i * 18)
+            color_hsv = np.array([[[hue, 255, 255]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+            
+            pts = np.array(points, dtype=np.int32)
+            cv2.polylines(frame, [pts], False, tuple(map(int, color)), 3, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_114_ink_diffusion(self, frame, magnitudes):
+        """Mode 114: Ink diffusing in water"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        if bass > 0.6 and self.frame_counter % 10 == 0:
+            self.ink_diffusion_particles.append({
+                'x': self.center_x,
+                'y': self.center_y,
+                'vx': np.random.uniform(-5, 5),
+                'vy': np.random.uniform(-5, 5),
+                'life': 100,
+                'hue': int(np.random.random() * 40 + 120)
+            })
+        
+        for particle in self.ink_diffusion_particles[:]:
+            particle['x'] += particle['vx'] + np.random.uniform(-treble * 2, treble * 2)
+            particle['y'] += particle['vy'] + np.random.uniform(-treble * 2, treble * 2)
+            particle['vx'] *= 0.98
+            particle['vy'] *= 0.98
+            particle['life'] -= 1
+            
+            if particle['life'] > 0:
+                alpha = particle['life'] / 100
+                color_hsv = np.array([[[particle['hue'], 255, int(200 * alpha)]]], dtype=np.uint8)
+                color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+                
+                size = int((1 - alpha) * 30 + 5)
+                cv2.circle(frame, (int(particle['x']), int(particle['y'])), size, tuple(map(int, color)), -1, lineType=cv2.LINE_AA)
+        
+        self.ink_diffusion_particles = [p for p in self.ink_diffusion_particles if p['life'] > 0]
+        return frame
+
+    def draw_mode_115_geometric_kaleidoscope(self, frame, magnitudes):
+        """Mode 115: Rotating kaleidoscope with morphing shapes"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        
+        self.geo_kaleidoscope_rotation += 0.02 + mids * 0.05
+        num_segments = 8
+        
+        for seg in range(num_segments):
+            angle_offset = (seg / num_segments) * 2 * np.pi
+            
+            for layer in range(3):
+                size = (layer + 1) * 60 * (1 + bass * 0.5)
+                num_sides = 3 + int(mids * 3)
+                
+                points = []
+                for i in range(num_sides):
+                    angle = angle_offset + self.geo_kaleidoscope_rotation + (i / num_sides) * 2 * np.pi
+                    x = int(self.center_x + np.cos(angle) * size)
+                    y = int(self.center_y + np.sin(angle) * size)
+                    points.append([x, y])
+                
+                hue = int((seg * 22.5 + layer * 60) % 180)
+                color_hsv = np.array([[[hue, 255, 255]]], dtype=np.uint8)
+                color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+                
+                pts = np.array(points, dtype=np.int32)
+                cv2.polylines(frame, [pts], True, tuple(map(int, color)), 2, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_116_lightning_storm(self, frame, magnitudes):
+        """Mode 116: Lightning bolts with branching"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        frame[:] = (30, 30, 40)
+        
+        if bass > 0.7 and np.random.random() < 0.3:
+            start_x = np.random.randint(100, self.width - 100)
+            self.lightning_bolts.append({'x': start_x, 'y': 0, 'life': 5, 'branches': []})
+        
+        for bolt in self.lightning_bolts[:]:
+            bolt['life'] -= 1
+            
+            if bolt['life'] > 0:
+                segments = 20
+                prev_x, prev_y = bolt['x'], bolt['y']
+                
+                for seg in range(segments):
+                    next_y = prev_y + self.height // segments
+                    next_x = prev_x + np.random.randint(-30, 30)
+                    
+                    cv2.line(frame, (prev_x, prev_y), (next_x, next_y), (255, 255, 200), 2, lineType=cv2.LINE_AA)
+                    cv2.line(frame, (prev_x, prev_y), (next_x, next_y), (150, 150, 255), 1, lineType=cv2.LINE_AA)
+                    
+                    if treble > 0.5 and np.random.random() < 0.2:
+                        branch_x = next_x + np.random.randint(-80, 80)
+                        branch_y = next_y + np.random.randint(20, 60)
+                        cv2.line(frame, (next_x, next_y), (branch_x, branch_y), (200, 200, 255), 1, lineType=cv2.LINE_AA)
+                    
+                    prev_x, prev_y = next_x, next_y
+        
+        self.lightning_bolts = [b for b in self.lightning_bolts if b['life'] > 0]
+        return frame
+
+    def draw_mode_117_cellular_growth(self, frame, magnitudes):
+        """Mode 117: Biological cell division and growth"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        if len(self.cellular_growth_cells) == 0:
+            self.cellular_growth_cells.append({'x': self.center_x, 'y': self.center_y, 'size': 50, 'gen': 0})
+        
+        if bass > 0.7 and len(self.cellular_growth_cells) < 50:
+            for cell in list(self.cellular_growth_cells):
+                if np.random.random() < 0.1:
+                    angle = np.random.random() * 2 * np.pi
+                    new_x = cell['x'] + np.cos(angle) * cell['size']
+                    new_y = cell['y'] + np.sin(angle) * cell['size']
+                    self.cellular_growth_cells.append({'x': new_x, 'y': new_y, 'size': 30, 'gen': cell['gen'] + 1})
+        
+        for cell in self.cellular_growth_cells:
+            cell['size'] = 20 + bass * 30
+            
+            hue = int(60 + cell['gen'] * 20) % 180
+            color_hsv = np.array([[[hue, 200, 255]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+            
+            cv2.circle(frame, (int(cell['x']), int(cell['y'])), int(cell['size']), tuple(map(int, color)), 2, lineType=cv2.LINE_AA)
+            cv2.circle(frame, (int(cell['x']), int(cell['y'])), int(cell['size'] * 0.5), tuple(map(int, color * 0.7)), -1, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_118_sound_ribbons(self, frame, magnitudes):
+        """Mode 118: 3D ribbons twisting through space"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        
+        num_ribbons = 5
+        for ribbon_idx in range(num_ribbons):
+            points = []
+            for t in range(100):
+                angle = t * 0.1 + self.frame_counter * 0.02 + ribbon_idx
+                radius = 100 + np.sin(t * 0.1) * 50 * bass
+                
+                x = int(self.center_x + np.cos(angle) * radius)
+                y = int(t * (self.height / 100))
+                points.append([x, y])
+            
+            hue = int(ribbon_idx * 36) % 180
+            color_hsv = np.array([[[hue, 255, int(200 + mids * 55)]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+            
+            pts = np.array(points, dtype=np.int32)
+            cv2.polylines(frame, [pts], False, tuple(map(int, color)), int(8 + bass * 10), lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_119_matrix_rain(self, frame, magnitudes):
+        """Mode 119: Matrix code rain"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        frame[:] = (0, 0, 0)
+        
+        if len(self.matrix_rain_columns) == 0:
+            for x in range(0, self.width, 20):
+                self.matrix_rain_columns.append({'x': x, 'y': np.random.randint(-100, 0), 'speed': 5 + np.random.randint(0, 10)})
+        
+        for col in self.matrix_rain_columns:
+            col['speed'] = 5 + bass * 10
+            col['y'] += col['speed']
+            
+            if col['y'] > self.height:
+                col['y'] = -20
+            
+            for i in range(15):
+                y_pos = int(col['y'] - i * 20)
+                if 0 <= y_pos < self.height:
+                    brightness = int(255 - i * 17)
+                    if i == 0:
+                        color = (brightness, brightness, brightness)
+                    else:
+                        color = (0, brightness, 0)
+                    
+                    char = chr(33 + np.random.randint(0, 94))
+                    cv2.putText(frame, char, (col['x'], y_pos), cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 1)
+        
+        if treble > 0.7:
+            for _ in range(int(treble * 5)):
+                x = np.random.randint(0, self.width)
+                y = np.random.randint(0, self.height)
+                cv2.putText(frame, chr(33 + np.random.randint(0, 94)), (x, y), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+        
+        return frame
+
+    def draw_mode_120_fire_mandala(self, frame, magnitudes):
+        """Mode 120: Circular mandala made of flames"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        num_flames = int(20 + treble * 30)
+        
+        for i in range(num_flames):
+            angle = (i / num_flames) * 2 * np.pi + self.frame_counter * 0.05
+            radius = 100 + bass * 150
+            
+            x = int(self.center_x + np.cos(angle) * radius)
+            y = int(self.center_y + np.sin(angle) * radius)
+            
+            flame_height = int(40 + bass * 60)
+            for h in range(flame_height):
+                offset = np.sin(h * 0.2 + self.frame_counter * 0.2) * 10
+                flame_x = int(x + offset)
+                flame_y = int(y - h)
+                
+                intensity = 1 - (h / flame_height)
+                if h < flame_height * 0.3:
+                    color = (255, int(255 * intensity), int(100 * intensity))
+                elif h < flame_height * 0.6:
+                    color = (int(255 * intensity), int(200 * intensity), 0)
+                else:
+                    color = (int(255 * intensity), 0, 0)
+                
+                if 0 <= flame_x < self.width and 0 <= flame_y < self.height:
+                    cv2.circle(frame, (flame_x, flame_y), 3, color, -1, lineType=cv2.LINE_AA)
+        
+        return frame
+    def draw_mode_121_tessellation_shift(self, frame, magnitudes):
+        """Mode 121: Escher-style morphing tessellations"""
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        
+        tile_size = int(40 + mids * 20)
+        for y in range(0, self.height, tile_size):
+            for x in range(0, self.width, tile_size):
+                shift = int(self.frame_counter * mids) % 3
+                hue = int((x + y) / 10 + self.frame_counter) % 180
+                color_hsv = np.array([[[hue, 200, 255]]], dtype=np.uint8)
+                color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+                
+                if shift == 0:
+                    cv2.rectangle(frame, (x, y), (x + tile_size, y + tile_size), tuple(map(int, color)), -1)
+                elif shift == 1:
+                    pts = np.array([[x, y + tile_size], [x + tile_size // 2, y], [x + tile_size, y + tile_size]], dtype=np.int32)
+                    cv2.fillPoly(frame, [pts], tuple(map(int, color)))
+                else:
+                    cv2.circle(frame, (x + tile_size // 2, y + tile_size // 2), tile_size // 2, tuple(map(int, color)), -1)
+                
+                cv2.rectangle(frame, (x, y), (x + tile_size, y + tile_size), (0, 0, 0), 1)
+        
+        return frame
+
+    def draw_mode_122_seismic_waves(self, frame, magnitudes):
+        """Mode 122: Seismograph readings with P-waves and S-waves"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        for wave_idx in range(3):
+            y_pos = 100 + wave_idx * (self.height - 200) // 3
+            points = []
+            
+            for x in range(self.width):
+                if wave_idx == 0:
+                    y = y_pos + int(bass * 80 * np.sin(x * 0.05 + self.frame_counter * 0.2))
+                elif wave_idx == 1:
+                    y = y_pos + int(mids * 60 * np.sin(x * 0.08 + self.frame_counter * 0.15))
+                else:
+                    y = y_pos + int(treble * 40 * np.sin(x * 0.1 + self.frame_counter * 0.25))
+                
+                points.append([x, y])
+            
+            colors = [(0, 100, 255), (0, 255, 100), (255, 100, 0)]
+            pts = np.array(points, dtype=np.int32)
+            cv2.polylines(frame, [pts], False, colors[wave_idx], 2, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_123_neon_city(self, frame, magnitudes):
+        """Mode 123: Cyberpunk city with pulsing lights"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        frame[:] = (80, 40, 80)
+        
+        if len(self.neon_city_buildings) == 0:
+            for i in range(15):
+                self.neon_city_buildings.append({
+                    'x': i * self.width // 15,
+                    'base_height': np.random.randint(100, 400),
+                    'width': self.width // 16
+                })
+        
+        for building in self.neon_city_buildings:
+            height = int(building['base_height'] * (1 + bass * 0.5))
+            cv2.rectangle(frame, (building['x'], self.height - height), 
+                         (building['x'] + building['width'], self.height), (40, 20, 60), -1)
+            
+            num_windows = int(height / 20)
+            for win_y in range(num_windows):
+                if np.random.random() < mids:
+                    win_color = (255, 100, 255) if np.random.random() < 0.5 else (100, 255, 255)
+                    win_actual_y = self.height - height + win_y * 20
+                    cv2.rectangle(frame, (building['x'] + 2, win_actual_y + 2),
+                                (building['x'] + building['width'] - 2, win_actual_y + 15),
+                                win_color, -1)
+        
+        return frame
+
+    def draw_mode_124_magnetic_field(self, frame, magnitudes):
+        """Mode 124: Magnetic field lines with particle clustering"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        
+        pole_n = (self.width // 3, self.center_y)
+        pole_s = (2 * self.width // 3, self.center_y)
+        
+        for line_idx in range(int(20 + mids * 20)):
+            angle = (line_idx / 20) * np.pi - np.pi / 2
+            points = []
+            
+            for t in range(100):
+                t_norm = t / 100
+                x = int(pole_n[0] + (pole_s[0] - pole_n[0]) * t_norm + np.sin(angle + t * 0.1) * 100 * bass)
+                y = int(pole_n[1] + np.cos(angle + t * 0.1) * 150 * (1 - abs(t_norm - 0.5) * 2))
+                points.append([x, y])
+            
+            pts = np.array(points, dtype=np.int32)
+            color = (255, 100, 100) if angle < 0 else (100, 100, 255)
+            cv2.polylines(frame, [pts], False, color, 1, lineType=cv2.LINE_AA)
+        
+        cv2.circle(frame, pole_n, 20, (255, 100, 100), -1, lineType=cv2.LINE_AA)
+        cv2.circle(frame, pole_s, 20, (100, 100, 255), -1, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_125_bubble_fusion(self, frame, magnitudes):
+        """Mode 125: Bubbles that float, merge, and pop"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        if bass > 0.5 and len(self.bubble_fusion_bubbles) < 30:
+            self.bubble_fusion_bubbles.append({
+                'x': self.center_x + np.random.randint(-100, 100),
+                'y': self.height - 50,
+                'vx': np.random.uniform(-1, 1),
+                'vy': -2 - bass * 3,
+                'radius': int(20 + bass * 40)
+            })
+        
+        for bubble in self.bubble_fusion_bubbles[:]:
+            bubble['vy'] -= 0.1
+            bubble['x'] += bubble['vx']
+            bubble['y'] += bubble['vy']
+            bubble['vx'] *= 0.99
+            
+            if bubble['y'] < 0 or treble > 0.8:
+                self.bubble_fusion_bubbles.remove(bubble)
+                continue
+            
+            hue = int((bubble['y'] / self.height) * 180)
+            color_hsv = np.array([[[hue, 100, 255]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+            
+            cv2.circle(frame, (int(bubble['x']), int(bubble['y'])), bubble['radius'], tuple(map(int, color)), 2, lineType=cv2.LINE_AA)
+            cv2.circle(frame, (int(bubble['x'] - bubble['radius'] // 3), int(bubble['y'] - bubble['radius'] // 3)),
+                      bubble['radius'] // 4, (255, 255, 255), -1, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_126_tribal_drums(self, frame, magnitudes):
+        """Mode 126: Tribal patterns pulsing like drum skins"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        
+        num_rings = int(5 + bass * 10)
+        for ring in range(num_rings):
+            radius = int(50 + ring * 40 * (1 + bass * 0.3))
+            
+            num_symbols = 8
+            for sym in range(num_symbols):
+                angle = (sym / num_symbols) * 2 * np.pi + self.frame_counter * 0.02
+                x = int(self.center_x + np.cos(angle) * radius)
+                y = int(self.center_y + np.sin(angle) * radius)
+                
+                symbol_size = int(15 + bass * 10)
+                pts = np.array([
+                    [x, y - symbol_size],
+                    [x + symbol_size, y],
+                    [x, y + symbol_size],
+                    [x - symbol_size, y]
+                ], dtype=np.int32)
+                
+                color = (int(100 + bass * 155), int(70 + bass * 100), 30)
+                cv2.fillPoly(frame, [pts], color, lineType=cv2.LINE_AA)
+                cv2.polylines(frame, [pts], True, (0, 0, 0), 2, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_127_glass_shatter(self, frame, magnitudes):
+        """Mode 127: Glass forming and shattering"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        if bass > 0.7 and len(self.glass_shatter_fragments) == 0:
+            for _ in range(30):
+                self.glass_shatter_fragments.append({
+                    'x': self.center_x + np.random.randint(-200, 200),
+                    'y': self.center_y + np.random.randint(-200, 200),
+                    'vx': np.random.uniform(-5, 5),
+                    'vy': np.random.uniform(-5, 5),
+                    'size': np.random.randint(20, 50),
+                    'life': 30
+                })
+        
+        if len(self.glass_shatter_fragments) > 0:
+            for frag in self.glass_shatter_fragments[:]:
+                frag['x'] += frag['vx']
+                frag['y'] += frag['vy']
+                frag['vy'] += 0.3
+                frag['life'] -= 1
+                
+                if frag['life'] > 0:
+                    alpha = frag['life'] / 30
+                    color = (int(200 * alpha), int(220 * alpha), int(255 * alpha))
+                    
+                    pts = np.array([
+                        [int(frag['x']), int(frag['y'] - frag['size'])],
+                        [int(frag['x'] + frag['size']), int(frag['y'])],
+                        [int(frag['x']), int(frag['y'] + frag['size'])],
+                        [int(frag['x'] - frag['size']), int(frag['y'])]
+                    ], dtype=np.int32)
+                    
+                    cv2.fillPoly(frame, [pts], color, lineType=cv2.LINE_AA)
+                    cv2.polylines(frame, [pts], True, (150, 150, 150), 1, lineType=cv2.LINE_AA)
+            
+            self.glass_shatter_fragments = [f for f in self.glass_shatter_fragments if f['life'] > 0]
+        else:
+            cv2.rectangle(frame, (self.center_x - 200, self.center_y - 200),
+                         (self.center_x + 200, self.center_y + 200),
+                         (200, 220, 255), -1, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_128_bioluminescence(self, frame, magnitudes):
+        """Mode 128: Deep ocean bioluminescent creatures"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        frame[:] = (20, 10, 0)
+        
+        if len(self.bioluminescent_creatures) < 20:
+            self.bioluminescent_creatures.append({
+                'x': np.random.randint(0, self.width),
+                'y': np.random.randint(0, self.height),
+                'phase': np.random.random() * 2 * np.pi,
+                'speed': np.random.uniform(0.5, 2)
+            })
+        
+        for creature in self.bioluminescent_creatures:
+            creature['x'] += np.sin(self.frame_counter * 0.02 + creature['phase']) * creature['speed']
+            creature['y'] += np.cos(self.frame_counter * 0.03 + creature['phase']) * creature['speed'] * 0.5
+            
+            if creature['x'] < 0: creature['x'] = self.width
+            if creature['x'] > self.width: creature['x'] = 0
+            if creature['y'] < 0: creature['y'] = self.height
+            if creature['y'] > self.height: creature['y'] = 0
+            
+            glow_intensity = int(150 + np.sin(self.frame_counter * 0.1 + creature['phase']) * 50 + bass * 55)
+            
+            hue = int(90 + mids * 60)
+            color_hsv = np.array([[[hue, 255, glow_intensity]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+            
+            size = int(15 + bass * 20)
+            cv2.circle(frame, (int(creature['x']), int(creature['y'])), size, tuple(map(int, color)), -1, lineType=cv2.LINE_AA)
+            cv2.circle(frame, (int(creature['x']), int(creature['y'])), size + 10, tuple(map(int, color * 0.5)), 2, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_129_sound_architecture(self, frame, magnitudes):
+        """Mode 129: Impossible architecture constructing/deconstructing"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        
+        build_progress = bass
+        
+        for level in range(5):
+            y_base = self.height - level * 100
+            block_width = 150 - level * 20
+            
+            if level * 0.2 < build_progress:
+                x = self.center_x - block_width // 2
+                y = int(y_base - (1 - build_progress) * 50)
+                
+                shadow_offset = 10
+                cv2.rectangle(frame, (x + shadow_offset, y + shadow_offset),
+                            (x + block_width + shadow_offset, y_base + shadow_offset),
+                            (30, 30, 30), -1)
+                
+                gray_value = int(100 + mids * 155)
+                cv2.rectangle(frame, (x, y), (x + block_width, y_base),
+                            (gray_value, gray_value, gray_value), -1)
+                cv2.rectangle(frame, (x, y), (x + block_width, y_base),
+                            (50, 50, 50), 3)
+        
+        return frame
+
+    def draw_mode_130_plasma_ball(self, frame, magnitudes):
+        """Mode 130: Plasma globe with electrical tendrils"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        center_radius = int(60 + bass * 40)
+        cv2.circle(frame, (self.center_x, self.center_y), center_radius, (100, 50, 100), -1, lineType=cv2.LINE_AA)
+        
+        num_arcs = int(5 + treble * 15)
+        for arc_idx in range(num_arcs):
+            angle = (arc_idx / num_arcs) * 2 * np.pi + self.frame_counter * 0.1
+            
+            current_x, current_y = self.center_x, self.center_y
+            segments = 20
+            
+            for seg in range(segments):
+                next_angle = angle + np.random.uniform(-0.5, 0.5)
+                distance = center_radius + seg * 15
+                
+                next_x = int(self.center_x + np.cos(next_angle) * distance)
+                next_y = int(self.center_y + np.sin(next_angle) * distance)
+                
+                hue = int(120 + seg * 5)
+                intensity = int(255 - seg * 10)
+                color_hsv = np.array([[[hue, 255, intensity]]], dtype=np.uint8)
+                color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+                
+                cv2.line(frame, (current_x, current_y), (next_x, next_y), tuple(map(int, color)), 2, lineType=cv2.LINE_AA)
+                
+                current_x, current_y = next_x, next_y
+                angle = next_angle
+        
+        return frame
+    def draw_mode_131_sand_mandala(self, frame, magnitudes):
+        """Mode 131: Tibetan sand mandala forming grain by grain"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        
+        num_sections = 8
+        for section in range(num_sections):
+            angle_offset = (section / num_sections) * 2 * np.pi
+            
+            for radius_level in range(int(5 + mids * 10)):
+                radius = 30 + radius_level * 20
+                num_grains = int(radius * 0.5)
+                
+                for grain in range(num_grains):
+                    angle = angle_offset + (grain / num_grains) * (2 * np.pi / num_sections)
+                    x = int(self.center_x + np.cos(angle) * radius)
+                    y = int(self.center_y + np.sin(angle) * radius)
+                    
+                    colors = [(0, 0, 255), (0, 255, 255), (0, 255, 0), (255, 255, 0), (255, 0, 0)]
+                    color = colors[radius_level % len(colors)]
+                    
+                    cv2.circle(frame, (x, y), 1, color, -1)
+        
+        return frame
+
+    def draw_mode_132_laser_show(self, frame, magnitudes):
+        """Mode 132: Concert laser beams sweeping and bouncing"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        frame[:] = (10, 10, 10)
+        
+        num_beams = int(3 + treble * 7)
+        for beam_idx in range(num_beams):
+            angle = (beam_idx / num_beams) * np.pi + np.sin(self.frame_counter * 0.05 + beam_idx) * 0.5
+            
+            start_x = self.center_x
+            start_y = self.height
+            end_x = int(self.center_x + np.cos(angle) * self.width)
+            end_y = int(self.height - abs(np.sin(angle)) * self.height)
+            
+            beam_colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 0, 255), (0, 255, 255)]
+            color = beam_colors[beam_idx % len(beam_colors)]
+            
+            intensity = bass
+            actual_color = tuple(int(c * intensity) for c in color)
+            
+            cv2.line(frame, (start_x, start_y), (end_x, end_y), actual_color, 3, lineType=cv2.LINE_AA)
+            cv2.line(frame, (start_x, start_y), (end_x, end_y), (255, 255, 255), 1, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_133_coral_reef(self, frame, magnitudes):
+        """Mode 133: Growing coral reef with swaying polyps"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        
+        frame[:] = (100, 50, 20)
+        
+        if len(self.coral_reef_polyps) < 30:
+            self.coral_reef_polyps.append({
+                'x': np.random.randint(50, self.width - 50),
+                'y': self.height - np.random.randint(50, 200),
+                'height': np.random.randint(40, 100),
+                'hue': np.random.randint(0, 180),
+                'phase': np.random.random() * 2 * np.pi
+            })
+        
+        for coral in self.coral_reef_polyps:
+            sway = np.sin(self.frame_counter * 0.05 + coral['phase']) * 20 * mids
+            
+            for h in range(coral['height']):
+                x = int(coral['x'] + sway * (h / coral['height']))
+                y = coral['y'] - h
+                
+                size = int(5 + (coral['height'] - h) / coral['height'] * 15 * (1 + bass * 0.3))
+                
+                color_hsv = np.array([[[coral['hue'], 255, 255]]], dtype=np.uint8)
+                color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+                
+                if 0 <= x < self.width and 0 <= y < self.height:
+                    cv2.circle(frame, (x, y), size, tuple(map(int, color)), -1, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_134_wireframe_morph(self, frame, magnitudes):
+        """Mode 134: 3D wireframe objects morphing between shapes"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        
+        shape_type = int(self.frame_counter * 0.01) % 4
+        angle = self.frame_counter * 0.03
+        
+        vertices_3d = []
+        size = 150 + bass * 100
+        
+        if shape_type == 0:  # Cube
+            for x in [-1, 1]:
+                for y in [-1, 1]:
+                    for z in [-1, 1]:
+                        vertices_3d.append([x * size, y * size, z * size])
+        elif shape_type == 1:  # Sphere
+            for lat in range(-90, 90, 30):
+                for lon in range(0, 360, 30):
+                    x = size * np.cos(np.radians(lat)) * np.cos(np.radians(lon))
+                    y = size * np.cos(np.radians(lat)) * np.sin(np.radians(lon))
+                    z = size * np.sin(np.radians(lat))
+                    vertices_3d.append([x, y, z])
+        elif shape_type == 2:  # Pyramid
+            vertices_3d = [[0, -size, 0], [size, size, size], [-size, size, size], [-size, size, -size], [size, size, -size]]
+        else:  # Torus
+            for u in range(0, 360, 30):
+                for v in range(0, 360, 60):
+                    R, r = size * 0.8, size * 0.3
+                    x = (R + r * np.cos(np.radians(v))) * np.cos(np.radians(u))
+                    y = (R + r * np.cos(np.radians(v))) * np.sin(np.radians(u))
+                    z = r * np.sin(np.radians(v))
+                    vertices_3d.append([x, y, z])
+        
+        vertices_2d = []
+        for v in vertices_3d:
+            x = v[0] * np.cos(angle) - v[2] * np.sin(angle)
+            z = v[0] * np.sin(angle) + v[2] * np.cos(angle)
+            y = v[1]
+            
+            scale = 300 / (300 + z)
+            x_2d = int(self.center_x + x * scale)
+            y_2d = int(self.center_y + y * scale)
+            vertices_2d.append((x_2d, y_2d))
+        
+        for i, v1 in enumerate(vertices_2d):
+            for v2 in vertices_2d[i+1:i+5]:
+                hue = int(100 + mids * 80)
+                color_hsv = np.array([[[hue, 255, 255]]], dtype=np.uint8)
+                color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+                
+                cv2.line(frame, v1, v2, tuple(map(int, color)), 2, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_135_sound_garden(self, frame, magnitudes):
+        """Mode 135: Abstract garden with blooming flowers"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        if len(self.sound_garden_plants) < 15:
+            self.sound_garden_plants.append({
+                'x': np.random.randint(100, self.width - 100),
+                'y': self.height - 50,
+                'height': np.random.randint(80, 200),
+                'bloom_size': 0,
+                'hue': np.random.randint(0, 180)
+            })
+        
+        for plant in self.sound_garden_plants:
+            plant['bloom_size'] = bass * 40 + 10
+            
+            cv2.line(frame, (plant['x'], plant['y']), (plant['x'], plant['y'] - plant['height']),
+                    (50, 150, 50), 3, lineType=cv2.LINE_AA)
+            
+            bloom_x = plant['x']
+            bloom_y = plant['y'] - plant['height']
+            
+            for petal in range(8):
+                angle = (petal / 8) * 2 * np.pi
+                petal_x = int(bloom_x + np.cos(angle) * plant['bloom_size'])
+                petal_y = int(bloom_y + np.sin(angle) * plant['bloom_size'])
+                
+                color_hsv = np.array([[[plant['hue'], 255, 255]]], dtype=np.uint8)
+                color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+                
+                cv2.circle(frame, (petal_x, petal_y), int(plant['bloom_size'] * 0.5),
+                          tuple(map(int, color)), -1, lineType=cv2.LINE_AA)
+            
+            cv2.circle(frame, (bloom_x, bloom_y), int(plant['bloom_size'] * 0.3),
+                      (255, 255, 100), -1, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_136_hologram_glitch(self, frame, magnitudes):
+        """Mode 136: Glitching holographic interface"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        frame[:] = (10, 10, 10)
+        
+        for panel_idx in range(5):
+            panel_x = 100 + panel_idx * (self.width - 200) // 5
+            panel_y = 100 + int(np.sin(self.frame_counter * 0.05 + panel_idx) * 30 * mids)
+            panel_w = 100
+            panel_h = 150
+            
+            if treble > 0.7 and np.random.random() < 0.3:
+                glitch_offset = np.random.randint(-20, 20)
+                panel_x += glitch_offset
+                
+                r_offset = np.random.randint(-5, 5)
+                cv2.rectangle(frame, (panel_x + r_offset, panel_y), (panel_x + panel_w + r_offset, panel_y + panel_h), (255, 0, 0), 1)
+                cv2.rectangle(frame, (panel_x - r_offset, panel_y), (panel_x + panel_w - r_offset, panel_y + panel_h), (0, 255, 255), 1)
+            else:
+                cv2.rectangle(frame, (panel_x, panel_y), (panel_x + panel_w, panel_y + panel_h), (0, 255, 255), 2, lineType=cv2.LINE_AA)
+                
+                for line_idx in range(5):
+                    line_y = panel_y + 30 + line_idx * 20
+                    cv2.line(frame, (panel_x + 10, line_y), (panel_x + panel_w - 10, line_y), (255, 150, 0), 1)
+        
+        if treble > 0.6:
+            for _ in range(int(treble * 20)):
+                scan_y = np.random.randint(0, self.height)
+                cv2.line(frame, (0, scan_y), (self.width, scan_y), (100, 255, 255), 1)
+        
+        return frame
+
+    def draw_mode_137_pendulum_wave(self, frame, magnitudes):
+        """Mode 137: Multiple pendulums creating wave patterns"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        
+        num_pendulums = 20
+        for i in range(num_pendulums):
+            x = 50 + i * (self.width - 100) // num_pendulums
+            
+            period = 1.0 + i * 0.05
+            angle = np.sin(self.frame_counter * 0.05 * period) * (0.5 + bass * 0.5)
+            
+            length = 150 + mids * 100
+            bob_x = int(x + np.sin(angle) * length)
+            bob_y = int(100 + np.cos(angle) * length)
+            
+            cv2.line(frame, (x, 100), (bob_x, bob_y), (200, 200, 200), 1, lineType=cv2.LINE_AA)
+            
+            hue = int((i / num_pendulums) * 180)
+            color_hsv = np.array([[[hue, 255, 255]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+            
+            cv2.circle(frame, (bob_x, bob_y), 10, tuple(map(int, color)), -1, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_138_volcano_eruption(self, frame, magnitudes):
+        """Mode 138: Volcano erupting with lava and ash"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        volcano_base = [(self.center_x - 200, self.height), (self.center_x + 200, self.height), (self.center_x, self.height - 200)]
+        pts = np.array(volcano_base, dtype=np.int32)
+        cv2.fillPoly(frame, [pts], (80, 60, 40), lineType=cv2.LINE_AA)
+        
+        if bass > 0.6:
+            for _ in range(int(bass * 20)):
+                self.volcano_lava_particles.append({
+                    'x': self.center_x + np.random.randint(-20, 20),
+                    'y': self.height - 200,
+                    'vx': np.random.uniform(-3, 3),
+                    'vy': -8 - bass * 5,
+                    'life': 60
+                })
+        
+        for particle in self.volcano_lava_particles[:]:
+            particle['vy'] += 0.3
+            particle['x'] += particle['vx']
+            particle['y'] += particle['vy']
+            particle['life'] -= 1
+            
+            if particle['life'] > 0:
+                if particle['vy'] < 0:
+                    color = (0, int(100 + particle['life'] * 2), 255)
+                else:
+                    color = (0, int(particle['life'] * 3), int(100 + particle['life'] * 2))
+                
+                if 0 <= particle['x'] < self.width and 0 <= particle['y'] < self.height:
+                    cv2.circle(frame, (int(particle['x']), int(particle['y'])), 4, color, -1)
+        
+        self.volcano_lava_particles = [p for p in self.volcano_lava_particles if p['life'] > 0 and p['y'] < self.height]
+        
+        return frame
+
+    def draw_mode_139_butterfly_effect(self, frame, magnitudes):
+        """Mode 139: Chaos theory Lorenz attractor"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        
+        sigma, rho, beta = 10.0, 28.0, 8.0/3.0
+        dt = 0.01
+        
+        if len(self.butterfly_attractor_trail) == 0:
+            self.butterfly_attractor_trail = [[0.1, 0.0, 0.0]]
+        
+        x, y, z = self.butterfly_attractor_trail[-1]
+        
+        dx = sigma * (y - x) * (1 + bass * 0.5)
+        dy = x * (rho - z) - y
+        dz = x * y - beta * z
+        
+        x += dx * dt
+        y += dy * dt
+        z += dz * dt
+        
+        self.butterfly_attractor_trail.append([x, y, z])
+        
+        if len(self.butterfly_attractor_trail) > 500:
+            self.butterfly_attractor_trail.pop(0)
+        
+        for i in range(1, len(self.butterfly_attractor_trail)):
+            x1, y1, z1 = self.butterfly_attractor_trail[i-1]
+            x2, y2, z2 = self.butterfly_attractor_trail[i]
+            
+            px1 = int(self.center_x + x1 * 10)
+            py1 = int(self.center_y + z1 * 10)
+            px2 = int(self.center_x + x2 * 10)
+            py2 = int(self.center_y + z2 * 10)
+            
+            hue = int((i / len(self.butterfly_attractor_trail)) * 180)
+            color_hsv = np.array([[[hue, 255, 255]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+            
+            if 0 <= px1 < self.width and 0 <= py1 < self.height and 0 <= px2 < self.width and 0 <= py2 < self.height:
+                cv2.line(frame, (px1, py1), (px2, py2), tuple(map(int, color)), 2, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_140_silk_weaving(self, frame, magnitudes):
+        """Mode 140: Silk threads weaving patterns"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        
+        grid_size = 20
+        for i in range(0, self.width, grid_size):
+            vertical_offset = int(np.sin(i * 0.05 + self.frame_counter * 0.1) * 30 * bass)
+            
+            hue = int((i / self.width) * 180)
+            color_hsv = np.array([[[hue, int(150 + mids * 105), 255]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+            
+            cv2.line(frame, (i, vertical_offset), (i, self.height + vertical_offset), tuple(map(int, color)), 2, lineType=cv2.LINE_AA)
+        
+        for j in range(0, self.height, grid_size):
+            horizontal_offset = int(np.sin(j * 0.05 + self.frame_counter * 0.1) * 30 * mids)
+            
+            hue = int(60 + (j / self.height) * 120)
+            color_hsv = np.array([[[hue, int(150 + bass * 105), 255]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+            
+            cv2.line(frame, (horizontal_offset, j), (self.width + horizontal_offset, j), tuple(map(int, color)), 2, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_141_clock_gears(self, frame, magnitudes):
+        """Mode 141: Interlocking clockwork gears turning"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        
+        gears = [
+            {'x': self.width // 3, 'y': self.center_y, 'radius': 80, 'teeth': 12, 'speed': 1},
+            {'x': 2 * self.width // 3, 'y': self.center_y, 'radius': 60, 'teeth': 9, 'speed': -1.33},
+            {'x': self.center_x, 'y': self.center_y - 100, 'radius': 50, 'teeth': 8, 'speed': 1.5}
+        ]
+        
+        for gear in gears:
+            rotation = (self.frame_counter * 0.05 * gear['speed'] * (1 + bass * 0.5))
+            
+            for tooth in range(gear['teeth']):
+                angle = rotation + (tooth / gear['teeth']) * 2 * np.pi
+                
+                inner_x = int(gear['x'] + np.cos(angle) * gear['radius'] * 0.8)
+                inner_y = int(gear['y'] + np.sin(angle) * gear['radius'] * 0.8)
+                outer_x = int(gear['x'] + np.cos(angle) * gear['radius'])
+                outer_y = int(gear['y'] + np.sin(angle) * gear['radius'])
+                
+                cv2.line(frame, (inner_x, inner_y), (outer_x, outer_y), (150, 100, 50), 3, lineType=cv2.LINE_AA)
+            
+            cv2.circle(frame, (gear['x'], gear['y']), int(gear['radius'] * 0.7), (180, 130, 70), -1, lineType=cv2.LINE_AA)
+            cv2.circle(frame, (gear['x'], gear['y']), int(gear['radius'] * 0.3), (50, 50, 50), -1, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_142_smoke_signals(self, frame, magnitudes):
+        """Mode 142: Rising smoke plumes forming patterns"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        if self.frame_counter % 3 == 0:
+            self.smoke_signal_particles.append({
+                'x': self.center_x + np.random.randint(-50, 50),
+                'y': self.height - 100,
+                'vx': np.random.uniform(-1, 1),
+                'vy': -2 - mids * 2,
+                'size': 10,
+                'life': 100
+            })
+        
+        for particle in self.smoke_signal_particles[:]:
+            particle['x'] += particle['vx'] + np.sin(self.frame_counter * 0.1) * treble * 2
+            particle['y'] += particle['vy']
+            particle['vy'] -= 0.05
+            particle['size'] += 0.5
+            particle['life'] -= 1
+            
+            if particle['life'] > 0:
+                alpha = particle['life'] / 100
+                gray = int(180 * alpha)
+                
+                if 0 <= particle['x'] < self.width and 0 <= particle['y'] < self.height:
+                    cv2.circle(frame, (int(particle['x']), int(particle['y'])), int(particle['size']),
+                              (gray, gray, gray), -1, lineType=cv2.LINE_AA)
+        
+        self.smoke_signal_particles = [p for p in self.smoke_signal_particles if p['life'] > 0]
+        
+        return frame
+
+    def draw_mode_143_stained_glass(self, frame, magnitudes):
+        """Mode 143: Glowing stained glass window"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        
+        pane_size = 80
+        for y in range(0, self.height, pane_size):
+            for x in range(0, self.width, pane_size):
+                hue = int((x + y) / 10) % 180
+                brightness = int(150 + bass * 105)
+                
+                color_hsv = np.array([[[hue, 200, brightness]]], dtype=np.uint8)
+                color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+                
+                cv2.rectangle(frame, (x, y), (x + pane_size, y + pane_size), tuple(map(int, color)), -1)
+                cv2.rectangle(frame, (x, y), (x + pane_size, y + pane_size), (30, 30, 30), 4)
+                
+                light_x = x + pane_size // 4
+                light_y = y + pane_size // 4
+                cv2.circle(frame, (light_x, light_y), pane_size // 6, (255, 255, 255), -1, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_144_string_theory(self, frame, magnitudes):
+        """Mode 144: Theoretical strings vibrating in multiple dimensions"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        num_strings = 30
+        for string_idx in range(num_strings):
+            points = []
+            
+            for t in range(100):
+                x = t * (self.width / 100)
+                
+                y = self.center_y
+                for harmonic in range(5):
+                    amplitude = (bass + mids + treble) / 3 * 50 / (harmonic + 1)
+                    frequency = (harmonic + 1) * (string_idx + 1) * 0.05
+                    y += np.sin(x * frequency + self.frame_counter * 0.1) * amplitude
+                
+                points.append([int(x), int(y)])
+            
+            hue = int((string_idx / num_strings) * 180)
+            alpha = 0.3 + treble * 0.7
+            color_hsv = np.array([[[hue, 255, int(255 * alpha)]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+            
+            pts = np.array(points, dtype=np.int32)
+            cv2.polylines(frame, [pts], False, tuple(map(int, color)), 1, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_145_paper_craft(self, frame, magnitudes):
+        """Mode 145: Paper cutouts folding into 3D shapes"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        
+        fold_progress = (np.sin(self.frame_counter * 0.05) + 1) / 2 * bass
+        
+        colors_pastel = [(255, 200, 200), (200, 255, 200), (200, 200, 255), (255, 255, 200)]
+        
+        for i in range(4):
+            angle = (i / 4) * 2 * np.pi
+            size = 100 * (1 + fold_progress)
+            
+            x1 = int(self.center_x + np.cos(angle) * size)
+            y1 = int(self.center_y + np.sin(angle) * size)
+            x2 = int(self.center_x + np.cos(angle + 0.5) * size * 0.7)
+            y2 = int(self.center_y + np.sin(angle + 0.5) * size * 0.7)
+            
+            pts = np.array([[self.center_x, self.center_y], [x1, y1], [x2, y2]], dtype=np.int32)
+            cv2.fillPoly(frame, [pts], colors_pastel[i], lineType=cv2.LINE_AA)
+            
+            shadow_offset = int(5 * fold_progress)
+            pts_shadow = pts + np.array([shadow_offset, shadow_offset])
+            cv2.fillPoly(frame, [pts_shadow], (150, 150, 150), lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_146_northern_lights(self, frame, magnitudes):
+        """Mode 146: Realistic aurora borealis dancing"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        frame[:] = (20, 20, 40)
+        
+        num_bands = 5
+        for band in range(num_bands):
+            y_base = 100 + band * 60
+            
+            for x in range(0, self.width, 10):
+                wave1 = np.sin(x * 0.01 + self.frame_counter * 0.05 + band) * bass * 50
+                wave2 = np.sin(x * 0.02 + self.frame_counter * 0.03) * mids * 30
+                
+                y = int(y_base + wave1 + wave2)
+                
+                hue = int(60 + mids * 60 + band * 10)
+                brightness = int(200 + treble * 55)
+                color_hsv = np.array([[[hue, 200, brightness]]], dtype=np.uint8)
+                color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+                
+                for y_offset in range(40):
+                    alpha = 1.0 - (y_offset / 40)
+                    if 0 <= y + y_offset < self.height:
+                        cv2.circle(frame, (x, y + y_offset), 5, tuple(int(c * alpha) for c in color), -1, lineType=cv2.LINE_AA)
+        
+        for _ in range(50):
+            sx = np.random.randint(0, self.width)
+            sy = np.random.randint(0, self.height // 2)
+            cv2.circle(frame, (sx, sy), 1, (255, 255, 255), -1)
+        
+        return frame
+
+    def draw_mode_147_cellular_automata(self, frame, magnitudes):
+        """Mode 147: Conway's Game of Life with audio triggers"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        cell_size = 10
+        grid_w = self.width // cell_size
+        grid_h = self.height // cell_size
+        
+        if len(self.cellular_automata_grid) == 0:
+            self.cellular_automata_grid = [[np.random.randint(0, 2) for _ in range(grid_w)] for _ in range(grid_h)]
+        
+        if self.frame_counter % 5 == 0:
+            new_grid = [[0 for _ in range(grid_w)] for _ in range(grid_h)]
+            
+            for y in range(grid_h):
+                for x in range(grid_w):
+                    neighbors = 0
+                    for dy in [-1, 0, 1]:
+                        for dx in [-1, 0, 1]:
+                            if dy == 0 and dx == 0:
+                                continue
+                            ny, nx = (y + dy) % grid_h, (x + dx) % grid_w
+                            neighbors += self.cellular_automata_grid[ny][nx]
+                    
+                    if self.cellular_automata_grid[y][x] == 1:
+                        new_grid[y][x] = 1 if neighbors in [2, 3] else 0
+                    else:
+                        new_grid[y][x] = 1 if neighbors == 3 else 0
+            
+            if bass > 0.7:
+                for _ in range(int(bass * 50)):
+                    rx, ry = np.random.randint(0, grid_w), np.random.randint(0, grid_h)
+                    new_grid[ry][rx] = 1
+            
+            self.cellular_automata_grid = new_grid
+        
+        for y in range(grid_h):
+            for x in range(grid_w):
+                if self.cellular_automata_grid[y][x] == 1:
+                    color = (0, int(200 + mids * 55), 0)
+                    cv2.rectangle(frame, (x * cell_size, y * cell_size),
+                                ((x + 1) * cell_size, (y + 1) * cell_size), color, -1)
+        
+        return frame
+
+    def draw_mode_148_dragon_curve(self, frame, magnitudes):
+        """Mode 148: Fractal dragon curve growing"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        
+        iterations = int(3 + bass * 8)
+        
+        def dragon_curve(order):
+            if order == 0:
+                return "F"
+            else:
+                prev = dragon_curve(order - 1)
+                return prev + "L" + prev[::-1].replace("L", "temp").replace("R", "L").replace("temp", "R") + "R"
+        
+        curve = dragon_curve(min(iterations, 12))
+        
+        x, y = self.center_x, self.center_y
+        angle = 0
+        step = max(2, 300 // (2 ** min(iterations, 10)))
+        
+        points = [(x, y)]
+        for command in curve:
+            if command == "F":
+                x += int(np.cos(np.radians(angle)) * step)
+                y += int(np.sin(np.radians(angle)) * step)
+                points.append((x, y))
+            elif command == "L":
+                angle -= 90
+            elif command == "R":
+                angle += 90
+        
+        for i in range(1, len(points)):
+            hue = int((i / len(points)) * 180)
+            color_hsv = np.array([[[hue, 255, int(200 + mids * 55)]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+            
+            if (0 <= points[i-1][0] < self.width and 0 <= points[i-1][1] < self.height and
+                0 <= points[i][0] < self.width and 0 <= points[i][1] < self.height):
+                cv2.line(frame, points[i-1], points[i], tuple(map(int, color)), 2, lineType=cv2.LINE_AA)
+        
+        return frame
+
+    def draw_mode_149_rain_circles(self, frame, magnitudes):
+        """Mode 149: Concentric circles like raindrops"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        if treble > 0.5 and self.frame_counter % 10 == 0:
+            self.rain_circle_ripples.append({
+                'x': np.random.randint(0, self.width),
+                'y': np.random.randint(0, self.height),
+                'radius': 0,
+                'life': 60
+            })
+        
+        for ripple in self.rain_circle_ripples[:]:
+            ripple['radius'] += 3 + bass * 2
+            ripple['life'] -= 1
+            
+            if ripple['life'] > 0:
+                alpha = ripple['life'] / 60
+                color = (int(100 * alpha), int(200 * alpha), int(255 * alpha))
+                
+                cv2.circle(frame, (ripple['x'], ripple['y']), int(ripple['radius']), color, 2, lineType=cv2.LINE_AA)
+        
+        self.rain_circle_ripples = [r for r in self.rain_circle_ripples if r['life'] > 0]
+        
+        return frame
+
+    def draw_mode_150_fourier_epicycles(self, frame, magnitudes):
+        """Mode 150: Rotating circles tracing Fourier series"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+        
+        num_circles = int(5 + treble * 10)
+        
+        x, y = self.center_x, self.center_y - 100
+        
+        for i in range(num_circles):
+            magnitude = magnitudes[min(i * 8, len(magnitudes) - 1)]
+            radius = int(20 + magnitude * 50 * (num_circles - i) / num_circles)
+            speed = (i + 1) * 0.1 + bass * 0.1
+            angle = self.frame_counter * speed
+            
+            next_x = x + int(np.cos(angle) * radius)
+            next_y = y + int(np.sin(angle) * radius)
+            
+            hue = int((i / num_circles) * 180)
+            color_hsv = np.array([[[hue, 255, 255]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+            
+            cv2.circle(frame, (x, y), radius, tuple(map(int, color)), 2, lineType=cv2.LINE_AA)
+            cv2.line(frame, (x, y), (next_x, next_y), tuple(map(int, color)), 2, lineType=cv2.LINE_AA)
+            cv2.circle(frame, (next_x, next_y), 5, tuple(map(int, color)), -1)
+            
+            x, y = next_x, next_y
+        
+        if len(self.fourier_epicycles) < 200:
+            self.fourier_epicycles.append((x, y))
+        else:
+            self.fourier_epicycles.pop(0)
+            self.fourier_epicycles.append((x, y))
+        
+        for i in range(1, len(self.fourier_epicycles)):
+            cv2.line(frame, self.fourier_epicycles[i-1], self.fourier_epicycles[i], (255, 255, 255), 2, lineType=cv2.LINE_AA)
+
+        return frame
+
+    def draw_mode_151_neon_halo_burst(self, frame, magnitudes):
+        """Mode 151: Circular ring whose radius pulses with kick; emits radial spikes on snare"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:len(magnitudes)//2])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        # Main pulsing ring
+        ring_radius = int(150 + bass * 200)
+        glow_intensity = int(150 + bass * 105)
+
+        # Draw glowing ring
+        for thickness in range(5, 0, -1):
+            alpha = glow_intensity * (thickness / 5)
+            color = (int(alpha), int(alpha * 0.5), int(alpha * 1.2))
+            cv2.circle(frame, (self.center_x, self.center_y), ring_radius, color, thickness, lineType=cv2.LINE_AA)
+
+        # Emit radial spikes on snare (mid peaks)
+        if mids > 0.6:
+            spike_count = int(12 + treble * 12)
+            for i in range(spike_count):
+                angle = (i / spike_count) * 2 * np.pi
+                spike_len = int(50 + mids * 100)
+                x1 = int(self.center_x + np.cos(angle) * ring_radius)
+                y1 = int(self.center_y + np.sin(angle) * ring_radius)
+                x2 = int(self.center_x + np.cos(angle) * (ring_radius + spike_len))
+                y2 = int(self.center_y + np.sin(angle) * (ring_radius + spike_len))
+                cv2.line(frame, (x1, y1), (x2, y2), (255, 200, 100), 2, lineType=cv2.LINE_AA)
+
+        # Glittery sparks for treble
+        if treble > 0.5:
+            spark_count = int(treble * 30)
+            for _ in range(spark_count):
+                angle = np.random.random() * 2 * np.pi
+                dist = ring_radius + np.random.randint(-30, 30)
+                sx = int(self.center_x + np.cos(angle) * dist)
+                sy = int(self.center_y + np.sin(angle) * dist)
+                cv2.circle(frame, (sx, sy), 2, (255, 255, 200), -1)
+
+        return frame
+
+    def draw_mode_152_twin_orbiters(self, frame, magnitudes):
+        """Mode 152: Two dots orbit a center with elastic distance; trails draw lissajous figure"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        # Orbit parameters
+        orbit_radius = 150 + bass * 100
+        speed = self.frame_counter * 0.05
+
+        # First orbiter
+        x1 = int(self.center_x + np.cos(speed) * orbit_radius)
+        y1 = int(self.center_y + np.sin(speed * 1.3) * orbit_radius * 0.8)
+
+        # Second orbiter
+        x2 = int(self.center_x + np.cos(speed + np.pi) * orbit_radius)
+        y2 = int(self.center_y + np.sin((speed + np.pi) * 1.3) * orbit_radius * 0.8)
+
+        # Store trail
+        self.twin_orbiters.append(((x1, y1), (x2, y2)))
+        if len(self.twin_orbiters) > 150:
+            self.twin_orbiters.pop(0)
+
+        # Draw trails
+        for i, ((tx1, ty1), (tx2, ty2)) in enumerate(self.twin_orbiters):
+            alpha = int((i / len(self.twin_orbiters)) * 255)
+            thickness = 1 + int(mids * 3)
+            cv2.circle(frame, (tx1, ty1), 2, (alpha, 100, 200), thickness)
+            cv2.circle(frame, (tx2, ty2), 2, (200, alpha, 150), thickness)
+
+        # Draw current orbiters
+        cv2.circle(frame, (x1, y1), 8, (100, 200, 255), -1)
+        cv2.circle(frame, (x2, y2), 8, (255, 100, 200), -1)
+
+        return frame
+
+    def draw_mode_153_bar_spiral_galaxy(self, frame, magnitudes):
+        """Mode 153: Bars arranged in a spiral. Each bar length follows its band"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+
+        self.bar_spiral_rotation += 0.02 + bass * 0.05
+
+        num_bars = min(60, len(magnitudes))
+        for i in range(num_bars):
+            angle = (i / num_bars) * 4 * np.pi + self.bar_spiral_rotation
+            distance = 50 + i * 8
+            magnitude = magnitudes[i]
+            bar_length = int(20 + magnitude * 100)
+
+            x = int(self.center_x + np.cos(angle) * distance)
+            y = int(self.center_y + np.sin(angle) * distance)
+
+            angle_perp = angle + np.pi / 2
+            x1 = int(x + np.cos(angle_perp) * bar_length)
+            y1 = int(y + np.sin(angle_perp) * bar_length)
+
+            hue = int((i / num_bars) * 180)
+            color_hsv = np.array([[[hue, 255, int(200 + magnitude * 55)]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+
+            cv2.line(frame, (x, y), (x1, y1), tuple(map(int, color)), 2, lineType=cv2.LINE_AA)
+
+        return frame
+
+    def draw_mode_154_ribbon_wave(self, frame, magnitudes):
+        """Mode 154: Wide ribbon undulates like cloth; bass lifts amplitude"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        segments = 80
+        points_top = []
+        points_bottom = []
+
+        for i in range(segments):
+            x = int(i * self.width / segments)
+            amplitude = int(50 + bass * 100)
+            wave = np.sin(i * 0.3 + self.frame_counter * 0.1) * amplitude
+            edge_jitter = np.random.randint(-int(treble * 10), int(treble * 10) + 1)
+
+            y_top = int(self.center_y - 30 + wave + edge_jitter)
+            y_bottom = int(self.center_y + 30 + wave - edge_jitter)
+
+            points_top.append((x, y_top))
+            points_bottom.append((x, y_bottom))
+
+        # Draw ribbon as filled polygon
+        all_points = points_top + points_bottom[::-1]
+        pts = np.array(all_points, np.int32)
+        pts = pts.reshape((-1, 1, 2))
+        cv2.fillPoly(frame, [pts], (150, 100, 255))
+
+        # Edge lines with shimmer
+        for i in range(1, len(points_top)):
+            cv2.line(frame, points_top[i-1], points_top[i], (255, 200, 255), 2, lineType=cv2.LINE_AA)
+            cv2.line(frame, points_bottom[i-1], points_bottom[i], (255, 200, 255), 2, lineType=cv2.LINE_AA)
+
+        return frame
+
+    def draw_mode_155_voxel_city(self, frame, magnitudes):
+        """Mode 155: 3D grid of extruded cubes like skyline; building heights react per frequency"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+
+        grid_size = 8
+        gap = 15
+        start_x = self.center_x - (grid_size * gap) // 2
+        start_y = self.center_y + 200
+
+        for i in range(grid_size):
+            for j in range(grid_size):
+                idx = (i * grid_size + j) % len(magnitudes)
+                height = int(magnitudes[idx] * 150)
+
+                x = start_x + j * gap
+                y_base = start_y - i * gap // 2
+
+                # Draw simple isometric cube
+                top_left = (x, y_base - height)
+                top_right = (x + gap, y_base - height)
+                bottom_left = (x, y_base)
+                bottom_right = (x + gap, y_base)
+
+                brightness = int(100 + magnitudes[idx] * 155)
+                color = (brightness // 2, brightness // 2, brightness)
+
+                cv2.rectangle(frame, top_left, bottom_right, color, -1)
+                cv2.rectangle(frame, top_left, bottom_right, (255, 255, 255), 1, lineType=cv2.LINE_AA)
+
+        # Fog breathes on beat
+        if bass > 0.6:
+            fog_overlay = np.zeros_like(frame, dtype=np.uint8)
+            fog_overlay[:, :] = (50, 50, 50)
+            frame = cv2.addWeighted(frame, 1.0, fog_overlay, bass * 0.3, 0)
+
+        return frame
+
+    def draw_mode_156_sunburst_dial(self, frame, magnitudes):
+        """Mode 156: 360° radial meter with ticks; ticks bend outward on mids"""
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        tick_count = 60
+        inner_radius = 120
+        outer_radius = 200
+
+        for i in range(tick_count):
+            angle = (i / tick_count) * 2 * np.pi
+            magnitude = magnitudes[min(i * len(magnitudes) // tick_count, len(magnitudes) - 1)]
+
+            bend_amount = mids * 50
+            effective_outer = outer_radius + int(magnitude * 100) + int(bend_amount)
+
+            x1 = int(self.center_x + np.cos(angle) * inner_radius)
+            y1 = int(self.center_y + np.sin(angle) * inner_radius)
+            x2 = int(self.center_x + np.cos(angle) * effective_outer)
+            y2 = int(self.center_y + np.sin(angle) * effective_outer)
+
+            # Flicker tips on highs
+            color = (200, 200, 255)
+            if treble > 0.6 and i % 3 == 0:
+                color = (255, 255, 255)
+                cv2.circle(frame, (x2, y2), 4, color, -1)
+
+            cv2.line(frame, (x1, y1), (x2, y2), color, 2, lineType=cv2.LINE_AA)
+
+        return frame
+
+    def draw_mode_157_waterline_oscilloscope(self, frame, magnitudes):
+        """Mode 157: Horizontal waveform floats like water surface"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        # Generate waveform points
+        points = []
+        swell = int(bass * 50)
+
+        for i in range(len(magnitudes)):
+            x = int(i * self.width / len(magnitudes))
+            y = int(self.center_y + swell + magnitudes[i] * 100 - 50)
+            points.append((x, y))
+
+        # Draw water surface
+        for i in range(1, len(points)):
+            cv2.line(frame, points[i-1], points[i], (100, 200, 255), 2, lineType=cv2.LINE_AA)
+
+        # Spawn foam particles on highs
+        if treble > 0.5 and self.frame_counter % 2 == 0:
+            for _ in range(int(treble * 5)):
+                idx = np.random.randint(0, len(points))
+                px, py = points[idx]
+                self.waterline_surface.append({'x': px, 'y': py, 'life': 20})
+
+        # Draw foam particles
+        for particle in self.waterline_surface[:]:
+            particle['y'] -= 1
+            particle['life'] -= 1
+            if particle['life'] > 0:
+                alpha = particle['life'] / 20
+                cv2.circle(frame, (particle['x'], particle['y']), 2, (int(255 * alpha), int(255 * alpha), 255), -1)
+
+        self.waterline_surface = [p for p in self.waterline_surface if p['life'] > 0]
+
+        return frame
+
+    def draw_mode_158_laser_tunnel(self, frame, magnitudes):
+        """Mode 158: Perspective tunnel of rings; ring scale follows kick"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        ring_count = 15
+        hue_shift = int(treble * 180)
+
+        for i in range(ring_count):
+            z = i / ring_count
+            scale = int(50 + z * 400 + bass * 100)
+            thickness = max(1, int(5 * (1 - z)))
+
+            hue = (hue_shift + i * 12) % 180
+            color_hsv = np.array([[[hue, 255, 200]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+
+            cv2.circle(frame, (self.center_x, self.center_y), scale, tuple(map(int, color)), thickness, lineType=cv2.LINE_AA)
+
+        return frame
+
+    def draw_mode_159_vector_field_sprites(self, frame, magnitudes):
+        """Mode 159: Thousands of particles follow a noise flow; velocity multiplies on mids"""
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        # Initialize particles
+        if len(self.vector_field_particles) < 300:
+            for _ in range(300 - len(self.vector_field_particles)):
+                self.vector_field_particles.append({
+                    'x': np.random.randint(0, self.width),
+                    'y': np.random.randint(0, self.height),
+                    'trail': []
+                })
+
+        # Update particles
+        for particle in self.vector_field_particles:
+            noise_x = np.sin(particle['x'] * 0.01 + self.frame_counter * 0.05) * (1 + mids * 2)
+            noise_y = np.cos(particle['y'] * 0.01 + self.frame_counter * 0.05) * (1 + mids * 2)
+
+            particle['x'] += noise_x
+            particle['y'] += noise_y
+
+            # Wrap around
+            particle['x'] = particle['x'] % self.width
+            particle['y'] = particle['y'] % self.height
+
+            # Trail
+            trail_length = int(5 + treble * 15)
+            particle['trail'].append((int(particle['x']), int(particle['y'])))
+            if len(particle['trail']) > trail_length:
+                particle['trail'].pop(0)
+
+            # Draw trail
+            for i in range(1, len(particle['trail'])):
+                alpha = int((i / len(particle['trail'])) * 255)
+                cv2.line(frame, particle['trail'][i-1], particle['trail'][i], (alpha, alpha // 2, 255), 1)
+
+        return frame
+
+    def draw_mode_160_orbit_rings_meter(self, frame, magnitudes):
+        """Mode 160: Nested orbits with dots; each ring maps to a band"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+
+        ring_count = min(10, len(magnitudes) // 12)
+
+        for i in range(ring_count):
+            idx = i * (len(magnitudes) // ring_count)
+            magnitude = magnitudes[idx]
+
+            radius = 50 + i * 40
+            eccentricity = magnitude * 0.5
+            dot_size = int(5 + magnitude * 15)
+
+            angle = self.frame_counter * 0.05 * (i + 1)
+            x = int(self.center_x + np.cos(angle) * radius * (1 + eccentricity))
+            y = int(self.center_y + np.sin(angle) * radius * (1 - eccentricity))
+
+            # Draw orbit path
+            cv2.ellipse(frame, (self.center_x, self.center_y), (int(radius * (1 + eccentricity)), int(radius * (1 - eccentricity))), 0, 0, 360, (100, 100, 150), 1, lineType=cv2.LINE_AA)
+
+            # Draw dot
+            hue = int((i / ring_count) * 180)
+            color_hsv = np.array([[[hue, 255, 255]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+            cv2.circle(frame, (x, y), dot_size, tuple(map(int, color)), -1)
+
+        return frame
+
+    def draw_mode_161_stitch_bars(self, frame, magnitudes):
+        """Mode 161: Stacked micro-bars like embroidered stitches"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+
+        rows = 8
+        cols = min(60, len(magnitudes))
+        gap = self.width // (cols + 1)
+        row_height = 15
+
+        for row in range(rows):
+            y = 100 + row * row_height
+            for col in range(cols):
+                x = gap * (col + 1)
+                magnitude = magnitudes[col]
+                density = int(magnitude * 10)
+
+                # Wobble on beat
+                wobble = int(np.sin(self.frame_counter * 0.1 + col * 0.5) * bass * 10)
+
+                for d in range(density):
+                    y_stitch = y + d * 2 + wobble
+                    cv2.line(frame, (x - 3, y_stitch), (x + 3, y_stitch), (200, 150, 255), 1)
+
+        return frame
+
+    def draw_mode_162_aurora_curtain(self, frame, magnitudes):
+        """Mode 162: Vertical curtains waving; bass widens curtain"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        curtain_count = 5
+
+        for c in range(curtain_count):
+            x_base = (c + 1) * self.width // (curtain_count + 1)
+            width_mult = 1 + bass * 0.5
+
+            points = []
+            for y in range(0, self.height, 10):
+                curl = int(np.sin(y * 0.05 + self.frame_counter * 0.1 + c) * mids * 30)
+                x = int(x_base + curl * width_mult)
+                points.append((x, y))
+
+            # Draw curtain
+            hue = int((c / curtain_count) * 180)
+            color_hsv = np.array([[[hue, 200, 200]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+
+            for i in range(1, len(points)):
+                cv2.line(frame, points[i-1], points[i], tuple(map(int, color)), 3, lineType=cv2.LINE_AA)
+
+        # Star-like flickers
+        if treble > 0.6:
+            for _ in range(int(treble * 10)):
+                sx = np.random.randint(0, self.width)
+                sy = np.random.randint(0, self.height)
+                cv2.circle(frame, (sx, sy), 2, (255, 255, 200), -1)
+
+        return frame
+
+    def draw_mode_163_helix_bars_3d(self, frame, magnitudes):
+        """Mode 163: Two helical rails of bars spinning"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+
+        self.helix_bars_state += 0.05 + bass * 0.1
+
+        bar_count = min(50, len(magnitudes))
+        turns = 3
+
+        for i in range(bar_count):
+            t = i / bar_count
+            angle = t * turns * 2 * np.pi + self.helix_bars_state
+
+            x = int(self.center_x + np.cos(angle) * 150)
+            y = int(100 + t * (self.height - 200))
+
+            magnitude = magnitudes[i]
+            bar_length = int(magnitude * 80)
+
+            x1 = x - bar_length // 2
+            x2 = x + bar_length // 2
+
+            brightness = int(100 + magnitude * 155)
+            color = (brightness, brightness // 2, brightness)
+
+            cv2.line(frame, (x1, y), (x2, y), color, 3, lineType=cv2.LINE_AA)
+
+        return frame
+
+    def draw_mode_164_polygon_heartbeat(self, frame, magnitudes):
+        """Mode 164: Regular polygon in the center inflates on kicks"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+
+        sides = 6
+        scale = 100 + int(bass * 150)
+
+        points = []
+        for i in range(sides):
+            angle = (i / sides) * 2 * np.pi
+            x = int(self.center_x + np.cos(angle) * scale)
+            y = int(self.center_y + np.sin(angle) * scale)
+            points.append((x, y))
+
+        pts = np.array(points, np.int32)
+        pts = pts.reshape((-1, 1, 2))
+        cv2.polylines(frame, [pts], True, (255, 150, 150), 3, lineType=cv2.LINE_AA)
+
+        # Concentric echo waves
+        if bass > 0.5:
+            for echo in range(1, 4):
+                echo_scale = scale + echo * 30
+                echo_points = []
+                for i in range(sides):
+                    angle = (i / sides) * 2 * np.pi
+                    x = int(self.center_x + np.cos(angle) * echo_scale)
+                    y = int(self.center_y + np.sin(angle) * echo_scale)
+                    echo_points.append((x, y))
+
+                echo_pts = np.array(echo_points, np.int32)
+                echo_pts = echo_pts.reshape((-1, 1, 2))
+                alpha = int(150 / echo)
+                cv2.polylines(frame, [echo_pts], True, (alpha, alpha // 2, alpha // 2), 1, lineType=cv2.LINE_AA)
+
+        return frame
+
+    def draw_mode_165_confetti_impulse(self, frame, magnitudes):
+        """Mode 165: On peaks, spawn confetti bursts"""
+        peak_threshold = 0.7
+
+        # Check for peaks
+        for i, mag in enumerate(magnitudes):
+            if mag > peak_threshold and np.random.random() < 0.1:
+                # Spawn confetti
+                hue = int((i / len(magnitudes)) * 180)
+                for _ in range(20):
+                    self.confetti_particles.append({
+                        'x': self.center_x + np.random.randint(-50, 50),
+                        'y': self.center_y + np.random.randint(-50, 50),
+                        'vx': np.random.uniform(-5, 5),
+                        'vy': np.random.uniform(-10, -2),
+                        'hue': hue,
+                        'life': 60
+                    })
+
+        # Update and draw confetti
+        for particle in self.confetti_particles[:]:
+            particle['vy'] += 0.3  # Gravity
+            particle['x'] += particle['vx']
+            particle['y'] += particle['vy']
+            particle['vx'] *= 0.98  # Air drag
+            particle['life'] -= 1
+
+            if particle['life'] > 0:
+                color_hsv = np.array([[[particle['hue'], 255, 255]]], dtype=np.uint8)
+                color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+                cv2.circle(frame, (int(particle['x']), int(particle['y'])), 3, tuple(map(int, color)), -1)
+
+        self.confetti_particles = [p for p in self.confetti_particles if p['life'] > 0 and 0 <= p['y'] < self.height]
+
+        return frame
+
+    def draw_mode_166_wireframe_dome(self, frame, magnitudes):
+        """Mode 166: Hemispherical mesh; vertices displace along normals"""
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        segments = 12
+
+        for lat in range(segments // 2):
+            for lon in range(segments):
+                theta = (lat / (segments / 2)) * np.pi / 2
+                phi = (lon / segments) * 2 * np.pi
+
+                idx = (lat * segments + lon) % len(magnitudes)
+                offset = int(magnitudes[idx] * 50)
+
+                r = 200 + offset
+                x = int(self.center_x + r * np.sin(theta) * np.cos(phi))
+                y = int(self.center_y + 200 - r * np.cos(theta))
+                z = int(r * np.sin(theta) * np.sin(phi))
+
+                # Simple 3D to 2D projection
+                x_2d = x + z // 2
+                y_2d = y - z // 4
+
+                if lat < segments // 2 - 1:
+                    theta2 = ((lat + 1) / (segments / 2)) * np.pi / 2
+                    r2 = 200 + int(magnitudes[((lat + 1) * segments + lon) % len(magnitudes)] * 50)
+                    x2 = int(self.center_x + r2 * np.sin(theta2) * np.cos(phi))
+                    y2 = int(self.center_y + 200 - r2 * np.cos(theta2))
+                    z2 = int(r2 * np.sin(theta2) * np.sin(phi))
+                    x2_2d = x2 + z2 // 2
+                    y2_2d = y2 - z2 // 4
+
+                    cv2.line(frame, (x_2d, y_2d), (x2_2d, y2_2d), (100, 150, 255), 1, lineType=cv2.LINE_AA)
+
+                # Specular sparkle on highs
+                if treble > 0.6 and idx % 3 == 0:
+                    cv2.circle(frame, (x_2d, y_2d), 3, (255, 255, 255), -1)
+
+        return frame
+
+    def draw_mode_167_pulse_dashes(self, frame, magnitudes):
+        """Mode 167: Circular dashed stroke; dash length oscillates with mids"""
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        dash_count = 60
+        radius = 200
+        dash_base_len = 20 + int(mids * 40)
+
+        for i in range(dash_count):
+            angle_start = (i / dash_count) * 2 * np.pi
+            angle_end = angle_start + (dash_base_len / radius)
+
+            x1 = int(self.center_x + np.cos(angle_start) * radius)
+            y1 = int(self.center_y + np.sin(angle_start) * radius)
+            x2 = int(self.center_x + np.cos(angle_end) * radius)
+            y2 = int(self.center_y + np.sin(angle_end) * radius)
+
+            # Tip glow on treble
+            glow = 200
+            if treble > 0.5 and i % 2 == 0:
+                glow = 255
+                cv2.circle(frame, (x2, y2), 5, (255, 255, 255), -1)
+
+            cv2.line(frame, (x1, y1), (x2, y2), (glow, glow // 2, 255), 3, lineType=cv2.LINE_AA)
+
+        return frame
+
+    def draw_mode_168_terrain_sweep(self, frame, magnitudes):
+        """Mode 168: Scrolling heightmap like synthwave hills"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+
+        row_count = 15
+
+        # Shift existing rows
+        for row in self.terrain_sweep_rows:
+            row['y'] += 5
+
+        # Remove off-screen rows
+        self.terrain_sweep_rows = [r for r in self.terrain_sweep_rows if r['y'] < self.height]
+
+        # Add new row
+        if len(self.terrain_sweep_rows) < row_count:
+            profile = [magnitudes[i % len(magnitudes)] for i in range(self.width // 10)]
+            self.terrain_sweep_rows.insert(0, {'y': 0, 'profile': profile})
+
+        # Draw terrain
+        for row_idx, row in enumerate(self.terrain_sweep_rows):
+            y_base = row['y']
+            profile = row['profile']
+
+            points = []
+            for i, height in enumerate(profile):
+                x = i * 10
+                y = int(y_base + 200 - height * 150 - row_idx * 5)
+                points.append((x, y))
+
+            # Draw line
+            for i in range(1, len(points)):
+                hue = int((height / 1.0) * 180)
+                color_hsv = np.array([[[hue, 255, 200]]], dtype=np.uint8)
+                color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+                cv2.line(frame, points[i-1], points[i], tuple(map(int, color)), 2, lineType=cv2.LINE_AA)
+
+        return frame
+
+    def draw_mode_169_chromatic_bars_mirror(self, frame, magnitudes):
+        """Mode 169: Mirrored bars with central symmetry; hue rotates"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+
+        hue_offset = (self.frame_counter * 2) % 180
+        bar_count = min(60, len(magnitudes))
+        gap = 3
+        bar_width = (self.width // 2) // bar_count - gap
+
+        # Flash on kick
+        if bass > 0.7 and self.frame_counter % 10 == 0:
+            self.chromatic_bars_flash = 10
+
+        flash_add = 0
+        if self.chromatic_bars_flash > 0:
+            flash_add = self.chromatic_bars_flash * 20
+            self.chromatic_bars_flash -= 1
+
+        for i in range(bar_count):
+            magnitude = magnitudes[i]
+            height = int(magnitude * (self.height // 2))
+
+            x_left = self.center_x - i * (bar_width + gap) - bar_width
+            x_right = self.center_x + i * (bar_width + gap)
+
+            hue = (hue_offset + i * 3) % 180
+            color_hsv = np.array([[[hue, 255, min(255, 200 + flash_add)]]], dtype=np.uint8)
+            color = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+
+            # Left bar
+            cv2.rectangle(frame, (x_left, self.center_y - height), (x_left + bar_width, self.center_y), tuple(map(int, color)), -1)
+            # Right bar
+            cv2.rectangle(frame, (x_right, self.center_y - height), (x_right + bar_width, self.center_y), tuple(map(int, color)), -1)
+
+        return frame
+
+    def draw_mode_170_bubble_choir(self, frame, magnitudes):
+        """Mode 170: Bubbles rise; size from band energy; pop on snare"""
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+
+        # Spawn bubbles
+        if self.frame_counter % 5 == 0:
+            for i in range(0, len(magnitudes), 10):
+                magnitude = magnitudes[i]
+                if magnitude > 0.3:
+                    self.bubble_choir_bubbles.append({
+                        'x': np.random.randint(50, self.width - 50),
+                        'y': self.height - 50,
+                        'size': int(10 + magnitude * 40),
+                        'vy': -2 - magnitude * 2,
+                        'life': 100,
+                        'popping': False
+                    })
+
+        # Update and draw bubbles
+        for bubble in self.bubble_choir_bubbles[:]:
+            bubble['y'] += bubble['vy']
+            bubble['life'] -= 1
+
+            # Pop on snare (mids spike)
+            if mids > 0.7 and not bubble['popping']:
+                bubble['popping'] = True
+                bubble['pop_frame'] = 0
+
+            if bubble['popping']:
+                bubble['pop_frame'] += 1
+                # Expanding rings
+                ring_radius = bubble['size'] + bubble['pop_frame'] * 10
+                alpha = max(0, 255 - bubble['pop_frame'] * 50)
+                cv2.circle(frame, (int(bubble['x']), int(bubble['y'])), ring_radius, (alpha, alpha, 255), 2, lineType=cv2.LINE_AA)
+
+                if bubble['pop_frame'] > 5:
+                    bubble['life'] = 0
+            else:
+                # Draw bubble
+                cv2.circle(frame, (int(bubble['x']), int(bubble['y'])), bubble['size'], (150, 200, 255), 2, lineType=cv2.LINE_AA)
+
+        self.bubble_choir_bubbles = [b for b in self.bubble_choir_bubbles if b['life'] > 0]
+
+        return frame
+
+    def draw_mode_171_starfield_quantizer(self, frame, magnitudes):
+        """Mode 171: Stars quantized to a grid; cell brightness follows local band"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+
+        grid_size = 16
+        cell_width = self.width // grid_size
+        cell_height = self.height // grid_size
+
+        for i in range(grid_size):
+            for j in range(grid_size):
+                idx = (i * grid_size + j) % len(magnitudes)
+                brightness = int(magnitudes[idx] * 255)
+
+                x = j * cell_width + cell_width // 2
+                y = i * cell_height + cell_height // 2
+
+                if brightness > 50:
+                    size = max(1, brightness // 50)
+                    cv2.circle(frame, (x, y), size, (brightness, brightness, brightness), -1)
+
+        # Subtle rotation on beat
+        if bass > 0.6:
+            angle = bass * 2
+            M = cv2.getRotationMatrix2D((self.center_x, self.center_y), angle, 1.0)
+            frame = cv2.warpAffine(frame, M, (self.width, self.height))
+
+        return frame
+
+    def draw_mode_172_dna_ladder(self, frame, magnitudes):
+        """Mode 172: Two sinusoid strands; rung length follows mids"""
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        strand_spacing = 100
+        amplitude = 50
+
+        points_left = []
+        points_right = []
+
+        for y in range(0, self.height, 5):
+            t = y * 0.02 + self.frame_counter * 0.05
+            x_left = int(self.center_x - strand_spacing // 2 + np.sin(t) * amplitude)
+            x_right = int(self.center_x + strand_spacing // 2 + np.sin(t) * amplitude)
+
+            points_left.append((x_left, y))
+            points_right.append((x_right, y))
+
+        # Draw strands
+        for i in range(1, len(points_left)):
+            cv2.line(frame, points_left[i-1], points_left[i], (100, 200, 255), 3, lineType=cv2.LINE_AA)
+            cv2.line(frame, points_right[i-1], points_right[i], (255, 100, 200), 3, lineType=cv2.LINE_AA)
+
+        # Draw rungs
+        for i in range(0, len(points_left), 10):
+            rung_length = int(strand_spacing * (0.5 + mids * 0.5))
+            x_mid = (points_left[i][0] + points_right[i][0]) // 2
+            y = points_left[i][1]
+
+            cv2.line(frame, (x_mid - rung_length // 2, y), (x_mid + rung_length // 2, y), (200, 200, 200), 2, lineType=cv2.LINE_AA)
+
+            # Sparks traverse on highs
+            if treble > 0.5:
+                spark_x = int(x_mid + np.sin(self.frame_counter * 0.2 + i) * rung_length // 2)
+                cv2.circle(frame, (spark_x, y), 3, (255, 255, 100), -1)
+
+        return frame
+
+    def draw_mode_173_arc_meter_trio(self, frame, magnitudes):
+        """Mode 173: Three concentric arcs for lows/mids/highs"""
+        bass = np.mean(magnitudes[:len(magnitudes)//4])
+        mids = np.mean(magnitudes[len(magnitudes)//4:3*len(magnitudes)//4])
+        treble = np.mean(magnitudes[3*len(magnitudes)//4:])
+
+        values = [bass, mids, treble]
+        colors = [(255, 100, 100), (100, 255, 100), (100, 100, 255)]
+
+        for i, (value, color) in enumerate(zip(values, colors)):
+            radius = 80 + i * 50
+            thickness = int(10 + value * 20)
+            sweep = int(value * 270)
+
+            cv2.ellipse(frame, (self.center_x, self.center_y), (radius, radius), -90, 0, sweep, color, thickness, lineType=cv2.LINE_AA)
+
+        return frame
+
+    def draw_mode_174_ink_splatter_scope(self, frame, magnitudes):
+        """Mode 174: Oscilloscope line with ink-style splats at transients"""
+        # Generate waveform
+        points = []
+        for i in range(len(magnitudes)):
+            x = int(i * self.width / len(magnitudes))
+            y = int(self.center_y + (magnitudes[i] - 0.5) * 200)
+            points.append((x, y))
+
+        # Draw waveform
+        for i in range(1, len(points)):
+            cv2.line(frame, points[i-1], points[i], (100, 100, 200), 2, lineType=cv2.LINE_AA)
+
+            # Detect transients (sharp changes)
+            if abs(magnitudes[i] - magnitudes[i-1]) > 0.3:
+                # Spawn splat
+                self.ink_splatter_splats.append({
+                    'x': points[i][0],
+                    'y': points[i][1],
+                    'size': 20,
+                    'life': 30
+                })
+
+        # Draw splats
+        for splat in self.ink_splatter_splats[:]:
+            splat['size'] += 2
+            splat['life'] -= 1
+
+            if splat['life'] > 0:
+                alpha = int((splat['life'] / 30) * 255)
+                cv2.circle(frame, (splat['x'], splat['y']), splat['size'], (alpha // 2, alpha // 2, alpha), 1, lineType=cv2.LINE_AA)
+
+        self.ink_splatter_splats = [s for s in self.ink_splatter_splats if s['life'] > 0]
+
+        return frame
+
+    def draw_mode_175_hex_cell_bloom(self, frame, magnitudes):
+        """Mode 175: Hex grid; cells bloom outward with frequency bucket"""
+        # Initialize hex grid
+        if not self.hex_cell_states:
+            hex_size = 30
+            rows = self.height // (hex_size * 2) + 2
+            cols = self.width // (hex_size * 2) + 2
+
+            for row in range(rows):
+                for col in range(cols):
+                    x = col * hex_size * 1.5
+                    y = row * hex_size * np.sqrt(3)
+                    if row % 2 == 1:
+                        x += hex_size * 0.75
+
+                    self.hex_cell_states.append({
+                        'x': int(x),
+                        'y': int(y),
+                        'bloom': 0,
+                        'idx': (row * cols + col) % len(magnitudes)
+                    })
+
+        # Update and draw cells
+        for cell in self.hex_cell_states:
+            magnitude = magnitudes[cell['idx']]
+            cell['bloom'] = magnitude
+
+            if cell['bloom'] > 0.2:
+                size = int(15 + cell['bloom'] * 20)
+                brightness = int(cell['bloom'] * 255)
+                color = (brightness // 2, brightness, brightness // 2)
+
+                # Draw hexagon (simplified as circle)
+                cv2.circle(frame, (cell['x'], cell['y']), size, color, -1, lineType=cv2.LINE_AA)
+
+        return frame
 
     def draw_spectrum(self, frame, magnitudes):
-        """Draw spectrum based on selected mode"""
+        """Draw spectrum based on selected mode using dynamic dispatch"""
         self.frame_counter += 1
 
-        if self.mode == 1:
-            return self.draw_mode_1_vinyl_grooves(frame, magnitudes)
-        elif self.mode == 2:
-            return self.draw_mode_2_neon_rain(frame, magnitudes)
-        elif self.mode == 3:
-            return self.draw_mode_3_jazzy_fireworks(frame, magnitudes)
-        elif self.mode == 4:
-            return self.draw_mode_4_retro_cassette(frame, magnitudes)
-        elif self.mode == 5:
-            return self.draw_mode_5_soul_aura(frame, magnitudes)
-        elif self.mode == 6:
-            return self.draw_mode_6_frequency_flowers(frame, magnitudes)
-        elif self.mode == 7:
-            return self.draw_mode_7_electric_heartbeat(frame, magnitudes)
-        elif self.mode == 8:
-            return self.draw_mode_8_pixel_clouds(frame, magnitudes)
-        elif self.mode == 9:
-            return self.draw_mode_9_liquid_mercury(frame, magnitudes)
-        elif self.mode == 10:
-            return self.draw_mode_10_cosmic_dust(frame, magnitudes)
-        elif self.mode == 11:
-            return self.draw_mode_11_quantum_strings(frame, magnitudes)
-        elif self.mode == 12:
-            return self.draw_mode_12_lava_lamp(frame, magnitudes)
-        elif self.mode == 13:
-            return self.draw_mode_13_dna_helix(frame, magnitudes)
-        elif self.mode == 14:
-            return self.draw_mode_14_lightning_strikes(frame, magnitudes)
-        elif self.mode == 15:
-            return self.draw_mode_15_morphing_geometry(frame, magnitudes)
-        elif self.mode == 16:
-            return self.draw_mode_16_ink_drops(frame, magnitudes)
-        elif self.mode == 17:
-            return self.draw_mode_17_aurora_waves(frame, magnitudes)
-        elif self.mode == 18:
-            return self.draw_mode_18_fractal_bloom(frame, magnitudes)
-        elif self.mode == 19:
-            return self.draw_mode_19_plasma_storm(frame, magnitudes)
-        elif self.mode == 20:
-            return self.draw_mode_20_crystal_growth(frame, magnitudes)
-        elif self.mode == 21:
-            return self.draw_mode_21_gravitational_lens(frame, magnitudes)
-        elif self.mode == 22:
-            return self.draw_mode_22_magnetic_fields(frame, magnitudes)
-        elif self.mode == 23:
-            return self.draw_mode_23_tribal_drums(frame, magnitudes)
-        elif self.mode == 24:
-            return self.draw_mode_24_neon_cityscape(frame, magnitudes)
-        elif self.mode == 25:
-            return self.draw_mode_25_heartbeat_monitor(frame, magnitudes)
-        elif self.mode == 26:
-            return self.draw_mode_26_ocean_depths(frame, magnitudes)
-        elif self.mode == 27:
-            return self.draw_mode_27_fire_dance(frame, magnitudes)
-        elif self.mode == 28:
-            return self.draw_mode_28_particle_collider(frame, magnitudes)
-        elif self.mode == 29:
-            return self.draw_mode_29_rainbow_prism(frame, magnitudes)
-        elif self.mode == 30:
-            return self.draw_mode_30_seismic_waves(frame, magnitudes)
-        elif self.mode == 31:
-            return self.draw_mode_31_origami_unfold(frame, magnitudes)
-        elif self.mode == 32:
-            return self.draw_mode_32_storm_clouds(frame, magnitudes)
-        elif self.mode == 33:
-            return self.draw_mode_33_binary_matrix(frame, magnitudes)
-        elif self.mode == 34:
-            return self.draw_mode_34_kaleidoscope(frame, magnitudes)
-        elif self.mode == 35:
-            return self.draw_mode_35_laser_show(frame, magnitudes)
-        elif self.mode == 36:
-            return self.draw_mode_36_sandstorm(frame, magnitudes)
-        elif self.mode == 37:
-            return self.draw_mode_37_ice_shatter(frame, magnitudes)
-        elif self.mode == 38:
-            return self.draw_mode_38_cellular_division(frame, magnitudes)
-        elif self.mode == 39:
-            return self.draw_mode_39_neon_tubes(frame, magnitudes)
-        elif self.mode == 40:
-            return self.draw_mode_40_cosmic_strings(frame, magnitudes)
-        elif self.mode == 41:
-            return self.draw_mode_41_paint_splatter(frame, magnitudes)
-        elif self.mode == 42:
-            return self.draw_mode_42_quantum_foam(frame, magnitudes)
-        elif self.mode == 43:
-            return self.draw_mode_43_aztec_sun(frame, magnitudes)
-        elif self.mode == 44:
-            return self.draw_mode_44_fiber_optics(frame, magnitudes)
-        elif self.mode == 45:
-            return self.draw_mode_45_tornado_funnel(frame, magnitudes)
-        elif self.mode == 46:
-            return self.draw_mode_46_hologram_glitch(frame, magnitudes)
-        elif self.mode == 47:
-            return self.draw_mode_47_starfield_warp(frame, magnitudes)
-        elif self.mode == 48:
-            return self.draw_mode_48_mandala_growth(frame, magnitudes)
-        elif self.mode == 49:
-            return self.draw_mode_49_neon_sign_flicker(frame, magnitudes)
-        elif self.mode == 50:
-            return self.draw_mode_50_black_hole(frame, magnitudes)
-        elif self.mode == 51:
-            return self.draw_mode_51_fractal_tree(frame, magnitudes)
-        elif self.mode == 52:
-            return self.draw_mode_52_cityscape_extrusion(frame, magnitudes)
-        elif self.mode == 53:
-            return self.draw_mode_53_gravity_well(frame, magnitudes)
-        elif self.mode == 54:
-            return self.draw_mode_54_metaball_fluid(frame, magnitudes)
-        elif self.mode == 55:
-            return self.draw_mode_55_aurora_borealis(frame, magnitudes)
-        elif self.mode == 56:
-            return self.draw_mode_56_stained_glass(frame, magnitudes)
-        elif self.mode == 57:
-            return self.draw_mode_57_neon_nerve_network(frame, magnitudes)
-        elif self.mode == 58:
-            return self.draw_mode_58_glitch_artifact(frame, magnitudes)
-        elif self.mode == 59:
-            return self.draw_mode_59_warp_tunnel(frame, magnitudes)
-        elif self.mode == 60:
-            return self.draw_mode_60_conway_life(frame, magnitudes)
-        elif self.mode == 61:
-            return self.draw_mode_61_ascii_art(frame, magnitudes)
-        elif self.mode == 62:
-            return self.draw_mode_62_rippling_water(frame, magnitudes)
-        elif self.mode == 63:
-            return self.draw_mode_63_terrain_flyover(frame, magnitudes)
-        elif self.mode == 64:
-            return self.draw_mode_64_string_art(frame, magnitudes)
-        elif self.mode == 65:
-            return self.draw_mode_65_fire_embers(frame, magnitudes)
-        elif self.mode == 66:
-            return self.draw_mode_66_radial_kaleidoscope(frame, magnitudes)
-        elif self.mode == 67:
-            return self.draw_mode_67_pulsing_jellyfish(frame, magnitudes)
-        elif self.mode == 68:
-            return self.draw_mode_68_orbital_system(frame, magnitudes)
-        elif self.mode == 69:
-            return self.draw_mode_69_spectrum_cube(frame, magnitudes)
-        elif self.mode == 70:
-            return self.draw_mode_70_typographic_flow(frame, magnitudes)
-        elif self.mode == 71:
-            return self.draw_mode_71_sonar_ping(frame, magnitudes)
-        elif self.mode == 72:
-            return self.draw_mode_72_vu_meters(frame, magnitudes)
-        elif self.mode == 73:
-            return self.draw_mode_73_lightning_cloud(frame, magnitudes)
-        elif self.mode == 74:
-            return self.draw_mode_74_bouncing_balls(frame, magnitudes)
-        elif self.mode == 75:
-            return self.draw_mode_75_liquid_ink(frame, magnitudes)
-        elif self.mode == 76:
-            return self.draw_mode_76_stereo_landscape(frame, magnitudes)
-        elif self.mode == 77:
-            return self.draw_mode_77_ai_latent_walk(frame, magnitudes)
-        elif self.mode == 78:
-            return self.draw_mode_78_pixel_storm(frame, magnitudes)
-        elif self.mode == 79:
-            return self.draw_mode_79_growing_vine(frame, magnitudes)
-        elif self.mode == 80:
-            return self.draw_mode_80_haunted_faces(frame, magnitudes)
-        elif self.mode == 81:
-            return self.draw_mode_81_connecting_constellations(frame, magnitudes)
-        elif self.mode == 82:
-            return self.draw_mode_82_matrix_rain(frame, magnitudes)
-        elif self.mode == 83:
-            return self.draw_mode_83_voxel_world(frame, magnitudes)
-        elif self.mode == 84:
-            return self.draw_mode_84_dna_helix_rungs(frame, magnitudes)
-        elif self.mode == 85:
-            return self.draw_mode_85_audio_reactive_shader(frame, magnitudes)
-        elif self.mode == 86:
-            return self.draw_mode_86_spirograph(frame, magnitudes)
-        elif self.mode == 87:
-            return self.draw_mode_87_equalizer_tower(frame, magnitudes)
-        elif self.mode == 88:
-            return self.draw_mode_88_audio_driven_doodles(frame, magnitudes)
-        elif self.mode == 89:
-            return self.draw_mode_89_firework_show(frame, magnitudes)
-        elif self.mode == 90:
-            return self.draw_mode_90_microscopic_view(frame, magnitudes)
-        elif self.mode == 91:
-            return self.draw_mode_91_burning_paper(frame, magnitudes)
-        elif self.mode == 92:
-            return self.draw_mode_92_swarm_intelligence(frame, magnitudes)
-        elif self.mode == 93:
-            return self.draw_mode_93_pendulum_wave(frame, magnitudes)
-        elif self.mode == 94:
-            return self.draw_mode_94_retro_scanlines(frame, magnitudes)
-        elif self.mode == 95:
-            return self.draw_mode_95_pulsing_polygon(frame, magnitudes)
-        elif self.mode == 96:
-            return self.draw_mode_96_chromatic_orb(frame, magnitudes)
-        elif self.mode == 97:
-            return self.draw_mode_97_textured_bars(frame, magnitudes)
-        elif self.mode == 98:
-            return self.draw_mode_98_voronoi_tessellation(frame, magnitudes)
-        elif self.mode == 99:
-            return self.draw_mode_99_shattering_glass(frame, magnitudes)
-        elif self.mode == 100:
-            return self.draw_mode_100_sunrise_sunset(frame, magnitudes)
+        # Get mode method from registry
+        mode_method = get_mode_method(self.mode)
+        if mode_method:
+            return mode_method(frame, magnitudes)
         else:
-            return self.draw_mode_1_vinyl_grooves(frame, magnitudes)
+            # Fallback: simple bars if mode not found
+            print(f"Warning: Mode {self.mode} not found, using fallback")
+            for i in range(min(self.num_bars, len(magnitudes))):
+                height = int(magnitudes[i] * self.height * 0.8)
+                x = int((i + 0.5) * self.width / self.num_bars)
+                cv2.rectangle(frame, (x - 5, self.height - height),
+                            (x + 5, self.height), (100, 150, 255), -1)
+            return frame
 
     def generate_video(self):
         """Generate the final video with transparent background"""
@@ -5830,10 +9932,34 @@ class CreativeSpectrumVisualizer:
         video_writer.release()
         print(f"\nVideo generation complete (silent): {temp_no_audio}")
 
-        print("Adding audio and transparency...")
+        print("Adding audio and finalizing...")
         import subprocess
 
         try:
+            # Fast preview path: skip transparency/prores when AS_PREVIEW=1
+            if os.getenv('AS_PREVIEW') == '1':
+                final_output = str(Path(self.output_path))
+                result = subprocess.run([
+                    'ffmpeg', '-y',
+                    '-i', temp_no_audio,
+                    '-i', self.audio_path,
+                    '-c:v', 'libx264',
+                    '-preset', 'veryfast',
+                    '-crf', '23',
+                    '-c:a', 'aac',
+                    '-shortest',
+                    final_output
+                ], capture_output=True, text=True)
+
+                Path(temp_no_audio).unlink(missing_ok=True)
+
+                if result.returncode == 0:
+                    self.output_path = final_output
+                    print(f"✓ Preview video created: {final_output}")
+                    return
+                else:
+                    print(f"Warning: Preview mux failed, falling back to transparency path")
+
             final_output = str(Path(self.output_path).with_suffix('.mov'))
 
             result = subprocess.run([
@@ -5851,7 +9977,7 @@ class CreativeSpectrumVisualizer:
                 final_output
             ], capture_output=True, text=True)
 
-            Path(temp_no_audio).unlink()
+            Path(temp_no_audio).unlink(missing_ok=True)
 
             if result.returncode == 0:
                 self.output_path = final_output
@@ -5871,7 +9997,7 @@ class CreativeSpectrumVisualizer:
                     final_output
                 ], capture_output=True, text=True)
 
-                Path(temp_no_audio).unlink()
+                Path(temp_no_audio).unlink(missing_ok=True)
 
                 if result.returncode == 0:
                     print(f"✓ Standard video created: {final_output}")
@@ -5914,8 +10040,8 @@ Examples:
 
     parser.add_argument('input', help='Input audio file (.mp3 or .wav)')
     parser.add_argument('output', help='Output video file (.mov recommended)')
-    parser.add_argument('--mode', type=int, choices=range(1, 101), default=1,
-                       help='Visualization mode (1-100). Use --help for full list.')
+    parser.add_argument('--mode', type=int, choices=range(1, 301), default=1,
+                       help='Visualization mode (1-300). Use --help for full list.')
     parser.add_argument('--width', type=int, default=720, help='Video width (default: 720 for square format)')
     parser.add_argument('--height', type=int, default=720, help='Video height (default: 720 for square format)')
     parser.add_argument('--fps', type=int, default=30, help='Frames per second (default: 30)')
@@ -6028,7 +10154,132 @@ Examples:
         97: "Textured Bars (scrolling patterns)",
         98: "Voronoi Tessellation (cellular diagram)",
         99: "Shattering Glass (cracking pane)",
-        100: "Sunrise/Sunset (gradient sky)"
+        100: "Sunrise/Sunset (gradient sky)",
+        151: "Neon Halo Burst",
+        152: "Twin Orbiters",
+        153: "Bar Spiral Galaxy",
+        154: "Ribbon Wave",
+        155: "Voxel City",
+        156: "Sunburst Dial",
+        157: "Waterline Oscilloscope",
+        158: "Laser Tunnel",
+        159: "Vector Field Sprites",
+        160: "Orbit Rings Meter",
+        161: "Stitch Bars",
+        162: "Aurora Curtain",
+        163: "Helix Bars 3D",
+        164: "Polygon Heartbeat",
+        165: "Confetti Impulse",
+        166: "Wireframe Dome",
+        167: "Pulse Dashes",
+        168: "Terrain Sweep",
+        169: "Chromatic Bars Mirror",
+        170: "Bubble Choir",
+        171: "Starfield Quantizer",
+        172: "DNA Ladder",
+        173: "Arc Meter Trio",
+        174: "Ink Splatter Scope",
+        175: "Hex Cell Bloom",
+        176: "Event Horizon Lattice",
+        177: "Comet Conveyor",
+        178: "Quantum Foam Micro",
+        179: "Aurora Crown",
+        180: "Asteroid Excavator",
+        181: "Hyperloop Spectrotrain",
+        182: "Galactic Pinball",
+        183: "Nebula Inkblot",
+        184: "Satellite Telemetry Rings",
+        185: "Wormhole Origami",
+        186: "Holographic Jellyfish",
+        187: "Moon Quarry Crane",
+        188: "Constellation TypoPlot",
+        189: "Cryo Crystal Garden",
+        190: "Meteorite Blueprint",
+        191: "Lunar Tide Pool",
+        192: "Orbital Barcode Slicer",
+        193: "Satellite Swarm Flocking",
+        194: "Astro Pulse Weave",
+        195: "Zero-G Paint Spheres",
+        196: "Supernova Countdown",
+        197: "Martian Wind Harp",
+        198: "Teleporting Bar Choir",
+        199: "Cosmic Vinyl Halo",
+        200: "Photon Origination Chamber",
+        201: "Meteor Net",
+        202: "Deep-Space Garden Hose",
+        203: "Horizon Monoliths",
+        204: "Gravity Slingshot Trails",
+        205: "Solar Flare Notches",
+        206: "Tesseract Window",
+        207: "Interstellar Postcards",
+        208: "Cosmic Braille",
+        209: "Stellar Harpoon",
+        210: "Galaxy Ticker Tape",
+        211: "Antimatter Chess",
+        212: "Star Nursery Conveyor",
+        213: "Magnetar Lines",
+        214: "Zero-Kelvin Diamonds",
+        215: "Orbital Time Garden",
+        216: "Subspace Ribbon Printer",
+        217: "Dark-Matter Drizzle",
+        218: "Meteor Choir Cones",
+        219: "Folded Galaxy Map",
+        220: "Ion Thruster Plume",
+        221: "Cosmic Dominoes",
+        222: "Spacesuit HUD",
+        223: "Pulsar Barcode Beam",
+        224: "Astro Terrarium",
+        225: "Micrometeor Spark Curtain"
+        ,226: "Golden Phyllotaxis Bloom"
+        ,227: "Breathing Mandala Weave"
+        ,228: "Infinite Tunnel Lissajous"
+        ,229: "Lotus Bloom Cascade"
+        ,230: "Orbital Hypno-Pendula"
+        ,231: "Moire Breathing Nets"
+        ,232: "Spiral Shepard Rings"
+        ,233: "Velvet Plasma Pool"
+        ,234: "Radial Pulse Cathedral"
+        ,235: "S-Curve Serpents"
+        ,236: "Orb Choir Orbitals"
+        ,237: "Sufi Spin Carpet"
+        ,238: "Helmholtz Rings"
+        ,239: "Hypno Slinky Stairwell"
+        ,240: "Fractal Fern Drift"
+        ,241: "Binaural Circles"
+        ,242: "Auric Chakric Wheel"
+        ,243: "Hypersphere Ribbon"
+        ,244: "Phi Step Kaleidos"
+        ,245: "Silk Ribbon Cycloid"
+        ,246: "Oceanic Breather"
+        ,247: "Zen Sand Harmonograph"
+        ,248: "Magnetic Ink Veins"
+        ,249: "Breath-Linked Vortex"
+        ,250: "Slow Meteor Carousel"
+        ,251: "Ripple-Glass Cathedral"
+        ,252: "Theta Lantern Field"
+        ,253: "Isochromatic Weaves"
+        ,254: "Orbiting Eye"
+        ,255: "Endless Ribbon Stair"
+        ,256: "Glassy Toroidal River"
+        ,257: "Low-Poly Hypno-Shell"
+        ,258: "Tide Clock Halo"
+        ,259: "Morphic Kaleidofish"
+        ,260: "Zen Compass Waves"
+        ,261: "Glacial Bloom"
+        ,262: "Double Helix Lanterns"
+        ,263: "Soft-Grid Phase Slide"
+        ,264: "Ripple Dome Observatory"
+        ,265: "Ethereal Spirocloud"
+        ,266: "Mosaic Drizzle"
+        ,267: "Whispering Bamboo"
+        ,268: "Nesting Circles Flow"
+        ,269: "Drifting Paper Cranes"
+        ,270: "Pulse-Weave Hologrid"
+        ,271: "Serene Ribbon Canopy"
+        ,272: "Auroral Veil Gate"
+        ,273: "Satin Spiral Ladder"
+        ,274: "Opaline Orb Drifter"
+        ,275: "Hypno Quilt Loom"
     }
     print(f"Selected visualization mode: {args.mode} - {mode_names.get(args.mode, 'Unknown')}")
 

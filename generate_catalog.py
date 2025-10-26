@@ -10,8 +10,8 @@ from pathlib import Path
 import time
 
 # Configuration
-AUDIO_FILE = '/Users/ahmeddoghri/Desktop/turkish-national-anthem.wav'
-CATALOG_DIR = '/Users/ahmeddoghri/Desktop/catalog'
+AUDIO_FILE = 'turkish-national-anthem.wav'
+CATALOG_DIR = 'catalog'
 
 # Define all modes for each script
 SCRIPTS = {

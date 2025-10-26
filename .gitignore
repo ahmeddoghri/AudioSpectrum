@@ -1,3 +1,4 @@
+# Media files
 *.mp3
 *.wav
 *.mov
@@ -12,6 +13,21 @@
 *.aac
 *.ogg
 
+# System files
+.DS_Store
+__pycache__/
+*.pyc
+*.pyo
 
-*.DS_Store
-*__pycache__/
+# Backup files
+*.backup
+*.bak
+*_old.py
+*.old
+
+# Generated catalog
+catalog/*
+
+# Song-specific scripts (keep only general-purpose scripts)
+generate_*_modes.sh
+*_specific.sh

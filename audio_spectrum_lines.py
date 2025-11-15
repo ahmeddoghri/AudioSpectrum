@@ -167,49 +167,100 @@ class LineSpectrumVisualizer:
         return bar_magnitudes
 
     def draw_mode_1_classic_bars(self, frame, magnitudes):
-        """Mode 1: Classic vertical bars"""
+        """Mode 1: Premium vertical bars with glassmorphism"""
         for i, magnitude in enumerate(magnitudes):
             # Calculate bar position
             x = self.bar_spacing + i * (self.bar_width + self.bar_spacing)
 
-            # Calculate bar height
-            bar_height = int(magnitude * self.max_bar_height)
-            bar_height = max(5, bar_height)
+            # Premium easing for smooth motion
+            t = magnitude
+            eased = t * t * (3.0 - 2.0 * t)  # Smootherstep
+            eased = eased * eased * (3.0 - 2.0 * eased)  # Double smootherstep
+            bar_height = int(eased * self.max_bar_height)
+            bar_height = max(3, bar_height)
 
             # Draw bar from bottom up
             y_bottom = self.height - 50
             y_top = y_bottom - bar_height
 
-            # Draw rectangle (filled bar)
-            cv2.rectangle(frame, (x, y_top), (x + self.bar_width, y_bottom),
-                         self.color, -1, lineType=cv2.LINE_AA)
+            # Premium color with sophisticated intensity
+            intensity = 0.75 + (0.25 * magnitude)
+            bar_color = tuple(int(c * intensity) for c in self.color)
 
-            # Add subtle glow for high magnitudes
-            if magnitude > 0.7:
-                glow_rect = (x - 1, y_top - 2, self.bar_width + 2, bar_height + 2)
-                cv2.rectangle(frame, (glow_rect[0], glow_rect[1]),
-                            (glow_rect[0] + glow_rect[2], glow_rect[1] + glow_rect[3]),
-                            tuple(int(c * 0.5) for c in self.color), 1, lineType=cv2.LINE_AA)
+            # Premium multi-layer glow for depth
+            if magnitude > 0.3:
+                # Outer glow
+                glow_outer = tuple(int(c * 0.12) for c in bar_color)
+                cv2.rectangle(frame, (x - 3, y_top - 3), (x + self.bar_width + 3, y_bottom),
+                            glow_outer, -1, lineType=cv2.LINE_AA)
+
+                # Mid glow
+                glow_mid = tuple(int(c * 0.25) for c in bar_color)
+                cv2.rectangle(frame, (x - 1, y_top - 1), (x + self.bar_width + 1, y_bottom),
+                            glow_mid, -1, lineType=cv2.LINE_AA)
+
+            # Main bar with premium rendering
+            cv2.rectangle(frame, (x, y_top), (x + self.bar_width, y_bottom),
+                         bar_color, -1, lineType=cv2.LINE_AA)
+
+            # Subtle gradient fill for depth
+            if bar_height > 20 and magnitude > 0.5:
+                gradient_overlay = tuple(int(c * 1.1) for c in bar_color)
+                gradient_height = int(bar_height * 0.3)
+                cv2.rectangle(frame, (x, y_top), (x + self.bar_width, y_top + gradient_height),
+                            gradient_overlay, -1, lineType=cv2.LINE_AA)
+
+            # Specular highlight for glassmorphism effect
+            if magnitude > 0.6:
+                highlight = tuple(min(255, int(c * 1.3)) for c in bar_color)
+                highlight_width = max(1, self.bar_width // 3)
+                cv2.rectangle(frame, (x + self.bar_width // 3, y_top + 2),
+                            (x + self.bar_width // 3 + highlight_width, y_top + int(bar_height * 0.15)),
+                            highlight, -1, lineType=cv2.LINE_AA)
 
         return frame
 
     def draw_mode_2_mirror_symmetry(self, frame, magnitudes):
-        """Mode 2: Bars mirrored from center line"""
+        """Mode 2: Premium mirrored bars with bloom and symmetry"""
         for i, magnitude in enumerate(magnitudes):
             x = self.bar_spacing + i * (self.bar_width + self.bar_spacing)
-            bar_height = int(magnitude * self.max_bar_height * 0.5)
-            bar_height = max(3, bar_height)
 
-            # Top bar (mirrored up from center)
+            # Premium easing
+            t = magnitude
+            eased = t * t * (3.0 - 2.0 * t)
+            eased = eased * eased * (3.0 - 2.0 * eased)
+            bar_height = int(eased * self.max_bar_height * 0.5)
+            bar_height = max(2, bar_height)
+
+            # Premium color
+            intensity = 0.75 + (0.25 * magnitude)
+            bar_color = tuple(int(c * intensity) for c in self.color)
+
             y_center = self.center_y
             y_top = y_center - bar_height
-            cv2.rectangle(frame, (x, y_top), (x + self.bar_width, y_center),
-                         self.color, -1, lineType=cv2.LINE_AA)
-
-            # Bottom bar (mirrored down from center)
             y_bottom = y_center + bar_height
+
+            # Premium bloom effect for both bars
+            if magnitude > 0.3:
+                glow = tuple(int(c * 0.2) for c in bar_color)
+                # Top glow
+                cv2.rectangle(frame, (x - 2, y_top - 2), (x + self.bar_width + 2, y_center),
+                            glow, -1, lineType=cv2.LINE_AA)
+                # Bottom glow
+                cv2.rectangle(frame, (x - 2, y_center), (x + self.bar_width + 2, y_bottom + 2),
+                            glow, -1, lineType=cv2.LINE_AA)
+
+            # Main bars
+            cv2.rectangle(frame, (x, y_top), (x + self.bar_width, y_center),
+                         bar_color, -1, lineType=cv2.LINE_AA)
             cv2.rectangle(frame, (x, y_center), (x + self.bar_width, y_bottom),
-                         self.color, -1, lineType=cv2.LINE_AA)
+                         bar_color, -1, lineType=cv2.LINE_AA)
+
+            # Center line glow for depth
+            if magnitude > 0.5:
+                center_glow = tuple(min(255, int(c * 1.4)) for c in bar_color)
+                cv2.line(frame, (x, y_center), (x + self.bar_width, y_center),
+                        center_glow, 2, lineType=cv2.LINE_AA)
 
         return frame
 
@@ -380,23 +431,33 @@ class LineSpectrumVisualizer:
         return frame
 
     def draw_mode_8_dancing_ribbons(self, frame, magnitudes):
-        """Mode 8: Flowing curved lines instead of straight bars"""
-        # Create smooth curves for each bar
+        """Mode 8: Premium flowing ribbons with gradient and depth"""
+        # Create smooth, elegant curves
         for i, magnitude in enumerate(magnitudes):
             x = self.bar_spacing + i * (self.bar_width + self.bar_spacing) + self.bar_width // 2
-            bar_height = int(magnitude * self.max_bar_height)
+
+            # Premium easing
+            t = magnitude
+            eased = t * t * (3.0 - 2.0 * t)
+            eased = eased * eased * (3.0 - 2.0 * eased)
+            bar_height = int(eased * self.max_bar_height)
             bar_height = max(10, bar_height)
 
-            # Create wavy curve for each bar
+            # Premium color
+            intensity = 0.75 + (0.25 * magnitude)
+            ribbon_color = tuple(int(c * intensity) for c in self.color)
+
+            # Create elegant flowing curve
             curve_points = []
-            num_curve_points = 20
+            num_curve_points = 30  # More points for smoother curves
 
             for j in range(num_curve_points):
                 y_progress = j / num_curve_points
                 y = self.height - 50 - int(y_progress * bar_height)
 
-                # Add wave motion
-                wave_x = np.sin(y_progress * np.pi * 2 + i * 0.2) * 8
+                # Premium wave motion with easing
+                wave_phase = y_progress * np.pi * 3 + i * 0.15
+                wave_x = np.sin(wave_phase) * 6 * (1 - y_progress * 0.5)  # Taper at top
                 curve_x = int(x + wave_x)
 
                 curve_points.append([curve_x, y])
@@ -404,9 +465,36 @@ class LineSpectrumVisualizer:
             if len(curve_points) > 1:
                 curve_points = np.array(curve_points, dtype=np.int32)
 
-                # Draw thick curve
-                cv2.polylines(frame, [curve_points], False, self.color,
-                            max(2, self.bar_width), lineType=cv2.LINE_AA)
+                # Premium multi-layer rendering for depth
+                ribbon_width = max(2, self.bar_width)
+
+                # Outer glow layer
+                if magnitude > 0.3:
+                    glow_outer = tuple(int(c * 0.15) for c in ribbon_color)
+                    cv2.polylines(frame, [curve_points], False, glow_outer,
+                                ribbon_width + 6, lineType=cv2.LINE_AA)
+
+                    # Mid glow
+                    glow_mid = tuple(int(c * 0.3) for c in ribbon_color)
+                    cv2.polylines(frame, [curve_points], False, glow_mid,
+                                ribbon_width + 3, lineType=cv2.LINE_AA)
+
+                # Main ribbon
+                cv2.polylines(frame, [curve_points], False, ribbon_color,
+                            ribbon_width, lineType=cv2.LINE_AA)
+
+                # Highlight edge for glassmorphism
+                if magnitude > 0.6 and len(curve_points) > 2:
+                    highlight = tuple(min(255, int(c * 1.3)) for c in ribbon_color)
+                    # Draw thinner highlight line
+                    highlight_points = []
+                    for j in range(0, len(curve_points), 2):
+                        pt = curve_points[j]
+                        highlight_points.append([pt[0] + 1, pt[1]])
+                    if len(highlight_points) > 1:
+                        highlight_points = np.array(highlight_points, dtype=np.int32)
+                        cv2.polylines(frame, [highlight_points], False, highlight,
+                                    max(1, ribbon_width // 3), lineType=cv2.LINE_AA)
 
         return frame
 
@@ -682,8 +770,8 @@ Examples:
     }
     print(f"Selected visualization mode: {args.mode} - {mode_names.get(args.mode, 'Unknown')}")
 
-    # White color in BGR format
-    color_bgr = (255, 255, 255)
+    # Premium muted white color in BGR format (sophisticated off-white)
+    color_bgr = (220, 225, 230)
 
     # Create visualizer
     visualizer = LineSpectrumVisualizer(

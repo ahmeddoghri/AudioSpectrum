@@ -977,8 +977,8 @@ class Modes301_350(BaseModeVisualizer):
 
         # Ash plume
         for i in range(int(bass * 100)):
-            spread = int((self.frame_count + i) * 2)
-            x = int(self.center_x + np.random.randint(-spread, spread))
+            spread = max(1, int((self.frame_count + i) * 2))
+            x = int(self.center_x + np.random.randint(-spread, spread + 1))
             y = int(self.height - self.frame_count * 3 - i * 5) % self.height
 
             size = 2 + int(np.random.random() * 5)

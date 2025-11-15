@@ -213,7 +213,7 @@ class CreativeSpectrumVisualizer:
 
         self.center_x = width // 2
         self.center_y = height // 2
-        self.max_radius = min(width, height) // 2 - 40
+        self.max_radius = min(width, height) // 2 - 50  # More padding for minimalist look
 
         # For smoothing between frames
         self.prev_magnitudes = None
@@ -658,6 +658,48 @@ class CreativeSpectrumVisualizer:
         self.prev_magnitudes = bar_magnitudes.copy()
 
         return bar_magnitudes
+
+    def get_apple_style_color(self, hue, magnitude, saturation_multiplier=0.6, value_multiplier=0.85):
+        """
+        Convert vibrant colors to Apple-style minimalist aesthetic
+
+        Args:
+            hue: Base hue (0-180 in OpenCV HSV)
+            magnitude: Audio magnitude (0-1)
+            saturation_multiplier: Reduce saturation for muted colors
+            value_multiplier: Adjust brightness
+
+        Returns:
+            BGR color tuple with minimalist aesthetic
+        """
+        # Reduce saturation for more muted, elegant colors
+        saturation = int(100 + magnitude * 80 * saturation_multiplier)
+        saturation = min(180, saturation)
+
+        # Softer value range for minimalist look
+        value = int(180 + magnitude * 75 * value_multiplier)
+        value = min(240, value)
+
+        color_hsv = np.array([[[hue, saturation, value]]], dtype=np.uint8)
+        color_bgr = cv2.cvtColor(color_hsv, cv2.COLOR_HSV2BGR)[0][0]
+
+        return tuple(int(c) for c in color_bgr)
+
+    def apply_elegant_glow(self, frame, x, y, color, size, intensity=0.3):
+        """
+        Apply subtle glow effect for depth - Apple style
+
+        Args:
+            frame: Frame to draw on
+            x, y: Position
+            color: Base color
+            size: Glow size
+            intensity: Glow intensity (0-1)
+        """
+        glow_color = tuple(int(c * intensity) for c in color)
+        cv2.circle(frame, (x, y), size + 4, glow_color, -1, lineType=cv2.LINE_AA)
+        cv2.circle(frame, (x, y), size + 2, tuple(int(c * intensity * 1.5) for c in color),
+                  -1, lineType=cv2.LINE_AA)
 
     def draw_mode_1_vinyl_grooves(self, frame, magnitudes):
         """Mode 1: Rotating vinyl record grooves"""

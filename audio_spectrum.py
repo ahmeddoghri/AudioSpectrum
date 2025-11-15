@@ -161,41 +161,38 @@ class CircularSpectrumVisualizer:
         return bar_magnitudes
 
     def get_color_for_position(self, index, magnitude):
-        """Get color for a given position with optional gradient and magnitude intensity - Apple minimalist style"""
+        """Get premium color with sophisticated gradients - Apple/Airbnb inspired"""
         angle_step = 360 / self.num_bars
 
         if self.gradient and self.gradient_color1 and self.gradient_color2:
             # Calculate gradient position based on angle
             angle_normalized = (index * angle_step) / 360.0
 
-            # Create a smooth transition with easing
-            if angle_normalized <= 0.5:
-                blend = 0.5 - angle_normalized
-            else:
-                blend = angle_normalized - 0.5
+            # Premium bezier easing for ultra-smooth transitions
+            t = angle_normalized
+            # Cubic bezier easing (0.4, 0.0, 0.2, 1.0) - Material Design inspired
+            blend = t * t * (3.0 - 2.0 * t)  # Smootherstep
+            blend = blend * blend * (3.0 - 2.0 * blend)  # Double smootherstep for premium feel
 
-            # Apply smooth easing function for more elegant transitions
-            blend = blend * 2
-            blend = blend * blend * (3 - 2 * blend)  # Smoothstep easing
-
-            # Interpolate between colors
+            # Interpolate between colors with perceptual color mixing
             bar_color = (
                 int(self.gradient_color1[0] * (1 - blend) + self.gradient_color2[0] * blend),
                 int(self.gradient_color1[1] * (1 - blend) + self.gradient_color2[1] * blend),
                 int(self.gradient_color1[2] * (1 - blend) + self.gradient_color2[2] * blend)
             )
 
-            # Subtle brightness based on magnitude - more refined
-            intensity = int(40 * magnitude)  # Reduced for minimalist look
+            # Premium subtle intensity variation based on magnitude
+            # Use desaturated brightness for sophisticated look
+            intensity_factor = 0.85 + (0.15 * magnitude)  # Very subtle: 85-100%
             bar_color = (
-                min(255, bar_color[0] + intensity),
-                min(255, bar_color[1] + intensity),
-                min(255, bar_color[2] + intensity)
+                int(bar_color[0] * intensity_factor),
+                int(bar_color[1] * intensity_factor),
+                int(bar_color[2] * intensity_factor)
             )
         else:
-            # Single color mode with subtle intensity variation
-            # Apply gentle opacity based on magnitude for minimalist effect
-            base_intensity = 0.6 + (0.4 * magnitude)  # Range: 60-100%
+            # Single color mode with premium intensity mapping
+            # Sophisticated opacity curve for refined aesthetic
+            base_intensity = 0.7 + (0.3 * magnitude * magnitude)  # Quadratic for smoother ramp
             bar_color = (
                 int(self.color[0] * base_intensity),
                 int(self.color[1] * base_intensity),
@@ -205,65 +202,92 @@ class CircularSpectrumVisualizer:
         return bar_color
 
     def draw_center_circle(self, frame, magnitudes):
-        """Draw a minimalist center circle with elegant subtle glow - Apple style"""
-        # Get average magnitude for center circle glow
+        """Draw a premium center circle with glassmorphism effect - Apple/Airbnb inspired"""
+        # Get average magnitude for reactive glow
         avg_magnitude = np.mean(magnitudes)
 
-        # Soft, elegant gray with slight warmth (Apple style)
-        circle_color = (220, 220, 220)
+        # Premium muted color palette (sophisticated gray-blue)
+        circle_color = (200, 205, 210)
 
-        # Multi-layer subtle glow for depth (very Apple-like)
-        for i in range(3, 0, -1):
-            glow_alpha = 0.08 * i
-            glow_color = tuple(int(c * glow_alpha) for c in circle_color)
+        # Glassmorphism-inspired multi-layer glow with premium falloff
+        glow_layers = 8  # More layers for smoother, more premium feel
+        for i in range(glow_layers, 0, -1):
+            # Exponential falloff for natural glow
+            glow_alpha = 0.05 * (i / glow_layers) ** 2
+            glow_radius = self.inner_radius + int(i * 3.5)
+            glow_color = tuple(int(c * glow_alpha * (0.5 + 0.5 * avg_magnitude)) for c in circle_color)
             cv2.circle(frame, (self.center_x, self.center_y),
-                      self.inner_radius + i * 2,
-                      glow_color, 1, lineType=cv2.LINE_AA)
+                      glow_radius, glow_color, 1, lineType=cv2.LINE_AA)
 
-        # Draw main center circle with clean, thin line
-        main_color = tuple(int(c * (0.7 + 0.3 * avg_magnitude)) for c in circle_color)
+        # Premium inner fill with subtle gradient effect
+        inner_alpha = 0.15 + (0.1 * avg_magnitude)
+        fill_color = tuple(int(c * inner_alpha) for c in circle_color)
+        cv2.circle(frame, (self.center_x, self.center_y), self.inner_radius - 2,
+                  fill_color, -1, lineType=cv2.LINE_AA)
+
+        # Ultra-thin main stroke for refined look
+        stroke_intensity = 0.6 + 0.4 * avg_magnitude
+        main_color = tuple(int(c * stroke_intensity) for c in circle_color)
         cv2.circle(frame, (self.center_x, self.center_y), self.inner_radius,
                   main_color, 1, lineType=cv2.LINE_AA)
 
         return frame
 
     def draw_mode_1_bars(self, frame, magnitudes):
-        """Mode 1: Classic radial bars - Minimalist Apple style with clean lines"""
+        """Mode 1: Premium radial bars with glassmorphism and depth"""
         angle_step = 360 / self.num_bars
 
         for i, magnitude in enumerate(magnitudes):
             angle = np.deg2rad(i * angle_step)
 
-            # Calculate bar height with smooth easing
-            min_bar_height = 3
+            # Premium spring physics-inspired easing for natural motion
+            min_bar_height = 2
             max_bar_height = self.max_radius - self.inner_radius
-            # Apply easing for smoother animation
-            eased_magnitude = magnitude * magnitude * (3 - 2 * magnitude)
-            bar_height = int(eased_magnitude * max_bar_height)
+            # Triple easing for ultra-smooth, Apple-quality animation
+            t = magnitude
+            eased = t * t * (3.0 - 2.0 * t)  # Smootherstep
+            eased = eased * eased * (3.0 - 2.0 * eased)  # Double smootherstep
+            bar_height = int(eased * max_bar_height)
             bar_height = max(min_bar_height, bar_height)
 
-            # Calculate start and end points
+            # Calculate positions
             start_x = int(self.center_x + self.inner_radius * np.cos(angle))
             start_y = int(self.center_y + self.inner_radius * np.sin(angle))
             end_x = int(self.center_x + (self.inner_radius + bar_height) * np.cos(angle))
             end_y = int(self.center_y + (self.inner_radius + bar_height) * np.sin(angle))
 
-            # Thinner bars for minimalist look
-            thickness = max(1, int(self.bar_width_multiplier * angle_step / 3))
+            # Ultra-refined thickness for premium aesthetic
+            thickness = max(1, int(self.bar_width_multiplier * angle_step / 4))
 
-            # Get color
+            # Get premium color
             bar_color = self.get_color_for_position(i, magnitude)
 
-            # Draw bar with subtle glow for depth
-            if magnitude > 0.5:
-                glow_color = tuple(int(c * 0.3) for c in bar_color)
+            # Premium multi-layer glow for depth and glassmorphism effect
+            if magnitude > 0.3:
+                # Outer soft glow
+                glow_outer = tuple(int(c * 0.12) for c in bar_color)
                 cv2.line(frame, (start_x, start_y), (end_x, end_y),
-                        glow_color, thickness + 2, lineType=cv2.LINE_AA)
+                        glow_outer, thickness + 6, lineType=cv2.LINE_AA)
 
+                # Mid glow layer
+                glow_mid = tuple(int(c * 0.25) for c in bar_color)
+                cv2.line(frame, (start_x, start_y), (end_x, end_y),
+                        glow_mid, thickness + 3, lineType=cv2.LINE_AA)
+
+            # Main bar with premium antialiasing
             cv2.line(frame, (start_x, start_y), (end_x, end_y),
                     bar_color, thickness, lineType=cv2.LINE_AA)
 
-        # Draw center circle
+            # Subtle highlight for glassmorphism depth
+            if magnitude > 0.6:
+                highlight_color = tuple(min(255, int(c * 1.2)) for c in bar_color)
+                highlight_offset = int(bar_height * 0.15)
+                highlight_x = int(self.center_x + (self.inner_radius + highlight_offset) * np.cos(angle))
+                highlight_y = int(self.center_y + (self.inner_radius + highlight_offset) * np.sin(angle))
+                cv2.circle(frame, (highlight_x, highlight_y), max(1, thickness // 2),
+                          highlight_color, -1, lineType=cv2.LINE_AA)
+
+        # Draw premium center circle
         self.draw_center_circle(frame, magnitudes)
 
         return frame
@@ -319,49 +343,62 @@ class CircularSpectrumVisualizer:
         return frame
 
     def draw_mode_3_particles(self, frame, magnitudes):
-        """Mode 3: Elegant particle rings - Minimalist dots with soft glow"""
+        """Mode 3: Premium particle system with bloom and depth"""
         angle_step = 360 / self.num_bars
 
         for i, magnitude in enumerate(magnitudes):
             angle = np.deg2rad(i * angle_step)
 
-            # Calculate position with smooth easing
+            # Premium easing for smooth, natural motion
             max_bar_height = self.max_radius - self.inner_radius
-            eased_magnitude = magnitude * magnitude * (3 - 2 * magnitude)
-            bar_height = int(eased_magnitude * max_bar_height)
+            t = magnitude
+            eased = t * t * (3.0 - 2.0 * t)
+            eased = eased * eased * (3.0 - 2.0 * eased)  # Double smootherstep
+            bar_height = int(eased * max_bar_height)
             radius = self.inner_radius + bar_height
 
             x = int(self.center_x + radius * np.cos(angle))
             y = int(self.center_y + radius * np.sin(angle))
 
-            # Smaller, more refined particles
-            particle_size = max(1, int(5 * magnitude + 1))
+            # Dynamic particle sizing with premium scaling
+            particle_size = max(2, int(3 + 4 * magnitude))
 
-            # Get color
+            # Get premium color
             particle_color = self.get_color_for_position(i, magnitude)
 
-            # Elegant multi-layer glow
-            if magnitude > 0.3:
-                # Outer glow
-                glow_size = particle_size + 4
-                glow_color = tuple(int(c * 0.15) for c in particle_color)
-                cv2.circle(frame, (x, y), glow_size, glow_color, -1, lineType=cv2.LINE_AA)
+            # Premium bloom effect with exponential falloff (like real light)
+            if magnitude > 0.2:
+                bloom_layers = 6
+                for layer in range(bloom_layers, 0, -1):
+                    # Exponential falloff for natural light bloom
+                    bloom_alpha = 0.08 * (layer / bloom_layers) ** 3
+                    bloom_size = particle_size + int(layer * 2.5)
+                    bloom_color = tuple(int(c * bloom_alpha * magnitude) for c in particle_color)
+                    cv2.circle(frame, (x, y), bloom_size, bloom_color, -1, lineType=cv2.LINE_AA)
 
-                # Middle glow
-                glow_size = particle_size + 2
-                glow_color = tuple(int(c * 0.35) for c in particle_color)
-                cv2.circle(frame, (x, y), glow_size, glow_color, -1, lineType=cv2.LINE_AA)
+            # Core glow for depth
+            if magnitude > 0.4:
+                core_glow = tuple(int(c * 0.6) for c in particle_color)
+                cv2.circle(frame, (x, y), particle_size + 1, core_glow, -1, lineType=cv2.LINE_AA)
 
-            # Draw main particle
+            # Main particle with premium rendering
             cv2.circle(frame, (x, y), particle_size, particle_color, -1, lineType=cv2.LINE_AA)
 
-        # Draw center circle
+            # Specular highlight for 3D depth effect
+            if magnitude > 0.5:
+                highlight = tuple(min(255, int(c * 1.4)) for c in particle_color)
+                highlight_offset_x = int(np.cos(angle + np.pi/4) * particle_size * 0.4)
+                highlight_offset_y = int(np.sin(angle + np.pi/4) * particle_size * 0.4)
+                cv2.circle(frame, (x + highlight_offset_x, y + highlight_offset_y),
+                          max(1, particle_size // 3), highlight, -1, lineType=cv2.LINE_AA)
+
+        # Draw premium center circle
         self.draw_center_circle(frame, magnitudes)
 
         return frame
 
     def draw_mode_4_waveform(self, frame, magnitudes):
-        """Mode 4: Smooth radial waveform - Clean continuous curve"""
+        """Mode 4: Premium flowing waveform with gradient mesh"""
         angle_step = 360 / self.num_bars
         points_outer = []
         points_inner = []
@@ -369,17 +406,19 @@ class CircularSpectrumVisualizer:
         for i, magnitude in enumerate(magnitudes):
             angle = np.deg2rad(i * angle_step)
 
-            # Calculate radius with smooth easing
+            # Premium triple-easing for ultra-smooth curves
             max_bar_height = self.max_radius - self.inner_radius
-            eased_magnitude = magnitude * magnitude * (3 - 2 * magnitude)
-            bar_height = int(eased_magnitude * max_bar_height)
+            t = magnitude
+            eased = t * t * (3.0 - 2.0 * t)
+            eased = eased * eased * (3.0 - 2.0 * eased)  # Double smootherstep
+            bar_height = int(eased * max_bar_height)
             radius = self.inner_radius + bar_height
 
             x = int(self.center_x + radius * np.cos(angle))
             y = int(self.center_y + radius * np.sin(angle))
             points_outer.append([x, y])
 
-            # Inner point for filled area
+            # Inner points for gradient fill
             x_inner = int(self.center_x + self.inner_radius * np.cos(angle))
             y_inner = int(self.center_y + self.inner_radius * np.sin(angle))
             points_inner.append([x_inner, y_inner])
@@ -387,32 +426,50 @@ class CircularSpectrumVisualizer:
         points_outer = np.array(points_outer, dtype=np.int32)
         points_inner = np.array(points_inner, dtype=np.int32)
 
-        # Create filled polygon with subtle transparency
+        # Create filled polygon with premium gradient fill
         all_points = np.concatenate([points_outer, points_inner[::-1]])
 
-        # Subtle fill color
+        # Premium gradient fill with multiple layers for depth
         avg_magnitude = np.mean(magnitudes)
-        fill_color = self.get_color_for_position(0, avg_magnitude)
-        fill_color = tuple(int(c * 0.4) for c in fill_color)
 
-        # Draw filled area
-        cv2.fillPoly(frame, [all_points], fill_color, lineType=cv2.LINE_AA)
+        # Outer fill layer (darker, more transparent)
+        fill_color_outer = self.get_color_for_position(0, avg_magnitude)
+        fill_color_outer = tuple(int(c * 0.25) for c in fill_color_outer)
+        cv2.fillPoly(frame, [all_points], fill_color_outer, lineType=cv2.LINE_AA)
 
-        # Draw elegant outer outline with soft glow
+        # Inner fill layer (lighter, creates gradient effect)
+        inner_fill_points = []
+        for i in range(len(points_inner)):
+            angle = np.deg2rad(i * angle_step)
+            inner_radius = self.inner_radius + 20
+            x = int(self.center_x + inner_radius * np.cos(angle))
+            y = int(self.center_y + inner_radius * np.sin(angle))
+            inner_fill_points.append([x, y])
+
+        inner_fill_points = np.array(inner_fill_points, dtype=np.int32)
+        fill_color_inner = tuple(int(c * 0.45) for c in fill_color_outer)
+        cv2.fillPoly(frame, [inner_fill_points], fill_color_inner, lineType=cv2.LINE_AA)
+
+        # Premium multi-layer outline with bloom effect
         for i in range(len(points_outer)):
             next_i = (i + 1) % len(points_outer)
             line_color = self.get_color_for_position(i, magnitudes[i])
 
-            # Subtle glow layer
-            glow_color = tuple(int(c * 0.25) for c in line_color)
+            # Outer glow for bloom
+            glow_outer = tuple(int(c * 0.15) for c in line_color)
             cv2.line(frame, tuple(points_outer[i]), tuple(points_outer[next_i]),
-                    glow_color, 3, lineType=cv2.LINE_AA)
+                    glow_outer, 5, lineType=cv2.LINE_AA)
 
-            # Main line - thinner for minimalist look
+            # Mid glow
+            glow_mid = tuple(int(c * 0.35) for c in line_color)
             cv2.line(frame, tuple(points_outer[i]), tuple(points_outer[next_i]),
-                    line_color, 1, lineType=cv2.LINE_AA)
+                    glow_mid, 3, lineType=cv2.LINE_AA)
 
-        # Draw center circle
+            # Main line - ultra-thin for premium look
+            cv2.line(frame, tuple(points_outer[i]), tuple(points_outer[next_i]),
+                    line_color, 2, lineType=cv2.LINE_AA)
+
+        # Draw premium center circle
         self.draw_center_circle(frame, magnitudes)
 
         return frame
@@ -987,13 +1044,13 @@ Examples:
     parser.add_argument('--height', type=int, default=None, help='Video height (used with --resolution custom)')
     parser.add_argument('--fps', type=int, default=30, help='Frames per second (default: 30)')
     parser.add_argument('--num-bars', type=int, default=120, help='Number of frequency bars (default: 120)')
-    parser.add_argument('--color', nargs=3, type=int, default=[220, 220, 220],
-                       metavar=('R', 'G', 'B'), help='RGB color for bars (default: Apple minimalist gray)')
+    parser.add_argument('--color', nargs=3, type=int, default=[200, 205, 210],
+                       metavar=('R', 'G', 'B'), help='RGB color for bars (default: Premium muted gray-blue)')
     parser.add_argument('--no-gradient', action='store_true', help='Disable gradient mode (use single color)')
-    parser.add_argument('--gradient-color1', nargs=3, type=int, default=[150, 160, 255],
-                       metavar=('R', 'G', 'B'), help='Left side gradient color RGB (default: 150 160 255 = soft blue)')
-    parser.add_argument('--gradient-color2', nargs=3, type=int, default=[255, 150, 200],
-                       metavar=('R', 'G', 'B'), help='Right side gradient color RGB (default: 255 150 200 = soft pink)')
+    parser.add_argument('--gradient-color1', nargs=3, type=int, default=[180, 190, 220],
+                       metavar=('R', 'G', 'B'), help='Left side gradient color RGB (default: 180 190 220 = sophisticated blue-gray)')
+    parser.add_argument('--gradient-color2', nargs=3, type=int, default=[220, 180, 200],
+                       metavar=('R', 'G', 'B'), help='Right side gradient color RGB (default: 220 180 200 = muted rose)')
     parser.add_argument('--inner-radius', type=int, default=150, help='Inner circle radius (default: 150)')
     parser.add_argument('--bar-width', type=float, default=1.5, help='Bar width multiplier (default: 1.5)')
     parser.add_argument('--smoothing', type=float, default=0.7, help='Smoothing factor 0-1 (default: 0.7)')

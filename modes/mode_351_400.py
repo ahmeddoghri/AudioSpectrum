@@ -355,7 +355,7 @@ class Modes351_400(BaseModeVisualizer):
                 y_pos = y + int(wave1 + wave2)
 
                 # Layered colors (green to purple)
-                hue = int(80 + y * 0.8 + mag * 40)
+                hue = int(80 + y * 0.8 + mag * 40) % 180  # Clamp to valid HSV hue range
                 color = self.hsv_to_bgr(hue, 255, int(mag * 255))
 
                 cv2.circle(frame, (x, y_pos), 3, color, -1)

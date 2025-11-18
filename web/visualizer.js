@@ -471,6 +471,21 @@ class Visualizer {
             case 'sunrise_sunset':
                 this.renderSunriseSunset(magnitudes);
                 break;
+            case 'neural_pulse':
+                this.renderNeuralPulse(magnitudes);
+                break;
+            case 'liquid_mercury':
+                this.renderLiquidMercury(magnitudes);
+                break;
+            case 'cosmic_strings':
+                this.renderCosmicStrings(magnitudes);
+                break;
+            case 'particle_swarm':
+                this.renderParticleSwarm(magnitudes);
+                break;
+            case 'crystal_lattice':
+                this.renderCrystalLattice(magnitudes);
+                break;
 
             default:
                 this.renderCircularBars(magnitudes);
@@ -5650,6 +5665,408 @@ class Visualizer {
                 this.ctx.arc(starX, starY, 2, 0, Math.PI * 2);
                 this.ctx.fill();
             }
+        }
+    }
+
+    /**
+     * Mode 101: Neural Pulse
+     * Neural network with pulsing nodes and lighting connections
+     */
+    renderNeuralPulse(magnitudes) {
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const mids = magnitudes.slice(Math.floor(magnitudes.length * 0.25), Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.5);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        // Initialize neural network nodes
+        if (!this.neuralNodes) {
+            this.neuralNodes = [];
+            for (let i = 0; i < 30; i++) {
+                this.neuralNodes.push({
+                    x: 100 + Math.random() * (this.canvas.width - 200),
+                    y: 100 + Math.random() * (this.canvas.height - 200),
+                    layer: i % 3,  // 3 layers
+                    active: 0
+                });
+            }
+        }
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Update node activation based on frequency bands
+        for (const node of this.neuralNodes) {
+            if (node.layer === 0) node.active = bass;
+            else if (node.layer === 1) node.active = mids;
+            else node.active = treble;
+        }
+
+        // Draw connections that flash with amplitude
+        for (let i = 0; i < this.neuralNodes.length; i++) {
+            const node1 = this.neuralNodes[i];
+            for (let j = i + 1; j < this.neuralNodes.length; j++) {
+                const node2 = this.neuralNodes[j];
+                if (Math.abs(node1.layer - node2.layer) === 1) {
+                    const intensity = (node1.active + node2.active) * 127.5;
+                    if (intensity > 50) {
+                        const thickness = intensity < 150 ? 1 : 2;
+                        this.ctx.strokeStyle = `rgb(${intensity}, ${intensity * 0.5}, ${intensity + 50})`;
+                        this.ctx.lineWidth = thickness;
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(node1.x, node1.y);
+                        this.ctx.lineTo(node2.x, node2.y);
+                        this.ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Draw pulsing nodes
+        for (const node of this.neuralNodes) {
+            const radius = 8 + node.active * 20;
+            const hue = 140 + node.layer * 30;
+            const intensity = 200 + node.active * 55;
+            const color = this.hsvToRgb(hue, 100, intensity / 255 * 100);
+
+            this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            this.ctx.strokeStyle = 'rgb(255, 255, 255)';
+            this.ctx.lineWidth = 1;
+            this.ctx.beginPath();
+            this.ctx.arc(node.x, node.y, radius + 3, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+    }
+
+    /**
+     * Mode 102: Liquid Mercury
+     * Metallic liquid that ripples with physics
+     */
+    renderLiquidMercury(magnitudes) {
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const mids = magnitudes.slice(Math.floor(magnitudes.length * 0.25), Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.5);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        if (!this.liquidMercuryParticles) this.liquidMercuryParticles = [];
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Spawn mercury droplets on high treble
+        if (treble > 0.5 && this.frameCounter % 3 === 0) {
+            this.liquidMercuryParticles.push({
+                x: 100 + Math.random() * (this.canvas.width - 200),
+                y: 100,
+                vx: (Math.random() - 0.5) * 4,
+                vy: 0,
+                radius: 10 + treble * 20
+            });
+        }
+
+        // Update and draw mercury particles
+        const newParticles = [];
+        for (const particle of this.liquidMercuryParticles) {
+            particle.vy += 0.5;  // Gravity
+            particle.y += particle.vy;
+            particle.x += particle.vx;
+
+            // Boundary bouncing
+            if (particle.y > this.canvas.height - 100) {
+                particle.vy *= -0.7;
+                particle.y = this.canvas.height - 100;
+            }
+
+            if (particle.x < 50 || particle.x > this.canvas.width - 50) {
+                particle.vx *= -0.7;
+            }
+
+            if (particle.y < this.canvas.height) {
+                // Draw with metallic shading
+                this.ctx.fillStyle = 'rgb(200, 200, 200)';
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                // Highlight
+                this.ctx.fillStyle = 'rgb(255, 255, 255)';
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x - 5, particle.y - 5, particle.radius / 3, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                newParticles.push(particle);
+            }
+        }
+        this.liquidMercuryParticles = newParticles;
+
+        // Mid-range creates surface ripples
+        for (let i = 0; i < mids * 5; i++) {
+            const rippleX = this.canvas.width / 2 + Math.sin(this.frameCounter * 0.1 + i) * 200;
+            const rippleY = this.canvas.height - 100;
+            const rippleRadius = 30 + i * 20 + mids * 30;
+            this.ctx.strokeStyle = 'rgb(150, 150, 150)';
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(rippleX, rippleY, rippleRadius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+    }
+
+    /**
+     * Mode 103: Cosmic Strings
+     * Vibrating strings in space like guitar strings
+     */
+    renderCosmicStrings(magnitudes) {
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        // Initialize strings
+        if (!this.cosmicStrings) {
+            this.cosmicStrings = [];
+            for (let i = 0; i < 12; i++) {
+                this.cosmicStrings.push({
+                    y: 100 + i * (this.canvas.height - 200) / 12,
+                    frequency: i + 1,
+                    magnitude: 0
+                });
+            }
+        }
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Update and draw vibrating strings
+        for (let i = 0; i < this.cosmicStrings.length; i++) {
+            const string = this.cosmicStrings[i];
+            string.magnitude = magnitudes[Math.min(i * 10, magnitudes.length - 1)];
+
+            const amplitude = string.magnitude * 100;
+
+            // Gold and white glowing strings
+            const hue = 30;  // Gold
+            const intensity = 200 + string.magnitude * 55;
+            const color = this.hsvToRgb(hue, 78, intensity / 255 * 100);
+
+            this.ctx.strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+
+            for (let x = 0; x < this.canvas.width; x += 10) {
+                const wave = Math.sin(x * 0.02 * string.frequency + this.frameCounter * 0.1);
+                const y = string.y + wave * amplitude;
+
+                if (x === 0) this.ctx.moveTo(x, y);
+                else this.ctx.lineTo(x, y);
+            }
+            this.ctx.stroke();
+
+            // Add glow
+            this.ctx.strokeStyle = 'rgb(255, 255, 255)';
+            this.ctx.lineWidth = 1;
+            this.ctx.stroke();
+        }
+    }
+
+    /**
+     * Mode 104: Particle Swarm
+     * Thousands of particles forming shapes
+     */
+    renderParticleSwarm(magnitudes) {
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const mids = magnitudes.slice(Math.floor(magnitudes.length * 0.25), Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.5);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        if (!this.particleSwarmArray) this.particleSwarmArray = [];
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
+
+        // Spawn particles
+        if (this.particleSwarmArray.length < 1000) {
+            for (let i = 0; i < 10; i++) {
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = Math.random() * 200;
+                this.particleSwarmArray.push({
+                    x: centerX + Math.cos(angle) * distance,
+                    y: centerY + Math.sin(angle) * distance,
+                    vx: 0,
+                    vy: 0,
+                    trail: []
+                });
+            }
+        }
+
+        const targetRadius = 150 + bass * 200;
+
+        // Update particle positions
+        for (const particle of this.particleSwarmArray) {
+            const dx = centerX - particle.x;
+            const dy = centerY - particle.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance > 0) {
+                const angle = Math.atan2(dy, dx);
+
+                let targetX, targetY;
+                if (bass > 0.5) {
+                    targetX = centerX + Math.cos(angle) * targetRadius;
+                    targetY = centerY + Math.sin(angle) * targetRadius;
+                } else {
+                    targetX = centerX + Math.cos(angle + treble * Math.PI) * (distance + treble * 100);
+                    targetY = centerY + Math.sin(angle + treble * Math.PI) * (distance + treble * 100);
+                }
+
+                particle.vx = (targetX - particle.x) * 0.05;
+                particle.vy = (targetY - particle.y) * 0.05;
+            }
+
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+
+            // Update trail
+            particle.trail.push({ x: particle.x, y: particle.y });
+            if (particle.trail.length > 5) particle.trail.shift();
+
+            // Velocity-based color
+            const velocity = Math.sqrt(particle.vx ** 2 + particle.vy ** 2);
+            const hue = 120 - Math.min(velocity * 50, 120);
+            const color = this.hsvToRgb(hue, 100, 100);
+
+            // Draw trail
+            if (particle.trail.length > 1) {
+                this.ctx.strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+                this.ctx.lineWidth = 1;
+                this.ctx.beginPath();
+                this.ctx.moveTo(particle.trail[0].x, particle.trail[0].y);
+                for (let i = 1; i < particle.trail.length; i++) {
+                    this.ctx.lineTo(particle.trail[i].x, particle.trail[i].y);
+                }
+                this.ctx.stroke();
+            }
+
+            // Draw particle
+            this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            this.ctx.fillRect(particle.x - 1, particle.y - 1, 2, 2);
+        }
+    }
+
+    /**
+     * Mode 105: Crystal Lattice
+     * 3D crystal structure with pulsing nodes
+     */
+    renderCrystalLattice(magnitudes) {
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const mids = magnitudes.slice(Math.floor(magnitudes.length * 0.25), Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.5);
+
+        // Initialize crystal lattice nodes
+        if (!this.crystalLatticeNodes) {
+            this.crystalLatticeNodes = [];
+            const gridSize = 5;
+            const spacing = Math.min(this.canvas.width, this.canvas.height) / (gridSize + 1);
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    for (let k = 0; k < gridSize; k++) {
+                        this.crystalLatticeNodes.push({
+                            x3d: (i - gridSize / 2) * spacing,
+                            y3d: (j - gridSize / 2) * spacing,
+                            z3d: (k - gridSize / 2) * spacing,
+                            magnitude: 0
+                        });
+                    }
+                }
+            }
+        }
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        const angle = this.frameCounter * 0.02;
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
+
+        // Update magnitudes and project nodes
+        for (let i = 0; i < this.crystalLatticeNodes.length; i++) {
+            const node = this.crystalLatticeNodes[i];
+            node.magnitude = magnitudes[Math.min(i * 2, magnitudes.length - 1)];
+
+            // 3D rotation
+            let x = node.x3d;
+            let y = node.y3d * Math.cos(angle) - node.z3d * Math.sin(angle);
+            let z = node.y3d * Math.sin(angle) + node.z3d * Math.cos(angle);
+
+            const xRot = x * Math.cos(angle) - z * Math.sin(angle);
+            const zRot = x * Math.sin(angle) + z * Math.cos(angle);
+
+            // Perspective projection
+            const scale = 300 / (300 + zRot);
+            node.x2d = centerX + xRot * scale;
+            node.y2d = centerY + y * scale;
+            node.z2d = zRot;
+        }
+
+        // Draw connections between nearby nodes
+        for (let i = 0; i < this.crystalLatticeNodes.length; i++) {
+            const node1 = this.crystalLatticeNodes[i];
+            for (let j = i + 1; j < Math.min(i + 10, this.crystalLatticeNodes.length); j++) {
+                const node2 = this.crystalLatticeNodes[j];
+                const dist = Math.sqrt(
+                    (node1.x3d - node2.x3d) ** 2 +
+                    (node1.y3d - node2.y3d) ** 2 +
+                    (node1.z3d - node2.z3d) ** 2
+                );
+
+                if (dist < 250) {
+                    const intensity = (node1.magnitude + node2.magnitude) * 127.5;
+                    if (intensity > 30) {
+                        this.ctx.strokeStyle = `rgb(${intensity}, ${intensity}, ${intensity + 50})`;
+                        this.ctx.lineWidth = 1;
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(node1.x2d, node1.y2d);
+                        this.ctx.lineTo(node2.x2d, node2.y2d);
+                        this.ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Draw nodes
+        for (const node of this.crystalLatticeNodes) {
+            const radius = 5 + node.magnitude * 15;
+            const hue = ((node.z2d + 300) / 600) * 180;
+            const color = this.hsvToRgb(hue, 100, 100);
+
+            this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(node.x2d, node.y2d, radius, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            this.ctx.strokeStyle = 'rgb(255, 255, 255)';
+            this.ctx.lineWidth = 1;
+            this.ctx.beginPath();
+            this.ctx.arc(node.x2d, node.y2d, radius + 2, 0, Math.PI * 2);
+            this.ctx.stroke();
         }
     }
 

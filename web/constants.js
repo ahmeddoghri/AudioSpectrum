@@ -1011,6 +1011,46 @@ const VISUALIZATION_MODES = {
         category: 'Nature',
         mode: 100,
         tags: ['sky', 'sun', 'stars']
+    },
+    neural_pulse: {
+        id: 'neural_pulse',
+        name: 'Neural Pulse',
+        description: 'Neural network with pulsing nodes and lighting connections',
+        category: 'Tech',
+        mode: 101,
+        tags: ['neural', 'network', 'ai']
+    },
+    liquid_mercury: {
+        id: 'liquid_mercury',
+        name: 'Liquid Mercury',
+        description: 'Metallic liquid that ripples with physics',
+        category: 'Fluid',
+        mode: 102,
+        tags: ['mercury', 'liquid', 'physics']
+    },
+    cosmic_strings: {
+        id: 'cosmic_strings',
+        name: 'Cosmic Strings',
+        description: 'Vibrating strings in space like guitar strings',
+        category: 'Nature',
+        mode: 103,
+        tags: ['strings', 'vibration', 'cosmic']
+    },
+    particle_swarm: {
+        id: 'particle_swarm',
+        name: 'Particle Swarm',
+        description: 'Thousands of particles forming shapes',
+        category: 'Particles',
+        mode: 104,
+        tags: ['particles', 'swarm', 'formation']
+    },
+    crystal_lattice: {
+        id: 'crystal_lattice',
+        name: 'Crystal Lattice',
+        description: '3D crystal structure with pulsing nodes',
+        category: 'Geometric',
+        mode: 105,
+        tags: ['3d', 'crystal', 'lattice']
     }
 };
 

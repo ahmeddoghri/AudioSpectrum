@@ -958,6 +958,9 @@ class AudioSpectrumApp {
             }
         });
 
+        // Update dynamic parameters for this mode
+        this.updateDynamicParameters(modeId);
+
         // Update preview
         this.updatePreview();
 
@@ -965,6 +968,21 @@ class AudioSpectrumApp {
         setTimeout(() => {
             Utils.scrollToElement('format-section');
         }, 300);
+    }
+
+    /**
+     * Update dynamic parameters based on selected mode
+     */
+    updateDynamicParameters(modeId) {
+        const mode = VISUALIZATION_MODES[modeId];
+        if (!mode || !mode.parameters) {
+            // No custom parameters for this mode, hide all mode-specific settings
+            return;
+        }
+
+        // TODO: Dynamically show/hide parameter controls based on mode.parameters
+        // For now, we'll implement this in the next iteration
+        console.log(`Mode ${modeId} has custom parameters:`, mode.parameters);
     }
 
     /**

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Spectrum - All Modes Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .stats {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #888;
+        }
+        .stats span {
+            display: inline-block;
+            margin: 0 15px;
+        }
+        .stats .success {
+            color: #52c41a;
+        }
+        .stats .error {
+            color: #f5222d;
+        }
+        .controls {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+        }
+        select, button {
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: #2a2a2a;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        button {
+            background: #0071e3;
+            border: none;
+            font-weight: 600;
+        }
+        button:hover {
+            background: #0077ed;
+        }
+        .canvas-container {
+            background: #f5f5f7;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        canvas {
+            display: block;
+            width: 100%;
+            border-radius: 8px;
+        }
+        .mode-info {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .mode-info .mode-name {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        .mode-info .mode-category {
+            color: #0071e3;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        .test-card {
+            background: #2a2a2a;
+            border-radius: 12px;
+            padding: 15px;
+            border: 2px solid transparent;
+        }
+        .test-card.success {
+            border-color: #52c41a;
+        }
+        .test-card.error {
+            border-color: #f5222d;
+        }
+        .test-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 16px;
+        }
+        .test-card .category {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 10px;
+        }
+        .test-card canvas {
+            width: 100%;
+            height: 200px;
+            background: #f5f5f7;
+            border-radius: 8px;
+        }
+        .test-card .status {
+            margin-top: 10px;
+            font-size: 12px;
+            text-align: center;
+        }
+        .test-card .status.success {
+            color: #52c41a;
+        }
+        .test-card .status.error {
+            color: #f5222d;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Audio Spectrum - All Modes Test</h1>
+        <div class="stats">
+            <span>Total Modes: <strong id="totalModes">0</strong></span>
+            <span class="success">✓ Working: <strong id="successCount">0</strong></span>
+            <span class="error">✗ Errors: <strong id="errorCount">0</strong></span>
+        </div>
+
+        <div class="controls">
+            <div class="control-group">
+                <label>Color Scheme</label>
+                <select id="colorScheme">
+                    <option value="apple_blue">Apple Blue</option>
+                    <option value="warm_orange">Warm Orange</option>
+                    <option value="monochrome_white">Monochrome White</option>
+                    <option value="sunset">Sunset</option>
+                    <option value="ocean">Ocean</option>
+                    <option value="forest">Forest</option>
+                    <option value="purple_haze">Purple Haze</option>
+                    <option value="neon">Neon</option>
+                    <option value="fire">Fire</option>
+                    <option value="gradient_2">Gradient (2 Colors)</option>
+                    <option value="gradient_3">Gradient (3 Colors)</option>
+                    <option value="super_custom">Super Custom</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Mode</label>
+                <select id="modeSelect">
+                    <option value="">-- Select Mode --</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>Category Filter</label>
+                <select id="categoryFilter">
+                    <option value="all">All Categories</option>
+                    <option value="Classic">Classic</option>
+                    <option value="Particles">Particles</option>
+                    <option value="Retro">Retro</option>
+                    <option value="Fluid">Fluid</option>
+                    <option value="Nature">Nature</option>
+                    <option value="Geometric">Geometric</option>
+                    <option value="Scientific">Scientific</option>
+                    <option value="Tech">Tech</option>
+                    <option value="Energy">Energy</option>
+                </select>
+            </div>
+
+            <button id="testAllBtn">Test All Modes</button>
+        </div>
+
+        <div class="canvas-container">
+            <canvas id="mainCanvas" width="1080" height="1080"></canvas>
+            <div class="mode-info">
+                <div class="mode-name" id="currentModeName">Select a mode</div>
+                <div class="mode-category" id="currentModeCategory"></div>
+            </div>
+        </div>
+
+        <div id="testResults" class="test-grid"></div>
+    </div>
+
+    <script src="constants.js"></script>
+    <script src="utils.js"></script>
+    <script src="visualizer.js"></script>
+
+    <script>
+        // Initialize
+        const canvas = document.getElementById('mainCanvas');
+        const modeSelect = document.getElementById('modeSelect');
+        const colorScheme = document.getElementById('colorScheme');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const testAllBtn = document.getElementById('testAllBtn');
+        const testResults = document.getElementById('testResults');
+
+        let visualizer = new Visualizer(canvas);
+        let animationId = null;
+
+        // Generate test data
+        function generateTestData() {
+            const data = new Float32Array(72);
+            for (let i = 0; i < data.length; i++) {
+                data[i] = Math.random() * 0.6 + 0.2;
+            }
+            return data;
+        }
+
+        // Populate mode select
+        function populateModeSelect() {
+            const modes = Object.values(VISUALIZATION_MODES);
+            modes.forEach(mode => {
+                const option = document.createElement('option');
+                option.value = mode.id;
+                option.textContent = `${mode.name} (${mode.category})`;
+                modeSelect.appendChild(option);
+            });
+            document.getElementById('totalModes').textContent = modes.length;
+        }
+
+        // Render current mode
+        function renderMode() {
+            const testData = generateTestData();
+            visualizer.render(testData);
+        }
+
+        // Update mode info
+        function updateModeInfo(modeId) {
+            const mode = VISUALIZATION_MODES[modeId];
+            if (mode) {
+                document.getElementById('currentModeName').textContent = mode.name;
+                document.getElementById('currentModeCategory').textContent = mode.category;
+            }
+        }
+
+        // Start animation
+        function startAnimation() {
+            if (animationId) {
+                cancelAnimationFrame(animationId);
+            }
+
+            function animate() {
+                renderMode();
+                animationId = requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+
+        // Test a single mode
+        function testMode(mode, colorSchemeName) {
+            return new Promise((resolve) => {
+                try {
+                    const testCanvas = document.createElement('canvas');
+                    testCanvas.width = 600;
+                    testCanvas.height = 600;
+
+                    const testVisualizer = new Visualizer(testCanvas, {
+                        mode: mode.id,
+                        colorScheme: colorSchemeName,
+                        gradient: true
+                    });
+
+                    const testData = generateTestData();
+
+                    // Render 5 frames to test animation
+                    for (let i = 0; i < 5; i++) {
+                        testVisualizer.render(testData);
+                    }
+
+                    resolve({
+                        success: true,
+                        mode: mode,
+                        canvas: testCanvas
+                    });
+                } catch (error) {
+                    resolve({
+                        success: false,
+                        mode: mode,
+                        error: error.message
+                    });
+                }
+            });
+        }
+
+        // Test all modes
+        async function testAllModes() {
+            testResults.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 20px;">Testing all modes...</div>';
+
+            const modes = Object.values(VISUALIZATION_MODES);
+            const currentColorScheme = colorScheme.value;
+            const category = categoryFilter.value;
+
+            const filteredModes = category === 'all'
+                ? modes
+                : modes.filter(m => m.category === category);
+
+            const results = [];
+            let successCount = 0;
+            let errorCount = 0;
+
+            // Test each mode
+            for (const mode of filteredModes) {
+                const result = await testMode(mode, currentColorScheme);
+                results.push(result);
+
+                if (result.success) {
+                    successCount++;
+                } else {
+                    errorCount++;
+                }
+            }
+
+            // Update stats
+            document.getElementById('successCount').textContent = successCount;
+            document.getElementById('errorCount').textContent = errorCount;
+
+            // Display results
+            testResults.innerHTML = '';
+            results.forEach(result => {
+                const card = document.createElement('div');
+                card.className = `test-card ${result.success ? 'success' : 'error'}`;
+
+                const html = `
+                    <h3>${result.mode.name}</h3>
+                    <div class="category">${result.mode.category}</div>
+                    ${result.success ? '' : `<div class="error-msg" style="color: #f5222d; margin-bottom: 10px;">${result.error}</div>`}
+                    ${result.success ? '<div id="canvas-' + result.mode.id + '"></div>' : ''}
+                    <div class="status ${result.success ? 'success' : 'error'}">
+                        ${result.success ? '✓ Working' : '✗ Error'}
+                    </div>
+                `;
+
+                card.innerHTML = html;
+
+                if (result.success && result.canvas) {
+                    const canvasContainer = card.querySelector('#canvas-' + result.mode.id);
+                    if (canvasContainer) {
+                        canvasContainer.appendChild(result.canvas);
+                    }
+                }
+
+                testResults.appendChild(card);
+            });
+        }
+
+        // Event listeners
+        modeSelect.addEventListener('change', (e) => {
+            const modeId = e.target.value;
+            if (modeId) {
+                visualizer.updateSettings({ mode: modeId });
+                updateModeInfo(modeId);
+                startAnimation();
+            }
+        });
+
+        colorScheme.addEventListener('change', (e) => {
+            visualizer.updateSettings({ colorScheme: e.target.value });
+            if (modeSelect.value) {
+                renderMode();
+            }
+        });
+
+        testAllBtn.addEventListener('click', testAllModes);
+
+        // Initialize
+        populateModeSelect();
+
+        // Auto-select first mode
+        if (modeSelect.options.length > 1) {
+            modeSelect.selectedIndex = 1;
+            const firstModeId = modeSelect.value;
+            visualizer.updateSettings({ mode: firstModeId });
+            updateModeInfo(firstModeId);
+            startAnimation();
+        }
+    </script>
+</body>
+</html>

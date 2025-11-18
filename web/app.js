@@ -464,8 +464,28 @@ class AudioSpectrumApp {
 
             this.elements.modeGrid.appendChild(card);
 
-            // Generate preview for this mode
-            this.generateModePreview(card.querySelector('canvas'), mode.id);
+            const canvas = card.querySelector('canvas');
+
+            // Generate initial static preview for this mode
+            this.generateModePreview(canvas, mode.id);
+
+            // Add hover animation
+            let animationId = null;
+            card.addEventListener('mouseenter', () => {
+                // Start animated preview on hover
+                this.animateModePreview(canvas, mode.id, (id) => {
+                    animationId = id;
+                });
+            });
+
+            card.addEventListener('mouseleave', () => {
+                // Stop animation and restore static preview
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                    animationId = null;
+                }
+                this.generateModePreview(canvas, mode.id);
+            });
         });
 
         // Initial count update
@@ -536,7 +556,10 @@ class AudioSpectrumApp {
         const tempSettings = {
             ...DEFAULT_SETTINGS,
             mode: modeId,
-            numBars: 48
+            numBars: 48,
+            // Use smaller settings for preview canvas (280x280)
+            innerRadius: 40,  // Much smaller than default 180
+            barWidthMultiplier: 1.2  // Slightly wider bars for better visibility
         };
 
         const tempVisualizer = new Visualizer(canvas, tempSettings);
@@ -548,6 +571,47 @@ class AudioSpectrumApp {
         }
 
         tempVisualizer.render(magnitudes);
+    }
+
+    /**
+     * Animate mode preview on hover
+     */
+    animateModePreview(canvas, modeId, setAnimationId) {
+        const tempSettings = {
+            ...DEFAULT_SETTINGS,
+            mode: modeId,
+            numBars: 48,
+            // Use smaller settings for preview canvas (280x280)
+            innerRadius: 40,  // Much smaller than default 180
+            barWidthMultiplier: 1.2  // Slightly wider bars for better visibility
+        };
+
+        const tempVisualizer = new Visualizer(canvas, tempSettings);
+        let time = 0;
+
+        const animate = () => {
+            time += 0.05;
+
+            // Generate animated magnitudes
+            const magnitudes = new Float32Array(48);
+            for (let i = 0; i < magnitudes.length; i++) {
+                // Create smooth wave motion with multiple frequencies
+                const wave1 = Math.sin(i * 0.2 + time) * 0.15;
+                const wave2 = Math.sin(i * 0.1 + time * 1.5) * 0.1;
+                const wave3 = Math.sin(i * 0.3 + time * 0.7) * 0.08;
+                const base = 0.35;
+                const randomness = Math.sin(i * 0.15 + time * 2) * 0.05;
+
+                magnitudes[i] = Math.max(0.1, Math.min(0.9, base + wave1 + wave2 + wave3 + randomness));
+            }
+
+            tempVisualizer.render(magnitudes);
+
+            const id = requestAnimationFrame(animate);
+            setAnimationId(id);
+        };
+
+        animate();
     }
 
     /**

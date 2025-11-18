@@ -91,14 +91,41 @@ class Visualizer {
 
         // Create gradient
         const t = index / total;
-        const color1 = scheme.primary;
-        const color2 = scheme.secondary;
 
-        const r = Math.round(Utils.lerp(color1[0], color2[0], t));
-        const g = Math.round(Utils.lerp(color1[1], color2[1], t));
-        const b = Math.round(Utils.lerp(color1[2], color2[2], t));
+        // Check if we have a 3-color gradient
+        if (scheme.tertiary && scheme.colorCount === 3) {
+            const color1 = scheme.primary;
+            const color2 = scheme.secondary;
+            const color3 = scheme.tertiary;
 
-        return `rgb(${r}, ${g}, ${b})`;
+            let r, g, b;
+
+            if (t < 0.5) {
+                // Interpolate between primary and secondary (first half)
+                const t1 = t * 2; // Map 0-0.5 to 0-1
+                r = Math.round(Utils.lerp(color1[0], color2[0], t1));
+                g = Math.round(Utils.lerp(color1[1], color2[1], t1));
+                b = Math.round(Utils.lerp(color1[2], color2[2], t1));
+            } else {
+                // Interpolate between secondary and tertiary (second half)
+                const t2 = (t - 0.5) * 2; // Map 0.5-1 to 0-1
+                r = Math.round(Utils.lerp(color2[0], color3[0], t2));
+                g = Math.round(Utils.lerp(color2[1], color3[1], t2));
+                b = Math.round(Utils.lerp(color2[2], color3[2], t2));
+            }
+
+            return `rgb(${r}, ${g}, ${b})`;
+        } else {
+            // 2-color gradient
+            const color1 = scheme.primary;
+            const color2 = scheme.secondary;
+
+            const r = Math.round(Utils.lerp(color1[0], color2[0], t));
+            const g = Math.round(Utils.lerp(color1[1], color2[1], t));
+            const b = Math.round(Utils.lerp(color1[2], color2[2], t));
+
+            return `rgb(${r}, ${g}, ${b})`;
+        }
     }
 
     /**

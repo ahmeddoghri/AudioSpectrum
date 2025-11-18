@@ -2,6 +2,35 @@
 
 Generate stunning circular audio spectrum animations with transparent backgrounds, perfect for overlaying on videos in editing software.
 
+## How to Run
+
+### Web App (Recommended)
+
+```bash
+# Navigate to the web directory
+cd web
+
+# Option 1: Open directly in browser
+open index.html
+
+# Option 2: Use Python's built-in HTTP server
+python3 -m http.server 8000
+# Then visit http://localhost:8000 in your browser
+
+# Option 3: Use Node's http-server (if installed)
+npx http-server -p 8000
+```
+
+### Python Script (Command Line)
+
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Run with your audio file
+python audio_spectrum.py input.mp3 output.mov
+```
+
 ## Features
 
 - Circular spectrum that radiates outward

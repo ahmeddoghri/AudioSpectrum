@@ -146,7 +146,7 @@ class AudioSpectrumApp {
         this.elements.videoPreview = document.getElementById('videoPreview');
         this.elements.downloadSize = document.getElementById('downloadSize');
         this.elements.downloadDuration = document.getElementById('downloadDuration');
-        this.elements.downloadFormat = document.getElementById('downloadFormat');
+        this.elements.downloadFormatDisplay = document.getElementById('downloadFormatDisplay');
         this.elements.downloadBtn = document.getElementById('downloadBtn');
         this.elements.createAnotherBtn = document.getElementById('createAnotherBtn');
     }
@@ -285,9 +285,15 @@ class AudioSpectrumApp {
             const schemeData = COLOR_SCHEMES[scheme];
             if (schemeData && schemeData.customizable) {
                 this.elements.gradientColors.style.display = 'flex';
+
+                // Initialize color pickers with scheme colors
+                this.elements.gradientColor1.value = Utils.rgbToHex(schemeData.primary);
+                this.elements.gradientColor2.value = Utils.rgbToHex(schemeData.secondary);
+
                 // Show 3rd color picker for 3-color gradients
                 if (schemeData.colorCount === 3) {
                     this.elements.gradientColor3Group.style.display = 'flex';
+                    this.elements.gradientColor3.value = Utils.rgbToHex(schemeData.tertiary);
                 } else {
                     this.elements.gradientColor3Group.style.display = 'none';
                 }
@@ -300,21 +306,55 @@ class AudioSpectrumApp {
         });
 
         // Gradient color pickers
-        [this.elements.gradientColor1, this.elements.gradientColor2, this.elements.gradientColor3].forEach(picker => {
-            picker.addEventListener('input', () => {
-                this.updateGradientPreview();
-                this.updatePreview();
-            });
-        });
-
-        // Custom color
-        this.elements.customColor.addEventListener('change', (e) => {
+        this.elements.gradientColor1.addEventListener('input', (e) => {
             const rgb = Utils.hexToRgb(e.target.value);
             if (rgb) {
-                COLOR_SCHEMES.custom.primary = rgb;
+                const scheme = this.state.settings.colorScheme;
+                const schemeData = COLOR_SCHEMES[scheme];
+                if (schemeData && schemeData.customizable) {
+                    COLOR_SCHEMES[scheme].primary = rgb;
+                }
+                this.updateGradientPreview();
                 this.updatePreview();
             }
         });
+
+        this.elements.gradientColor2.addEventListener('input', (e) => {
+            const rgb = Utils.hexToRgb(e.target.value);
+            if (rgb) {
+                const scheme = this.state.settings.colorScheme;
+                const schemeData = COLOR_SCHEMES[scheme];
+                if (schemeData && schemeData.customizable) {
+                    COLOR_SCHEMES[scheme].secondary = rgb;
+                }
+                this.updateGradientPreview();
+                this.updatePreview();
+            }
+        });
+
+        this.elements.gradientColor3.addEventListener('input', (e) => {
+            const rgb = Utils.hexToRgb(e.target.value);
+            if (rgb) {
+                const scheme = this.state.settings.colorScheme;
+                const schemeData = COLOR_SCHEMES[scheme];
+                if (schemeData && schemeData.customizable && schemeData.colorCount === 3) {
+                    COLOR_SCHEMES[scheme].tertiary = rgb;
+                }
+                this.updateGradientPreview();
+                this.updatePreview();
+            }
+        });
+
+        // Custom color
+        if (this.elements.customColor) {
+            this.elements.customColor.addEventListener('change', (e) => {
+                const rgb = Utils.hexToRgb(e.target.value);
+                if (rgb) {
+                    COLOR_SCHEMES.custom.primary = rgb;
+                    this.updatePreview();
+                }
+            });
+        }
 
         // Sliders
         this.elements.barCount.addEventListener('input', (e) => {
@@ -1109,7 +1149,7 @@ class AudioSpectrumApp {
         // Update file info
         this.elements.downloadSize.textContent = Utils.formatBytes(this.state.generatedVideo.size);
         this.elements.downloadDuration.textContent = Utils.formatTime(this.audioProcessor.duration);
-        this.elements.downloadFormat.textContent = 'WebM';
+        this.elements.downloadFormatDisplay.textContent = 'WebM';
 
         // Scroll to download section
         setTimeout(() => {
@@ -1125,22 +1165,15 @@ class AudioSpectrumApp {
     downloadVideo() {
         if (!this.state.generatedVideo) return;
 
-        // Get selected download format
-        const selectedFormat = document.querySelector('input[name="downloadFormat"]:checked');
-        const formatValue = selectedFormat ? selectedFormat.value : 'webm';
+        // All videos are generated as WebM using the browser's MediaRecorder API
+        const extension = 'webm';
 
-        // Map format value to file extension
-        const extensionMap = {
-            'webm': 'webm',
-            'mp4-h264': 'mp4',
-            'mp4-h265': 'mp4'
-        };
-
-        const extension = extensionMap[formatValue] || 'webm';
-        const filename = Utils.createFilename(this.state.selectedMode, extension);
+        // Get original audio filename if available
+        const originalFilename = this.state.audioFile ? this.state.audioFile.name : null;
+        const filename = Utils.createFilename(this.state.selectedMode, extension, originalFilename);
 
         Utils.downloadBlob(this.state.generatedVideo, filename);
-        Utils.showToast(`Download started! Format: ${formatValue.toUpperCase()}`, 'success');
+        Utils.showToast('Download started!', 'success');
     }
 
     /**

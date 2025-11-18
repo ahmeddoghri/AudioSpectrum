@@ -152,8 +152,17 @@ class Utils {
     /**
      * Create filename with timestamp
      */
-    static createFilename(mode, extension = 'mp4') {
+    static createFilename(mode, extension = 'mp4', originalFilename = null) {
         const timestamp = new Date().getTime();
+
+        // If original filename is provided, use its base name
+        if (originalFilename) {
+            // Remove the extension from the original filename
+            const baseName = originalFilename.substring(0, originalFilename.lastIndexOf('.')) || originalFilename;
+            return `${baseName}.${extension}`;
+        }
+
+        // Otherwise, use the mode-based naming
         const modeSlug = mode.replace(/\s+/g, '-').toLowerCase();
         return `audiospectrum-${modeSlug}-${timestamp}.${extension}`;
     }

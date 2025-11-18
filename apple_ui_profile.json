@@ -1,0 +1,383 @@
+{
+    "design_style": {
+    "vibe": "minimal, premium, product-first",
+    "mood": "clean, bright, confident with moments of high-contrast drama",
+    "visual_metaphors": [
+    "large hero modules with product imagery",
+    "content cards with rounded corners",
+    "full-bleed feature bands",
+    "spec comparison tables",
+    "carousel-like product tiles",
+    "pill-shaped labels and controls"
+    ]
+    },
+    "layout": {
+    "grid": {
+    "columns": 12,
+    "max_width_px": 1100,
+    "gutter_px": 24,
+    "page_margin_px": 24,
+    "common_alignments": [
+    "centered hero content",
+    "left-aligned copy with right-aligned imagery",
+    "two-column split: text + product visual",
+    "three-column product/info tiles"
+    ]
+    },
+    "page_patterns": [
+    "global sticky top navigation followed by long scrolling page",
+    "hero section with large product image and primary heading",
+    "alternating light and dark feature bands",
+    "rows of cards for products and accessories",
+    "spec comparison sections with multi-column tables",
+    "footer with dense legal text and multi-column link lists"
+    ],
+    "component_density": {
+    "overall": "spacious",
+    "section_padding_y_px": 80,
+    "section_padding_x_px": 24,
+    "card_padding_px": 24,
+    "grid_row_gap_px": 40,
+    "grid_column_gap_px": 24
+    }
+    },
+    "color_system": {
+    "palette": {
+    "primary": {
+    "token": "color_primary",
+    "value": "#0071e3",
+    "description": "vivid cool blue used for key actions and interactive highlights"
+    },
+    "primary_variant": {
+    "token": "color_primary_variant",
+    "value": "#ff7a00",
+    "description": "warm orange accent used in gradients and promotional highlights"
+    },
+    "background": {
+    "token": "color_background",
+    "value": "#f5f5f7",
+    "description": "soft neutral gray used as page backdrop"
+    },
+    "surface": {
+    "token": "color_surface",
+    "value": "#ffffff",
+    "description": "pure white used for cards, navigation, and most content blocks"
+    },
+    "surface_alt": {
+    "token": "color_surface_alt",
+    "value": "#0b0b10",
+    "description": "very dark slate used for spotlight sections with inverted text"
+    },
+    "error": {
+    "token": "color_error",
+    "value": "#ff3b30",
+    "description": "vivid red reserved for error states and critical messaging"
+    },
+    "success": {
+    "token": "color_success",
+    "value": "#34c759",
+    "description": "bright green for success confirmations and positive states"
+    },
+    "warning": {
+    "token": "color_warning",
+    "value": "#ffcc00",
+    "description": "strong yellow used sparingly for warnings or limited-time notices"
+    },
+    "info": {
+    "token": "color_info",
+    "value": "#5e5ce6",
+    "description": "cool violet used for informational highlights and secondary CTAs"
+    }
+    },
+    "usage_rules": [
+    "primary color is reserved mainly for primary CTAs, interactive links, and key sliders",
+    "background is a soft gray while most content is placed on white surfaces to create subtle depth",
+    "dark surface sections are used to create spotlight zones with bright product imagery and light text",
+    "gradients blend warm and cool colors (e.g., orange to blue) for hero backgrounds and promotional banners",
+    "dividers use a very light neutral gray line for section separation without adding heavy borders",
+    "status colors (error, success, warning) are used minimally and mostly in inline messaging, not large components"
+    ]
+    },
+    "typography": {
+    "font_family_style": {
+    "primary": "humanist system sans-serif with slightly rounded terminals",
+    "fallback_stack": "system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+    },
+    "scale": {
+    "display_heading": {
+    "size_px": 52,
+    "weight": 600,
+    "line_height": 1.05
+    },
+    "hero_heading": {
+    "size_px": 40,
+    "weight": 600,
+    "line_height": 1.1
+    },
+    "section_heading": {
+    "size_px": 28,
+    "weight": 600,
+    "line_height": 1.15
+    },
+    "eyebrow_label": {
+    "size_px": 12,
+    "weight": 600,
+    "line_height": 1.2
+    },
+    "body": {
+    "size_px": 16,
+    "weight": 400,
+    "line_height": 1.5
+    },
+    "small_body": {
+    "size_px": 13,
+    "weight": 400,
+    "line_height": 1.4
+    },
+    "legal": {
+    "size_px": 11,
+    "weight": 400,
+    "line_height": 1.4
+    }
+    },
+    "text_treatments": [
+    "hero headings are sentence case with tight tracking and high contrast against the background",
+    "eyebrow labels above headings are all caps or small caps with increased letter-spacing",
+    "button labels are title case with medium weight and subtle letter-spacing",
+    "link text often uses the primary color with no underline until hover/focus",
+    "long legal copy uses smaller size and tighter leading, in muted gray color"
+    ]
+    },
+    "components": {
+    "buttons": {
+    "shapes": [
+    "primary filled pill",
+    "secondary outlined pill",
+    "text-only link"
+    ],
+    "corner_radius_px": {
+    "filled": 9999,
+    "outlined": 9999
+    },
+    "sizes": {
+    "default": {
+    "padding_x_px": 18,
+    "padding_y_px": 10,
+    "font_size_px": 16
+    },
+    "small": {
+    "padding_x_px": 14,
+    "padding_y_px": 8,
+    "font_size_px": 14
+    }
+    },
+    "icon_use": "icons are used sparingly, mostly for play controls or arrows; when present they are aligned to the right of the label with small spacing",
+    "states": {
+    "default": "filled buttons use primary color with white text; outlined buttons use transparent background with primary border and text",
+    "hover": "slightly darker background for filled buttons, subtle scale-up (~1.02), and stronger shadow; outlined buttons gain a soft tinted background",
+    "active": "briefly darker fill and slightly compressed scale (~0.98) with reduced shadow",
+    "focus": "primary-colored ring or soft glow around button",
+    "disabled": "lower opacity and muted colors with no hover elevation"
+    }
+    },
+    "inputs": {
+    "style": "rounded rectangular fields with soft neutral outline and white surface",
+    "border_style": "1px solid light gray with subtle inner shadow removed",
+    "focus_state": "outline color switches to primary and a faint glow or 1px outer ring appears",
+    "label_placement": "labels are placed above the input in smaller text or inside as placeholder for search fields",
+    "helper_text": "optional small text below the field in muted gray for hints or validation messages"
+    },
+    "cards": {
+    "shape": "rounded rectangles with medium radius",
+    "corner_radius_px": 24,
+    "shadow": "soft, wide drop shadow with low opacity to create floating effect",
+    "border": "typically borderless; sometimes a faint 1px line around cards on light backgrounds",
+    "padding_px": 24,
+    "header_patterns": [
+    "top-aligned product image with text below",
+    "text block with small eyebrow label, heading, and short body",
+    "badge or label in the upper-left corner for status like 'new'"
+    ],
+    "footer_patterns": [
+    "primary and secondary CTAs stacked or inline",
+    "subtle link for additional details",
+    "dot-based carousel indicators for multi-slide modules"
+    ]
+    },
+    "navigation": {
+    "type": "top navigation bar",
+    "position": "sticky at top on scroll",
+    "layout": "logo or icon on the left, horizontal list of primary categories in the center or left, utility icons (search, bag, profile) on the right",
+    "background": "translucent or solid white surface with slight blur when over content",
+    "item_style": "compact text links with medium weight and generous horizontal spacing",
+    "hover_behavior": "text color changes to primary or dark, and in some cases a thin underline or pill-shaped background appears",
+    "active_state": "stronger text color and persistent underline or pill",
+    "mobile_behavior": "navigation collapses into a menu icon and panel, with items stacked vertically"
+    },
+    "chips_tags_badges": {
+    "shape": "pill-shaped with fully rounded ends",
+    "corner_radius_px": 9999,
+    "padding_x_px": 10,
+    "padding_y_px": 4,
+    "typical_use": [
+    "indicating new products or features",
+    "filter or category tags in carousels",
+    "compact status labels above headings"
+    ],
+    "colors": {
+    "background": "tinted version of primary or gradient highlight",
+    "text": "high-contrast dark or white depending on background"
+    }
+    },
+    "other_key_components": {
+    "hero_product_module": {
+    "description": "large section combining a central product image, primary heading, short body text, and 1–2 CTAs",
+    "layout": "content usually centered on desktop; on other sections text is left-aligned with product imagery offset to one side"
+    },
+    "feature_band": {
+    "description": "full-width band highlighting a specific capability, sometimes with darker background and high-contrast imagery",
+    "pattern": "heading, supporting body text, and visual asset (image or video frame) aligned on grid"
+    },
+    "spec_comparison_table": {
+    "description": "multi-column comparison for different product variants",
+    "style": "light grid lines, alternating row backgrounds, small text, and checkmarks or values aligned vertically"
+    },
+    "product_carousel": {
+    "description": "row of cards showcasing multiple related products or accessories",
+    "behavior": "horizontal scrolling on smaller viewports and paginated cards with dots or arrows on larger screens"
+    },
+    "promo_banner": {
+    "description": "gradient-backed highlight panel for seasonal offers or campaigns",
+    "style": "rounded rectangles with large illustration or product imagery and bold headings"
+    }
+    }
+    },
+    "elevation_and_borders": {
+    "shadows": {
+    "card_shadow": "0 18px 40px rgba(0,0,0,0.12)",
+    "button_shadow": "0 8px 20px rgba(0,0,0,0.22) on hover and smaller at rest",
+    "hero_image_shadow": "broader, softer shadow to make hardware imagery appear floating"
+    },
+    "border_usage": [
+    "minimal use of borders; preference for separation via spacing and background color shifts",
+    "thin neutral dividers used to segment dense content zones such as footers or spec tables",
+    "rounded surfaces and shadows provide hierarchy instead of heavy outlines"
+    ],
+    "when_elevation_is_applied": [
+    "primary interactive components (cards, CTAs) gain a subtle lift or stronger shadow on hover",
+    "hero imagery floats above the background using pronounced but soft shadows",
+    "menus and overlays use higher elevation with blur to separate them from the main page"
+    ]
+    },
+    "iconography_and_illustration": {
+    "icon_style": {
+    "stroke": "mostly filled or duotone glyphs with simple geometry and slightly rounded corners",
+    "size_relative_to_text": "around 1.1–1.3x the height of body text",
+    "usage": "used sparingly for functional actions such as search, shopping bag, and chevrons"
+    },
+    "illustration_style": {
+    "primary": "photorealistic device renders with subtle reflections and soft shadows",
+    "secondary": "soft 3D-like or gradient backgrounds behind hardware to create depth and color contrast",
+    "accent": "occasional flat or semi-3D illustrations for promotions or abstract technology concepts"
+    }
+    },
+    "motion_and_interaction": {
+    "scroll_based": [
+    "sections reveal with a fade-in and slight upward translation as they enter the viewport",
+    "hero imagery and background gradients may have gentle parallax where images move at a different rate than text",
+    "dark and light bands transition with soft cross-fades rather than abrupt cuts"
+    ],
+    "hover_interactions": [
+    "cards subtly lift (1–2px translateY negative) and intensify shadows",
+    "buttons slightly scale up and darken their background while preserving pill shape",
+    "links change color to the primary tone and sometimes display a thin underline",
+    "carousel controls (dots or arrows) become more prominent with opacity and scale changes"
+    ],
+    "micro_interactions": [
+    "spec sliders or variant selectors update price and details with smooth opacity transitions instead of full page reloads",
+    "chips and filters animate with quick color fades and subtle background scale when toggled",
+    "sticky navigation bar gently changes background opacity or gains a shadow when the page scrolls"
+    ],
+    "animation_feel": {
+    "easing": "mostly cubic-bezier curves approximating ease-out for entrances and ease-in-out for transitions",
+    "duration_ms": {
+    "micro": 120,
+    "standard": 200,
+    "emphasis": 300
+    },
+    "overall": "animations are smooth, understated, and never distract from product content"
+    },
+    "media_components": {
+    "hero_media": "could transition between still frames or short autoplaying loops with fading cross-dissolves",
+    "product_gallery": "image carousels slide horizontally with easing, snapping cleanly to each frame",
+    "interactive_3d": "optional tilt or rotation on cursor movement can be simulated for hero hardware models"
+    },
+    "state_changes": {
+    "active": "elements compress slightly and reduce shadow on press, then bounce back to hover state",
+    "disabled": "reduced opacity and removal of hover/active motion",
+    "error": "inputs or inline messages can gently shake or briefly tint red when validation fails (optional)"
+    }
+    },
+    "responsive_behaviour": {
+    "breakpoints_px": {
+    "small": 0,
+    "medium": 768,
+    "large": 1024,
+    "xlarge": 1280
+    },
+    "layout_changes": [
+    "multi-column grids collapse into a single column stack on small screens",
+    "hero layout reorders so the primary heading appears above the product image on mobile",
+    "navigation condenses into a menu button and full-screen overlay menu at small widths",
+    "horizontal product rows transform into swipeable carousels with partial next-card peeking",
+    "spec comparison tables become vertically stacked sections per product variant with accordions"
+    ],
+    "touch_interactions": [
+    "carousels support swipe gestures with momentum scrolling",
+    "buttons and chips have increased vertical padding for tap targets",
+    "hover-only effects are translated into color and elevation changes on tap or focus"
+    ]
+    },
+    "implementation_hints": {
+    "tailwind_tokens": {
+    "font_family": "font-sans using system-ui stack",
+    "colors": {
+    "primary": "blue-500/600 equivalent",
+    "primary_variant": "orange-500/600 equivalent",
+    "background": "slate-100 equivalent",
+    "surface": "white",
+    "surface_alt": "slate-900 equivalent",
+    "border_subtle": "slate-200",
+    "text_primary": "slate-900",
+    "text_muted": "slate-600"
+    },
+    "radius": {
+    "pill": "full",
+    "card": "2xl",
+    "chip": "full"
+    },
+    "shadow": {
+    "card": "xl",
+    "button": "lg",
+    "hero_image": "2xl"
+    },
+    "spacing_scale": "use multiples of 4px (Tailwind 1, 2, 4, 6, 8, 10, 12) with sections using 16–24 units vertically",
+    "typography_scale": {
+    "display": "text-5xl to text-6xl",
+    "hero": "text-4xl",
+    "section_heading": "text-2xl to text-3xl",
+    "body": "text-base",
+    "small": "text-sm",
+    "legal": "text-xs"
+    }
+    },
+    "component_recipes": [
+    "build hero modules with a responsive two-column grid at large breakpoints and stacked flex column on small screens",
+    "implement cards using bg-surface, rounded-2xl, shadow-xl, and p-6 with hover:shadow-2xl hover:-translate-y-0.5 transition-all duration-200",
+    "define primary buttons as inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-medium text-white bg-primary hover:bg-primary-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary",
+    "use motion-safe utilities or custom animation classes to apply fade-in and translate-y transitions on scroll for sections",
+    "set page container with mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 to mirror the central column feel"
+    ]
+    }
+    }
+    

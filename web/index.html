@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Create stunning audio visualizations for your content">
+    <title>Audio Spectrum Visualizer</title>
+
+    <!-- Preload critical resources -->
+    <link rel="preconnect" href="https://unpkg.com">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%230071e3'/></svg>">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <div class="nav-content">
+            <div class="nav-logo">
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                    <circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="2"/>
+                    <path d="M16 10 L16 22 M12 16 L20 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <span>AudioSpectrum</span>
+            </div>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#modes">Modes</a>
+                <a href="https://github.com/ahmeddoghri/AudioSpectrum" target="_blank">GitHub</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <h1 class="hero-heading">Audio Spectrum Visualizer</h1>
+            <p class="hero-subheading">Create stunning audio visualizations for your content</p>
+            <button class="btn btn-primary btn-large" id="heroGetStarted">
+                Get Started
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                    <path d="M8 3L8 13M3 8L13 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+            </button>
+        </div>
+    </section>
+
+    <!-- Main App Container -->
+    <main class="main">
+        <div class="container">
+
+            <!-- Step 1: Upload Section -->
+            <section class="section" id="upload-section">
+                <div class="section-header">
+                    <span class="eyebrow">Step 1</span>
+                    <h2 class="section-heading">Upload Your Audio</h2>
+                    <p class="section-description">Select an MP3 or WAV file to get started</p>
+                </div>
+
+                <div class="upload-card card">
+                    <div class="dropzone" id="dropzone">
+                        <svg class="dropzone-icon" width="64" height="64" viewBox="0 0 64 64" fill="none">
+                            <path d="M32 8L32 48M16 24L32 8L48 24" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M8 48L8 56L56 56L56 48" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <p class="dropzone-text">Drag and drop your audio file here</p>
+                        <p class="dropzone-subtext">or</p>
+                        <button class="btn btn-secondary" id="selectFileBtn">Browse Files</button>
+                        <input type="file" id="audioInput" accept=".mp3,.wav" hidden>
+                        <div class="dropzone-info">
+                            <span class="badge">MP3, WAV</span>
+                            <span class="text-muted">Max 50MB</span>
+                        </div>
+                    </div>
+
+                    <!-- File Info (hidden initially) -->
+                    <div class="file-info" id="fileInfo" style="display: none;">
+                        <div class="file-info-content">
+                            <svg class="file-info-icon" width="48" height="48" viewBox="0 0 48 48" fill="none">
+                                <circle cx="24" cy="24" r="20" fill="#0071e3" opacity="0.1"/>
+                                <path d="M20 18L28 24L20 30Z" fill="#0071e3"/>
+                            </svg>
+                            <div class="file-info-details">
+                                <p class="file-info-name" id="fileName">song.mp3</p>
+                                <p class="file-info-meta">
+                                    <span id="fileDuration">0:00</span> •
+                                    <span id="fileSize">0 MB</span>
+                                </p>
+                            </div>
+                            <button class="btn btn-text" id="clearFileBtn">Clear</button>
+                        </div>
+
+                        <!-- Waveform Preview -->
+                        <div class="waveform-container">
+                            <canvas id="waveformCanvas" width="800" height="80"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 2: Mode Selection -->
+            <section class="section" id="mode-section" style="display: none;">
+                <div class="section-header">
+                    <span class="eyebrow">Step 2</span>
+                    <h2 class="section-heading">Choose Your Style</h2>
+                    <p class="section-description">Select a visualization mode that matches your vibe</p>
+                </div>
+
+                <div class="mode-grid" id="modeGrid">
+                    <!-- Mode cards will be populated by JavaScript -->
+                </div>
+            </section>
+
+            <!-- Step 3: Format Selection -->
+            <section class="section" id="format-section" style="display: none;">
+                <div class="section-header">
+                    <span class="eyebrow">Step 3</span>
+                    <h2 class="section-heading">Select Output Format</h2>
+                    <p class="section-description">Choose the perfect dimensions for your platform</p>
+                </div>
+
+                <div class="format-selector">
+                    <div class="format-chips" id="formatChips">
+                        <!-- Format chips will be populated by JavaScript -->
+                    </div>
+
+                    <!-- Custom Format Input (initially hidden) -->
+                    <div class="custom-format" id="customFormat" style="display: none;">
+                        <div class="input-group">
+                            <label for="customWidth">Width</label>
+                            <input type="number" id="customWidth" value="1920" min="480" max="3840" step="1">
+                        </div>
+                        <div class="input-group">
+                            <label for="customHeight">Height</label>
+                            <input type="number" id="customHeight" value="1080" min="480" max="3840" step="1">
+                        </div>
+                    </div>
+
+                    <!-- FPS Selector -->
+                    <div class="fps-selector">
+                        <label>Frame Rate</label>
+                        <div class="chip-group" id="fpsChips">
+                            <button class="chip" data-fps="24">24 fps</button>
+                            <button class="chip chip-selected" data-fps="30">30 fps</button>
+                            <button class="chip" data-fps="60">60 fps</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Step 4: Advanced Settings -->
+            <section class="section" id="settings-section" style="display: none;">
+                <div class="section-header">
+                    <button class="accordion-toggle" id="settingsToggle">
+                        <span class="eyebrow">Step 4</span>
+                        <h3 class="section-heading-small">Advanced Settings</h3>
+                        <svg class="accordion-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="accordion-content" id="settingsContent" style="display: none;">
+                    <div class="settings-grid">
+                        <!-- Color Scheme -->
+                        <div class="setting-item">
+                            <label for="colorScheme">Color Scheme</label>
+                            <select id="colorScheme" class="select">
+                                <option value="apple_blue">Apple Blue</option>
+                                <option value="warm_orange">Warm Orange</option>
+                                <option value="monochrome_white">Monochrome White</option>
+                                <option value="custom">Custom</option>
+                            </select>
+                        </div>
+
+                        <!-- Custom Color Picker (hidden initially) -->
+                        <div class="setting-item" id="customColorPicker" style="display: none;">
+                            <label for="customColor">Custom Color</label>
+                            <input type="color" id="customColor" value="#0071e3">
+                        </div>
+
+                        <!-- Bar Count -->
+                        <div class="setting-item">
+                            <label for="barCount">Bar Count: <span id="barCountValue">72</span></label>
+                            <input type="range" id="barCount" min="48" max="120" value="72" step="1" class="slider">
+                        </div>
+
+                        <!-- Inner Radius -->
+                        <div class="setting-item">
+                            <label for="innerRadius">Inner Radius: <span id="innerRadiusValue">180</span>px</label>
+                            <input type="range" id="innerRadius" min="100" max="250" value="180" step="10" class="slider">
+                        </div>
+
+                        <!-- Smoothing -->
+                        <div class="setting-item">
+                            <label for="smoothing">Smoothing: <span id="smoothingValue">0.85</span></label>
+                            <input type="range" id="smoothing" min="0.5" max="0.95" value="0.85" step="0.05" class="slider">
+                        </div>
+
+                        <!-- Background -->
+                        <div class="setting-item">
+                            <label for="background">Background</label>
+                            <select id="background" class="select">
+                                <option value="soft_gray">Soft Gray</option>
+                                <option value="white">White</option>
+                                <option value="dark">Dark</option>
+                                <option value="transparent">Transparent</option>
+                            </select>
+                        </div>
+
+                        <!-- Enable Gradient -->
+                        <div class="setting-item">
+                            <label for="enableGradient">Enable Gradient</label>
+                            <label class="toggle">
+                                <input type="checkbox" id="enableGradient" checked>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Preview Section -->
+            <section class="section" id="preview-section" style="display: none;">
+                <div class="section-header">
+                    <span class="eyebrow">Preview</span>
+                    <h2 class="section-heading">Looking Good!</h2>
+                    <p class="section-description">Here's a preview of your visualization</p>
+                </div>
+
+                <div class="preview-card card">
+                    <div class="preview-canvas-container">
+                        <canvas id="previewCanvas" width="400" height="400"></canvas>
+                    </div>
+                    <div class="preview-controls">
+                        <button class="btn btn-secondary" id="previewPlayBtn">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M4 2L12 8L4 14Z" fill="currentColor"/>
+                            </svg>
+                            Play Preview
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Generate Section -->
+            <section class="section" id="generate-section" style="display: none;">
+                <div class="generate-card card">
+                    <button class="btn btn-primary btn-large" id="generateBtn">
+                        Generate Video
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M4 7L10 13L16 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+
+                    <!-- Progress (hidden initially) -->
+                    <div class="progress-container" id="progressContainer" style="display: none;">
+                        <div class="progress-info">
+                            <p class="progress-status" id="progressStatus">Processing audio...</p>
+                            <p class="progress-percentage" id="progressPercentage">0%</p>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                        </div>
+                        <p class="progress-time" id="progressTime">Estimated time: calculating...</p>
+                        <button class="btn btn-text" id="cancelBtn">Cancel</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Download Section (hidden initially) -->
+            <section class="section" id="download-section" style="display: none;">
+                <div class="section-header">
+                    <div class="success-icon">
+                        <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                            <circle cx="32" cy="32" r="28" stroke="#34c759" stroke-width="3"/>
+                            <path d="M20 32L28 40L44 24" stroke="#34c759" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h2 class="section-heading">Your Video is Ready!</h2>
+                    <p class="section-description">Download and share your creation</p>
+                </div>
+
+                <div class="download-card card">
+                    <!-- Video Preview -->
+                    <div class="video-preview">
+                        <video id="videoPreview" controls></video>
+                    </div>
+
+                    <!-- File Info -->
+                    <div class="download-info">
+                        <p><strong>File size:</strong> <span id="downloadSize">0 MB</span></p>
+                        <p><strong>Duration:</strong> <span id="downloadDuration">0:00</span></p>
+                        <p><strong>Format:</strong> <span id="downloadFormat">MP4</span></p>
+                    </div>
+
+                    <!-- Download Button -->
+                    <button class="btn btn-primary btn-large" id="downloadBtn">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <path d="M10 2L10 14M4 10L10 16L16 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M2 16L2 18L18 18L18 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        Download Video
+                    </button>
+
+                    <!-- Create Another -->
+                    <button class="btn btn-secondary" id="createAnotherBtn">Create Another</button>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="#hero">About</a>
+                <span class="footer-divider">|</span>
+                <a href="https://github.com/ahmeddoghri/AudioSpectrum" target="_blank">GitHub</a>
+                <span class="footer-divider">|</span>
+                <a href="mailto:support@audiospectrum.com">Support</a>
+            </div>
+            <p class="footer-legal">
+                © 2024 AudioSpectrum. All processing happens locally in your browser.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Toast Notification (hidden initially) -->
+    <div class="toast" id="toast" style="display: none;">
+        <div class="toast-content">
+            <svg class="toast-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <circle cx="10" cy="10" r="8" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            <p class="toast-message" id="toastMessage">Notification message</p>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="constants.js"></script>
+    <script src="utils.js"></script>
+    <script src="audio-processor.js"></script>
+    <script src="visualizer.js"></script>
+    <script src="video-encoder.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

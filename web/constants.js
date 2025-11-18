@@ -971,6 +971,46 @@ const VISUALIZATION_MODES = {
         category: 'Geometric',
         mode: 95,
         tags: ['polygon', 'pulse', 'geometric']
+    },
+    chromatic_orb: {
+        id: 'chromatic_orb',
+        name: 'Chromatic Orb',
+        description: '3D sphere with chromatic shader and moving light source',
+        category: 'Geometric',
+        mode: 96,
+        tags: ['3d', 'sphere', 'lighting']
+    },
+    textured_bars: {
+        id: 'textured_bars',
+        name: 'Textured Bars',
+        description: 'Bars filled with scrolling animated texture',
+        category: 'Classic',
+        mode: 97,
+        tags: ['bars', 'texture', 'pattern']
+    },
+    voronoi_tessellation: {
+        id: 'voronoi_tessellation',
+        name: 'Voronoi Tessellation',
+        description: 'Voronoi diagram with cells pulsing and seed points moving',
+        category: 'Geometric',
+        mode: 98,
+        tags: ['voronoi', 'tessellation', 'cells']
+    },
+    shattering_glass: {
+        id: 'shattering_glass',
+        name: 'Shattering Glass',
+        description: 'Glass pane with cracks appearing on beats',
+        category: 'Energy',
+        mode: 99,
+        tags: ['glass', 'cracks', 'impact']
+    },
+    sunrise_sunset: {
+        id: 'sunrise_sunset',
+        name: 'Sunrise Sunset',
+        description: 'Gradient sky with pulsing sun and glittering stars',
+        category: 'Nature',
+        mode: 100,
+        tags: ['sky', 'sun', 'stars']
     }
 };
 

@@ -456,6 +456,21 @@ class Visualizer {
             case 'pulsing_polygon':
                 this.renderPulsingPolygon(magnitudes);
                 break;
+            case 'chromatic_orb':
+                this.renderChromaticOrb(magnitudes);
+                break;
+            case 'textured_bars':
+                this.renderTexturedBars(magnitudes);
+                break;
+            case 'voronoi_tessellation':
+                this.renderVoronoiTessellation(magnitudes);
+                break;
+            case 'shattering_glass':
+                this.renderShatteringGlass(magnitudes);
+                break;
+            case 'sunrise_sunset':
+                this.renderSunriseSunset(magnitudes);
+                break;
 
             default:
                 this.renderCircularBars(magnitudes);
@@ -5348,6 +5363,293 @@ class Visualizer {
             this.ctx.strokeStyle = 'rgb(255, 255, 255)';
             this.ctx.lineWidth = 3;
             this.ctx.stroke();
+        }
+    }
+
+    /**
+     * Mode 96: Chromatic Orb
+     * 3D sphere with chromatic shader and moving light source
+     */
+    renderChromaticOrb(magnitudes) {
+        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        // Light source moves with stereo pan
+        const left = magnitudes.slice(0, Math.floor(magnitudes.length / 2))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length / 2);
+        const right = magnitudes.slice(Math.floor(magnitudes.length / 2))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length / 2);
+
+        if (!this.chromaticOrbRotation) this.chromaticOrbRotation = 0;
+        this.chromaticOrbRotation += (right - left) * 0.1;
+        const lightAngle = this.chromaticOrbRotation;
+        const lightX = Math.cos(lightAngle);
+        const lightY = Math.sin(lightAngle);
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Draw orb
+        const orbRadius = 150 + bass * 50;
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
+
+        for (let angleIdx = 0; angleIdx < 60; angleIdx++) {
+            const angle = (angleIdx / 60) * Math.PI * 2;
+            for (let radiusIdx = 0; radiusIdx < 20; radiusIdx++) {
+                const radiusFactor = radiusIdx / 20;
+                const radius = orbRadius * radiusFactor;
+
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+
+                // Lighting calculation
+                const dot = Math.cos(angle) * lightX + Math.sin(angle) * lightY;
+                const brightness = Math.max(0, dot) * 200 + 55;
+
+                // Chromatic color
+                const hue = ((angle / (2 * Math.PI) + radiusFactor + this.frameCounter * 0.01) * 180) % 180;
+                const saturation = 78 + avgMagnitude * 22;
+                const value = brightness / 255 * 100;
+                const color = this.hsvToRgb(hue, saturation, value);
+
+                this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+    }
+
+    /**
+     * Mode 97: Textured Bars
+     * Bars filled with scrolling animated texture
+     */
+    renderTexturedBars(magnitudes) {
+        const barWidth = this.canvas.width / magnitudes.length;
+
+        // Clear background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        for (let i = 0; i < magnitudes.length; i++) {
+            const magnitude = magnitudes[i];
+            const barHeight = magnitude * this.canvas.height * 0.7;
+            const x = i * barWidth;
+            const y = this.canvas.height - barHeight;
+
+            // Scrolling texture (simulated with pattern)
+            for (let ty = y; ty < this.canvas.height; ty += 5) {
+                const scrollOffset = Math.floor((this.frameCounter * magnitude * 2) % 10);
+                const patternY = (ty + scrollOffset) % 10;
+
+                if (patternY < 5) {
+                    const brightness = 100 + magnitude * 155;
+                    this.ctx.strokeStyle = `rgb(${brightness}, 150, 200)`;
+                } else {
+                    this.ctx.strokeStyle = 'rgb(50, 100, 150)';
+                }
+
+                this.ctx.lineWidth = 2;
+                this.ctx.beginPath();
+                this.ctx.moveTo(x, ty);
+                this.ctx.lineTo(x + barWidth - 2, ty);
+                this.ctx.stroke();
+            }
+        }
+    }
+
+    /**
+     * Mode 98: Voronoi Tessellation
+     * Voronoi diagram with cells pulsing and seed points moving
+     */
+    renderVoronoiTessellation(magnitudes) {
+        const numSeeds = Math.min(magnitudes.length, 20);
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        // Initialize seed positions
+        if (!this.voronoiSeeds || this.voronoiSeeds.length === 0) {
+            this.voronoiSeeds = [];
+            for (let i = 0; i < numSeeds; i++) {
+                this.voronoiSeeds.push({
+                    x: Math.random() * this.canvas.width,
+                    y: Math.random() * this.canvas.height
+                });
+            }
+        }
+
+        // Update seed positions
+        for (let i = 0; i < numSeeds && i < this.voronoiSeeds.length; i++) {
+            const seed = this.voronoiSeeds[i];
+            const magnitude = i < magnitudes.length ? magnitudes[i] : 0;
+
+            // Seeds move slightly
+            seed.x += (Math.random() - 0.5) * bass * 5;
+            seed.y += (Math.random() - 0.5) * bass * 5;
+
+            // Keep in bounds
+            seed.x = Math.max(0, Math.min(this.canvas.width, seed.x));
+            seed.y = Math.max(0, Math.min(this.canvas.height, seed.y));
+        }
+
+        // Draw Voronoi cells (simplified - sample points)
+        for (let y = 0; y < this.canvas.height; y += 5) {
+            for (let x = 0; x < this.canvas.width; x += 5) {
+                // Find closest seed
+                let minDist = Infinity;
+                let closestIdx = 0;
+
+                for (let i = 0; i < numSeeds && i < this.voronoiSeeds.length; i++) {
+                    const seed = this.voronoiSeeds[i];
+                    const dist = (x - seed.x) ** 2 + (y - seed.y) ** 2;
+                    if (dist < minDist) {
+                        minDist = dist;
+                        closestIdx = i;
+                    }
+                }
+
+                // Color based on closest seed and its magnitude
+                const magnitude = closestIdx < magnitudes.length ? magnitudes[closestIdx] : 0;
+                const hue = (closestIdx / numSeeds) * 180;
+                const saturation = 78 + magnitude * 22;
+                const value = 39 + magnitude * 61;
+                const color = this.hsvToRgb(hue, saturation, value);
+
+                this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+                this.ctx.fillRect(x, y, 5, 5);
+            }
+        }
+
+        // Draw seed points
+        for (let i = 0; i < numSeeds && i < this.voronoiSeeds.length; i++) {
+            const seed = this.voronoiSeeds[i];
+            this.ctx.fillStyle = 'rgb(255, 255, 255)';
+            this.ctx.beginPath();
+            this.ctx.arc(seed.x, seed.y, 6, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+    }
+
+    /**
+     * Mode 99: Shattering Glass
+     * Glass pane with cracks appearing on beats
+     */
+    renderShatteringGlass(magnitudes) {
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        if (!this.glassCracks) this.glassCracks = [];
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Glass pane (semi-transparent overlay)
+        this.ctx.fillStyle = 'rgba(240, 220, 200, 0.3)';
+        this.ctx.fillRect(100, 100, this.canvas.width - 200, this.canvas.height - 200);
+
+        // Create cracks on strong beats
+        if (bass > 0.65 && this.glassCracks.length < 50) {
+            const crackCenter = {
+                x: this.canvas.width / 2 + (Math.random() - 0.5) * 200,
+                y: this.canvas.height / 2 + (Math.random() - 0.5) * 200
+            };
+
+            // Radiating crack lines
+            const numLines = Math.floor(4 + bass * 8);
+            for (let i = 0; i < numLines; i++) {
+                const angle = Math.random() * 2 * Math.PI;
+                const length = 50 + bass * 150;
+
+                const endX = crackCenter.x + Math.cos(angle) * length;
+                const endY = crackCenter.y + Math.sin(angle) * length;
+
+                this.glassCracks.push({
+                    start: crackCenter,
+                    end: { x: endX, y: endY },
+                    complexity: treble
+                });
+            }
+        }
+
+        // Draw cracks
+        for (const crack of this.glassCracks) {
+            const thickness = 1 + crack.complexity * 3;
+            this.ctx.strokeStyle = 'rgb(50, 50, 50)';
+            this.ctx.lineWidth = thickness;
+            this.ctx.beginPath();
+            this.ctx.moveTo(crack.start.x, crack.start.y);
+            this.ctx.lineTo(crack.end.x, crack.end.y);
+            this.ctx.stroke();
+        }
+    }
+
+    /**
+     * Mode 100: Sunrise Sunset
+     * Gradient sky with pulsing sun and glittering stars
+     */
+    renderSunriseSunset(magnitudes) {
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const mids = magnitudes.slice(Math.floor(magnitudes.length * 0.25), Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.5);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        // Sky gradient (color mapped to mid-range)
+        const skyHue = 20 + mids * 100;
+
+        for (let y = 0; y < this.canvas.height; y++) {
+            const gradientFactor = y / this.canvas.height;
+            const saturation = 78 - gradientFactor * 39;
+            const value = 100 - gradientFactor * 39;
+
+            const color = this.hsvToRgb(skyHue, saturation, value);
+            this.ctx.strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            this.ctx.lineWidth = 1;
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, y);
+            this.ctx.lineTo(this.canvas.width, y);
+            this.ctx.stroke();
+        }
+
+        // Sun/Moon (pulses with bass)
+        if (!this.sunPosition) this.sunPosition = this.canvas.height * 0.3;
+        this.sunPosition = this.canvas.height * 0.3 + Math.sin(this.frameCounter * 0.02) * 50;
+        const sunRadius = 60 + bass * 50;
+
+        const sunColor = mids < 0.5 ? 'rgb(255, 200, 100)' : 'rgb(255, 150, 50)';
+        this.ctx.fillStyle = sunColor;
+        this.ctx.beginPath();
+        this.ctx.arc(this.canvas.width / 2, this.sunPosition, sunRadius, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        this.ctx.strokeStyle = sunColor;
+        this.ctx.lineWidth = 3;
+        this.ctx.globalAlpha = 0.7;
+        this.ctx.beginPath();
+        this.ctx.arc(this.canvas.width / 2, this.sunPosition, sunRadius + 10, 0, Math.PI * 2);
+        this.ctx.stroke();
+        this.ctx.globalAlpha = 1;
+
+        // Stars glitter on treble (visible when dark)
+        if (mids < 0.3) {
+            const numStars = Math.floor(treble * 50 + 10);
+            for (let i = 0; i < numStars; i++) {
+                const starX = Math.random() * this.canvas.width;
+                const starY = Math.random() * (this.canvas.height / 2);
+                const brightness = 200 + treble * 55;
+
+                this.ctx.fillStyle = `rgb(${brightness}, ${brightness}, ${brightness})`;
+                this.ctx.beginPath();
+                this.ctx.arc(starX, starY, 2, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
         }
     }
 

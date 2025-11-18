@@ -79,23 +79,56 @@
                     <!-- File Info (hidden initially) -->
                     <div class="file-info" id="fileInfo" style="display: none;">
                         <div class="file-info-content">
-                            <svg class="file-info-icon" width="48" height="48" viewBox="0 0 48 48" fill="none">
-                                <circle cx="24" cy="24" r="20" fill="#0071e3" opacity="0.1"/>
-                                <path d="M20 18L28 24L20 30Z" fill="#0071e3"/>
-                            </svg>
-                            <div class="file-info-details">
-                                <p class="file-info-name" id="fileName">song.mp3</p>
-                                <p class="file-info-meta">
-                                    <span id="fileDuration">0:00</span> •
-                                    <span id="fileSize">0 MB</span>
-                                </p>
+                            <div class="file-info-header">
+                                <div class="file-info-details">
+                                    <p class="file-info-name" id="fileName">song.mp3</p>
+                                    <p class="file-info-meta">
+                                        <span id="fileDuration">0:00</span> •
+                                        <span id="fileSize">0 MB</span>
+                                    </p>
+                                </div>
+                                <button class="btn btn-text" id="clearFileBtn">Clear</button>
                             </div>
-                            <button class="btn btn-text" id="clearFileBtn">Clear</button>
                         </div>
 
-                        <!-- Waveform Preview -->
-                        <div class="waveform-container">
-                            <canvas id="waveformCanvas" width="800" height="80"></canvas>
+                        <!-- Audio Player with Interactive Waveform -->
+                        <div class="audio-player">
+                            <!-- Hidden HTML5 audio element -->
+                            <audio id="audioElement" preload="metadata"></audio>
+
+                            <!-- Waveform Visualization -->
+                            <div class="waveform-wrapper">
+                                <div class="waveform-container" id="waveformContainer">
+                                    <canvas id="waveformCanvas" width="800" height="100"></canvas>
+                                    <canvas id="waveformProgress" width="800" height="100"></canvas>
+                                    <div class="waveform-cursor" id="waveformCursor"></div>
+                                </div>
+                            </div>
+
+                            <!-- Playback Controls -->
+                            <div class="playback-controls">
+                                <button class="btn-icon play-button" id="playButton" title="Play/Pause">
+                                    <svg class="play-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                                        <path d="M8 5L19 12L8 19Z" fill="currentColor"/>
+                                    </svg>
+                                    <svg class="pause-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display: none;">
+                                        <rect x="6" y="4" width="4" height="16" fill="currentColor"/>
+                                        <rect x="14" y="4" width="4" height="16" fill="currentColor"/>
+                                    </svg>
+                                </button>
+                                <div class="time-display">
+                                    <span id="currentTime">0:00</span>
+                                    <span class="time-separator">/</span>
+                                    <span id="totalTime">0:00</span>
+                                </div>
+                                <div class="volume-control">
+                                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                        <path d="M9 5L6 8H3v4h3l3 3V5z" stroke="currentColor" stroke-width="1.5" fill="currentColor"/>
+                                        <path d="M13 7c1 1 1 5 0 6M15 5c2 2 2 8 0 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                    </svg>
+                                    <input type="range" id="volumeSlider" min="0" max="100" value="80" class="volume-slider">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -109,8 +142,52 @@
                     <p class="section-description">Select a visualization mode that matches your vibe</p>
                 </div>
 
+                <!-- Mode Filters -->
+                <div class="mode-filters">
+                    <div class="search-box">
+                        <svg class="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                            <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2"/>
+                            <path d="M13 13L17 17" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <input type="text" id="modeSearch" placeholder="Search modes..." class="search-input">
+                        <button class="clear-search" id="clearSearch" style="display: none;">
+                            <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M4 4L12 12M12 4L4 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <div class="category-filter">
+                        <select id="categoryFilter" class="select">
+                            <option value="all">All Categories</option>
+                            <option value="classic">Classic</option>
+                            <option value="particles">Particles</option>
+                            <option value="retro">Retro</option>
+                            <option value="fluid">Fluid</option>
+                            <option value="nature">Nature</option>
+                            <option value="geometric">Geometric</option>
+                            <option value="scientific">Scientific</option>
+                            <option value="tech">Tech</option>
+                            <option value="energy">Energy</option>
+                        </select>
+                    </div>
+
+                    <div class="mode-count" id="modeCount">
+                        <span id="visibleModeCount">0</span> modes
+                    </div>
+                </div>
+
                 <div class="mode-grid" id="modeGrid">
                     <!-- Mode cards will be populated by JavaScript -->
+                </div>
+
+                <div class="no-modes-message" id="noModesMessage" style="display: none;">
+                    <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                        <circle cx="32" cy="32" r="28" stroke="currentColor" stroke-width="2" opacity="0.3"/>
+                        <path d="M32 20V34M32 42V44" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                    <p>No modes found matching your search.</p>
+                    <button class="btn btn-secondary" id="resetFilters">Reset Filters</button>
                 </div>
             </section>
 
@@ -167,42 +244,80 @@
                     <div class="settings-grid">
                         <!-- Color Scheme -->
                         <div class="setting-item">
-                            <label for="colorScheme">Color Scheme</label>
+                            <label for="colorScheme" class="setting-label">
+                                Color Scheme
+                                <span class="setting-tooltip" title="Choose a color scheme for your visualization">ⓘ</span>
+                            </label>
                             <select id="colorScheme" class="select">
                                 <option value="apple_blue">Apple Blue</option>
                                 <option value="warm_orange">Warm Orange</option>
                                 <option value="monochrome_white">Monochrome White</option>
-                                <option value="custom">Custom</option>
+                                <option value="sunset">Sunset</option>
+                                <option value="ocean">Ocean</option>
+                                <option value="forest">Forest</option>
+                                <option value="purple_haze">Purple Haze</option>
+                                <option value="neon">Neon</option>
+                                <option value="fire">Fire</option>
+                                <option value="gradient_2">Gradient (2 Colors)</option>
+                                <option value="gradient_3">Gradient (3 Colors)</option>
+                                <option value="super_custom">Super Custom</option>
                             </select>
                         </div>
 
-                        <!-- Custom Color Picker (hidden initially) -->
-                        <div class="setting-item" id="customColorPicker" style="display: none;">
-                            <label for="customColor">Custom Color</label>
-                            <input type="color" id="customColor" value="#0071e3">
+                        <!-- Custom Gradient Colors (hidden initially) -->
+                        <div class="setting-item gradient-colors" id="gradientColors" style="display: none;">
+                            <label>Gradient Colors</label>
+                            <div class="color-pickers">
+                                <div class="color-picker-group">
+                                    <label for="gradientColor1">Color 1</label>
+                                    <input type="color" id="gradientColor1" value="#0071e3">
+                                </div>
+                                <div class="color-picker-group">
+                                    <label for="gradientColor2">Color 2</label>
+                                    <input type="color" id="gradientColor2" value="#ff7a00">
+                                </div>
+                                <div class="color-picker-group" id="gradientColor3Group" style="display: none;">
+                                    <label for="gradientColor3">Color 3</label>
+                                    <input type="color" id="gradientColor3" value="#7cb342">
+                                </div>
+                            </div>
+                            <!-- Gradient Preview -->
+                            <div class="gradient-preview" id="gradientPreview"></div>
                         </div>
 
                         <!-- Bar Count -->
-                        <div class="setting-item">
-                            <label for="barCount">Bar Count: <span id="barCountValue">72</span></label>
-                            <input type="range" id="barCount" min="48" max="120" value="72" step="1" class="slider">
+                        <div class="setting-item" data-setting="barCount">
+                            <label for="barCount" class="setting-label">
+                                Bar Count: <span id="barCountValue">72</span>
+                                <span class="setting-tooltip" title="Number of frequency bars (50-150)">ⓘ</span>
+                            </label>
+                            <input type="range" id="barCount" min="50" max="150" value="72" step="1" class="slider">
                         </div>
 
                         <!-- Inner Radius -->
-                        <div class="setting-item">
-                            <label for="innerRadius">Inner Radius: <span id="innerRadiusValue">180</span>px</label>
-                            <input type="range" id="innerRadius" min="100" max="250" value="180" step="10" class="slider">
+                        <div class="setting-item" data-setting="innerRadius">
+                            <label for="innerRadius" class="setting-label">
+                                Inner Radius: <span id="innerRadiusValue">180</span>px
+                                <span class="setting-tooltip" title="Inner radius for circular visualizations (50-250px)">ⓘ</span>
+                            </label>
+                            <input type="range" id="innerRadius" min="50" max="250" value="180" step="10" class="slider">
                         </div>
 
                         <!-- Smoothing -->
                         <div class="setting-item">
-                            <label for="smoothing">Smoothing: <span id="smoothingValue">0.85</span></label>
+                            <label for="smoothing" class="setting-label">
+                                Smoothing: <span id="smoothingValue">0.85</span>
+                                <span class="setting-tooltip" title="Audio smoothing factor (0.5-0.95)">ⓘ</span>
+                            </label>
                             <input type="range" id="smoothing" min="0.5" max="0.95" value="0.85" step="0.05" class="slider">
                         </div>
 
                         <!-- Background -->
                         <div class="setting-item">
-                            <label for="background">Background</label>
+                            <label for="background" class="setting-label">
+                                Background
+                                <span class="setting-tooltip" title="Background style for the visualization">ⓘ</span>
+                            </label>
                             <select id="background" class="select">
                                 <option value="soft_gray">Soft Gray</option>
                                 <option value="white">White</option>
@@ -213,7 +328,10 @@
 
                         <!-- Enable Gradient -->
                         <div class="setting-item">
-                            <label for="enableGradient">Enable Gradient</label>
+                            <label for="enableGradient" class="setting-label">
+                                Enable Gradient
+                                <span class="setting-tooltip" title="Use gradient colors instead of solid">ⓘ</span>
+                            </label>
                             <label class="toggle">
                                 <input type="checkbox" id="enableGradient" checked>
                                 <span class="toggle-slider"></span>
@@ -294,7 +412,35 @@
                     <div class="download-info">
                         <p><strong>File size:</strong> <span id="downloadSize">0 MB</span></p>
                         <p><strong>Duration:</strong> <span id="downloadDuration">0:00</span></p>
-                        <p><strong>Format:</strong> <span id="downloadFormat">MP4</span></p>
+                        <p><strong>Format:</strong> <span id="downloadFormatDisplay">WebM</span></p>
+                    </div>
+
+                    <!-- Format Selection -->
+                    <div class="download-format-selector">
+                        <label>Download Format:</label>
+                        <div class="format-options">
+                            <label class="format-option">
+                                <input type="radio" name="downloadFormat" value="webm" checked>
+                                <div class="format-option-content">
+                                    <span class="format-option-name">WebM (VP9)</span>
+                                    <span class="format-option-desc">Best for web, smaller file size</span>
+                                </div>
+                            </label>
+                            <label class="format-option">
+                                <input type="radio" name="downloadFormat" value="mp4-h264">
+                                <div class="format-option-content">
+                                    <span class="format-option-name">MP4 (H.264)</span>
+                                    <span class="format-option-desc">Most compatible, standard quality</span>
+                                </div>
+                            </label>
+                            <label class="format-option">
+                                <input type="radio" name="downloadFormat" value="mp4-h265">
+                                <div class="format-option-content">
+                                    <span class="format-option-name">MP4 (H.265)</span>
+                                    <span class="format-option-desc">Better compression, newer devices</span>
+                                </div>
+                            </label>
+                        </div>
                     </div>
 
                     <!-- Download Button -->

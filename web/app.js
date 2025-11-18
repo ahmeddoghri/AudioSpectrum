@@ -77,10 +77,24 @@ class AudioSpectrumApp {
         this.elements.fileSize = document.getElementById('fileSize');
         this.elements.clearFileBtn = document.getElementById('clearFileBtn');
         this.elements.waveformCanvas = document.getElementById('waveformCanvas');
+        this.elements.waveformProgress = document.getElementById('waveformProgress');
+        this.elements.waveformContainer = document.getElementById('waveformContainer');
+        this.elements.waveformCursor = document.getElementById('waveformCursor');
+        this.elements.audioElement = document.getElementById('audioElement');
+        this.elements.playButton = document.getElementById('playButton');
+        this.elements.currentTime = document.getElementById('currentTime');
+        this.elements.totalTime = document.getElementById('totalTime');
+        this.elements.volumeSlider = document.getElementById('volumeSlider');
 
         // Mode section
         this.elements.modeSection = document.getElementById('mode-section');
         this.elements.modeGrid = document.getElementById('modeGrid');
+        this.elements.modeSearch = document.getElementById('modeSearch');
+        this.elements.clearSearch = document.getElementById('clearSearch');
+        this.elements.categoryFilter = document.getElementById('categoryFilter');
+        this.elements.visibleModeCount = document.getElementById('visibleModeCount');
+        this.elements.noModesMessage = document.getElementById('noModesMessage');
+        this.elements.resetFilters = document.getElementById('resetFilters');
 
         // Format section
         this.elements.formatSection = document.getElementById('format-section');
@@ -97,6 +111,12 @@ class AudioSpectrumApp {
         this.elements.colorScheme = document.getElementById('colorScheme');
         this.elements.customColorPicker = document.getElementById('customColorPicker');
         this.elements.customColor = document.getElementById('customColor');
+        this.elements.gradientColors = document.getElementById('gradientColors');
+        this.elements.gradientColor1 = document.getElementById('gradientColor1');
+        this.elements.gradientColor2 = document.getElementById('gradientColor2');
+        this.elements.gradientColor3 = document.getElementById('gradientColor3');
+        this.elements.gradientColor3Group = document.getElementById('gradientColor3Group');
+        this.elements.gradientPreview = document.getElementById('gradientPreview');
         this.elements.barCount = document.getElementById('barCount');
         this.elements.barCountValue = document.getElementById('barCountValue');
         this.elements.innerRadius = document.getElementById('innerRadius');
@@ -186,6 +206,60 @@ class AudioSpectrumApp {
             this.clearFile();
         });
 
+        // Audio player controls
+        this.elements.playButton.addEventListener('click', () => {
+            this.togglePlayback();
+        });
+
+        this.elements.audioElement.addEventListener('timeupdate', () => {
+            this.updatePlaybackProgress();
+        });
+
+        this.elements.audioElement.addEventListener('ended', () => {
+            this.handleAudioEnded();
+        });
+
+        this.elements.volumeSlider.addEventListener('input', (e) => {
+            this.updateVolume(e.target.value / 100);
+        });
+
+        // Waveform interaction
+        this.elements.waveformContainer.addEventListener('click', (e) => {
+            this.handleWaveformClick(e);
+        });
+
+        this.elements.waveformContainer.addEventListener('mousemove', (e) => {
+            this.handleWaveformHover(e);
+        });
+
+        this.elements.waveformContainer.addEventListener('mouseleave', () => {
+            this.elements.waveformCursor.style.opacity = '0';
+        });
+
+        // Mode search and filter
+        this.elements.modeSearch.addEventListener('input', (e) => {
+            const searchTerm = e.target.value;
+            this.elements.clearSearch.style.display = searchTerm ? 'flex' : 'none';
+            this.filterModes();
+        });
+
+        this.elements.clearSearch.addEventListener('click', () => {
+            this.elements.modeSearch.value = '';
+            this.elements.clearSearch.style.display = 'none';
+            this.filterModes();
+        });
+
+        this.elements.categoryFilter.addEventListener('change', () => {
+            this.filterModes();
+        });
+
+        this.elements.resetFilters.addEventListener('click', () => {
+            this.elements.modeSearch.value = '';
+            this.elements.categoryFilter.value = 'all';
+            this.elements.clearSearch.style.display = 'none';
+            this.filterModes();
+        });
+
         // FPS selector
         const fpsButtons = this.elements.fpsChips.querySelectorAll('.chip');
         fpsButtons.forEach(btn => {
@@ -204,10 +278,33 @@ class AudioSpectrumApp {
 
         // Color scheme selector
         this.elements.colorScheme.addEventListener('change', (e) => {
-            this.state.settings.colorScheme = e.target.value;
-            this.elements.customColorPicker.style.display =
-                e.target.value === 'custom' ? 'block' : 'none';
+            const scheme = e.target.value;
+            this.state.settings.colorScheme = scheme;
+
+            // Show/hide gradient color pickers based on scheme
+            const schemeData = COLOR_SCHEMES[scheme];
+            if (schemeData && schemeData.customizable) {
+                this.elements.gradientColors.style.display = 'flex';
+                // Show 3rd color picker for 3-color gradients
+                if (schemeData.colorCount === 3) {
+                    this.elements.gradientColor3Group.style.display = 'flex';
+                } else {
+                    this.elements.gradientColor3Group.style.display = 'none';
+                }
+                this.updateGradientPreview();
+            } else {
+                this.elements.gradientColors.style.display = 'none';
+            }
+
             this.updatePreview();
+        });
+
+        // Gradient color pickers
+        [this.elements.gradientColor1, this.elements.gradientColor2, this.elements.gradientColor3].forEach(picker => {
+            picker.addEventListener('input', () => {
+                this.updateGradientPreview();
+                this.updatePreview();
+            });
         });
 
         // Custom color
@@ -301,11 +398,16 @@ class AudioSpectrumApp {
             const card = document.createElement('div');
             card.className = 'mode-card';
             card.dataset.mode = mode.id;
+            card.dataset.category = mode.category.toLowerCase();
+            card.dataset.name = mode.name.toLowerCase();
+            card.dataset.description = mode.description.toLowerCase();
+            card.dataset.tags = mode.tags.join(' ').toLowerCase();
 
             card.innerHTML = `
                 <div class="mode-preview">
                     <canvas width="280" height="280"></canvas>
                 </div>
+                <div class="mode-category-badge">${mode.category}</div>
                 <h3 class="mode-name">${mode.name}</h3>
                 <p class="mode-description">${mode.description}</p>
                 <button class="btn btn-secondary">
@@ -325,6 +427,66 @@ class AudioSpectrumApp {
             // Generate preview for this mode
             this.generateModePreview(card.querySelector('canvas'), mode.id);
         });
+
+        // Initial count update
+        this.updateModeCount();
+    }
+
+    /**
+     * Filter modes based on search and category
+     */
+    filterModes() {
+        const searchTerm = this.elements.modeSearch.value.toLowerCase().trim();
+        const selectedCategory = this.elements.categoryFilter.value;
+
+        const cards = this.elements.modeGrid.querySelectorAll('.mode-card');
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+            const name = card.dataset.name;
+            const description = card.dataset.description;
+            const category = card.dataset.category;
+            const tags = card.dataset.tags;
+
+            // Check search match
+            const searchMatch = !searchTerm ||
+                                name.includes(searchTerm) ||
+                                description.includes(searchTerm) ||
+                                tags.includes(searchTerm);
+
+            // Check category match
+            const categoryMatch = selectedCategory === 'all' ||
+                                  category === selectedCategory;
+
+            // Show/hide card based on filters
+            if (searchMatch && categoryMatch) {
+                card.style.display = 'block';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // Update count and show/hide no results message
+        this.updateModeCount(visibleCount);
+
+        if (visibleCount === 0) {
+            this.elements.noModesMessage.style.display = 'flex';
+            this.elements.modeGrid.style.display = 'none';
+        } else {
+            this.elements.noModesMessage.style.display = 'none';
+            this.elements.modeGrid.style.display = 'grid';
+        }
+    }
+
+    /**
+     * Update mode count display
+     */
+    updateModeCount(count) {
+        if (count === undefined) {
+            count = Object.keys(VISUALIZATION_MODES).length;
+        }
+        this.elements.visibleModeCount.textContent = count;
     }
 
     /**
@@ -354,11 +516,18 @@ class AudioSpectrumApp {
     populateFormatChips() {
         Object.entries(FORMAT_PRESETS).forEach(([key, preset]) => {
             const chip = document.createElement('button');
-            chip.className = 'chip';
+            chip.className = 'format-chip';
             chip.dataset.format = key;
+
+            // Create aspect ratio visual indicator
+            const aspectIcon = this.createAspectRatioIcon(preset);
+
             chip.innerHTML = `
-                <span>${preset.name}</span>
-                <small>${preset.aspectRatio}</small>
+                ${aspectIcon}
+                <div class="format-chip-content">
+                    <div class="format-chip-name">${preset.name}</div>
+                    <div class="format-chip-dimensions">${preset.width} × ${preset.height}</div>
+                </div>
             `;
 
             chip.addEventListener('click', () => {
@@ -367,6 +536,54 @@ class AudioSpectrumApp {
 
             this.elements.formatChips.appendChild(chip);
         });
+    }
+
+    /**
+     * Create aspect ratio icon (visual rectangle)
+     */
+    createAspectRatioIcon(preset) {
+        if (preset.isCustom) {
+            return `
+                <div class="aspect-ratio-icon custom">
+                    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                        <rect x="12" y="12" width="24" height="24" stroke="currentColor" stroke-width="2" fill="none" rx="4"/>
+                        <text x="24" y="30" text-anchor="middle" fill="currentColor" font-size="16" font-weight="600">?</text>
+                    </svg>
+                </div>
+            `;
+        }
+
+        const aspectRatio = preset.width / preset.height;
+        let rectWidth, rectHeight;
+        const maxSize = 40;
+
+        if (aspectRatio >= 1) {
+            // Landscape or square
+            rectWidth = maxSize;
+            rectHeight = maxSize / aspectRatio;
+        } else {
+            // Portrait
+            rectHeight = maxSize;
+            rectWidth = maxSize * aspectRatio;
+        }
+
+        return `
+            <div class="aspect-ratio-icon">
+                <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+                    <rect
+                        x="${(48 - rectWidth) / 2}"
+                        y="${(48 - rectHeight) / 2}"
+                        width="${rectWidth}"
+                        height="${rectHeight}"
+                        fill="currentColor"
+                        opacity="0.2"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        rx="2"
+                    />
+                </svg>
+            </div>
+        `;
     }
 
     /**
@@ -400,7 +617,14 @@ class AudioSpectrumApp {
 
             // Generate waveform
             const waveformData = await this.audioProcessor.getWaveformData(800);
-            Utils.drawWaveform(this.elements.waveformCanvas, waveformData);
+            this.waveformData = waveformData; // Store for later use
+            this.drawWaveform(waveformData);
+
+            // Set up HTML5 audio element
+            const audioURL = URL.createObjectURL(file);
+            this.elements.audioElement.src = audioURL;
+            this.elements.audioElement.volume = 0.8;
+            this.elements.totalTime.textContent = Utils.formatTime(audioInfo.duration);
 
             // Show next sections
             this.elements.modeSection.style.display = 'block';
@@ -424,15 +648,25 @@ class AudioSpectrumApp {
      * Clear file
      */
     clearFile() {
+        // Stop playback
+        if (this.elements.audioElement) {
+            this.elements.audioElement.pause();
+            this.elements.audioElement.src = '';
+        }
+
         this.audioProcessor.dispose();
         this.audioProcessor = new AudioProcessor();
 
         this.state.audioFile = null;
         this.state.audioLoaded = false;
+        this.waveformData = null;
 
         this.elements.audioInput.value = '';
         this.elements.dropzone.style.display = 'block';
         this.elements.fileInfo.style.display = 'none';
+
+        // Reset play button
+        this.updatePlayButtonState(false);
 
         // Hide sections
         this.elements.modeSection.style.display = 'none';
@@ -440,6 +674,167 @@ class AudioSpectrumApp {
         this.elements.settingsSection.style.display = 'none';
         this.elements.previewSection.style.display = 'none';
         this.elements.generateSection.style.display = 'none';
+    }
+
+    /**
+     * Draw waveform on canvas
+     */
+    drawWaveform(waveformData) {
+        const canvas = this.elements.waveformCanvas;
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+
+        // Clear canvas
+        ctx.clearRect(0, 0, width, height);
+
+        // Set style
+        ctx.fillStyle = `rgb(${COLORS.PRIMARY_BLUE[0]}, ${COLORS.PRIMARY_BLUE[1]}, ${COLORS.PRIMARY_BLUE[2]})`;
+        ctx.globalAlpha = 0.6;
+
+        // Draw bars
+        const barWidth = width / waveformData.length;
+        const middle = height / 2;
+
+        waveformData.forEach((value, index) => {
+            const barHeight = value * height * 0.9;
+            const x = index * barWidth;
+            const y = middle - barHeight / 2;
+
+            ctx.fillRect(x, y, Math.max(barWidth - 1, 1), barHeight);
+        });
+    }
+
+    /**
+     * Draw waveform progress
+     */
+    drawWaveformProgress(progress) {
+        const canvas = this.elements.waveformProgress;
+        const ctx = canvas.getContext('2d');
+        const width = canvas.width;
+        const height = canvas.height;
+
+        // Clear canvas
+        ctx.clearRect(0, 0, width, height);
+
+        if (!this.waveformData) return;
+
+        // Calculate how many bars to draw based on progress
+        const progressWidth = width * progress;
+        const barWidth = width / this.waveformData.length;
+        const middle = height / 2;
+
+        // Set style for progress
+        ctx.fillStyle = `rgb(${COLORS.PRIMARY_BLUE[0]}, ${COLORS.PRIMARY_BLUE[1]}, ${COLORS.PRIMARY_BLUE[2]})`;
+        ctx.globalAlpha = 1.0;
+
+        this.waveformData.forEach((value, index) => {
+            const x = index * barWidth;
+
+            // Only draw if within progress
+            if (x < progressWidth) {
+                const barHeight = value * height * 0.9;
+                const y = middle - barHeight / 2;
+                ctx.fillRect(x, y, Math.max(barWidth - 1, 1), barHeight);
+            }
+        });
+    }
+
+    /**
+     * Toggle playback
+     */
+    togglePlayback() {
+        if (!this.state.audioLoaded) return;
+
+        if (this.elements.audioElement.paused) {
+            this.elements.audioElement.play();
+            this.updatePlayButtonState(true);
+        } else {
+            this.elements.audioElement.pause();
+            this.updatePlayButtonState(false);
+        }
+    }
+
+    /**
+     * Update play button state
+     */
+    updatePlayButtonState(isPlaying) {
+        const playIcon = this.elements.playButton.querySelector('.play-icon');
+        const pauseIcon = this.elements.playButton.querySelector('.pause-icon');
+
+        if (isPlaying) {
+            playIcon.style.display = 'none';
+            pauseIcon.style.display = 'block';
+        } else {
+            playIcon.style.display = 'block';
+            pauseIcon.style.display = 'none';
+        }
+    }
+
+    /**
+     * Update playback progress
+     */
+    updatePlaybackProgress() {
+        const currentTime = this.elements.audioElement.currentTime;
+        const duration = this.elements.audioElement.duration;
+
+        if (!isNaN(duration) && duration > 0) {
+            const progress = currentTime / duration;
+
+            // Update time display
+            this.elements.currentTime.textContent = Utils.formatTime(currentTime);
+
+            // Update waveform progress
+            this.drawWaveformProgress(progress);
+        }
+    }
+
+    /**
+     * Handle audio ended
+     */
+    handleAudioEnded() {
+        this.updatePlayButtonState(false);
+        this.elements.audioElement.currentTime = 0;
+        this.drawWaveformProgress(0);
+    }
+
+    /**
+     * Update volume
+     */
+    updateVolume(volume) {
+        this.elements.audioElement.volume = volume;
+
+        // Update slider background
+        const percentage = volume * 100;
+        this.elements.volumeSlider.style.background =
+            `linear-gradient(to right, var(--color-primary) 0%, var(--color-primary) ${percentage}%, #d2d2d7 ${percentage}%, #d2d2d7 100%)`;
+    }
+
+    /**
+     * Handle waveform click for seeking
+     */
+    handleWaveformClick(e) {
+        if (!this.state.audioLoaded) return;
+
+        const rect = this.elements.waveformContainer.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const percentage = x / rect.width;
+
+        const duration = this.elements.audioElement.duration;
+        if (!isNaN(duration)) {
+            this.elements.audioElement.currentTime = duration * percentage;
+        }
+    }
+
+    /**
+     * Handle waveform hover for cursor
+     */
+    handleWaveformHover(e) {
+        const rect = this.elements.waveformContainer.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+
+        this.elements.waveformCursor.style.left = `${x}px`;
+        this.elements.waveformCursor.style.opacity = '1';
     }
 
     /**
@@ -480,12 +875,12 @@ class AudioSpectrumApp {
         this.state.settings.height = preset.height;
 
         // Update UI
-        const chips = this.elements.formatChips.querySelectorAll('.chip');
+        const chips = this.elements.formatChips.querySelectorAll('.format-chip');
         chips.forEach(chip => {
             if (chip.dataset.format === formatKey) {
-                chip.classList.add('chip-selected');
+                chip.classList.add('format-chip-selected');
             } else {
-                chip.classList.remove('chip-selected');
+                chip.classList.remove('format-chip-selected');
             }
         });
 
@@ -543,6 +938,26 @@ class AudioSpectrumApp {
         }
 
         this.visualizer.render(magnitudes);
+    }
+
+    /**
+     * Update gradient preview
+     */
+    updateGradientPreview() {
+        const color1 = this.elements.gradientColor1.value;
+        const color2 = this.elements.gradientColor2.value;
+        const color3 = this.elements.gradientColor3.value;
+
+        const scheme = this.state.settings.colorScheme;
+        const schemeData = COLOR_SCHEMES[scheme];
+
+        if (schemeData && schemeData.colorCount === 3) {
+            this.elements.gradientPreview.style.background =
+                `linear-gradient(to right, ${color1}, ${color2}, ${color3})`;
+        } else {
+            this.elements.gradientPreview.style.background =
+                `linear-gradient(to right, ${color1}, ${color2})`;
+        }
     }
 
     /**
@@ -710,10 +1125,22 @@ class AudioSpectrumApp {
     downloadVideo() {
         if (!this.state.generatedVideo) return;
 
-        const filename = Utils.createFilename(this.state.selectedMode, 'webm');
-        Utils.downloadBlob(this.state.generatedVideo, filename);
+        // Get selected download format
+        const selectedFormat = document.querySelector('input[name="downloadFormat"]:checked');
+        const formatValue = selectedFormat ? selectedFormat.value : 'webm';
 
-        Utils.showToast('Download started!', 'success');
+        // Map format value to file extension
+        const extensionMap = {
+            'webm': 'webm',
+            'mp4-h264': 'mp4',
+            'mp4-h265': 'mp4'
+        };
+
+        const extension = extensionMap[formatValue] || 'webm';
+        const filename = Utils.createFilename(this.state.selectedMode, extension);
+
+        Utils.downloadBlob(this.state.generatedVideo, filename);
+        Utils.showToast(`Download started! Format: ${formatValue.toUpperCase()}`, 'success');
     }
 
     /**

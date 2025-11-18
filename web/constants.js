@@ -931,6 +931,46 @@ const VISUALIZATION_MODES = {
         category: 'Scientific',
         mode: 90,
         tags: ['cells', 'biology', 'division']
+    },
+    burning_paper: {
+        id: 'burning_paper',
+        name: 'Burning Paper',
+        description: 'Spectrum bars as flames, embers on high freq, paper curls on bass',
+        category: 'Energy',
+        mode: 91,
+        tags: ['fire', 'flames', 'heat']
+    },
+    swarm_intelligence: {
+        id: 'swarm_intelligence',
+        name: 'Swarm Intelligence',
+        description: 'Boid flocking - cohesion/separation modulated by audio',
+        category: 'Nature',
+        mode: 92,
+        tags: ['boids', 'flocking', 'swarm']
+    },
+    pendulum_wave: {
+        id: 'pendulum_wave',
+        name: 'Pendulum Wave',
+        description: 'Multiple pendulums with slightly different periods - force from frequency',
+        category: 'Geometric',
+        mode: 93,
+        tags: ['pendulum', 'wave', 'physics']
+    },
+    retro_scanlines: {
+        id: 'retro_scanlines',
+        name: 'Retro Scanlines',
+        description: 'Waveform on old CRT with scanlines and static',
+        category: 'Retro',
+        mode: 94,
+        tags: ['crt', 'scanlines', 'vintage']
+    },
+    pulsing_polygon: {
+        id: 'pulsing_polygon',
+        name: 'Pulsing Polygon',
+        description: 'Central polygon with vertices pushed by frequency bands',
+        category: 'Geometric',
+        mode: 95,
+        tags: ['polygon', 'pulse', 'geometric']
     }
 };
 

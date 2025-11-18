@@ -441,6 +441,21 @@ class Visualizer {
             case 'microscopic_view':
                 this.renderMicroscopicView(magnitudes);
                 break;
+            case 'burning_paper':
+                this.renderBurningPaper(magnitudes);
+                break;
+            case 'swarm_intelligence':
+                this.renderSwarmIntelligence(magnitudes);
+                break;
+            case 'pendulum_wave':
+                this.renderPendulumWave(magnitudes);
+                break;
+            case 'retro_scanlines':
+                this.renderRetroScanlines(magnitudes);
+                break;
+            case 'pulsing_polygon':
+                this.renderPulsingPolygon(magnitudes);
+                break;
 
             default:
                 this.renderCircularBars(magnitudes);
@@ -4986,6 +5001,354 @@ class Visualizer {
         }
 
         this.microscopicCells = newCells.slice(0, 50);
+    }
+
+    /**
+     * Mode 91: Burning Paper
+     * Spectrum bars as flames, embers on high freq, paper curls on bass
+     */
+    renderBurningPaper(magnitudes) {
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Draw flame bars
+        const barWidth = this.canvas.width / magnitudes.length;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const magnitude = magnitudes[i];
+            const barHeight = magnitude * this.canvas.height * 0.7;
+            const x = i * barWidth;
+            const yBase = this.canvas.height - 50;
+
+            // Flame effect (multiple layers)
+            for (let layer = 0; layer < 3; layer++) {
+                const yOffset = layer * 15;
+                const layerHeight = barHeight - yOffset;
+                if (layerHeight > 0) {
+                    const y = yBase - layerHeight;
+
+                    // Flame color gradient (yellow to red)
+                    const hue = 10 + layer * 5;
+                    const saturation = 100;
+                    const value = 78 - layer * 16;
+                    const color = this.hsvToRgb(hue, saturation, value);
+
+                    // Flickering width
+                    const flicker = Math.floor((Math.random() - 0.5) * 5);
+
+                    this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+                    this.ctx.fillRect(x + flicker, y, barWidth - 2, yBase - y);
+                }
+            }
+        }
+
+        // Embers on treble
+        if (treble > 0.5) {
+            for (let i = 0; i < treble * 20; i++) {
+                const emberX = Math.random() * this.canvas.width;
+                const emberY = this.canvas.height - 50 - Math.random() * 100;
+                this.ctx.fillStyle = 'rgb(255, 150, 100)';
+                this.ctx.beginPath();
+                this.ctx.arc(emberX, emberY, 2, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+
+        // Paper curl effect on bass (darken corners)
+        if (bass > 0.4) {
+            const curlAlpha = bass * 0.5;
+            this.ctx.fillStyle = `rgba(10, 20, 20, ${curlAlpha})`;
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, 0);
+            this.ctx.lineTo(this.canvas.width * 0.2, 0);
+            this.ctx.lineTo(0, this.canvas.height * 0.2);
+            this.ctx.closePath();
+            this.ctx.fill();
+        }
+    }
+
+    /**
+     * Mode 92: Swarm Intelligence
+     * Boid flocking - cohesion/separation modulated by audio
+     */
+    renderSwarmIntelligence(magnitudes) {
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        // Initialize boids
+        if (!this.swarmBoids) {
+            this.swarmBoids = [];
+            for (let i = 0; i < 40; i++) {
+                this.swarmBoids.push({
+                    x: Math.random() * this.canvas.width,
+                    y: Math.random() * this.canvas.height,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: (Math.random() - 0.5) * 4
+                });
+            }
+        }
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Boid rules modulated by audio
+        const cohesionFactor = 0.01 * (1 - bass);  // Bass scatters
+        const separationFactor = 0.5 + treble * 1.5;  // Treble aligns
+        const alignmentFactor = 0.05 + treble * 0.1;
+
+        for (let boid of this.swarmBoids) {
+            // Calculate forces
+            let cohesionX = 0, cohesionY = 0;
+            let separationX = 0, separationY = 0;
+            let alignmentVx = 0, alignmentVy = 0;
+            let neighbors = 0;
+
+            for (let other of this.swarmBoids) {
+                if (other === boid) continue;
+
+                const dx = other.x - boid.x;
+                const dy = other.y - boid.y;
+                const dist = Math.sqrt(dx * dx + dy * dy) + 0.1;
+
+                if (dist < 100) {
+                    // Cohesion
+                    cohesionX += dx;
+                    cohesionY += dy;
+
+                    // Alignment
+                    alignmentVx += other.vx;
+                    alignmentVy += other.vy;
+
+                    neighbors++;
+                }
+
+                if (dist < 30) {
+                    // Separation
+                    separationX -= dx / dist;
+                    separationY -= dy / dist;
+                }
+            }
+
+            if (neighbors > 0) {
+                cohesionX /= neighbors;
+                cohesionY /= neighbors;
+                alignmentVx /= neighbors;
+                alignmentVy /= neighbors;
+            }
+
+            // Apply forces
+            boid.vx += cohesionX * cohesionFactor + separationX * separationFactor + alignmentVx * alignmentFactor;
+            boid.vy += cohesionY * cohesionFactor + separationY * separationFactor + alignmentVy * alignmentFactor;
+
+            // Limit speed
+            const speed = Math.sqrt(boid.vx * boid.vx + boid.vy * boid.vy);
+            const maxSpeed = 5 + treble * 5;
+            if (speed > maxSpeed) {
+                boid.vx = (boid.vx / speed) * maxSpeed;
+                boid.vy = (boid.vy / speed) * maxSpeed;
+            }
+
+            // Update position
+            boid.x += boid.vx;
+            boid.y += boid.vy;
+
+            // Wrap around
+            boid.x = (boid.x + this.canvas.width) % this.canvas.width;
+            boid.y = (boid.y + this.canvas.height) % this.canvas.height;
+
+            // Draw boid
+            this.ctx.fillStyle = 'rgb(255, 200, 100)';
+            this.ctx.beginPath();
+            this.ctx.arc(boid.x, boid.y, 5, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Draw velocity direction
+            const endX = boid.x + boid.vx * 3;
+            const endY = boid.y + boid.vy * 3;
+            this.ctx.strokeStyle = 'rgb(255, 220, 150)';
+            this.ctx.lineWidth = 1;
+            this.ctx.beginPath();
+            this.ctx.moveTo(boid.x, boid.y);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+    }
+
+    /**
+     * Mode 93: Pendulum Wave
+     * Multiple pendulums with slightly different periods - force from frequency
+     */
+    renderPendulumWave(magnitudes) {
+        const numPendulums = Math.min(magnitudes.length, 30);
+
+        // Initialize pendulum angles
+        if (!this.pendulumAngles) {
+            this.pendulumAngles = new Array(numPendulums).fill(0);
+        }
+
+        // Clear background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Update and draw pendulums
+        for (let i = 0; i < numPendulums; i++) {
+            const magnitude = i < magnitudes.length ? magnitudes[i] : 0;
+
+            // Period slightly different for each pendulum
+            const period = 0.05 + i * 0.001;
+
+            // Force from audio
+            this.pendulumAngles[i] += period + magnitude * 0.1;
+
+            // Pendulum position
+            const xBase = (i / numPendulums) * this.canvas.width;
+            const yBase = 100;
+
+            const pendulumLength = 200 + magnitude * 100;
+            const xEnd = xBase + Math.sin(this.pendulumAngles[i]) * pendulumLength;
+            const yEnd = yBase + pendulumLength;
+
+            // Draw rod
+            this.ctx.strokeStyle = 'rgb(150, 150, 150)';
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.moveTo(xBase, yBase);
+            this.ctx.lineTo(xEnd, yEnd);
+            this.ctx.stroke();
+
+            // Draw bob
+            const bobSize = 5 + magnitude * 15;
+            const hue = (i / numPendulums) * 180;
+            const color = this.hsvToRgb(hue, 78, 100);
+
+            this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(xEnd, yEnd, bobSize, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+    }
+
+    /**
+     * Mode 94: Retro Scanlines
+     * Waveform on old CRT with scanlines and static
+     */
+    renderRetroScanlines(magnitudes) {
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        // Initialize CRT flicker state
+        if (this.crtFlicker === undefined) {
+            this.crtFlicker = 0;
+        }
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Draw waveform
+        this.ctx.strokeStyle = 'rgb(100, 255, 100)';
+        this.ctx.lineWidth = 3;
+        this.ctx.beginPath();
+
+        for (let i = 0; i < magnitudes.length; i++) {
+            const x = (i / magnitudes.length) * this.canvas.width;
+            const y = this.canvas.height / 2 + (magnitudes[i] - 0.5) * this.canvas.height * 0.6;
+
+            if (i === 0) {
+                this.ctx.moveTo(x, y);
+            } else {
+                this.ctx.lineTo(x, y);
+            }
+        }
+        this.ctx.stroke();
+
+        // Scanlines
+        for (let y = 0; y < this.canvas.height; y += 4) {
+            this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+            this.ctx.lineWidth = 1;
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, y);
+            this.ctx.lineTo(this.canvas.width, y);
+            this.ctx.stroke();
+        }
+
+        // Static/noise increases with treble
+        if (treble > 0.3) {
+            const noiseIntensity = Math.floor(treble * 50);
+            for (let i = 0; i < noiseIntensity; i++) {
+                const x = Math.random() * this.canvas.width;
+                const y = Math.random() * this.canvas.height;
+                const brightness = Math.floor(Math.random() * 155) + 100;
+                this.ctx.fillStyle = `rgb(${brightness}, ${brightness}, ${brightness})`;
+                this.ctx.fillRect(x, y, 1, 1);
+            }
+        }
+
+        // CRT flicker
+        this.crtFlicker = (this.crtFlicker + treble * 10) % 20;
+        if (this.crtFlicker > 18) {
+            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+    }
+
+    /**
+     * Mode 95: Pulsing Polygon
+     * Central polygon with vertices pushed by frequency bands
+     */
+    renderPulsingPolygon(magnitudes) {
+        const numVertices = Math.min(magnitudes.length, 12);
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Calculate vertex positions
+        const vertices = [];
+        for (let i = 0; i < numVertices; i++) {
+            const angle = (i / numVertices) * 2 * Math.PI;
+            const magnitude = i < magnitudes.length ? magnitudes[i] : 0;
+
+            // Base radius and pushed radius
+            const baseRadius = Math.min(this.canvas.width, this.canvas.height) * 0.25;
+            const pushedRadius = baseRadius + magnitude * 200;
+
+            const x = this.canvas.width / 2 + Math.cos(angle) * pushedRadius;
+            const y = this.canvas.height / 2 + Math.sin(angle) * pushedRadius;
+            vertices.push({ x, y });
+        }
+
+        // Draw filled polygon
+        if (vertices.length > 2) {
+            const avgMagnitude = magnitudes.slice(0, numVertices).reduce((a, b) => a + b, 0) / numVertices;
+
+            const hue = (this.frameCounter * 2) % 180;
+            const saturation = 78 + avgMagnitude * 22;
+            const value = 59 + avgMagnitude * 41;
+            const color = this.hsvToRgb(hue, saturation, value);
+
+            this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            this.ctx.beginPath();
+            this.ctx.moveTo(vertices[0].x, vertices[0].y);
+            for (let i = 1; i < vertices.length; i++) {
+                this.ctx.lineTo(vertices[i].x, vertices[i].y);
+            }
+            this.ctx.closePath();
+            this.ctx.fill();
+
+            // Draw outline
+            this.ctx.strokeStyle = 'rgb(255, 255, 255)';
+            this.ctx.lineWidth = 3;
+            this.ctx.stroke();
+        }
     }
 
     /**

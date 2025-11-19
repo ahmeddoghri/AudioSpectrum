@@ -473,7 +473,10 @@ class AudioSpectrumApp {
                 const tempSettings = {
                     ...DEFAULT_SETTINGS,
                     mode: mode.id,
-                    numBars: 48
+                    numBars: 48,
+                    // Use small settings for 280x280 preview canvas
+                    innerRadius: 50,  // Adjusted for better visibility in preview
+                    barWidthMultiplier: 1.0
                 };
                 hoverVisualizer = new Visualizer(canvas, tempSettings);
 
@@ -483,12 +486,14 @@ class AudioSpectrumApp {
                     // Generate animated magnitudes that change over time
                     const magnitudes = new Float32Array(48);
                     for (let i = 0; i < magnitudes.length; i++) {
-                        // Create smooth animated values
-                        magnitudes[i] =
-                            0.3 +
-                            Math.sin(animationTime * 0.02 + i * 0.15) * 0.25 +
-                            Math.sin(animationTime * 0.03 + i * 0.08) * 0.2 +
-                            Math.cos(animationTime * 0.015 + i * 0.1) * 0.15;
+                        // Create smooth animated values with controlled range for preview
+                        const value =
+                            0.25 +
+                            Math.sin(animationTime * 0.02 + i * 0.15) * 0.15 +
+                            Math.sin(animationTime * 0.03 + i * 0.08) * 0.12 +
+                            Math.cos(animationTime * 0.015 + i * 0.1) * 0.1;
+                        // Clamp to safe range for 280x280 canvas
+                        magnitudes[i] = Math.min(Math.max(value, 0.15), 0.65);
                     }
 
                     hoverVisualizer.render(magnitudes);
@@ -586,17 +591,19 @@ class AudioSpectrumApp {
             ...DEFAULT_SETTINGS,
             mode: modeId,
             numBars: 48,
-            // Use smallest settings for preview canvas (280x280) to ensure full visibility
-            innerRadius: 25,  // Smallest radius to ensure all previews are visible
-            barWidthMultiplier: 1.2  // Slightly wider bars for better visibility
+            // Use settings for preview canvas (280x280) to ensure full visibility
+            innerRadius: 50,  // Match hover animation settings
+            barWidthMultiplier: 1.0
         };
 
         const tempVisualizer = new Visualizer(canvas, tempSettings);
 
-        // Generate demo magnitudes with smaller values for compact preview
+        // Generate demo magnitudes with controlled values for preview
         const magnitudes = new Float32Array(48);
         for (let i = 0; i < magnitudes.length; i++) {
-            magnitudes[i] = 0.2 + Math.random() * 0.3 + Math.sin(i * 0.2) * 0.15;
+            const value = 0.25 + Math.random() * 0.25 + Math.sin(i * 0.2) * 0.12;
+            // Clamp to safe range matching animation
+            magnitudes[i] = Math.min(Math.max(value, 0.15), 0.65);
         }
 
         tempVisualizer.render(magnitudes);
@@ -610,9 +617,9 @@ class AudioSpectrumApp {
             ...DEFAULT_SETTINGS,
             mode: modeId,
             numBars: 48,
-            // Use smallest settings for preview canvas (280x280) to ensure full visibility
-            innerRadius: 25,  // Smallest radius to ensure all previews are visible
-            barWidthMultiplier: 1.2  // Slightly wider bars for better visibility
+            // Use settings for preview canvas (280x280) to ensure full visibility
+            innerRadius: 50,  // Match static preview settings
+            barWidthMultiplier: 1.0
         };
 
         const tempVisualizer = new Visualizer(canvas, tempSettings);
@@ -621,17 +628,19 @@ class AudioSpectrumApp {
         const animate = () => {
             time += 0.05;
 
-            // Generate animated magnitudes with smaller values for compact preview
+            // Generate animated magnitudes with controlled values for preview
             const magnitudes = new Float32Array(48);
             for (let i = 0; i < magnitudes.length; i++) {
                 // Create smooth wave motion with multiple frequencies
-                const wave1 = Math.sin(i * 0.2 + time) * 0.12;
+                const wave1 = Math.sin(i * 0.2 + time) * 0.1;
                 const wave2 = Math.sin(i * 0.1 + time * 1.5) * 0.08;
-                const wave3 = Math.sin(i * 0.3 + time * 0.7) * 0.06;
-                const base = 0.25;
+                const wave3 = Math.sin(i * 0.3 + time * 0.7) * 0.05;
+                const base = 0.3;
                 const randomness = Math.sin(i * 0.15 + time * 2) * 0.04;
 
-                magnitudes[i] = Math.max(0.1, Math.min(0.7, base + wave1 + wave2 + wave3 + randomness));
+                const value = base + wave1 + wave2 + wave3 + randomness;
+                // Clamp to safe range for 280x280 canvas
+                magnitudes[i] = Math.min(Math.max(value, 0.15), 0.65);
             }
 
             tempVisualizer.render(magnitudes);
@@ -768,6 +777,9 @@ class AudioSpectrumApp {
 
             // Update preview
             this.updatePreview();
+
+            // Automatically select the classic audiospectrum mode (circular_bars)
+            this.selectMode('circular_bars');
 
             Utils.showToast('Audio loaded successfully!', 'success');
 

@@ -462,8 +462,56 @@ class AudioSpectrumApp {
                 this.selectMode(mode.id);
             });
 
-            this.elements.modeGrid.appendChild(card);
+            const canvas = card.querySelector('canvas');
 
+            // Add hover animation
+            let animationId = null;
+            let hoverVisualizer = null;
+
+            card.addEventListener('mouseenter', () => {
+                // Create a visualizer for this mode
+                const tempSettings = {
+                    ...DEFAULT_SETTINGS,
+                    mode: mode.id,
+                    numBars: 48
+                };
+                hoverVisualizer = new Visualizer(canvas, tempSettings);
+
+                // Start animation loop
+                let animationTime = 0;
+                const animate = () => {
+                    // Generate animated magnitudes that change over time
+                    const magnitudes = new Float32Array(48);
+                    for (let i = 0; i < magnitudes.length; i++) {
+                        // Create smooth animated values
+                        magnitudes[i] =
+                            0.3 +
+                            Math.sin(animationTime * 0.02 + i * 0.15) * 0.25 +
+                            Math.sin(animationTime * 0.03 + i * 0.08) * 0.2 +
+                            Math.cos(animationTime * 0.015 + i * 0.1) * 0.15;
+                    }
+
+                    hoverVisualizer.render(magnitudes);
+                    animationTime++;
+                    animationId = requestAnimationFrame(animate);
+                };
+
+                animate();
+            });
+
+            card.addEventListener('mouseleave', () => {
+                // Stop animation
+                if (animationId) {
+                    cancelAnimationFrame(animationId);
+                    animationId = null;
+                }
+
+                // Restore static preview
+                this.generateModePreview(canvas, mode.id);
+                hoverVisualizer = null;
+            });
+
+            this.elements.modeGrid.appendChild(card);
             const canvas = card.querySelector('canvas');
 
             // Generate initial static preview for this mode

@@ -19476,9 +19476,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Impressionist visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Impressionist', 501);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -19497,9 +19511,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Cubist visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Cubist', 502);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -19518,9 +19546,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Surreal visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Surreal', 503);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -19539,9 +19581,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Abstract Expressionist visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Abstract Expressionist', 504);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -19560,9 +19616,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Pop Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Pop Art', 505);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -19581,9 +19649,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Minimalist visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Minimalist', 506);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -19602,9 +19684,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Pointillist visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Pointillist', 507);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -19623,9 +19717,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Art Deco visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Art Deco', 508);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -19644,9 +19750,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Art Nouveau visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Art Nouveau', 509);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -19665,9 +19785,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Bauhaus visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Bauhaus', 510);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -19686,9 +19824,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Futurist visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Futurist', 511);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -19707,9 +19863,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Dadaist visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Dadaist', 512);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -19728,9 +19902,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Expressionist visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Expressionist', 513);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -19749,9 +19937,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Fauvism visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Fauvism', 514);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -19770,9 +19970,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Constructivist visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Constructivist', 515);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -19791,9 +20005,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Suprematist visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Suprematist', 516);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -19812,9 +20044,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Vorticism visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Vorticism', 517);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -19833,9 +20083,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Orphism visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Orphism', 518);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -19854,9 +20118,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Rayonism visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Rayonism', 519);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -19875,9 +20151,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Synchromism visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Synchromism', 520);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -19896,9 +20184,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Precisionism visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Precisionism', 521);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -19917,9 +20223,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Regionalism visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Regionalism', 522);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -19938,9 +20256,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Social Realism visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Social Realism', 523);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -19959,9 +20291,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Neo Plasticism visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Neo Plasticism', 524);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -19980,9 +20326,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement De Stijl visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'De Stijl', 525);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20001,9 +20361,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Color Field visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Color Field', 526);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20022,9 +20396,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Hard Edge visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Hard Edge', 527);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20043,9 +20435,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Lyrical Abstraction visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Lyrical Abstraction', 528);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20064,9 +20470,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Tachisme visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Tachisme', 529);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20085,9 +20509,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Action Painting visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Action Painting', 530);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20106,9 +20548,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Stain Painting visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Stain Painting', 531);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20127,9 +20583,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Shaped Canvas visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Shaped Canvas', 532);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20148,9 +20622,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Monochrome visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Monochrome', 533);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -20169,9 +20655,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Kinetic Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Kinetic Art', 534);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20190,9 +20690,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Op Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Op Art', 535);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -20211,9 +20723,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Light Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Light Art', 536);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20232,9 +20758,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Land Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Land Art', 537);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -20253,9 +20791,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Earth Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Earth Art', 538);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20274,9 +20826,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Environmental Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Environmental Art', 539);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20295,9 +20861,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Installation Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Installation Art', 540);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -20316,9 +20894,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Video Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Video Art', 541);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -20337,9 +20927,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Digital Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Digital Art', 542);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -20358,9 +20960,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Glitch Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Glitch Art', 543);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -20379,9 +20993,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Pixel Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Pixel Art', 544);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20400,9 +21028,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Ascii Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Ascii Art', 545);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -20421,9 +21061,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Vector Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Vector Art', 546);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20442,9 +21096,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Fractal Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Fractal Art', 547);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20463,9 +21135,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Algorithmic Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Algorithmic Art', 548);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20484,9 +21174,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Generative Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Generative Art', 549);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20505,9 +21213,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Data Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Data Art', 550);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20526,9 +21248,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Bio Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Bio Art', 551);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -20547,9 +21281,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Net Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Net Art', 552);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -20568,9 +21314,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Software Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Software Art', 553);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -20589,9 +21347,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Robotic Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Robotic Art', 554);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20610,9 +21386,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Interactive Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Interactive Art', 555);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20631,9 +21421,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Projection Mapping visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Projection Mapping', 556);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -20652,9 +21454,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Holographic Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Holographic Art', 557);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20673,9 +21489,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Augmented Reality Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Augmented Reality Art', 558);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20694,9 +21528,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Vr Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Vr Art', 559);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20715,9 +21563,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Procedural Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Procedural Art', 560);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20736,9 +21598,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Parametric Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Parametric Art', 561);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20757,9 +21633,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Mathematical Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Mathematical Art', 562);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -20778,9 +21666,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Geometric Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Geometric Art', 563);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20799,9 +21705,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Tessellation Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Tessellation Art', 564);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20820,9 +21740,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Symmetry Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Symmetry Art', 565);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20841,9 +21779,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Kaleidoscope Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Kaleidoscope Art', 566);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20862,9 +21818,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Mandala Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Mandala Art', 567);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -20883,9 +21851,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Zentangle Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Zentangle Art', 568);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20904,9 +21886,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Doodle Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Doodle Art', 569);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20925,9 +21925,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Street Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Street Art', 570);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20946,9 +21960,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Graffiti Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Graffiti Art', 571);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -20967,9 +21993,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Mural Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Mural Art', 572);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -20988,9 +22032,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Stencil Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Stencil Art', 573);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -21009,9 +22071,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Wheat Paste Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Wheat Paste Art', 574);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -21030,9 +22106,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Spray Paint Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Spray Paint Art', 575);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -21051,9 +22145,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Mosaic Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Mosaic Art', 576);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -21072,9 +22184,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Collage Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Collage Art', 577);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -21093,9 +22223,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Mixed Media Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Mixed Media Art', 578);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -21114,9 +22258,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Assemblage Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Assemblage Art', 579);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -21135,9 +22291,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Found Object Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Found Object Art', 580);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -21156,9 +22326,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Readymade Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Readymade Art', 581);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -21177,9 +22365,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Appropriation Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Appropriation Art', 582);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -21198,9 +22400,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Sampling Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Sampling Art', 583);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -21219,9 +22433,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Remix Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Remix Art', 584);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -21240,9 +22472,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Mashup Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Mashup Art', 585);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -21261,9 +22505,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Photomontage visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Photomontage', 586);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -21282,9 +22538,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Cut Up Technique visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Cut Up Technique', 587);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -21303,9 +22571,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Exquisite Corpse visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Exquisite Corpse', 588);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -21324,9 +22610,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Automatic Drawing visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Automatic Drawing', 589);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -21345,9 +22645,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Chance Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Chance Art', 590);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -21366,9 +22678,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Indeterminacy Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Indeterminacy Art', 591);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -21387,9 +22713,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Aleatory Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Aleatory Art', 592);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -21408,9 +22752,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Stochastic Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Stochastic Art', 593);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -21429,9 +22785,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Entropy Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Entropy Art', 594);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -21450,9 +22818,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Chaos Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Chaos Art', 595);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -21471,9 +22857,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Complexity Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Complexity Art', 596);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -21492,9 +22896,27 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Emergence Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Emergence Art', 597);
+        // Energy-based particle visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const particleCount = Math.floor(energy * 100 * intensity * complexity / 5);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const x = Math.floor(Math.random() * this.canvas.width);
+            const y = Math.floor(Math.random() * this.canvas.height);
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx];
+            
+            if (mag > 0.3 / intensity) {
+                const size = Math.floor((2 + mag * 12) * intensity);
+                const hue = ((i * 7) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 100, Math.floor(mag * 100));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -21513,9 +22935,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Self Organization Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Self Organization Art', 598);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -21534,9 +22968,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Swarm Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Swarm Art', 599);
+        // Layer-based visualization with wave effect
+        for (let layer = 0; layer < Math.floor(complexity); layer++) {
+            const yOffset = Math.floor((layer / complexity) * this.canvas.height);
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i] * intensity;
+                const x = Math.floor((i / magnitudes.length) * this.canvas.width);
+                const wave = Math.sin(x * 0.02 + this.frameCounter * 0.01 + layer) * mag * 30;
+                const y = yOffset + Math.floor(wave);
+                const hue = ((layer * 72) % 360);
+                const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(39 + mag * 61));
+                
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3 * intensity, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -21555,9 +23003,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Flocking Art visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Flocking Art', 600);
+        // Bass-responsive visualization
+        const step = Math.max(1, Math.floor(2 / complexity));
+        for (let i = 0; i < magnitudes.length; i += step) {
+            const mag = magnitudes[i] * intensity;
+            const x = Math.floor((i / (magnitudes.length / step)) * this.canvas.width);
+            const y = Math.floor(this.canvas.height * (0.3 + Math.sin(i * 0.2) * 0.3));
+            const size = Math.floor((5 + mag * 25) * intensity);
+            const hue = ((i * 5 + Math.floor(this.frameCounter)) % 360);
+            const [r, g, b] = this.hsvToRgb(hue, 78, Math.floor(59 + mag * 41));
+            
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
     }
 
     /**

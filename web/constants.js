@@ -2933,9 +2933,9 @@ const VISUALIZATION_MODES = {
         mode: 301,
         tags: ["forest", "canopy"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            treeCount: { min: 5, max: 25, default: 12, label: 'Number of Trees' },
+            swayIntensity: { min: 0.5, max: 3, default: 1, label: 'Sway Intensity' },
+            branchDensity: { min: 10, max: 60, default: 30, label: 'Branch Density' }
         }
     },
     mode_302_ocean_waves: {
@@ -2946,9 +2946,9 @@ const VISUALIZATION_MODES = {
         mode: 302,
         tags: ["ocean", "waves"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            waveCount: { min: 3, max: 10, default: 5, label: 'Wave Layers' },
+            waveSpeed: { min: 0.05, max: 0.3, default: 0.1, label: 'Wave Speed' },
+            foamIntensity: { min: 0.5, max: 2, default: 1, label: 'Foam Intensity' }
         }
     },
     mode_303_coral_reef: {
@@ -2959,9 +2959,9 @@ const VISUALIZATION_MODES = {
         mode: 303,
         tags: ["coral", "reef"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            coralCount: { min: 5, max: 30, default: 15, label: 'Coral Count' },
+            tentacleLength: { min: 15, max: 50, default: 30, label: 'Tentacle Length' },
+            swaySpeed: { min: 0.03, max: 0.15, default: 0.08, label: 'Sway Speed' }
         }
     },
     mode_304_butterfly_swarm: {
@@ -2972,9 +2972,9 @@ const VISUALIZATION_MODES = {
         mode: 304,
         tags: ["butterfly", "swarm"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            butterflyCount: { min: 10, max: 100, default: 50, label: 'Butterfly Count' },
+            flightRadius: { min: 100, max: 300, default: 200, label: 'Flight Radius' },
+            wingSize: { min: 5, max: 25, default: 15, label: 'Wing Size' }
         }
     },
     mode_305_mountain_peaks: {
@@ -2985,9 +2985,9 @@ const VISUALIZATION_MODES = {
         mode: 305,
         tags: ["mountain", "peaks"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            peakHeight: { min: 0.3, max: 0.9, default: 0.7, label: 'Peak Height' },
+            snowThreshold: { min: 0.4, max: 0.8, default: 0.6, label: 'Snow Threshold' },
+            smoothness: { min: 1, max: 5, default: 1, label: 'Mountain Smoothness' }
         }
     },
     mode_306_fireflies: {
@@ -2998,9 +2998,9 @@ const VISUALIZATION_MODES = {
         mode: 306,
         tags: ["fireflies"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            fireflyCount: { min: 20, max: 200, default: 100, label: 'Firefly Count' },
+            glowIntensity: { min: 0.5, max: 2, default: 1, label: 'Glow Intensity' },
+            glowSize: { min: 2, max: 15, default: 8, label: 'Glow Size' }
         }
     },
     mode_307_flower_bloom: {
@@ -3011,9 +3011,9 @@ const VISUALIZATION_MODES = {
         mode: 307,
         tags: ["flower", "bloom"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            flowerCount: { min: 4, max: 16, default: 8, label: 'Flower Count' },
+            petalCount: { min: 20, max: 50, default: 30, label: 'Petal Count' },
+            bloomSize: { min: 50, max: 200, default: 100, label: 'Bloom Size' }
         }
     },
     mode_308_rain_ripples: {
@@ -3024,9 +3024,9 @@ const VISUALIZATION_MODES = {
         mode: 308,
         tags: ["rain", "ripples"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            dropletCount: { min: 20, max: 150, default: 80, label: 'Droplet Count' },
+            rippleSpeed: { min: 1, max: 5, default: 3, label: 'Ripple Speed' },
+            maxRippleSize: { min: 30, max: 100, default: 50, label: 'Max Ripple Size' }
         }
     },
     mode_309_leaf_fall: {
@@ -3037,9 +3037,9 @@ const VISUALIZATION_MODES = {
         mode: 309,
         tags: ["leaf", "fall"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            leafCount: { min: 20, max: 100, default: 50, label: 'Leaf Count' },
+            fallSpeed: { min: 1, max: 4, default: 2, label: 'Fall Speed' },
+            swayAmount: { min: 5, max: 30, default: 20, label: 'Sway Amount' }
         }
     },
     mode_310_tree_rings: {
@@ -3050,9 +3050,9 @@ const VISUALIZATION_MODES = {
         mode: 310,
         tags: ["tree", "rings"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            ringCount: { min: 20, max: 120, default: 64, label: 'Number of Rings' },
+            ringThickness: { min: 1, max: 10, default: 5, label: 'Ring Thickness' },
+            ringVariation: { min: 0, max: 40, default: 20, label: 'Ring Variation' }
         }
     },
     mode_311_lightning_storm: {
@@ -3063,9 +3063,9 @@ const VISUALIZATION_MODES = {
         mode: 311,
         tags: ["lightning", "storm"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            boltFrequency: { min: 0.3, max: 1, default: 0.6, label: 'Strike Frequency' },
+            boltComplexity: { min: 5, max: 20, default: 10, label: 'Bolt Branches' },
+            flashIntensity: { min: 0.5, max: 2, default: 1, label: 'Flash Intensity' }
         }
     },
     mode_312_pond_koi: {
@@ -3076,9 +3076,9 @@ const VISUALIZATION_MODES = {
         mode: 312,
         tags: ["pond"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            fishCount: { min: 4, max: 16, default: 8, label: 'Number of Koi' },
+            swimSpeed: { min: 0.01, max: 0.05, default: 0.02, label: 'Swim Speed' },
+            fishSize: { min: 10, max: 30, default: 20, label: 'Fish Size' }
         }
     },
     mode_313_moss_growth: {
@@ -3089,9 +3089,9 @@ const VISUALIZATION_MODES = {
         mode: 313,
         tags: ["moss", "growth"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            mossPatches: { min: 50, max: 200, default: 100, label: 'Moss Patches' },
+            spreadRadius: { min: 5, max: 25, default: 15, label: 'Spread Radius' },
+            growthDensity: { min: 0.1, max: 0.5, default: 0.2, label: 'Growth Density' }
         }
     },
     mode_314_aurora_forest: {
@@ -3102,9 +3102,9 @@ const VISUALIZATION_MODES = {
         mode: 314,
         tags: ["aurora", "forest"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            auroraLayers: { min: 5, max: 20, default: 10, label: 'Aurora Layers' },
+            waveSpeed: { min: 0.05, max: 0.2, default: 0.1, label: 'Wave Speed' },
+            treeCount: { min: 10, max: 30, default: 20, label: 'Tree Count' }
         }
     },
     mode_315_dandelion_seeds: {
@@ -3115,9 +3115,9 @@ const VISUALIZATION_MODES = {
         mode: 315,
         tags: ["dandelion", "seeds"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            seedCount: { min: 30, max: 120, default: 60, label: 'Seed Count' },
+            driftSpeed: { min: 0.5, max: 3, default: 1.5, label: 'Drift Speed' },
+            windStrength: { min: 0.1, max: 1, default: 0.5, label: 'Wind Strength' }
         }
     },
     mode_316_fern_fractals: {
@@ -3128,9 +3128,9 @@ const VISUALIZATION_MODES = {
         mode: 316,
         tags: ["fern", "fractals"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            branchDepth: { min: 10, max: 40, default: 20, label: 'Branch Depth' },
+            branchAngle: { min: 30, max: 60, default: 45, label: 'Branch Angle' },
+            fernLength: { min: 20, max: 60, default: 40, label: 'Fern Length' }
         }
     },
     mode_317_beehive_cells: {
@@ -3141,9 +3141,9 @@ const VISUALIZATION_MODES = {
         mode: 317,
         tags: ["beehive", "cells"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            hexSize: { min: 15, max: 50, default: 30, label: 'Hexagon Size' },
+            cellDensity: { min: 0.1, max: 0.5, default: 0.3, label: 'Cell Activity' },
+            honeycombGlow: { min: 0.5, max: 2, default: 1, label: 'Glow Intensity' }
         }
     },
     mode_318_wheat_field: {
@@ -3154,9 +3154,9 @@ const VISUALIZATION_MODES = {
         mode: 318,
         tags: ["wheat", "field"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            wheatStalks: { min: 20, max: 60, default: 40, label: 'Wheat Stalks' },
+            swaySpeed: { min: 0.05, max: 0.2, default: 0.1, label: 'Sway Speed' },
+            windWaves: { min: 5, max: 20, default: 10, label: 'Wind Wave Intensity' }
         }
     },
     mode_319_spider_web: {
@@ -3167,9 +3167,9 @@ const VISUALIZATION_MODES = {
         mode: 319,
         tags: ["spider"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            radialThreads: { min: 8, max: 20, default: 12, label: 'Radial Threads' },
+            concentricRings: { min: 20, max: 60, default: 40, label: 'Concentric Rings' },
+            dewDrops: { min: 0.2, max: 0.6, default: 0.4, label: 'Dew Threshold' }
         }
     },
     mode_320_mushroom_spores: {
@@ -3180,9 +3180,9 @@ const VISUALIZATION_MODES = {
         mode: 320,
         tags: ["mushroom", "spores"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            sporeCount: { min: 40, max: 160, default: 80, label: 'Spore Count' },
+            floatSpeed: { min: 0.5, max: 3, default: 1.5, label: 'Float Speed' },
+            driftAmount: { min: 10, max: 40, default: 30, label: 'Drift Amount' }
         }
     },
     mode_321_bamboo_forest: {
@@ -3193,7 +3193,10 @@ const VISUALIZATION_MODES = {
         mode: 321,
         tags: ["bamboo", "forest"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            bambooStalks: { min: 8, max: 25, default: 15, label: 'Bamboo Stalks' },
+            swayAmount: { min: 5, max: 25, default: 15, label: 'Sway Amount' },
+            segmentCount: { min: 5, max: 12, default: 8, label: 'Segments per Stalk' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3206,7 +3209,10 @@ const VISUALIZATION_MODES = {
         mode: 322,
         tags: ["tide", "pools"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            poolCount: { min: 3, max: 10, default: 6, label: 'Tide Pools' },
+            creatureCount: { min: 5, max: 20, default: 10, label: 'Creatures per Pool' },
+            waveSpeed: { min: 0.02, max: 0.1, default: 0.05, label: 'Wave Speed' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3219,7 +3225,10 @@ const VISUALIZATION_MODES = {
         mode: 323,
         tags: ["vine", "tendrils"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            vineCount: { min: 4, max: 12, default: 8, label: 'Vine Count' },
+            growthLength: { min: 20, max: 60, default: 40, label: 'Growth Length' },
+            curlAmount: { min: 10, max: 30, default: 20, label: 'Curl Amount' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3232,7 +3241,10 @@ const VISUALIZATION_MODES = {
         mode: 324,
         tags: ["crystal", "cave"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            crystalCount: { min: 8, max: 20, default: 12, label: 'Crystal Count' },
+            crystalSize: { min: 15, max: 40, default: 25, label: 'Crystal Size' },
+            sparkleIntensity: { min: 0.5, max: 2, default: 1, label: 'Sparkle Intensity' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3245,7 +3257,10 @@ const VISUALIZATION_MODES = {
         mode: 325,
         tags: ["bird", "murmuration"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            birdCount: { min: 50, max: 200, default: 100, label: 'Bird Count' },
+            flockSpeed: { min: 0.02, max: 0.1, default: 0.05, label: 'Flock Speed' },
+            formationTightness: { min: 0.5, max: 2, default: 1, label: 'Formation Tightness' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3258,7 +3273,10 @@ const VISUALIZATION_MODES = {
         mode: 326,
         tags: ["river", "flow"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            flowLayers: { min: 4, max: 12, default: 8, label: 'Flow Layers' },
+            currentSpeed: { min: 0.05, max: 0.2, default: 0.1, label: 'Current Speed' },
+            rippleAmount: { min: 5, max: 25, default: 15, label: 'Ripple Amount' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3271,7 +3289,10 @@ const VISUALIZATION_MODES = {
         mode: 327,
         tags: ["seed", "pods"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            podCount: { min: 5, max: 15, default: 10, label: 'Seed Pods' },
+            burstThreshold: { min: 0.3, max: 0.6, default: 0.4, label: 'Burst Threshold' },
+            seedsPerPod: { min: 8, max: 16, default: 12, label: 'Seeds per Pod' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3284,7 +3305,10 @@ const VISUALIZATION_MODES = {
         mode: 328,
         tags: ["algae", "bloom"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            algaePatches: { min: 80, max: 250, default: 150, label: 'Algae Patches' },
+            bloomSize: { min: 5, max: 25, default: 15, label: 'Bloom Size' },
+            growthRate: { min: 0.1, max: 0.4, default: 0.2, label: 'Growth Rate' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3297,7 +3321,10 @@ const VISUALIZATION_MODES = {
         mode: 329,
         tags: ["cactus", "spines"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            cactusSegments: { min: 20, max: 60, default: 40, label: 'Cactus Segments' },
+            spineCount: { min: 4, max: 12, default: 8, label: 'Spines per Segment' },
+            spineLength: { min: 10, max: 30, default: 20, label: 'Spine Length' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3310,7 +3337,10 @@ const VISUALIZATION_MODES = {
         mode: 330,
         tags: ["snowflakes"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            snowflakeCount: { min: 30, max: 100, default: 50, label: 'Snowflake Count' },
+            fallSpeed: { min: 0.8, max: 3, default: 1.5, label: 'Fall Speed' },
+            symmetryArms: { min: 4, max: 8, default: 6, label: 'Symmetry Arms' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3323,7 +3353,10 @@ const VISUALIZATION_MODES = {
         mode: 331,
         tags: ["lava", "flow"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            lavaLayers: { min: 4, max: 8, default: 6, label: 'Lava Layers' },
+            flowSpeed: { min: 0.1, max: 0.3, default: 0.15, label: 'Flow Speed' },
+            heatIntensity: { min: 0.5, max: 2, default: 1, label: 'Heat Intensity' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3336,7 +3369,10 @@ const VISUALIZATION_MODES = {
         mode: 332,
         tags: ["crystals"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            crystalCount: { min: 10, max: 25, default: 15, label: 'Ice Crystals' },
+            branchCount: { min: 4, max: 8, default: 6, label: 'Crystal Branches' },
+            rotationSpeed: { min: 0.01, max: 0.05, default: 0.02, label: 'Rotation Speed' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3349,7 +3385,10 @@ const VISUALIZATION_MODES = {
         mode: 333,
         tags: ["pine", "cones"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            spiralDensity: { min: 30, max: 120, default: 64, label: 'Spiral Density' },
+            coneSize: { min: 3, max: 12, default: 8, label: 'Cone Size' },
+            goldenAngle: { min: 135, max: 140, default: 137.5, label: 'Golden Angle' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3362,7 +3401,10 @@ const VISUALIZATION_MODES = {
         mode: 334,
         tags: ["geyser", "eruption"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            eruptionThreshold: { min: 0.4, max: 0.7, default: 0.5, label: 'Eruption Threshold' },
+            steamHeight: { min: 15, max: 30, default: 20, label: 'Steam Height' },
+            particleCount: { min: 20, max: 60, default: 40, label: 'Steam Particles' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3375,7 +3417,10 @@ const VISUALIZATION_MODES = {
         mode: 335,
         tags: ["pollen", "cloud"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            pollenCount: { min: 50, max: 200, default: 100, label: 'Pollen Count' },
+            driftSpeed: { min: 0.01, max: 0.05, default: 0.02, label: 'Drift Speed' },
+            particleSize: { min: 2, max: 8, default: 5, label: 'Particle Size' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3388,7 +3433,10 @@ const VISUALIZATION_MODES = {
         mode: 336,
         tags: ["desert", "dunes"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            duneCount: { min: 3, max: 6, default: 4, label: 'Sand Dunes' },
+            windSpeed: { min: 0.01, max: 0.05, default: 0.02, label: 'Wind Speed' },
+            duneHeight: { min: 20, max: 60, default: 40, label: 'Dune Height' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3401,7 +3449,10 @@ const VISUALIZATION_MODES = {
         mode: 337,
         tags: ["lily", "pads"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            lilyPadCount: { min: 6, max: 18, default: 12, label: 'Lily Pads' },
+            flowerThreshold: { min: 0.4, max: 0.7, default: 0.5, label: 'Flower Threshold' },
+            driftSpeed: { min: 0.005, max: 0.02, default: 0.01, label: 'Drift Speed' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3414,7 +3465,10 @@ const VISUALIZATION_MODES = {
         mode: 338,
         tags: ["termite", "mound"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            moundLayers: { min: 20, max: 80, default: 60, label: 'Mound Layers' },
+            chamberCount: { min: 10, max: 30, default: 20, label: 'Chambers' },
+            chamberThreshold: { min: 0.3, max: 0.6, default: 0.4, label: 'Chamber Threshold' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3427,7 +3481,10 @@ const VISUALIZATION_MODES = {
         mode: 339,
         tags: ["cherry", "blossoms"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            petalCount: { min: 30, max: 100, default: 60, label: 'Petal Count' },
+            fallSpeed: { min: 0.5, max: 2, default: 0.8, label: 'Fall Speed' },
+            flutter: { min: 10, max: 35, default: 25, label: 'Flutter Amount' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3440,7 +3497,10 @@ const VISUALIZATION_MODES = {
         mode: 340,
         tags: ["root", "system"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            maxDepth: { min: 5, max: 12, default: 8, label: 'Root Depth' },
+            branchThreshold: { min: 0.2, max: 0.5, default: 0.3, label: 'Branch Threshold' },
+            rootThickness: { min: 1, max: 10, default: 5, label: 'Root Thickness' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3453,7 +3513,10 @@ const VISUALIZATION_MODES = {
         mode: 341,
         tags: ["plankton", "swarm"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            planktonCount: { min: 50, max: 150, default: 100, label: 'Plankton Count' },
+            glowIntensity: { min: 0.5, max: 2, default: 1, label: 'Glow Intensity' },
+            waveAmplitude: { min: 0.2, max: 0.5, default: 0.3, label: 'Wave Amplitude' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3466,7 +3529,10 @@ const VISUALIZATION_MODES = {
         mode: 342,
         tags: ["frost", "patterns"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            frostDensity: { min: 30, max: 80, default: 50, label: 'Frost Density' },
+            branchLength: { min: 15, max: 40, default: 30, label: 'Branch Length' },
+            spreadAngle: { min: 30, max: 90, default: 60, label: 'Spread Angle' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3479,7 +3545,10 @@ const VISUALIZATION_MODES = {
         mode: 343,
         tags: ["trails"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            trailCount: { min: 6, max: 12, default: 8, label: 'Ant Trails' },
+            trailLength: { min: 20, max: 60, default: 40, label: 'Trail Length' },
+            antSpeed: { min: 0.3, max: 1, default: 0.5, label: 'Ant Speed' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3492,7 +3561,10 @@ const VISUALIZATION_MODES = {
         mode: 344,
         tags: ["seaweed", "sway"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            strandCount: { min: 8, max: 20, default: 12, label: 'Seaweed Strands' },
+            swayAmount: { min: 10, max: 35, default: 25, label: 'Sway Amount' },
+            swaySpeed: { min: 0.05, max: 0.15, default: 0.08, label: 'Sway Speed' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3505,7 +3577,10 @@ const VISUALIZATION_MODES = {
         mode: 345,
         tags: ["volcano"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            ashDensity: { min: 50, max: 200, default: 100, label: 'Ash Density' },
+            plumeHeight: { min: 100, max: 400, default: 250, label: 'Plume Height' },
+            spreadRate: { min: 1, max: 4, default: 2, label: 'Spread Rate' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3518,7 +3593,10 @@ const VISUALIZATION_MODES = {
         mode: 346,
         tags: ["dragonfly", "wings"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            dragonflyCount: { min: 4, max: 10, default: 6, label: 'Dragonfly Count' },
+            wingSize: { min: 15, max: 35, default: 20, label: 'Wing Size' },
+            flightSpeed: { min: 0.03, max: 0.08, default: 0.05, label: 'Flight Speed' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3531,7 +3609,10 @@ const VISUALIZATION_MODES = {
         mode: 347,
         tags: ["pebble", "ripples"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            rippleCount: { min: 20, max: 80, default: 50, label: 'Ripple Count' },
+            rippleLifetime: { min: 20, max: 40, default: 30, label: 'Ripple Lifetime' },
+            dropThreshold: { min: 0.4, max: 0.7, default: 0.5, label: 'Drop Threshold' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3544,7 +3625,10 @@ const VISUALIZATION_MODES = {
         mode: 348,
         tags: ["moss", "tendrils"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            mossPatches: { min: 100, max: 300, default: 200, label: 'Moss Patches' },
+            patchSize: { min: 5, max: 20, default: 10, label: 'Patch Size' },
+            growthDensity: { min: 5, max: 15, default: 10, label: 'Growth Density' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3557,7 +3641,10 @@ const VISUALIZATION_MODES = {
         mode: 349,
         tags: ["starfish", "arms"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            armCount: { min: 4, max: 6, default: 5, label: 'Starfish Arms' },
+            armLength: { min: 20, max: 50, default: 35, label: 'Arm Length' },
+            waveAmount: { min: 0.1, max: 0.5, default: 0.3, label: 'Wave Amount' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3570,7 +3657,10 @@ const VISUALIZATION_MODES = {
         mode: 350,
         tags: ["venus", "flytrap"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            openAngle: { min: 30, max: 90, default: 60, label: 'Opening Angle' },
+            triggerHairs: { min: 3, max: 7, default: 5, label: 'Trigger Hairs' },
+            snapSpeed: { min: 0.5, max: 2, default: 1, label: 'Snap Speed' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3583,7 +3673,10 @@ const VISUALIZATION_MODES = {
         mode: 351,
         tags: ["rainbow", "mist"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            rainbowLayers: { min: 5, max: 9, default: 7, label: 'Rainbow Layers' },
+            arcRadius: { min: 0.5, max: 0.9, default: 0.7, label: 'Arc Radius' },
+            mistDensity: { min: 0.5, max: 2, default: 1, label: 'Mist Density' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3596,7 +3689,10 @@ const VISUALIZATION_MODES = {
         mode: 352,
         tags: ["geode", "crystals"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            crystalCount: { min: 16, max: 32, default: 24, label: 'Inner Crystals' },
+            spikeLength: { min: 10, max: 30, default: 20, label: 'Crystal Spikes' },
+            shellThickness: { min: 10, max: 30, default: 20, label: 'Geode Shell' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3609,7 +3705,10 @@ const VISUALIZATION_MODES = {
         mode: 353,
         tags: ["snake", "scales"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            scaleSize: { min: 15, max: 30, default: 20, label: 'Scale Size' },
+            scaleThreshold: { min: 0.15, max: 0.35, default: 0.2, label: 'Scale Threshold' },
+            patternComplexity: { min: 4, max: 8, default: 6, label: 'Pattern Sides' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3622,7 +3721,10 @@ const VISUALIZATION_MODES = {
         mode: 354,
         tags: ["whirlpool"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            spiralTurns: { min: 3, max: 6, default: 4, label: 'Spiral Turns' },
+            rotationSpeed: { min: 0.05, max: 0.2, default: 0.1, label: 'Rotation Speed' },
+            particleSize: { min: 2, max: 10, default: 5, label: 'Particle Size' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3635,7 +3737,10 @@ const VISUALIZATION_MODES = {
         mode: 355,
         tags: ["eyes"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            eyeSize: { min: 30, max: 60, default: 40, label: 'Eye Size' },
+            pupilDilation: { min: 0.5, max: 1.5, default: 1, label: 'Pupil Dilation' },
+            blinkSpeed: { min: 0.5, max: 2, default: 1, label: 'Blink Speed' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3648,7 +3753,10 @@ const VISUALIZATION_MODES = {
         mode: 356,
         tags: ["tornado", "funnel"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            funnelWidth: { min: 30, max: 250, default: 140, label: 'Funnel Width' },
+            debrisCount: { min: 20, max: 60, default: 40, label: 'Debris Count' },
+            rotationSpeed: { min: 0.2, max: 0.5, default: 0.3, label: 'Rotation Speed' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3661,7 +3769,10 @@ const VISUALIZATION_MODES = {
         mode: 357,
         tags: ["peacock", "feathers"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            featherCount: { min: 8, max: 16, default: 12, label: 'Feathers' },
+            eyeSize: { min: 15, max: 35, default: 25, label: 'Eye Size' },
+            spreadAmount: { min: 80, max: 250, default: 150, label: 'Spread Amount' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3674,7 +3785,10 @@ const VISUALIZATION_MODES = {
         mode: 358,
         tags: ["jellyfish", "pulse"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            bellSize: { min: 60, max: 120, default: 80, label: 'Bell Size' },
+            tentacleCount: { min: 6, max: 12, default: 8, label: 'Tentacles' },
+            pulseSpeed: { min: 0.2, max: 0.5, default: 0.3, label: 'Pulse Speed' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3687,7 +3801,10 @@ const VISUALIZATION_MODES = {
         mode: 359,
         tags: ["sand", "ripples"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            rippleRows: { min: 20, max: 40, default: 30, label: 'Ripple Rows' },
+            rippleDepth: { min: 4, max: 12, default: 8, label: 'Ripple Depth' },
+            wavelength: { min: 0.03, max: 0.08, default: 0.05, label: 'Wavelength' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3700,7 +3817,10 @@ const VISUALIZATION_MODES = {
         mode: 360,
         tags: ["swarm"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            batCount: { min: 30, max: 100, default: 50, label: 'Bat Count' },
+            swarmSpeed: { min: 0.05, max: 0.15, default: 0.08, label: 'Swarm Speed' },
+            wingSpan: { min: 8, max: 16, default: 12, label: 'Wing Span' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3713,7 +3833,10 @@ const VISUALIZATION_MODES = {
         mode: 361,
         tags: ["tide", "motion"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            tideCycle: { min: 0.03, max: 0.08, default: 0.05, label: 'Tide Cycle' },
+            waveHeight: { min: 20, max: 40, default: 30, label: 'Wave Height' },
+            foamThreshold: { min: 0.4, max: 0.7, default: 0.5, label: 'Foam Threshold' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3726,7 +3849,10 @@ const VISUALIZATION_MODES = {
         mode: 362,
         tags: ["lichen", "growth"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            colonyCount: { min: 100, max: 250, default: 150, label: 'Lichen Colonies' },
+            growthRadius: { min: 5, max: 35, default: 20, label: 'Growth Radius' },
+            density: { min: 15, max: 40, default: 25, label: 'Colony Density' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3739,7 +3865,10 @@ const VISUALIZATION_MODES = {
         mode: 363,
         tags: ["eagle", "soar"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            thermalCount: { min: 2, max: 5, default: 3, label: 'Thermal Currents' },
+            spiralTurns: { min: 15, max: 25, default: 20, label: 'Spiral Turns' },
+            eagleSize: { min: 20, max: 35, default: 25, label: 'Eagle Size' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3752,7 +3881,10 @@ const VISUALIZATION_MODES = {
         mode: 364,
         tags: ["mangrove", "roots"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            rootCount: { min: 6, max: 15, default: 10, label: 'Root Arches' },
+            archHeight: { min: 0.4, max: 0.8, default: 0.6, label: 'Arch Height' },
+            curvature: { min: 30, max: 70, default: 50, label: 'Arch Curvature' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3765,7 +3897,10 @@ const VISUALIZATION_MODES = {
         mode: 365,
         tags: ["aurora", "waves"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            auroraHeight: { min: 0.3, max: 0.7, default: 0.5, label: 'Aurora Height' },
+            waveSpeed: { min: 0.05, max: 0.15, default: 0.1, label: 'Wave Speed' },
+            layerDensity: { min: 3, max: 8, default: 5, label: 'Layer Density' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3778,7 +3913,10 @@ const VISUALIZATION_MODES = {
         mode: 366,
         tags: ["dolphin", "leap"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            leapThreshold: { min: 0.4, max: 0.7, default: 0.5, label: 'Leap Threshold' },
+            arcHeight: { min: 100, max: 250, default: 200, label: 'Leap Height' },
+            splashSize: { min: 5, max: 15, default: 10, label: 'Splash Size' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3791,7 +3929,10 @@ const VISUALIZATION_MODES = {
         mode: 367,
         tags: ["tumbleweed", "roll"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            tumbleweedSize: { min: 30, max: 70, default: 50, label: 'Tumbleweed Size' },
+            rollSpeed: { min: 2, max: 5, default: 3, label: 'Roll Speed' },
+            branchDensity: { min: 15, max: 25, default: 20, label: 'Branch Density' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3804,7 +3945,10 @@ const VISUALIZATION_MODES = {
         mode: 368,
         tags: ["coral", "polyps"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            polypCount: { min: 15, max: 30, default: 20, label: 'Polyp Count' },
+            tentacleCount: { min: 6, max: 10, default: 8, label: 'Tentacles' },
+            extendThreshold: { min: 0.25, max: 0.45, default: 0.3, label: 'Extend Threshold' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3817,7 +3961,10 @@ const VISUALIZATION_MODES = {
         mode: 369,
         tags: ["smoke", "wisps"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            wispCount: { min: 30, max: 100, default: 60, label: 'Smoke Wisps' },
+            riseHeight: { min: 15, max: 25, default: 20, label: 'Rise Height' },
+            driftAmount: { min: 15, max: 40, default: 30, label: 'Drift Amount' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3830,7 +3977,10 @@ const VISUALIZATION_MODES = {
         mode: 370,
         tags: ["nautilus", "shell"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            spiralTurns: { min: 4, max: 8, default: 6, label: 'Spiral Turns' },
+            chamberCount: { min: 6, max: 10, default: 8, label: 'Chamber Walls' },
+            growthRate: { min: 0.1, max: 0.2, default: 0.15, label: 'Growth Rate' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3843,7 +3993,10 @@ const VISUALIZATION_MODES = {
         mode: 371,
         tags: ["wolf", "howl"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            moonSize: { min: 40, max: 70, default: 50, label: 'Moon Size' },
+            howlThreshold: { min: 0.3, max: 0.6, default: 0.4, label: 'Howl Threshold' },
+            waveCount: { min: 4, max: 7, default: 5, label: 'Sound Waves' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3856,7 +4009,10 @@ const VISUALIZATION_MODES = {
         mode: 372,
         tags: ["seashell", "patterns"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            shellCount: { min: 6, max: 12, default: 8, label: 'Seashell Count' },
+            spiralTurns: { min: 12, max: 20, default: 15, label: 'Spiral Turns' },
+            patternSize: { min: 2, max: 5, default: 3, label: 'Pattern Size' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3869,7 +4025,10 @@ const VISUALIZATION_MODES = {
         mode: 373,
         tags: ["grass", "blades"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            bladeCount: { min: 30, max: 70, default: 50, label: 'Grass Blades' },
+            swayAmount: { min: 10, max: 30, default: 20, label: 'Sway Amount' },
+            bladeLength: { min: 60, max: 120, default: 100, label: 'Blade Length' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3882,7 +4041,10 @@ const VISUALIZATION_MODES = {
         mode: 374,
         tags: ["stalactites"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            stalactiteCount: { min: 10, max: 20, default: 15, label: 'Formations' },
+            maxLength: { min: 100, max: 200, default: 150, label: 'Max Length' },
+            formationWidth: { min: 10, max: 30, default: 20, label: 'Formation Width' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3895,7 +4057,10 @@ const VISUALIZATION_MODES = {
         mode: 375,
         tags: ["amoeba", "movement"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            pseudopodCount: { min: 15, max: 25, default: 20, label: 'Pseudopod Count' },
+            blobSize: { min: 80, max: 150, default: 100, label: 'Blob Size' },
+            movementSpeed: { min: 0.05, max: 0.15, default: 0.1, label: 'Movement Speed' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3908,7 +4073,10 @@ const VISUALIZATION_MODES = {
         mode: 376,
         tags: ["pine", "needles"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            clusterCount: { min: 8, max: 16, default: 12, label: 'Needle Clusters' },
+            needlesPerCluster: { min: 6, max: 10, default: 8, label: 'Needles per Cluster' },
+            needleLength: { min: 25, max: 50, default: 35, label: 'Needle Length' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3921,7 +4089,10 @@ const VISUALIZATION_MODES = {
         mode: 377,
         tags: ["water", "droplet"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            dropletSize: { min: 6, max: 12, default: 8, label: 'Droplet Size' },
+            splashCount: { min: 8, max: 16, default: 12, label: 'Splash Rays' },
+            impactThreshold: { min: 0.3, max: 0.6, default: 0.4, label: 'Impact Threshold' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3934,7 +4105,10 @@ const VISUALIZATION_MODES = {
         mode: 378,
         tags: ["succulent", "rosette"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            layerCount: { min: 6, max: 10, default: 8, label: 'Rosette Layers' },
+            leavesPerLayer: { min: 6, max: 12, default: 8, label: 'Leaves per Layer' },
+            leafSize: { min: 12, max: 25, default: 18, label: 'Leaf Size' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3947,7 +4121,10 @@ const VISUALIZATION_MODES = {
         mode: 379,
         tags: ["salmon", "upstream"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            salmonCount: { min: 4, max: 12, default: 8, label: 'Salmon Count' },
+            swimSpeed: { min: 2, max: 5, default: 3, label: 'Swim Speed' },
+            currentSpeed: { min: 3, max: 7, default: 5, label: 'Current Speed' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3960,7 +4137,10 @@ const VISUALIZATION_MODES = {
         mode: 380,
         tags: ["cloud", "formation"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            cloudLayers: { min: 2, max: 4, default: 3, label: 'Cloud Layers' },
+            puffiness: { min: 5, max: 15, default: 10, label: 'Puffiness' },
+            cloudSize: { min: 10, max: 30, default: 20, label: 'Cloud Size' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3973,7 +4153,10 @@ const VISUALIZATION_MODES = {
         mode: 381,
         tags: ["tail"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            tailSegments: { min: 15, max: 25, default: 20, label: 'Tail Segments' },
+            swishSpeed: { min: 0.1, max: 0.25, default: 0.15, label: 'Swish Speed' },
+            tailLength: { min: 150, max: 250, default: 200, label: 'Tail Length' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3986,7 +4169,10 @@ const VISUALIZATION_MODES = {
         mode: 382,
         tags: ["clover", "field"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            cloverCount: { min: 25, max: 60, default: 40, label: 'Clover Count' },
+            leafSize: { min: 5, max: 12, default: 8, label: 'Leaf Size' },
+            cloverThreshold: { min: 0.15, max: 0.35, default: 0.2, label: 'Growth Threshold' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -3999,7 +4185,10 @@ const VISUALIZATION_MODES = {
         mode: 383,
         tags: ["geyser", "field"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            geyserCount: { min: 5, max: 20, default: 10, label: 'Geyser Count' },
+            eruptionThreshold: { min: 0.4, max: 0.7, default: 0.5, label: 'Eruption Threshold' },
+            plumeHeight: { min: 150, max: 250, default: 200, label: 'Plume Height' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -4012,7 +4201,10 @@ const VISUALIZATION_MODES = {
         mode: 384,
         tags: ["insect", "compound"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            hexSize: { min: 8, max: 18, default: 12, label: 'Facet Size' },
+            curvatureRadius: { min: 0.6, max: 1, default: 0.8, label: 'Eye Curvature' },
+            facetBrightness: { min: 0.5, max: 2, default: 1, label: 'Facet Brightness' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -4025,7 +4217,10 @@ const VISUALIZATION_MODES = {
         mode: 385,
         tags: ["moonflower", "bloom"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            petalCount: { min: 5, max: 8, default: 6, label: 'Petal Count' },
+            bloomSpeed: { min: 0.5, max: 2, default: 1, label: 'Bloom Speed' },
+            petalLength: { min: 60, max: 120, default: 90, label: 'Petal Length' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -4038,7 +4233,10 @@ const VISUALIZATION_MODES = {
         mode: 386,
         tags: ["sand", "dollar"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            petalSlots: { min: 4, max: 6, default: 5, label: 'Petal Slots' },
+            slotDepth: { min: 15, max: 35, default: 25, label: 'Slot Depth' },
+            dollarSize: { min: 0.3, max: 0.7, default: 0.5, label: 'Dollar Size' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -4051,7 +4249,10 @@ const VISUALIZATION_MODES = {
         mode: 387,
         tags: ["glacier", "crevasse"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            crevasseDepth: { min: 0.8, max: 1, default: 0.9, label: 'Crevasse Depth' },
+            wallRoughness: { min: 0.3, max: 0.8, default: 0.5, label: 'Wall Roughness' },
+            iceGradient: { min: 50, max: 150, default: 100, label: 'Ice Gradient' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -4064,7 +4265,10 @@ const VISUALIZATION_MODES = {
         mode: 388,
         tags: ["antler", "growth"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            branchDepth: { min: 4, max: 7, default: 5, label: 'Branch Depth' },
+            antlerSize: { min: 30, max: 50, default: 40, label: 'Antler Size' },
+            branchAngle: { min: 20, max: 40, default: 30, label: 'Branch Angle' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -4077,7 +4281,10 @@ const VISUALIZATION_MODES = {
         mode: 389,
         tags: ["plume", "worm"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            filamentCount: { min: 18, max: 32, default: 24, label: 'Filament Count' },
+            plumeLength: { min: 60, max: 140, default: 100, label: 'Plume Length' },
+            curvature: { min: 15, max: 25, default: 20, label: 'Filament Curve' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -4090,7 +4297,10 @@ const VISUALIZATION_MODES = {
         mode: 390,
         tags: ["reed", "marsh"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            reedCount: { min: 20, max: 40, default: 30, label: 'Reed Count' },
+            reedHeight: { min: 120, max: 250, default: 180, label: 'Reed Height' },
+            swayAmount: { min: 15, max: 40, default: 30, label: 'Sway Amount' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -4103,7 +4313,10 @@ const VISUALIZATION_MODES = {
         mode: 391,
         tags: ["beetle", "shell"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            spotCount: { min: 30, max: 90, default: 60, label: 'Iridescent Spots' },
+            shellSize: { min: 0.4, max: 0.8, default: 0.6, label: 'Shell Size' },
+            colorShift: { min: 10, max: 25, default: 15, label: 'Color Shift Speed' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -4116,7 +4329,10 @@ const VISUALIZATION_MODES = {
         mode: 392,
         tags: ["tide", "anemone"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            tentacleCount: { min: 15, max: 28, default: 20, label: 'Tentacles' },
+            tentacleLength: { min: 50, max: 120, default: 80, label: 'Tentacle Length' },
+            waveIntensity: { min: 0.5, max: 2, default: 1, label: 'Wave Intensity' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -4129,7 +4345,10 @@ const VISUALIZATION_MODES = {
         mode: 393,
         tags: ["earthquake", "waves"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            waveCount: { min: 6, max: 12, default: 8, label: 'Wave Count' },
+            waveSpeed: { min: 2, max: 4, default: 3, label: 'Wave Speed' },
+            displacementAmount: { min: 15, max: 40, default: 30, label: 'Ground Displacement' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -4142,7 +4361,10 @@ const VISUALIZATION_MODES = {
         mode: 394,
         tags: ["butterfly", "lifecycle"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            stageSpeed: { min: 0.5, max: 2, default: 1, label: 'Stage Speed' },
+            segmentCount: { min: 6, max: 10, default: 8, label: 'Caterpillar Segments' },
+            wingSize: { min: 40, max: 70, default: 50, label: 'Butterfly Wing Size' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -4155,7 +4377,10 @@ const VISUALIZATION_MODES = {
         mode: 395,
         tags: ["coconut", "palm"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            frondCount: { min: 6, max: 12, default: 8, label: 'Palm Fronds' },
+            frondLength: { min: 80, max: 160, default: 120, label: 'Frond Length' },
+            coconutCount: { min: 3, max: 6, default: 4, label: 'Coconuts' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -4168,7 +4393,10 @@ const VISUALIZATION_MODES = {
         mode: 396,
         tags: ["frost", "ferns"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            fernCount: { min: 4, max: 8, default: 6, label: 'Frost Ferns' },
+            branchDepth: { min: 5, max: 8, default: 6, label: 'Branch Depth' },
+            branchAngle: { min: 35, max: 55, default: 45, label: 'Branch Angle' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -4181,7 +4409,10 @@ const VISUALIZATION_MODES = {
         mode: 397,
         tags: ["bioluminescent"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            glowCount: { min: 60, max: 180, default: 120, label: 'Glow Organisms' },
+            glowSize: { min: 4, max: 18, default: 10, label: 'Glow Size' },
+            waveAmplitude: { min: 0.2, max: 0.5, default: 0.3, label: 'Wave Amplitude' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -4194,7 +4425,10 @@ const VISUALIZATION_MODES = {
         mode: 398,
         tags: ["erosion", "patterns"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            channelCount: { min: 6, max: 12, default: 8, label: 'Erosion Channels' },
+            meanderAmount: { min: 30, max: 70, default: 50, label: 'Meander Amount' },
+            channelWidth: { min: 4, max: 12, default: 8, label: 'Channel Width' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -4207,7 +4441,10 @@ const VISUALIZATION_MODES = {
         mode: 399,
         tags: ["hedge", "maze"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            cellSize: { min: 30, max: 50, default: 40, label: 'Maze Cell Size' },
+            wallThreshold: { min: 0.25, max: 0.75, default: 0.5, label: 'Wall Density' },
+            wallThickness: { min: 4, max: 8, default: 5, label: 'Wall Thickness' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
@@ -4220,7 +4457,10 @@ const VISUALIZATION_MODES = {
         mode: 400,
         tags: ["water", "lily", "reflection"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            petalCount: { min: 6, max: 12, default: 8, label: 'Lily Petals' },
+            reflectionClarity: { min: 0.5, max: 1, default: 0.7, label: 'Reflection Clarity' },
+            rippleCount: { min: 4, max: 8, default: 5, label: 'Water Ripples' }
+         },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }

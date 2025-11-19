@@ -2,9 +2,9 @@
 
 Generate stunning circular audio spectrum animations with transparent backgrounds, perfect for overlaying on videos in editing software.
 
-## How to Run
+## 🚀 Quick Start - Run the Web App
 
-### Web App (Recommended)
+The easiest way to use this tool is through the web interface:
 
 ```bash
 # Navigate to the web directory
@@ -21,7 +21,14 @@ python3 -m http.server 8000
 npx http-server -p 8000
 ```
 
-### Python Script (Command Line)
+The web app lets you:
+- Upload audio files and generate visualizations instantly
+- Preview in real-time before rendering
+- Choose from multiple visualization modes
+- Customize colors, size, and animation parameters
+- Export directly to video files
+
+### Alternative: Python Script (Command Line)
 
 ```bash
 # Install dependencies

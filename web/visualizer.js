@@ -8916,16 +8916,18 @@ class Visualizer {
         // Draw circular bars as placeholder
         const numBars = this.settings.numBars || 72;
         const angleStep = (Math.PI * 2) / numBars;
+        // Use the innerRadius from settings, respecting preview mode settings
+        const innerRadius = this.settings.innerRadius !== undefined ? this.settings.innerRadius : 180;
 
         for (let i = 0; i < numBars; i++) {
             const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
             const angle = i * angleStep;
             const barLength = magnitude * this.maxRadius * 0.8;
 
-            const startX = this.centerX + Math.cos(angle) * (this.settings.innerRadius || 180);
-            const startY = this.centerY + Math.sin(angle) * (this.settings.innerRadius || 180);
-            const endX = this.centerX + Math.cos(angle) * ((this.settings.innerRadius || 180) + barLength);
-            const endY = this.centerY + Math.sin(angle) * ((this.settings.innerRadius || 180) + barLength);
+            const startX = this.centerX + Math.cos(angle) * innerRadius;
+            const startY = this.centerY + Math.sin(angle) * innerRadius;
+            const endX = this.centerX + Math.cos(angle) * (innerRadius + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius + barLength);
 
             const color = this.getColor(i, numBars);
 
@@ -10971,7 +10973,7 @@ class Visualizer {
      * Mode 202: Deep Space Garden Hose
      * Mode 202: Deep-Space Garden Hose - spray pressure by amplitude; droplets chime on highs
      */
-    render202Deepspacegardenhose(magnitudes) {
+    render202DeepSpaceGardenHose(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11008,7 +11010,7 @@ class Visualizer {
      * Mode 203: Horizon Monoliths
      * Mode 203: Horizon Monoliths - distant monoliths rise with band; shadow sweeps on kicks
      */
-    render203Horizonmonoliths(magnitudes) {
+    render203HorizonMonoliths(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11064,7 +11066,7 @@ class Visualizer {
      * Mode 204: Gravity Slingshot Trails
      * Mode 204: Gravity Slingshot Trails - probes slingshot around planet; trail length by highs
      */
-    render204Gravityslingshottrails(magnitudes) {
+    render204GravitySlingshotTrails(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11101,7 +11103,7 @@ class Visualizer {
      * Mode 205: Solar Flare Notches
      * Mode 205: Solar Flare Notches - solar disc with notch flares per bin
      */
-    render205Solarflarenotches(magnitudes) {
+    render205SolarFlareNotches(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11162,7 +11164,7 @@ class Visualizer {
      * Mode 206: Tesseract Window
      * Mode 206: Tesseract Window - 4D cube projection; face alpha by band energy
      */
-    render206Tesseractwindow(magnitudes) {
+    render206TesseractWindow(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11232,7 +11234,7 @@ class Visualizer {
      * Mode 207: Interstellar Postcards
      * Mode 207: Interstellar Postcards - tiles flip; each hosts tiny spectrum motif
      */
-    render207Interstellarpostcards(magnitudes) {
+    render207InterstellarPostcards(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11277,7 +11279,7 @@ class Visualizer {
      * Mode 208: Cosmic Braille
      * Mode 208: Cosmic Braille - raised dots scroll; dot height by band
      */
-    render208Cosmicbraille(magnitudes) {
+    render208CosmicBraille(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11338,7 +11340,7 @@ class Visualizer {
      * Mode 209: Stellar Harpoon
      * Mode 209: Stellar Harpoon - line tension by amplitude; vibrato with highs
      */
-    render209Stellarharpoon(magnitudes) {
+    render209StellarHarpoon(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11383,7 +11385,7 @@ class Visualizer {
      * Mode 210: Galaxy Ticker Tape
      * Mode 210: Galaxy Ticker Tape - ticker snakes; character scale by band
      */
-    render210Galaxytickertape(magnitudes) {
+    render210GalaxyTickerTape(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11429,7 +11431,7 @@ class Visualizer {
      * Mode 211: Antimatter Chess
      * Mode 211: Antimatter Chess - pieces phase in/out; height maps to band
      */
-    render211Antimatterchess(magnitudes) {
+    render211AntimatterChess(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11451,7 +11453,7 @@ class Visualizer {
      * Mode 212: Star Nursery Conveyor
      * Mode 212: Star Nursery Conveyor - progression speed from energy
      */
-    render212Starnurseryconveyor(magnitudes) {
+    render212StarNurseryConveyor(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11488,7 +11490,7 @@ class Visualizer {
      * Mode 213: Magnetar Lines
      * Mode 213: Magnetar Lines - field lines whip; gamma flashes on transients
      */
-    render213Magnetarlines(magnitudes) {
+    render213MagnetarLines(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11533,7 +11535,7 @@ class Visualizer {
      * Mode 214: Zero Kelvin Diamonds
      * Mode 214: Zero-Kelvin Diamonds - refracted beams thickness tracks bands; spin with tempo
      */
-    render214Zerokelvindiamonds(magnitudes) {
+    render214ZeroKelvinDiamonds(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11578,7 +11580,7 @@ class Visualizer {
      * Mode 215: Orbital Time Garden
      * Mode 215: Orbital Time Garden - planets are clock markers; orbits expand with bass
      */
-    render215Orbitaltimegarden(magnitudes) {
+    render215OrbitalTimeGarden(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11625,7 +11627,7 @@ class Visualizer {
      * Mode 216: Subspace Ribbon Printer
      * Mode 216: Subspace Ribbon Printer - ribbon thickness equals summed band energy at slice
      */
-    render216Subspaceribbonprinter(magnitudes) {
+    render216SubspaceRibbonPrinter(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11670,7 +11672,7 @@ class Visualizer {
      * Mode 217: Dark Matter Drizzle
      * Mode 217: Dark-Matter Drizzle - invisible drizzle reveals when bands exceed threshold
      */
-    render217Darkmatterdrizzle(magnitudes) {
+    render217DarkMatterDrizzle(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11731,7 +11733,7 @@ class Visualizer {
      * Mode 218: Meteor Choir Cones
      * Mode 218: Meteor Choir Cones - cone aperture by band; inner rings harmonics
      */
-    render218Meteorchoircones(magnitudes) {
+    render218MeteorChoirCones(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11768,7 +11770,7 @@ class Visualizer {
      * Mode 219: Folded Galaxy Map
      * Mode 219: Folded Galaxy Map - folds reveal bar clusters; refolds during breakdown
      */
-    render219Foldedgalaxymap(magnitudes) {
+    render219FoldedGalaxyMap(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11790,7 +11792,7 @@ class Visualizer {
      * Mode 220: Ion Thruster Plume
      * Mode 220: Ion Thruster Plume - plume length maps to amplitude; shock diamonds on peaks
      */
-    render220Ionthrusterplume(magnitudes) {
+    render220IonThrusterPlume(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11850,7 +11852,7 @@ class Visualizer {
      * Mode 221: Cosmic Dominoes
      * Mode 221: Cosmic Dominoes - curved domino line; fall rate by energy; tiles display local bars
      */
-    render221Cosmicdominoes(magnitudes) {
+    render221CosmicDominoes(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11895,7 +11897,7 @@ class Visualizer {
      * Mode 222: Spacesuit Hud
      * Mode 222: Spacesuit HUD - HUD overlays with spectrum wedges; warning flashes on peaks
      */
-    render222Spacesuithud(magnitudes) {
+    render222SpacesuitHud(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11932,7 +11934,7 @@ class Visualizer {
      * Mode 223: Pulsar Barcode Beam
      * Mode 223: Pulsar Barcode Beam - rotating beam; bar lengths by band; bloom on peaks
      */
-    render223Pulsarbarcodebeam(magnitudes) {
+    render223PulsarBarcodeBeam(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -11969,7 +11971,7 @@ class Visualizer {
      * Mode 224: Astro Terrarium
      * Mode 224: Astro Terrarium - micro planet ecosystem; eruptions on kicks; biolume with highs
      */
-    render224Astroterrarium(magnitudes) {
+    render224AstroTerrarium(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -12016,7 +12018,7 @@ class Visualizer {
      * Mode 225: Micrometeor Spark Curtain
      * Mode 225: Micrometeor Spark Curtain - diagonal sparks; density with amplitude
      */
-    render225Micrometeorsparkcurtain(magnitudes) {
+    render225MicrometeorSparkCurtain(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -13902,7 +13904,7 @@ class Visualizer {
      * Mode 276: Quantum Lattice
      * 3D-looking quantum lattice that shifts with bass
      */
-    render276Quantumlattice(magnitudes) {
+    render276QuantumLattice(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -13972,7 +13974,7 @@ class Visualizer {
      * Mode 277: Prism Rays
      * Light rays splitting through a prism
      */
-    render277Prismrays(magnitudes) {
+    render277PrismRays(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -14017,7 +14019,7 @@ class Visualizer {
      * Mode 278: Liquid Nitrogen
      * Freezing and shattering effects
      */
-    render278Liquidnitrogen(magnitudes) {
+    render278LiquidNitrogen(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -14062,7 +14064,7 @@ class Visualizer {
      * Mode 279: Silk Road Caravan
      * Moving lights across the screen like a caravan
      */
-    render279Silkroadcaravan(magnitudes) {
+    render279SilkRoadCaravan(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -14099,7 +14101,7 @@ class Visualizer {
      * Mode 280: Steampunk Gears
      * Rotating mechanical gears
      */
-    render280Steampunkgears(magnitudes) {
+    render280SteampunkGears(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -14169,7 +14171,7 @@ class Visualizer {
      * Mode 281: Dragon Scales
      * Overlapping scale patterns like dragon skin
      */
-    render281Dragonscales(magnitudes) {
+    render281DragonScales(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -14191,7 +14193,7 @@ class Visualizer {
      * Mode 282: Time Dilation Grid
      * Warped spacetime grid
      */
-    render282Timedilationgrid(magnitudes) {
+    render282TimeDilationGrid(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -14246,7 +14248,7 @@ class Visualizer {
      * Mode 283: Fiber Bundle
      * Mathematical fiber bundle visualization
      */
-    render283Fiberbundle(magnitudes) {
+    render283FiberBundle(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -14291,7 +14293,7 @@ class Visualizer {
      * Mode 284: Moth Wing Shimmer
      * Iridescent shimmer patterns like moth wings
      */
-    render284Mothwingshimmer(magnitudes) {
+    render284MothWingShimmer(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -14328,7 +14330,7 @@ class Visualizer {
      * Mode 285: Cathedral Rose
      * Rose window geometry like a cathedral
      */
-    render285Cathedralrose(magnitudes) {
+    render285CathedralRose(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -14398,7 +14400,7 @@ class Visualizer {
      * Mode 286: Neon Veins Pulse
      * Pulsing vein-like network
      */
-    render286Neonveinspulse(magnitudes) {
+    render286NeonVeinsPulse(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -14443,7 +14445,7 @@ class Visualizer {
      * Mode 287: Glacial Crack
      * Spreading ice crack patterns
      */
-    render287Glacialcrack(magnitudes) {
+    render287GlacialCrack(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -14488,7 +14490,7 @@ class Visualizer {
      * Mode 288: Quantum Dots
      * Floating quantum dot particles
      */
-    render288Quantumdots(magnitudes) {
+    render288QuantumDots(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -14566,7 +14568,7 @@ class Visualizer {
      * Mode 289: Origami Crane Flight
      * Geometric origami birds in flight
      */
-    render289Origamicraneflight(magnitudes) {
+    render289OrigamiCraneFlight(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -14621,7 +14623,7 @@ class Visualizer {
      * Mode 290: Magma Chamber
      * Bubbling lava effects
      */
-    render290Magmachamber(magnitudes) {
+    render290MagmaChamber(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -14709,7 +14711,7 @@ class Visualizer {
      * Mode 291: Spider Web Dew
      * Dew drops on spider web
      */
-    render291Spiderwebdew(magnitudes) {
+    render291SpiderWebDew(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -14769,7 +14771,7 @@ class Visualizer {
      * Mode 292: Nebula Birth
      * Gas cloud formation
      */
-    render292Nebulabirth(magnitudes) {
+    render292NebulaBirth(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -14842,7 +14844,7 @@ class Visualizer {
      * Mode 293: Circuit Board Live
      * Live electric circuit patterns
      */
-    render293Circuitboardlive(magnitudes) {
+    render293CircuitBoardLive(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -14902,7 +14904,7 @@ class Visualizer {
      * Mode 294: Bioluminescent Tide
      * Glowing wave patterns
      */
-    render294Bioluminescenttide(magnitudes) {
+    render294BioluminescentTide(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -14962,7 +14964,7 @@ class Visualizer {
      * Mode 295: Tesseract Projection
      * 4D hypercube projection
      */
-    render295Tesseractprojection(magnitudes) {
+    render295TesseractProjection(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -15017,7 +15019,7 @@ class Visualizer {
      * Mode 296: Frost Crystal Growth
      * Growing ice crystals
      */
-    render296Frostcrystalgrowth(magnitudes) {
+    render296FrostCrystalGrowth(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -15062,7 +15064,7 @@ class Visualizer {
      * Mode 297: Sound Wave Interference
      * Wave interference patterns
      */
-    render297Soundwaveinterference(magnitudes) {
+    render297SoundWaveInterference(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -15084,7 +15086,7 @@ class Visualizer {
      * Mode 298: Holographic Fracture
      * Broken hologram effect
      */
-    render298Holographicfracture(magnitudes) {
+    render298HolographicFracture(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -15129,7 +15131,7 @@ class Visualizer {
      * Mode 299: Plasma Ball Arc
      * Electric plasma arcs
      */
-    render299Plasmaballarc(magnitudes) {
+    render299PlasmaBallArc(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;
@@ -15174,7 +15176,7 @@ class Visualizer {
      * Mode 300: Eternal Flame Dance
      * Flowing fire patterns
      */
-    render300Eternalflamedance(magnitudes) {
+    render300EternalFlameDance(magnitudes) {
         const ctx = this.ctx;
         const params = this.settings.parameters || {};
         const intensity = params.intensity !== undefined ? params.intensity : 1;

@@ -586,17 +586,17 @@ class AudioSpectrumApp {
             ...DEFAULT_SETTINGS,
             mode: modeId,
             numBars: 48,
-            // Use smaller settings for preview canvas (280x280)
-            innerRadius: 40,  // Much smaller than default 180
+            // Use smallest settings for preview canvas (280x280) to ensure full visibility
+            innerRadius: 25,  // Smallest radius to ensure all previews are visible
             barWidthMultiplier: 1.2  // Slightly wider bars for better visibility
         };
 
         const tempVisualizer = new Visualizer(canvas, tempSettings);
 
-        // Generate demo magnitudes
+        // Generate demo magnitudes with smaller values for compact preview
         const magnitudes = new Float32Array(48);
         for (let i = 0; i < magnitudes.length; i++) {
-            magnitudes[i] = 0.3 + Math.random() * 0.4 + Math.sin(i * 0.2) * 0.2;
+            magnitudes[i] = 0.2 + Math.random() * 0.3 + Math.sin(i * 0.2) * 0.15;
         }
 
         tempVisualizer.render(magnitudes);
@@ -610,8 +610,8 @@ class AudioSpectrumApp {
             ...DEFAULT_SETTINGS,
             mode: modeId,
             numBars: 48,
-            // Use smaller settings for preview canvas (280x280)
-            innerRadius: 40,  // Much smaller than default 180
+            // Use smallest settings for preview canvas (280x280) to ensure full visibility
+            innerRadius: 25,  // Smallest radius to ensure all previews are visible
             barWidthMultiplier: 1.2  // Slightly wider bars for better visibility
         };
 
@@ -621,17 +621,17 @@ class AudioSpectrumApp {
         const animate = () => {
             time += 0.05;
 
-            // Generate animated magnitudes
+            // Generate animated magnitudes with smaller values for compact preview
             const magnitudes = new Float32Array(48);
             for (let i = 0; i < magnitudes.length; i++) {
                 // Create smooth wave motion with multiple frequencies
-                const wave1 = Math.sin(i * 0.2 + time) * 0.15;
-                const wave2 = Math.sin(i * 0.1 + time * 1.5) * 0.1;
-                const wave3 = Math.sin(i * 0.3 + time * 0.7) * 0.08;
-                const base = 0.35;
-                const randomness = Math.sin(i * 0.15 + time * 2) * 0.05;
+                const wave1 = Math.sin(i * 0.2 + time) * 0.12;
+                const wave2 = Math.sin(i * 0.1 + time * 1.5) * 0.08;
+                const wave3 = Math.sin(i * 0.3 + time * 0.7) * 0.06;
+                const base = 0.25;
+                const randomness = Math.sin(i * 0.15 + time * 2) * 0.04;
 
-                magnitudes[i] = Math.max(0.1, Math.min(0.9, base + wave1 + wave2 + wave3 + randomness));
+                magnitudes[i] = Math.max(0.1, Math.min(0.7, base + wave1 + wave2 + wave3 + randomness));
             }
 
             tempVisualizer.render(magnitudes);

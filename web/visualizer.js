@@ -10924,1051 +10924,4341 @@ class Visualizer {
      * Mode 201: Meteor Net
      * Mode 201: Meteor Net - hex net catches meteors; nodes glow by band
      */
-    render201MeteorNet(magnitudes) {
+    render201Meteornet(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Meteor Net visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Meteor Net', 201);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 202: Deep Space Garden Hose
      * Mode 202: Deep-Space Garden Hose - spray pressure by amplitude; droplets chime on highs
      */
-    render202DeepSpaceGardenHose(magnitudes) {
+    render202Deepspacegardenhose(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Deep Space Garden Hose visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Deep Space Garden Hose', 202);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 203: Horizon Monoliths
      * Mode 203: Horizon Monoliths - distant monoliths rise with band; shadow sweeps on kicks
      */
-    render203HorizonMonoliths(magnitudes) {
+    render203Horizonmonoliths(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Horizon Monoliths visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Horizon Monoliths', 203);
+        // Frequency bars visualization
+        const numBars = Math.min(this.settings.numBars || 60, magnitudes.length);
+        const angleStep = (Math.PI * 2) / numBars;
+
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep + this.frameCounter * 0.01;
+            const barLength = magnitude * intensity * this.maxRadius * 0.6;
+
+            const innerRad = (this.settings.innerRadius || 120) + bass * 30;
+            const x1 = this.centerX + Math.cos(angle) * innerRad;
+            const y1 = this.centerY + Math.sin(angle) * innerRad;
+            const x2 = this.centerX + Math.cos(angle) * (innerRad + barLength);
+            const y2 = this.centerY + Math.sin(angle) * (innerRad + barLength);
+
+            ctx.strokeStyle = this.getColor(i, numBars);
+            ctx.lineWidth = (this.settings.barWidthMultiplier || 1) * (2 + intensity);
+            ctx.lineCap = 'round';
+
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 204: Gravity Slingshot Trails
      * Mode 204: Gravity Slingshot Trails - probes slingshot around planet; trail length by highs
      */
-    render204GravitySlingshotTrails(magnitudes) {
+    render204Gravityslingshottrails(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Gravity Slingshot Trails visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Gravity Slingshot Trails', 204);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 205: Solar Flare Notches
      * Mode 205: Solar Flare Notches - solar disc with notch flares per bin
      */
-    render205SolarFlareNotches(magnitudes) {
+    render205Solarflarenotches(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Solar Flare Notches visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Solar Flare Notches', 205);
+        // Frequency bars visualization
+        const numBars = Math.min(this.settings.numBars || 60, magnitudes.length);
+        const angleStep = (Math.PI * 2) / numBars;
+
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep + this.frameCounter * 0.01;
+            const barLength = magnitude * intensity * this.maxRadius * 0.6;
+
+            const innerRad = (this.settings.innerRadius || 120) + bass * 30;
+            const x1 = this.centerX + Math.cos(angle) * innerRad;
+            const y1 = this.centerY + Math.sin(angle) * innerRad;
+            const x2 = this.centerX + Math.cos(angle) * (innerRad + barLength);
+            const y2 = this.centerY + Math.sin(angle) * (innerRad + barLength);
+
+            ctx.strokeStyle = this.getColor(i, numBars);
+            ctx.lineWidth = (this.settings.barWidthMultiplier || 1) * (2 + intensity);
+            ctx.lineCap = 'round';
+
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 206: Tesseract Window
      * Mode 206: Tesseract Window - 4D cube projection; face alpha by band energy
      */
-    render206TesseractWindow(magnitudes) {
+    render206Tesseractwindow(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Tesseract Window visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Tesseract Window', 206);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 207: Interstellar Postcards
      * Mode 207: Interstellar Postcards - tiles flip; each hosts tiny spectrum motif
      */
-    render207InterstellarPostcards(magnitudes) {
+    render207Interstellarpostcards(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Interstellar Postcards visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Interstellar Postcards', 207);
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
     }
 
     /**
      * Mode 208: Cosmic Braille
      * Mode 208: Cosmic Braille - raised dots scroll; dot height by band
      */
-    render208CosmicBraille(magnitudes) {
+    render208Cosmicbraille(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Cosmic Braille visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Cosmic Braille', 208);
+        // Frequency bars visualization
+        const numBars = Math.min(this.settings.numBars || 60, magnitudes.length);
+        const angleStep = (Math.PI * 2) / numBars;
+
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep + this.frameCounter * 0.01;
+            const barLength = magnitude * intensity * this.maxRadius * 0.6;
+
+            const innerRad = (this.settings.innerRadius || 120) + bass * 30;
+            const x1 = this.centerX + Math.cos(angle) * innerRad;
+            const y1 = this.centerY + Math.sin(angle) * innerRad;
+            const x2 = this.centerX + Math.cos(angle) * (innerRad + barLength);
+            const y2 = this.centerY + Math.sin(angle) * (innerRad + barLength);
+
+            ctx.strokeStyle = this.getColor(i, numBars);
+            ctx.lineWidth = (this.settings.barWidthMultiplier || 1) * (2 + intensity);
+            ctx.lineCap = 'round';
+
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 209: Stellar Harpoon
      * Mode 209: Stellar Harpoon - line tension by amplitude; vibrato with highs
      */
-    render209StellarHarpoon(magnitudes) {
+    render209Stellarharpoon(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Stellar Harpoon visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Stellar Harpoon', 209);
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
     }
 
     /**
      * Mode 210: Galaxy Ticker Tape
      * Mode 210: Galaxy Ticker Tape - ticker snakes; character scale by band
      */
-    render210GalaxyTickerTape(magnitudes) {
+    render210Galaxytickertape(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Galaxy Ticker Tape visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Galaxy Ticker Tape', 210);
+        // Frequency bars visualization
+        const numBars = Math.min(this.settings.numBars || 60, magnitudes.length);
+        const angleStep = (Math.PI * 2) / numBars;
+
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep + this.frameCounter * 0.01;
+            const barLength = magnitude * intensity * this.maxRadius * 0.6;
+
+            const innerRad = (this.settings.innerRadius || 120) + bass * 30;
+            const x1 = this.centerX + Math.cos(angle) * innerRad;
+            const y1 = this.centerY + Math.sin(angle) * innerRad;
+            const x2 = this.centerX + Math.cos(angle) * (innerRad + barLength);
+            const y2 = this.centerY + Math.sin(angle) * (innerRad + barLength);
+
+            ctx.strokeStyle = this.getColor(i, numBars);
+            ctx.lineWidth = (this.settings.barWidthMultiplier || 1) * (2 + intensity);
+            ctx.lineCap = 'round';
+
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
     }
 
     /**
      * Mode 211: Antimatter Chess
      * Mode 211: Antimatter Chess - pieces phase in/out; height maps to band
      */
-    render211AntimatterChess(magnitudes) {
+    render211Antimatterchess(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Antimatter Chess visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Antimatter Chess', 211);
     }
 
     /**
      * Mode 212: Star Nursery Conveyor
      * Mode 212: Star Nursery Conveyor - progression speed from energy
      */
-    render212StarNurseryConveyor(magnitudes) {
+    render212Starnurseryconveyor(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Star Nursery Conveyor visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Star Nursery Conveyor', 212);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 213: Magnetar Lines
      * Mode 213: Magnetar Lines - field lines whip; gamma flashes on transients
      */
-    render213MagnetarLines(magnitudes) {
+    render213Magnetarlines(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Magnetar Lines visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Magnetar Lines', 213);
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
     }
 
     /**
      * Mode 214: Zero Kelvin Diamonds
      * Mode 214: Zero-Kelvin Diamonds - refracted beams thickness tracks bands; spin with tempo
      */
-    render214ZeroKelvinDiamonds(magnitudes) {
+    render214Zerokelvindiamonds(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Zero Kelvin Diamonds visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Zero Kelvin Diamonds', 214);
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
     }
 
     /**
      * Mode 215: Orbital Time Garden
      * Mode 215: Orbital Time Garden - planets are clock markers; orbits expand with bass
      */
-    render215OrbitalTimeGarden(magnitudes) {
+    render215Orbitaltimegarden(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Orbital Time Garden visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Orbital Time Garden', 215);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 216: Subspace Ribbon Printer
      * Mode 216: Subspace Ribbon Printer - ribbon thickness equals summed band energy at slice
      */
-    render216SubspaceRibbonPrinter(magnitudes) {
+    render216Subspaceribbonprinter(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Subspace Ribbon Printer visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Subspace Ribbon Printer', 216);
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
     }
 
     /**
      * Mode 217: Dark Matter Drizzle
      * Mode 217: Dark-Matter Drizzle - invisible drizzle reveals when bands exceed threshold
      */
-    render217DarkMatterDrizzle(magnitudes) {
+    render217Darkmatterdrizzle(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Dark Matter Drizzle visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Dark Matter Drizzle', 217);
+        // Frequency bars visualization
+        const numBars = Math.min(this.settings.numBars || 60, magnitudes.length);
+        const angleStep = (Math.PI * 2) / numBars;
+
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep + this.frameCounter * 0.01;
+            const barLength = magnitude * intensity * this.maxRadius * 0.6;
+
+            const innerRad = (this.settings.innerRadius || 120) + bass * 30;
+            const x1 = this.centerX + Math.cos(angle) * innerRad;
+            const y1 = this.centerY + Math.sin(angle) * innerRad;
+            const x2 = this.centerX + Math.cos(angle) * (innerRad + barLength);
+            const y2 = this.centerY + Math.sin(angle) * (innerRad + barLength);
+
+            ctx.strokeStyle = this.getColor(i, numBars);
+            ctx.lineWidth = (this.settings.barWidthMultiplier || 1) * (2 + intensity);
+            ctx.lineCap = 'round';
+
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 218: Meteor Choir Cones
      * Mode 218: Meteor Choir Cones - cone aperture by band; inner rings harmonics
      */
-    render218MeteorChoirCones(magnitudes) {
+    render218Meteorchoircones(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Meteor Choir Cones visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Meteor Choir Cones', 218);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 219: Folded Galaxy Map
      * Mode 219: Folded Galaxy Map - folds reveal bar clusters; refolds during breakdown
      */
-    render219FoldedGalaxyMap(magnitudes) {
+    render219Foldedgalaxymap(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Folded Galaxy Map visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Folded Galaxy Map', 219);
     }
 
     /**
      * Mode 220: Ion Thruster Plume
      * Mode 220: Ion Thruster Plume - plume length maps to amplitude; shock diamonds on peaks
      */
-    render220IonThrusterPlume(magnitudes) {
+    render220Ionthrusterplume(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Ion Thruster Plume visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Ion Thruster Plume', 220);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
     }
 
     /**
      * Mode 221: Cosmic Dominoes
      * Mode 221: Cosmic Dominoes - curved domino line; fall rate by energy; tiles display local bars
      */
-    render221CosmicDominoes(magnitudes) {
+    render221Cosmicdominoes(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Cosmic Dominoes visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Cosmic Dominoes', 221);
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
     }
 
     /**
      * Mode 222: Spacesuit Hud
      * Mode 222: Spacesuit HUD - HUD overlays with spectrum wedges; warning flashes on peaks
      */
-    render222SpacesuitHud(magnitudes) {
+    render222Spacesuithud(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Spacesuit Hud visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Spacesuit Hud', 222);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 223: Pulsar Barcode Beam
      * Mode 223: Pulsar Barcode Beam - rotating beam; bar lengths by band; bloom on peaks
      */
-    render223PulsarBarcodeBeam(magnitudes) {
+    render223Pulsarbarcodebeam(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Pulsar Barcode Beam visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Pulsar Barcode Beam', 223);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 224: Astro Terrarium
      * Mode 224: Astro Terrarium - micro planet ecosystem; eruptions on kicks; biolume with highs
      */
-    render224AstroTerrarium(magnitudes) {
+    render224Astroterrarium(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Astro Terrarium visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Astro Terrarium', 224);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 225: Micrometeor Spark Curtain
      * Mode 225: Micrometeor Spark Curtain - diagonal sparks; density with amplitude
      */
-    render225MicrometeorSparkCurtain(magnitudes) {
+    render225Micrometeorsparkcurtain(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Micrometeor Spark Curtain visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Micrometeor Spark Curtain', 225);
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+    }
+
+    /**
+     * Mode 226: Golden Phyllotaxis Bloom
+     * Golden Phyllotaxis Bloom visualization
+     */
+    render226Goldenphyllotaxisbloom(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 227: Breathing Mandala Weave
+     * Breathing Mandala Weave visualization
+     */
+    render227Breathingmandalaweave(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 228: Infinite Tunnel Lissajous
+     * Infinite Tunnel Lissajous visualization
+     */
+    render228Infinitetunnellissajous(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 229: Lotus Bloom Cascade
+     * Lotus Bloom Cascade visualization
+     */
+    render229Lotusbloomcascade(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 230: Orbital Hypno Pendula
+     * Orbital Hypno Pendula visualization
+     */
+    render230Orbitalhypnopendula(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 231: Moire Breathing Nets
+     * Moire Breathing Nets visualization
+     */
+    render231Moirebreathingnets(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 232: Spiral Shepard Rings
+     * Spiral Shepard Rings visualization
+     */
+    render232Spiralshepardrings(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 233: Velvet Plasma Pool
+     * Velvet Plasma Pool visualization
+     */
+    render233Velvetplasmapool(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+    }
+
+    /**
+     * Mode 234: Radial Pulse Cathedral
+     * Radial Pulse Cathedral visualization
+     */
+    render234Radialpulsecathedral(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 235: S Curve Serpents
+     * S Curve Serpents visualization
+     */
+    render235Scurveserpents(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+    }
+
+    /**
+     * Mode 236: Orb Choir Orbitals
+     * Orb Choir Orbitals visualization
+     */
+    render236Orbchoirorbitals(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 237: Sufi Spin Carpet
+     * Sufi Spin Carpet visualization
+     */
+    render237Sufispincarpet(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+    }
+
+    /**
+     * Mode 238: Helmholtz Rings
+     * Helmholtz Rings visualization
+     */
+    render238Helmholtzrings(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 239: Hypno Slinky Stairwell
+     * Hypno Slinky Stairwell visualization
+     */
+    render239Hypnoslinkystairwell(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+    }
+
+    /**
+     * Mode 240: Fractal Fern Drift
+     * Fractal Fern Drift visualization
+     */
+    render240Fractalferndrift(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+    }
+
+    /**
+     * Mode 241: Binaural Circles
+     * Binaural Circles visualization
+     */
+    render241Binauralcircles(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 242: Auric Chakric Wheel
+     * Auric Chakric Wheel visualization
+     */
+    render242Auricchakricwheel(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 243: Hypersphere Ribbon
+     * Hypersphere Ribbon visualization
+     */
+    render243Hypersphereribbon(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+    }
+
+    /**
+     * Mode 244: Phi Step Kaleidos
+     * Phi Step Kaleidos visualization
+     */
+    render244Phistepkaleidos(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+    }
+
+    /**
+     * Mode 245: Silk Ribbon Cycloid
+     * Silk Ribbon Cycloid visualization
+     */
+    render245Silkribboncycloid(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+    }
+
+    /**
+     * Mode 246: Oceanic Breather
+     * Oceanic Breather visualization
+     */
+    render246Oceanicbreather(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 247: Zen Sand Harmonograph
+     * Zen Sand Harmonograph visualization
+     */
+    render247Zensandharmonograph(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+    }
+
+    /**
+     * Mode 248: Magnetic Ink Veins
+     * Magnetic Ink Veins visualization
+     */
+    render248Magneticinkveins(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+    }
+
+    /**
+     * Mode 249: Breath Linked Vortex
+     * Breath Linked Vortex visualization
+     */
+    render249Breathlinkedvortex(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 250: Slow Meteor Carousel
+     * Slow Meteor Carousel visualization
+     */
+    render250Slowmeteorcarousel(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 251: Ripple Glass Cathedral
+     * Ripple Glass Cathedral visualization
+     */
+    render251Rippleglasscathedral(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+    }
+
+    /**
+     * Mode 252: Theta Lantern Field
+     * Theta Lantern Field visualization
+     */
+    render252Thetalanternfield(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 253: Isochromatic Weaves
+     * Isochromatic Weaves visualization
+     */
+    render253Isochromaticweaves(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+    }
+
+    /**
+     * Mode 254: Orbiting Eye
+     * Orbiting Eye visualization
+     */
+    render254Orbitingeye(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 255: Endless Ribbon Stair
+     * Endless Ribbon Stair visualization
+     */
+    render255Endlessribbonstair(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+    }
+
+    /**
+     * Mode 256: Glassy Toroidal River
+     * Glassy Toroidal River visualization
+     */
+    render256Glassytoroidalriver(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+    }
+
+    /**
+     * Mode 257: Low Poly Hypno Shell
+     * Low Poly Hypno Shell visualization
+     */
+    render257Lowpolyhypnoshell(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 258: Tide Clock Halo
+     * Tide Clock Halo visualization
+     */
+    render258Tideclockhalo(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 259: Morphic Kaleidofish
+     * Morphic Kaleidofish visualization
+     */
+    render259Morphickaleidofish(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+    }
+
+    /**
+     * Mode 260: Zen Compass Waves
+     * Zen Compass Waves visualization
+     */
+    render260Zencompasswaves(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 261: Glacial Bloom
+     * Glacial Bloom visualization
+     */
+    render261Glacialbloom(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 262: Double Helix Lanterns
+     * Double Helix Lanterns visualization
+     */
+    render262Doublehelixlanterns(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 263: Soft Grid Phase Slide
+     * Soft Grid Phase Slide visualization
+     */
+    render263Softgridphaseslide(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 264: Ripple Dome Observatory
+     * Ripple Dome Observatory visualization
+     */
+    render264Rippledomeobservatory(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 265: Ethereal Spirocloud
+     * Ethereal Spirocloud visualization
+     */
+    render265Etherealspirocloud(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+    }
+
+    /**
+     * Mode 266: Mosaic Drizzle
+     * Mosaic Drizzle visualization
+     */
+    render266Mosaicdrizzle(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+    }
+
+    /**
+     * Mode 267: Whispering Bamboo
+     * Whispering Bamboo visualization
+     */
+    render267Whisperingbamboo(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+    }
+
+    /**
+     * Mode 268: Nesting Circles Flow
+     * Nesting Circles Flow visualization
+     */
+    render268Nestingcirclesflow(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 269: Drifting Paper Cranes
+     * Drifting Paper Cranes visualization
+     */
+    render269Driftingpapercranes(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 270: Pulse Weave Hologrid
+     * Pulse Weave Hologrid visualization
+     */
+    render270Pulseweavehologrid(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+    }
+
+    /**
+     * Mode 271: Serene Ribbon Canopy
+     * Serene Ribbon Canopy visualization
+     */
+    render271Sereneribboncanopy(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+    }
+
+    /**
+     * Mode 272: Auroral Veil Gate
+     * Auroral Veil Gate visualization
+     */
+    render272Auroralveilgate(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+    }
+
+    /**
+     * Mode 273: Satin Spiral Ladder
+     * Satin Spiral Ladder visualization
+     */
+    render273Satinspiralladder(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+    }
+
+    /**
+     * Mode 274: Opaline Orb Drifter
+     * Opaline Orb Drifter visualization
+     */
+    render274Opalineorbdrifter(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+    }
+
+    /**
+     * Mode 275: Hypno Quilt Loom
+     * Hypno Quilt Loom visualization
+     */
+    render275Hypnoquiltloom(magnitudes) {
+        const ctx = this.ctx;
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
+
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 276: Quantum Lattice
      * 3D-looking quantum lattice that shifts with bass
      */
-    render276QuantumLattice(magnitudes) {
+    render276Quantumlattice(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Quantum Lattice visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Quantum Lattice', 276);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 277: Prism Rays
      * Light rays splitting through a prism
      */
-    render277PrismRays(magnitudes) {
+    render277Prismrays(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Prism Rays visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Prism Rays', 277);
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
     }
 
     /**
      * Mode 278: Liquid Nitrogen
      * Freezing and shattering effects
      */
-    render278LiquidNitrogen(magnitudes) {
+    render278Liquidnitrogen(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Liquid Nitrogen visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Liquid Nitrogen', 278);
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
     }
 
     /**
      * Mode 279: Silk Road Caravan
      * Moving lights across the screen like a caravan
      */
-    render279SilkRoadCaravan(magnitudes) {
+    render279Silkroadcaravan(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Silk Road Caravan visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Silk Road Caravan', 279);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 280: Steampunk Gears
      * Rotating mechanical gears
      */
-    render280SteampunkGears(magnitudes) {
+    render280Steampunkgears(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Steampunk Gears visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Steampunk Gears', 280);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 281: Dragon Scales
      * Overlapping scale patterns like dragon skin
      */
-    render281DragonScales(magnitudes) {
+    render281Dragonscales(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Dragon Scales visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Dragon Scales', 281);
     }
 
     /**
      * Mode 282: Time Dilation Grid
      * Warped spacetime grid
      */
-    render282TimeDilationGrid(magnitudes) {
+    render282Timedilationgrid(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Time Dilation Grid visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Time Dilation Grid', 282);
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 283: Fiber Bundle
      * Mathematical fiber bundle visualization
      */
-    render283FiberBundle(magnitudes) {
+    render283Fiberbundle(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Fiber Bundle visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Fiber Bundle', 283);
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
     }
 
     /**
      * Mode 284: Moth Wing Shimmer
      * Iridescent shimmer patterns like moth wings
      */
-    render284MothWingShimmer(magnitudes) {
+    render284Mothwingshimmer(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Moth Wing Shimmer visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Moth Wing Shimmer', 284);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 285: Cathedral Rose
      * Rose window geometry like a cathedral
      */
-    render285CathedralRose(magnitudes) {
+    render285Cathedralrose(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Cathedral Rose visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Cathedral Rose', 285);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 286: Neon Veins Pulse
      * Pulsing vein-like network
      */
-    render286NeonVeinsPulse(magnitudes) {
+    render286Neonveinspulse(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Neon Veins Pulse visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Neon Veins Pulse', 286);
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
     }
 
     /**
      * Mode 287: Glacial Crack
      * Spreading ice crack patterns
      */
-    render287GlacialCrack(magnitudes) {
+    render287Glacialcrack(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Glacial Crack visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Glacial Crack', 287);
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
     }
 
     /**
      * Mode 288: Quantum Dots
      * Floating quantum dot particles
      */
-    render288QuantumDots(magnitudes) {
+    render288Quantumdots(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Quantum Dots visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Quantum Dots', 288);
+        // Particle system visualization
+        if (!this.particles288) {
+            this.particles288 = [];
+        }
+
+        // Spawn particles based on energy
+        if (this.particles288.length < 100 * intensity && Math.random() < 0.2 + energy * 0.3) {
+            for (let i = 0; i < Math.floor(2 + energy * 8); i++) {
+                this.particles288.push({
+                    x: this.centerX + (Math.random() - 0.5) * 100,
+                    y: this.centerY + (Math.random() - 0.5) * 100,
+                    vx: (Math.random() - 0.5) * (2 + bass * 4),
+                    vy: (Math.random() - 0.5) * (2 + bass * 4),
+                    life: 60 + Math.floor(energy * 40),
+                    size: 2 + Math.floor(energy * 4),
+                    hue: Math.floor((this.frameCounter + i * 10) % 360)
+                });
+            }
+        }
+
+        // Update and draw particles
+        this.particles288.forEach((p, idx) => {
+            p.x += p.vx * speed;
+            p.y += p.vy * speed;
+            p.life -= 1;
+
+            if (p.life > 0) {
+                const alpha = p.life / 60;
+                ctx.globalAlpha = alpha * intensity;
+                ctx.fillStyle = this.getColor(idx, this.particles288.length);
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        });
+
+        // Remove dead particles
+        this.particles288 = this.particles288.filter(p => p.life > 0 &&
+            p.x >= -50 && p.x <= this.canvas.width + 50 &&
+            p.y >= -50 && p.y <= this.canvas.height + 50);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 289: Origami Crane Flight
      * Geometric origami birds in flight
      */
-    render289OrigamiCraneFlight(magnitudes) {
+    render289Origamicraneflight(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Origami Crane Flight visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Origami Crane Flight', 289);
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 290: Magma Chamber
      * Bubbling lava effects
      */
-    render290MagmaChamber(magnitudes) {
+    render290Magmachamber(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Magma Chamber visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Magma Chamber', 290);
+        // Particle system visualization
+        if (!this.particles290) {
+            this.particles290 = [];
+        }
+
+        // Spawn particles based on energy
+        if (this.particles290.length < 100 * intensity && Math.random() < 0.2 + energy * 0.3) {
+            for (let i = 0; i < Math.floor(2 + energy * 8); i++) {
+                this.particles290.push({
+                    x: this.centerX + (Math.random() - 0.5) * 100,
+                    y: this.centerY + (Math.random() - 0.5) * 100,
+                    vx: (Math.random() - 0.5) * (2 + bass * 4),
+                    vy: (Math.random() - 0.5) * (2 + bass * 4),
+                    life: 60 + Math.floor(energy * 40),
+                    size: 2 + Math.floor(energy * 4),
+                    hue: Math.floor((this.frameCounter + i * 10) % 360)
+                });
+            }
+        }
+
+        // Update and draw particles
+        this.particles290.forEach((p, idx) => {
+            p.x += p.vx * speed;
+            p.y += p.vy * speed;
+            p.life -= 1;
+
+            if (p.life > 0) {
+                const alpha = p.life / 60;
+                ctx.globalAlpha = alpha * intensity;
+                ctx.fillStyle = this.getColor(idx, this.particles290.length);
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        });
+
+        // Remove dead particles
+        this.particles290 = this.particles290.filter(p => p.life > 0 &&
+            p.x >= -50 && p.x <= this.canvas.width + 50 &&
+            p.y >= -50 && p.y <= this.canvas.height + 50);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 291: Spider Web Dew
      * Dew drops on spider web
      */
-    render291SpiderWebDew(magnitudes) {
+    render291Spiderwebdew(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Spider Web Dew visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Spider Web Dew', 291);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
     }
 
     /**
      * Mode 292: Nebula Birth
      * Gas cloud formation
      */
-    render292NebulaBirth(magnitudes) {
+    render292Nebulabirth(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Nebula Birth visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Nebula Birth', 292);
+        // Particle system visualization
+        if (!this.particles292) {
+            this.particles292 = [];
+        }
+
+        // Spawn particles based on energy
+        if (this.particles292.length < 100 * intensity && Math.random() < 0.2 + energy * 0.3) {
+            for (let i = 0; i < Math.floor(2 + energy * 8); i++) {
+                this.particles292.push({
+                    x: this.centerX + (Math.random() - 0.5) * 100,
+                    y: this.centerY + (Math.random() - 0.5) * 100,
+                    vx: (Math.random() - 0.5) * (2 + bass * 4),
+                    vy: (Math.random() - 0.5) * (2 + bass * 4),
+                    life: 60 + Math.floor(energy * 40),
+                    size: 2 + Math.floor(energy * 4),
+                    hue: Math.floor((this.frameCounter + i * 10) % 360)
+                });
+            }
+        }
+
+        // Update and draw particles
+        this.particles292.forEach((p, idx) => {
+            p.x += p.vx * speed;
+            p.y += p.vy * speed;
+            p.life -= 1;
+
+            if (p.life > 0) {
+                const alpha = p.life / 60;
+                ctx.globalAlpha = alpha * intensity;
+                ctx.fillStyle = this.getColor(idx, this.particles292.length);
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        });
+
+        // Remove dead particles
+        this.particles292 = this.particles292.filter(p => p.life > 0 &&
+            p.x >= -50 && p.x <= this.canvas.width + 50 &&
+            p.y >= -50 && p.y <= this.canvas.height + 50);
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 293: Circuit Board Live
      * Live electric circuit patterns
      */
-    render293CircuitBoardLive(magnitudes) {
+    render293Circuitboardlive(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Circuit Board Live visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Circuit Board Live', 293);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
     }
 
     /**
      * Mode 294: Bioluminescent Tide
      * Glowing wave patterns
      */
-    render294BioluminescentTide(magnitudes) {
+    render294Bioluminescenttide(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Bioluminescent Tide visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Bioluminescent Tide', 294);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
     }
 
     /**
      * Mode 295: Tesseract Projection
      * 4D hypercube projection
      */
-    render295TesseractProjection(magnitudes) {
+    render295Tesseractprojection(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Tesseract Projection visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Tesseract Projection', 295);
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
     }
 
     /**
      * Mode 296: Frost Crystal Growth
      * Growing ice crystals
      */
-    render296FrostCrystalGrowth(magnitudes) {
+    render296Frostcrystalgrowth(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Frost Crystal Growth visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Frost Crystal Growth', 296);
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
     }
 
     /**
      * Mode 297: Sound Wave Interference
      * Wave interference patterns
      */
-    render297SoundWaveInterference(magnitudes) {
+    render297Soundwaveinterference(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Sound Wave Interference visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Sound Wave Interference', 297);
     }
 
     /**
      * Mode 298: Holographic Fracture
      * Broken hologram effect
      */
-    render298HolographicFracture(magnitudes) {
+    render298Holographicfracture(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Holographic Fracture visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Holographic Fracture', 298);
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
     }
 
     /**
      * Mode 299: Plasma Ball Arc
      * Electric plasma arcs
      */
-    render299PlasmaBallArc(magnitudes) {
+    render299Plasmaballarc(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Plasma Ball Arc visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Plasma Ball Arc', 299);
+        // Wave/line visualization
+        const points = [];
+        const numPoints = 100;
+
+        ctx.strokeStyle = this.getColor(0, 1);
+        ctx.lineWidth = 2 + intensity;
+        ctx.beginPath();
+
+        for (let i = 0; i < numPoints; i++) {
+            const t = i / numPoints;
+            const x = t * this.canvas.width;
+            const idx = Math.floor(t * magnitudes.length);
+            const magnitude = magnitudes[idx] || 0;
+            const y = this.centerY + Math.sin(this.frameCounter * 0.05 + t * Math.PI * 4) *
+                     (40 + magnitude * 100 * intensity);
+
+            if (i === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.stroke();
     }
 
     /**
      * Mode 300: Eternal Flame Dance
      * Flowing fire patterns
      */
-    render300EternalFlameDance(magnitudes) {
+    render300Eternalflamedance(magnitudes) {
+        const ctx = this.ctx;
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const intensity = params.intensity !== undefined ? params.intensity : 1;
+        const speed = params.speed !== undefined ? params.speed : 1;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Audio analysis
+        const bassRange = Math.floor(magnitudes.length / 4);
+        const bass = magnitudes.slice(0, bassRange).reduce((a, b) => a + b, 0) / bassRange;
+        const midsRange = Math.floor(3 * magnitudes.length / 4);
+        const mids = magnitudes.slice(bassRange, midsRange).reduce((a, b) => a + b, 0) / (midsRange - bassRange);
+        const treble = magnitudes.slice(midsRange).reduce((a, b) => a + b, 0) / (magnitudes.length - midsRange);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Eternal Flame Dance visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Eternal Flame Dance', 300);
+        // Particle system visualization
+        if (!this.particles300) {
+            this.particles300 = [];
+        }
+
+        // Spawn particles based on energy
+        if (this.particles300.length < 100 * intensity && Math.random() < 0.2 + energy * 0.3) {
+            for (let i = 0; i < Math.floor(2 + energy * 8); i++) {
+                this.particles300.push({
+                    x: this.centerX + (Math.random() - 0.5) * 100,
+                    y: this.centerY + (Math.random() - 0.5) * 100,
+                    vx: (Math.random() - 0.5) * (2 + bass * 4),
+                    vy: (Math.random() - 0.5) * (2 + bass * 4),
+                    life: 60 + Math.floor(energy * 40),
+                    size: 2 + Math.floor(energy * 4),
+                    hue: Math.floor((this.frameCounter + i * 10) % 360)
+                });
+            }
+        }
+
+        // Update and draw particles
+        this.particles300.forEach((p, idx) => {
+            p.x += p.vx * speed;
+            p.y += p.vy * speed;
+            p.life -= 1;
+
+            if (p.life > 0) {
+                const alpha = p.life / 60;
+                ctx.globalAlpha = alpha * intensity;
+                ctx.fillStyle = this.getColor(idx, this.particles300.length);
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.globalAlpha = 1;
+            }
+        });
+
+        // Remove dead particles
+        this.particles300 = this.particles300.filter(p => p.life > 0 &&
+            p.x >= -50 && p.x <= this.canvas.width + 50 &&
+            p.y >= -50 && p.y <= this.canvas.height + 50);
+        // Circular visualization
+        const numCircles = Math.floor(6 + intensity * 6);
+        for (let i = 0; i < numCircles; i++) {
+            const t = i / numCircles;
+            const radius = 50 + t * (this.maxRadius - 50) + bass * 40 * intensity;
+            const alpha = 0.3 + energy * 0.5;
+
+            ctx.strokeStyle = this.getColor(i, numCircles);
+            ctx.globalAlpha = alpha;
+            ctx.lineWidth = 2 + intensity;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.globalAlpha = 1;
+        }
+
+        // Central bass indicator
+        if (bass > 0.3) {
+            ctx.fillStyle = this.getColor(0, 1);
+            ctx.globalAlpha = bass * 0.6;
+            ctx.beginPath();
+            ctx.arc(this.centerX, this.centerY, 10 + bass * 40 * intensity, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+        }
     }
+
+
 
     /**
      * Mode 301: Forest Canopy

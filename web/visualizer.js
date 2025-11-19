@@ -22484,11 +22484,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Mandala visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Mandala', 801);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -22505,11 +22519,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Yantra visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Yantra', 802);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -22526,11 +22554,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Lotus visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Lotus', 803);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -22547,11 +22589,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Om Symbol visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Om Symbol', 804);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -22568,11 +22628,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Chakra visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Chakra', 805);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -22589,11 +22667,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Aura Field visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Aura Field', 806);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -22610,11 +22702,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Third Eye visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Third Eye', 807);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -22631,11 +22741,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Kundalini visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Kundalini', 808);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -22652,11 +22776,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Merkaba visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Merkaba', 809);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -22673,11 +22811,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Flower Of Life visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Flower Of Life', 810);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -22694,11 +22850,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Seed Of Life visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Seed Of Life', 811);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -22715,11 +22885,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Tree Of Life visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Tree Of Life', 812);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -22736,11 +22924,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Metatron Cube visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Metatron Cube', 813);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -22757,11 +22959,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Sri Yantra visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Sri Yantra', 814);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -22778,11 +22998,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Shri Yantra visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Shri Yantra', 815);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -22799,11 +23033,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Tibetan Sand Mandala visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Tibetan Sand Mandala', 816);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -22820,11 +23068,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Zen Circle visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Zen Circle', 817);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -22841,11 +23103,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Yin Yang visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Yin Yang', 818);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -22862,11 +23142,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Tao Symbol visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Tao Symbol', 819);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -22883,11 +23177,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Bagua visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Bagua', 820);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -22904,11 +23212,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement I Ching Hexagram visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'I Ching Hexagram', 821);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -22925,11 +23251,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Trigram visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Trigram', 822);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -22946,11 +23286,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Medicine Wheel visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Medicine Wheel', 823);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -22967,11 +23325,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Dreamcatcher visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Dreamcatcher', 824);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -22988,11 +23360,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Totem visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Totem', 825);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -23009,11 +23395,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Spirit Animal visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Spirit Animal', 826);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23030,11 +23430,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Shamanic Journey visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Shamanic Journey', 827);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -23051,11 +23465,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Ayahuasca Vision visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Ayahuasca Vision', 828);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23072,11 +23504,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Dmt Realm visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Dmt Realm', 829);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -23093,11 +23539,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Astral Projection visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Astral Projection', 830);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -23114,11 +23574,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Out Of Body Experience visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Out Of Body Experience', 831);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23135,11 +23609,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Near Death Experience visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Near Death Experience', 832);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -23156,11 +23644,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Tunnel Of Light visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Tunnel Of Light', 833);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23177,11 +23683,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Life Review visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Life Review', 834);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -23198,11 +23718,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Soul Retrieval visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Soul Retrieval', 835);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -23219,11 +23753,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Past Life Regression visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Past Life Regression', 836);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23240,11 +23788,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Akashic Records visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Akashic Records', 837);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23261,11 +23827,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Collective Unconscious visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Collective Unconscious', 838);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -23282,11 +23862,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Archetypal Realm visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Archetypal Realm', 839);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23303,11 +23897,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Synchronicity visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Synchronicity', 840);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -23324,11 +23932,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Meaningful Coincidence visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Meaningful Coincidence', 841);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -23345,11 +23967,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Serendipity visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Serendipity', 842);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -23366,11 +24002,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Providence visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Providence', 843);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23387,11 +24037,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Fate visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Fate', 844);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23408,11 +24072,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Destiny visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Destiny', 845);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23429,11 +24111,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Karma visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Karma', 846);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23450,11 +24146,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Dharma visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Dharma', 847);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -23471,11 +24181,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Samsara visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Samsara', 848);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -23492,11 +24216,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Nirvana visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Nirvana', 849);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -23513,11 +24251,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Enlightenment visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Enlightenment', 850);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23534,11 +24290,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Samadhi visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Samadhi', 851);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23555,11 +24329,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Satori visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Satori', 852);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23576,11 +24368,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Kensho visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Kensho', 853);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23597,11 +24407,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Moksha visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Moksha', 854);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23618,11 +24446,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Liberation visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Liberation', 855);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23639,11 +24481,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Self Realization visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Self Realization', 856);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23660,11 +24516,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement God Consciousness visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'God Consciousness', 857);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23681,11 +24555,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Cosmic Consciousness visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Cosmic Consciousness', 858);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23702,11 +24590,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Unity Consciousness visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Unity Consciousness', 859);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23723,11 +24625,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Non Dual Awareness visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Non Dual Awareness', 860);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23744,11 +24660,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Witness Consciousness visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Witness Consciousness', 861);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23765,11 +24695,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Pure Awareness visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Pure Awareness', 862);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23786,11 +24730,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Presence visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Presence', 863);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -23807,11 +24765,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Now Moment visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Now Moment', 864);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23828,11 +24804,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Eternal Present visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Eternal Present', 865);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -23849,11 +24839,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Timeless Being visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Timeless Being', 866);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -23870,11 +24874,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Infinite Space visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Infinite Space', 867);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23891,11 +24909,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Boundless Compassion visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Boundless Compassion', 868);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23912,11 +24948,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Unconditional Love visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Unconditional Love', 869);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23933,11 +24987,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Divine Grace visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Divine Grace', 870);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23954,11 +25022,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Holy Spirit visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Holy Spirit', 871);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -23975,11 +25057,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Shekinah visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Shekinah', 872);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -23996,11 +25092,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Divine Feminine visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Divine Feminine', 873);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -24017,11 +25131,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Goddess Energy visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Goddess Energy', 874);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -24038,11 +25170,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Sacred Masculine visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Sacred Masculine', 875);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -24059,11 +25205,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Hieros Gamos visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Hieros Gamos', 876);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -24080,11 +25244,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Alchemical Wedding visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Alchemical Wedding', 877);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -24101,11 +25283,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Coniunctio visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Coniunctio', 878);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -24122,11 +25318,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Philosopher Stone visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Philosopher Stone', 879);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -24143,11 +25357,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Prima Materia visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Prima Materia', 880);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -24164,11 +25392,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Nigredo visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Nigredo', 881);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -24185,11 +25427,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Albedo visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Albedo', 882);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -24206,11 +25462,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Citrinitas visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Citrinitas', 883);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -24227,11 +25501,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Rubedo visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Rubedo', 884);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -24248,11 +25536,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Seven Stages visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Seven Stages', 885);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -24269,11 +25575,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Hermetic Principle visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Hermetic Principle', 886);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -24290,11 +25614,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement As Above So Below visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'As Above So Below', 887);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -24311,11 +25649,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Microcosm Macrocosm visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Microcosm Macrocosm', 888);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -24332,11 +25688,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Correspondence visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Correspondence', 889);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -24353,11 +25727,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Vibration visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Vibration', 890);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -24374,11 +25762,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Polarity visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Polarity', 891);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -24395,11 +25797,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Rhythm visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Rhythm', 892);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -24416,11 +25836,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Cause And Effect visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Cause And Effect', 893);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -24437,11 +25875,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Gender Principle visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Gender Principle', 894);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -24458,11 +25910,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Mentalism visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Mentalism', 895);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -24479,11 +25945,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Mandala-style pattern with bass reactivity
+        const numCircles = Math.floor(12 * complexity / 5);
+        const numLayers = Math.floor(3 * complexity / 5);
 
-        // TODO: Implement Emerald Tablet visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Emerald Tablet', 896);
+        for (let i = 0; i < numCircles; i++) {
+            const angle = (i / numCircles) * 2 * Math.PI;
+            for (let j = 0; j < numLayers; j++) {
+                const radius = (60 + j * 50 + bass * 40 * intensity) * (this.canvas.width / 800);
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((i * 15 + j * 40) % 180) * 2; // Convert 0-180 to 0-360
+                const color = this.hsvToRgb(hue, 78, 78); // 200/255 * 100 ≈ 78%
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 8 * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -24500,11 +25980,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Kybalion visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Kybalion', 897);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -24521,11 +26015,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Corpus Hermeticum visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Corpus Hermeticum', 898);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**
@@ -24542,11 +26050,29 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
+        const numRings = Math.floor(5 * complexity / 5);
 
-        // TODO: Implement Gnostic Vision visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Gnostic Vision', 899);
+        for (let ring = 0; ring < numRings; ring++) {
+            const radius = (50 + ring * 60) * (this.canvas.width / 800);
+            const numPoints = 6 + ring * 4;
+
+            for (let i = 0; i < numPoints; i++) {
+                const angle = (i / numPoints) * 2 * Math.PI;
+                const magIdx = (ring * 10 + i) % magnitudes.length;
+                const mag = magnitudes[magIdx] * intensity;
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
+                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
+                const color = this.hsvToRgb(hue, 100, brightness);
+
+                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.fill();
+            }
+        }
     }
 
     /**
@@ -24563,11 +26089,25 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + speed;        // Petal-based rotating pattern
+        const numPetals = Math.floor(8 * complexity / 5);
 
-        // TODO: Implement Sophia visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Sophia', 900);
+        for (let i = 0; i < numPetals; i++) {
+            const angle = (i / numPetals) * 2 * Math.PI + this.frameCounter * 0.05 * speed;
+            const magIdx = Math.floor(i * magnitudes.length / numPetals);
+            const mag = magnitudes[magIdx] * intensity;
+            const radius = (80 + mag * 120) * (this.canvas.width / 800);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = (15 + mag * 35) * intensity;
+            const hue = ((i * 22 + this.frameCounter) % 180) * 2; // Convert 0-180 to 0-360
+            const color = this.hsvToRgb(hue, 78, 100); // 200/255 * 100 ≈ 78%
+
+            this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, 2 * Math.PI);
+            this.ctx.fill();
+        }
     }
 
     /**

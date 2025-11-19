@@ -770,7 +770,7 @@ class Visualizer {
                 this.render200PhotonOriginationChamber(magnitudes);
                 break;
             case 'mode_201_meteor_net':
-                this.render201MeteorNet(magnitudes);
+                this.render201Meteornet(magnitudes);
                 break;
             case 'mode_202_deep_space_garden_hose':
                 this.render202DeepSpaceGardenHose(magnitudes);
@@ -40323,6 +40323,7 @@ class Visualizer {
                 magnitudes[i] = Math.random() * 0.5 + 0.3;
             }
         }
+    }
 
     // ========================================
     // AUTO-GENERATED MODE IMPLEMENTATIONS (401-500)
@@ -42728,14 +42729,6 @@ class Visualizer {
         this.ctx.globalAlpha = 1;
     }
 
-
-
-        this.render(magnitudes);
-    }
-
-    /**
-     * Dispose resources
-     */
     /**
      * Convert HSV to RGB
      * @param {number} h - Hue (0-360)
@@ -42766,6 +42759,10 @@ class Visualizer {
 
         return [
             Math.round(r * 255),
+            Math.round(g * 255),
+            Math.round(b * 255)
+        ];
+    }
 
     /**
      * Shared implementation for modes 401-500
@@ -42794,11 +42791,6 @@ class Visualizer {
         }
 
         this.ctx.globalAlpha = 1;
-    }
-
-            Math.round(g * 255),
-            Math.round(b * 255)
-        ];
     }
 
     dispose() {

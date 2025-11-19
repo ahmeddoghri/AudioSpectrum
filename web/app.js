@@ -511,29 +511,10 @@ class AudioSpectrumApp {
                 hoverVisualizer = null;
             });
 
-            this.elements.modeGrid.appendChild(card);
-            const canvas = card.querySelector('canvas');
-
             // Generate initial static preview for this mode
             this.generateModePreview(canvas, mode.id);
 
-            // Add hover animation
-            let animationId = null;
-            card.addEventListener('mouseenter', () => {
-                // Start animated preview on hover
-                this.animateModePreview(canvas, mode.id, (id) => {
-                    animationId = id;
-                });
-            });
-
-            card.addEventListener('mouseleave', () => {
-                // Stop animation and restore static preview
-                if (animationId) {
-                    cancelAnimationFrame(animationId);
-                    animationId = null;
-                }
-                this.generateModePreview(canvas, mode.id);
-            });
+            this.elements.modeGrid.appendChild(card);
         });
 
         // Initial count update

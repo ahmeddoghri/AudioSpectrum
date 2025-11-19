@@ -14,8 +14,8 @@ cd web
 open index.html
 
 # Option 2: Use Python's built-in HTTP server
-python3 -m http.server 8000
-# Then visit http://localhost:8000 in your browser
+python3 -m http.server 8001
+# Then visit http://localhost:8001 in your browser
 
 # Option 3: Use Node's http-server (if installed)
 npx http-server -p 8000

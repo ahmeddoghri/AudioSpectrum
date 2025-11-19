@@ -931,6 +931,126 @@ const VISUALIZATION_MODES = {
         category: 'Scientific',
         mode: 90,
         tags: ['cells', 'biology', 'division']
+    },
+    burning_paper: {
+        id: 'burning_paper',
+        name: 'Burning Paper',
+        description: 'Spectrum bars as flames, embers on high freq, paper curls on bass',
+        category: 'Energy',
+        mode: 91,
+        tags: ['fire', 'flames', 'heat']
+    },
+    swarm_intelligence: {
+        id: 'swarm_intelligence',
+        name: 'Swarm Intelligence',
+        description: 'Boid flocking - cohesion/separation modulated by audio',
+        category: 'Nature',
+        mode: 92,
+        tags: ['boids', 'flocking', 'swarm']
+    },
+    pendulum_wave: {
+        id: 'pendulum_wave',
+        name: 'Pendulum Wave',
+        description: 'Multiple pendulums with slightly different periods - force from frequency',
+        category: 'Geometric',
+        mode: 93,
+        tags: ['pendulum', 'wave', 'physics']
+    },
+    retro_scanlines: {
+        id: 'retro_scanlines',
+        name: 'Retro Scanlines',
+        description: 'Waveform on old CRT with scanlines and static',
+        category: 'Retro',
+        mode: 94,
+        tags: ['crt', 'scanlines', 'vintage']
+    },
+    pulsing_polygon: {
+        id: 'pulsing_polygon',
+        name: 'Pulsing Polygon',
+        description: 'Central polygon with vertices pushed by frequency bands',
+        category: 'Geometric',
+        mode: 95,
+        tags: ['polygon', 'pulse', 'geometric']
+    },
+    chromatic_orb: {
+        id: 'chromatic_orb',
+        name: 'Chromatic Orb',
+        description: '3D sphere with chromatic shader and moving light source',
+        category: 'Geometric',
+        mode: 96,
+        tags: ['3d', 'sphere', 'lighting']
+    },
+    textured_bars: {
+        id: 'textured_bars',
+        name: 'Textured Bars',
+        description: 'Bars filled with scrolling animated texture',
+        category: 'Classic',
+        mode: 97,
+        tags: ['bars', 'texture', 'pattern']
+    },
+    voronoi_tessellation: {
+        id: 'voronoi_tessellation',
+        name: 'Voronoi Tessellation',
+        description: 'Voronoi diagram with cells pulsing and seed points moving',
+        category: 'Geometric',
+        mode: 98,
+        tags: ['voronoi', 'tessellation', 'cells']
+    },
+    shattering_glass: {
+        id: 'shattering_glass',
+        name: 'Shattering Glass',
+        description: 'Glass pane with cracks appearing on beats',
+        category: 'Energy',
+        mode: 99,
+        tags: ['glass', 'cracks', 'impact']
+    },
+    sunrise_sunset: {
+        id: 'sunrise_sunset',
+        name: 'Sunrise Sunset',
+        description: 'Gradient sky with pulsing sun and glittering stars',
+        category: 'Nature',
+        mode: 100,
+        tags: ['sky', 'sun', 'stars']
+    },
+    neural_pulse: {
+        id: 'neural_pulse',
+        name: 'Neural Pulse',
+        description: 'Neural network with pulsing nodes and lighting connections',
+        category: 'Tech',
+        mode: 101,
+        tags: ['neural', 'network', 'ai']
+    },
+    liquid_mercury: {
+        id: 'liquid_mercury',
+        name: 'Liquid Mercury',
+        description: 'Metallic liquid that ripples with physics',
+        category: 'Fluid',
+        mode: 102,
+        tags: ['mercury', 'liquid', 'physics']
+    },
+    cosmic_strings: {
+        id: 'cosmic_strings',
+        name: 'Cosmic Strings',
+        description: 'Vibrating strings in space like guitar strings',
+        category: 'Nature',
+        mode: 103,
+        tags: ['strings', 'vibration', 'cosmic']
+    },
+    particle_swarm: {
+        id: 'particle_swarm',
+        name: 'Particle Swarm',
+        description: 'Thousands of particles forming shapes',
+        category: 'Particles',
+        mode: 104,
+        tags: ['particles', 'swarm', 'formation']
+    },
+    crystal_lattice: {
+        id: 'crystal_lattice',
+        name: 'Crystal Lattice',
+        description: '3D crystal structure with pulsing nodes',
+        category: 'Geometric',
+        mode: 105,
+        tags: ['3d', 'crystal', 'lattice']
     }
 };
 

@@ -441,6 +441,51 @@ class Visualizer {
             case 'microscopic_view':
                 this.renderMicroscopicView(magnitudes);
                 break;
+            case 'burning_paper':
+                this.renderBurningPaper(magnitudes);
+                break;
+            case 'swarm_intelligence':
+                this.renderSwarmIntelligence(magnitudes);
+                break;
+            case 'pendulum_wave':
+                this.renderPendulumWave(magnitudes);
+                break;
+            case 'retro_scanlines':
+                this.renderRetroScanlines(magnitudes);
+                break;
+            case 'pulsing_polygon':
+                this.renderPulsingPolygon(magnitudes);
+                break;
+            case 'chromatic_orb':
+                this.renderChromaticOrb(magnitudes);
+                break;
+            case 'textured_bars':
+                this.renderTexturedBars(magnitudes);
+                break;
+            case 'voronoi_tessellation':
+                this.renderVoronoiTessellation(magnitudes);
+                break;
+            case 'shattering_glass':
+                this.renderShatteringGlass(magnitudes);
+                break;
+            case 'sunrise_sunset':
+                this.renderSunriseSunset(magnitudes);
+                break;
+            case 'neural_pulse':
+                this.renderNeuralPulse(magnitudes);
+                break;
+            case 'liquid_mercury':
+                this.renderLiquidMercury(magnitudes);
+                break;
+            case 'cosmic_strings':
+                this.renderCosmicStrings(magnitudes);
+                break;
+            case 'particle_swarm':
+                this.renderParticleSwarm(magnitudes);
+                break;
+            case 'crystal_lattice':
+                this.renderCrystalLattice(magnitudes);
+                break;
 
             default:
                 this.renderCircularBars(magnitudes);
@@ -4986,6 +5031,1043 @@ class Visualizer {
         }
 
         this.microscopicCells = newCells.slice(0, 50);
+    }
+
+    /**
+     * Mode 91: Burning Paper
+     * Spectrum bars as flames, embers on high freq, paper curls on bass
+     */
+    renderBurningPaper(magnitudes) {
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Draw flame bars
+        const barWidth = this.canvas.width / magnitudes.length;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const magnitude = magnitudes[i];
+            const barHeight = magnitude * this.canvas.height * 0.7;
+            const x = i * barWidth;
+            const yBase = this.canvas.height - 50;
+
+            // Flame effect (multiple layers)
+            for (let layer = 0; layer < 3; layer++) {
+                const yOffset = layer * 15;
+                const layerHeight = barHeight - yOffset;
+                if (layerHeight > 0) {
+                    const y = yBase - layerHeight;
+
+                    // Flame color gradient (yellow to red)
+                    const hue = 10 + layer * 5;
+                    const saturation = 100;
+                    const value = 78 - layer * 16;
+                    const color = this.hsvToRgb(hue, saturation, value);
+
+                    // Flickering width
+                    const flicker = Math.floor((Math.random() - 0.5) * 5);
+
+                    this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+                    this.ctx.fillRect(x + flicker, y, barWidth - 2, yBase - y);
+                }
+            }
+        }
+
+        // Embers on treble
+        if (treble > 0.5) {
+            for (let i = 0; i < treble * 20; i++) {
+                const emberX = Math.random() * this.canvas.width;
+                const emberY = this.canvas.height - 50 - Math.random() * 100;
+                this.ctx.fillStyle = 'rgb(255, 150, 100)';
+                this.ctx.beginPath();
+                this.ctx.arc(emberX, emberY, 2, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+
+        // Paper curl effect on bass (darken corners)
+        if (bass > 0.4) {
+            const curlAlpha = bass * 0.5;
+            this.ctx.fillStyle = `rgba(10, 20, 20, ${curlAlpha})`;
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, 0);
+            this.ctx.lineTo(this.canvas.width * 0.2, 0);
+            this.ctx.lineTo(0, this.canvas.height * 0.2);
+            this.ctx.closePath();
+            this.ctx.fill();
+        }
+    }
+
+    /**
+     * Mode 92: Swarm Intelligence
+     * Boid flocking - cohesion/separation modulated by audio
+     */
+    renderSwarmIntelligence(magnitudes) {
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        // Initialize boids
+        if (!this.swarmBoids) {
+            this.swarmBoids = [];
+            for (let i = 0; i < 40; i++) {
+                this.swarmBoids.push({
+                    x: Math.random() * this.canvas.width,
+                    y: Math.random() * this.canvas.height,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: (Math.random() - 0.5) * 4
+                });
+            }
+        }
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Boid rules modulated by audio
+        const cohesionFactor = 0.01 * (1 - bass);  // Bass scatters
+        const separationFactor = 0.5 + treble * 1.5;  // Treble aligns
+        const alignmentFactor = 0.05 + treble * 0.1;
+
+        for (let boid of this.swarmBoids) {
+            // Calculate forces
+            let cohesionX = 0, cohesionY = 0;
+            let separationX = 0, separationY = 0;
+            let alignmentVx = 0, alignmentVy = 0;
+            let neighbors = 0;
+
+            for (let other of this.swarmBoids) {
+                if (other === boid) continue;
+
+                const dx = other.x - boid.x;
+                const dy = other.y - boid.y;
+                const dist = Math.sqrt(dx * dx + dy * dy) + 0.1;
+
+                if (dist < 100) {
+                    // Cohesion
+                    cohesionX += dx;
+                    cohesionY += dy;
+
+                    // Alignment
+                    alignmentVx += other.vx;
+                    alignmentVy += other.vy;
+
+                    neighbors++;
+                }
+
+                if (dist < 30) {
+                    // Separation
+                    separationX -= dx / dist;
+                    separationY -= dy / dist;
+                }
+            }
+
+            if (neighbors > 0) {
+                cohesionX /= neighbors;
+                cohesionY /= neighbors;
+                alignmentVx /= neighbors;
+                alignmentVy /= neighbors;
+            }
+
+            // Apply forces
+            boid.vx += cohesionX * cohesionFactor + separationX * separationFactor + alignmentVx * alignmentFactor;
+            boid.vy += cohesionY * cohesionFactor + separationY * separationFactor + alignmentVy * alignmentFactor;
+
+            // Limit speed
+            const speed = Math.sqrt(boid.vx * boid.vx + boid.vy * boid.vy);
+            const maxSpeed = 5 + treble * 5;
+            if (speed > maxSpeed) {
+                boid.vx = (boid.vx / speed) * maxSpeed;
+                boid.vy = (boid.vy / speed) * maxSpeed;
+            }
+
+            // Update position
+            boid.x += boid.vx;
+            boid.y += boid.vy;
+
+            // Wrap around
+            boid.x = (boid.x + this.canvas.width) % this.canvas.width;
+            boid.y = (boid.y + this.canvas.height) % this.canvas.height;
+
+            // Draw boid
+            this.ctx.fillStyle = 'rgb(255, 200, 100)';
+            this.ctx.beginPath();
+            this.ctx.arc(boid.x, boid.y, 5, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Draw velocity direction
+            const endX = boid.x + boid.vx * 3;
+            const endY = boid.y + boid.vy * 3;
+            this.ctx.strokeStyle = 'rgb(255, 220, 150)';
+            this.ctx.lineWidth = 1;
+            this.ctx.beginPath();
+            this.ctx.moveTo(boid.x, boid.y);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+    }
+
+    /**
+     * Mode 93: Pendulum Wave
+     * Multiple pendulums with slightly different periods - force from frequency
+     */
+    renderPendulumWave(magnitudes) {
+        const numPendulums = Math.min(magnitudes.length, 30);
+
+        // Initialize pendulum angles
+        if (!this.pendulumAngles) {
+            this.pendulumAngles = new Array(numPendulums).fill(0);
+        }
+
+        // Clear background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Update and draw pendulums
+        for (let i = 0; i < numPendulums; i++) {
+            const magnitude = i < magnitudes.length ? magnitudes[i] : 0;
+
+            // Period slightly different for each pendulum
+            const period = 0.05 + i * 0.001;
+
+            // Force from audio
+            this.pendulumAngles[i] += period + magnitude * 0.1;
+
+            // Pendulum position
+            const xBase = (i / numPendulums) * this.canvas.width;
+            const yBase = 100;
+
+            const pendulumLength = 200 + magnitude * 100;
+            const xEnd = xBase + Math.sin(this.pendulumAngles[i]) * pendulumLength;
+            const yEnd = yBase + pendulumLength;
+
+            // Draw rod
+            this.ctx.strokeStyle = 'rgb(150, 150, 150)';
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.moveTo(xBase, yBase);
+            this.ctx.lineTo(xEnd, yEnd);
+            this.ctx.stroke();
+
+            // Draw bob
+            const bobSize = 5 + magnitude * 15;
+            const hue = (i / numPendulums) * 180;
+            const color = this.hsvToRgb(hue, 78, 100);
+
+            this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(xEnd, yEnd, bobSize, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+    }
+
+    /**
+     * Mode 94: Retro Scanlines
+     * Waveform on old CRT with scanlines and static
+     */
+    renderRetroScanlines(magnitudes) {
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        // Initialize CRT flicker state
+        if (this.crtFlicker === undefined) {
+            this.crtFlicker = 0;
+        }
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Draw waveform
+        this.ctx.strokeStyle = 'rgb(100, 255, 100)';
+        this.ctx.lineWidth = 3;
+        this.ctx.beginPath();
+
+        for (let i = 0; i < magnitudes.length; i++) {
+            const x = (i / magnitudes.length) * this.canvas.width;
+            const y = this.canvas.height / 2 + (magnitudes[i] - 0.5) * this.canvas.height * 0.6;
+
+            if (i === 0) {
+                this.ctx.moveTo(x, y);
+            } else {
+                this.ctx.lineTo(x, y);
+            }
+        }
+        this.ctx.stroke();
+
+        // Scanlines
+        for (let y = 0; y < this.canvas.height; y += 4) {
+            this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+            this.ctx.lineWidth = 1;
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, y);
+            this.ctx.lineTo(this.canvas.width, y);
+            this.ctx.stroke();
+        }
+
+        // Static/noise increases with treble
+        if (treble > 0.3) {
+            const noiseIntensity = Math.floor(treble * 50);
+            for (let i = 0; i < noiseIntensity; i++) {
+                const x = Math.random() * this.canvas.width;
+                const y = Math.random() * this.canvas.height;
+                const brightness = Math.floor(Math.random() * 155) + 100;
+                this.ctx.fillStyle = `rgb(${brightness}, ${brightness}, ${brightness})`;
+                this.ctx.fillRect(x, y, 1, 1);
+            }
+        }
+
+        // CRT flicker
+        this.crtFlicker = (this.crtFlicker + treble * 10) % 20;
+        if (this.crtFlicker > 18) {
+            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+    }
+
+    /**
+     * Mode 95: Pulsing Polygon
+     * Central polygon with vertices pushed by frequency bands
+     */
+    renderPulsingPolygon(magnitudes) {
+        const numVertices = Math.min(magnitudes.length, 12);
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Calculate vertex positions
+        const vertices = [];
+        for (let i = 0; i < numVertices; i++) {
+            const angle = (i / numVertices) * 2 * Math.PI;
+            const magnitude = i < magnitudes.length ? magnitudes[i] : 0;
+
+            // Base radius and pushed radius
+            const baseRadius = Math.min(this.canvas.width, this.canvas.height) * 0.25;
+            const pushedRadius = baseRadius + magnitude * 200;
+
+            const x = this.canvas.width / 2 + Math.cos(angle) * pushedRadius;
+            const y = this.canvas.height / 2 + Math.sin(angle) * pushedRadius;
+            vertices.push({ x, y });
+        }
+
+        // Draw filled polygon
+        if (vertices.length > 2) {
+            const avgMagnitude = magnitudes.slice(0, numVertices).reduce((a, b) => a + b, 0) / numVertices;
+
+            const hue = (this.frameCounter * 2) % 180;
+            const saturation = 78 + avgMagnitude * 22;
+            const value = 59 + avgMagnitude * 41;
+            const color = this.hsvToRgb(hue, saturation, value);
+
+            this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            this.ctx.beginPath();
+            this.ctx.moveTo(vertices[0].x, vertices[0].y);
+            for (let i = 1; i < vertices.length; i++) {
+                this.ctx.lineTo(vertices[i].x, vertices[i].y);
+            }
+            this.ctx.closePath();
+            this.ctx.fill();
+
+            // Draw outline
+            this.ctx.strokeStyle = 'rgb(255, 255, 255)';
+            this.ctx.lineWidth = 3;
+            this.ctx.stroke();
+        }
+    }
+
+    /**
+     * Mode 96: Chromatic Orb
+     * 3D sphere with chromatic shader and moving light source
+     */
+    renderChromaticOrb(magnitudes) {
+        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        // Light source moves with stereo pan
+        const left = magnitudes.slice(0, Math.floor(magnitudes.length / 2))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length / 2);
+        const right = magnitudes.slice(Math.floor(magnitudes.length / 2))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length / 2);
+
+        if (!this.chromaticOrbRotation) this.chromaticOrbRotation = 0;
+        this.chromaticOrbRotation += (right - left) * 0.1;
+        const lightAngle = this.chromaticOrbRotation;
+        const lightX = Math.cos(lightAngle);
+        const lightY = Math.sin(lightAngle);
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Draw orb
+        const orbRadius = 150 + bass * 50;
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
+
+        for (let angleIdx = 0; angleIdx < 60; angleIdx++) {
+            const angle = (angleIdx / 60) * Math.PI * 2;
+            for (let radiusIdx = 0; radiusIdx < 20; radiusIdx++) {
+                const radiusFactor = radiusIdx / 20;
+                const radius = orbRadius * radiusFactor;
+
+                const x = centerX + Math.cos(angle) * radius;
+                const y = centerY + Math.sin(angle) * radius;
+
+                // Lighting calculation
+                const dot = Math.cos(angle) * lightX + Math.sin(angle) * lightY;
+                const brightness = Math.max(0, dot) * 200 + 55;
+
+                // Chromatic color
+                const hue = ((angle / (2 * Math.PI) + radiusFactor + this.frameCounter * 0.01) * 180) % 180;
+                const saturation = 78 + avgMagnitude * 22;
+                const value = brightness / 255 * 100;
+                const color = this.hsvToRgb(hue, saturation, value);
+
+                this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+    }
+
+    /**
+     * Mode 97: Textured Bars
+     * Bars filled with scrolling animated texture
+     */
+    renderTexturedBars(magnitudes) {
+        const barWidth = this.canvas.width / magnitudes.length;
+
+        // Clear background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        for (let i = 0; i < magnitudes.length; i++) {
+            const magnitude = magnitudes[i];
+            const barHeight = magnitude * this.canvas.height * 0.7;
+            const x = i * barWidth;
+            const y = this.canvas.height - barHeight;
+
+            // Scrolling texture (simulated with pattern)
+            for (let ty = y; ty < this.canvas.height; ty += 5) {
+                const scrollOffset = Math.floor((this.frameCounter * magnitude * 2) % 10);
+                const patternY = (ty + scrollOffset) % 10;
+
+                if (patternY < 5) {
+                    const brightness = 100 + magnitude * 155;
+                    this.ctx.strokeStyle = `rgb(${brightness}, 150, 200)`;
+                } else {
+                    this.ctx.strokeStyle = 'rgb(50, 100, 150)';
+                }
+
+                this.ctx.lineWidth = 2;
+                this.ctx.beginPath();
+                this.ctx.moveTo(x, ty);
+                this.ctx.lineTo(x + barWidth - 2, ty);
+                this.ctx.stroke();
+            }
+        }
+    }
+
+    /**
+     * Mode 98: Voronoi Tessellation
+     * Voronoi diagram with cells pulsing and seed points moving
+     */
+    renderVoronoiTessellation(magnitudes) {
+        const numSeeds = Math.min(magnitudes.length, 20);
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        // Initialize seed positions
+        if (!this.voronoiSeeds || this.voronoiSeeds.length === 0) {
+            this.voronoiSeeds = [];
+            for (let i = 0; i < numSeeds; i++) {
+                this.voronoiSeeds.push({
+                    x: Math.random() * this.canvas.width,
+                    y: Math.random() * this.canvas.height
+                });
+            }
+        }
+
+        // Update seed positions
+        for (let i = 0; i < numSeeds && i < this.voronoiSeeds.length; i++) {
+            const seed = this.voronoiSeeds[i];
+            const magnitude = i < magnitudes.length ? magnitudes[i] : 0;
+
+            // Seeds move slightly
+            seed.x += (Math.random() - 0.5) * bass * 5;
+            seed.y += (Math.random() - 0.5) * bass * 5;
+
+            // Keep in bounds
+            seed.x = Math.max(0, Math.min(this.canvas.width, seed.x));
+            seed.y = Math.max(0, Math.min(this.canvas.height, seed.y));
+        }
+
+        // Draw Voronoi cells (simplified - sample points)
+        for (let y = 0; y < this.canvas.height; y += 5) {
+            for (let x = 0; x < this.canvas.width; x += 5) {
+                // Find closest seed
+                let minDist = Infinity;
+                let closestIdx = 0;
+
+                for (let i = 0; i < numSeeds && i < this.voronoiSeeds.length; i++) {
+                    const seed = this.voronoiSeeds[i];
+                    const dist = (x - seed.x) ** 2 + (y - seed.y) ** 2;
+                    if (dist < minDist) {
+                        minDist = dist;
+                        closestIdx = i;
+                    }
+                }
+
+                // Color based on closest seed and its magnitude
+                const magnitude = closestIdx < magnitudes.length ? magnitudes[closestIdx] : 0;
+                const hue = (closestIdx / numSeeds) * 180;
+                const saturation = 78 + magnitude * 22;
+                const value = 39 + magnitude * 61;
+                const color = this.hsvToRgb(hue, saturation, value);
+
+                this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+                this.ctx.fillRect(x, y, 5, 5);
+            }
+        }
+
+        // Draw seed points
+        for (let i = 0; i < numSeeds && i < this.voronoiSeeds.length; i++) {
+            const seed = this.voronoiSeeds[i];
+            this.ctx.fillStyle = 'rgb(255, 255, 255)';
+            this.ctx.beginPath();
+            this.ctx.arc(seed.x, seed.y, 6, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+    }
+
+    /**
+     * Mode 99: Shattering Glass
+     * Glass pane with cracks appearing on beats
+     */
+    renderShatteringGlass(magnitudes) {
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        if (!this.glassCracks) this.glassCracks = [];
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Glass pane (semi-transparent overlay)
+        this.ctx.fillStyle = 'rgba(240, 220, 200, 0.3)';
+        this.ctx.fillRect(100, 100, this.canvas.width - 200, this.canvas.height - 200);
+
+        // Create cracks on strong beats
+        if (bass > 0.65 && this.glassCracks.length < 50) {
+            const crackCenter = {
+                x: this.canvas.width / 2 + (Math.random() - 0.5) * 200,
+                y: this.canvas.height / 2 + (Math.random() - 0.5) * 200
+            };
+
+            // Radiating crack lines
+            const numLines = Math.floor(4 + bass * 8);
+            for (let i = 0; i < numLines; i++) {
+                const angle = Math.random() * 2 * Math.PI;
+                const length = 50 + bass * 150;
+
+                const endX = crackCenter.x + Math.cos(angle) * length;
+                const endY = crackCenter.y + Math.sin(angle) * length;
+
+                this.glassCracks.push({
+                    start: crackCenter,
+                    end: { x: endX, y: endY },
+                    complexity: treble
+                });
+            }
+        }
+
+        // Draw cracks
+        for (const crack of this.glassCracks) {
+            const thickness = 1 + crack.complexity * 3;
+            this.ctx.strokeStyle = 'rgb(50, 50, 50)';
+            this.ctx.lineWidth = thickness;
+            this.ctx.beginPath();
+            this.ctx.moveTo(crack.start.x, crack.start.y);
+            this.ctx.lineTo(crack.end.x, crack.end.y);
+            this.ctx.stroke();
+        }
+    }
+
+    /**
+     * Mode 100: Sunrise Sunset
+     * Gradient sky with pulsing sun and glittering stars
+     */
+    renderSunriseSunset(magnitudes) {
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const mids = magnitudes.slice(Math.floor(magnitudes.length * 0.25), Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.5);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        // Sky gradient (color mapped to mid-range)
+        const skyHue = 20 + mids * 100;
+
+        for (let y = 0; y < this.canvas.height; y++) {
+            const gradientFactor = y / this.canvas.height;
+            const saturation = 78 - gradientFactor * 39;
+            const value = 100 - gradientFactor * 39;
+
+            const color = this.hsvToRgb(skyHue, saturation, value);
+            this.ctx.strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            this.ctx.lineWidth = 1;
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, y);
+            this.ctx.lineTo(this.canvas.width, y);
+            this.ctx.stroke();
+        }
+
+        // Sun/Moon (pulses with bass)
+        if (!this.sunPosition) this.sunPosition = this.canvas.height * 0.3;
+        this.sunPosition = this.canvas.height * 0.3 + Math.sin(this.frameCounter * 0.02) * 50;
+        const sunRadius = 60 + bass * 50;
+
+        const sunColor = mids < 0.5 ? 'rgb(255, 200, 100)' : 'rgb(255, 150, 50)';
+        this.ctx.fillStyle = sunColor;
+        this.ctx.beginPath();
+        this.ctx.arc(this.canvas.width / 2, this.sunPosition, sunRadius, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        this.ctx.strokeStyle = sunColor;
+        this.ctx.lineWidth = 3;
+        this.ctx.globalAlpha = 0.7;
+        this.ctx.beginPath();
+        this.ctx.arc(this.canvas.width / 2, this.sunPosition, sunRadius + 10, 0, Math.PI * 2);
+        this.ctx.stroke();
+        this.ctx.globalAlpha = 1;
+
+        // Stars glitter on treble (visible when dark)
+        if (mids < 0.3) {
+            const numStars = Math.floor(treble * 50 + 10);
+            for (let i = 0; i < numStars; i++) {
+                const starX = Math.random() * this.canvas.width;
+                const starY = Math.random() * (this.canvas.height / 2);
+                const brightness = 200 + treble * 55;
+
+                this.ctx.fillStyle = `rgb(${brightness}, ${brightness}, ${brightness})`;
+                this.ctx.beginPath();
+                this.ctx.arc(starX, starY, 2, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+    }
+
+    /**
+     * Mode 101: Neural Pulse
+     * Neural network with pulsing nodes and lighting connections
+     */
+    renderNeuralPulse(magnitudes) {
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const mids = magnitudes.slice(Math.floor(magnitudes.length * 0.25), Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.5);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        // Initialize neural network nodes
+        if (!this.neuralNodes) {
+            this.neuralNodes = [];
+            for (let i = 0; i < 30; i++) {
+                this.neuralNodes.push({
+                    x: 100 + Math.random() * (this.canvas.width - 200),
+                    y: 100 + Math.random() * (this.canvas.height - 200),
+                    layer: i % 3,  // 3 layers
+                    active: 0
+                });
+            }
+        }
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Update node activation based on frequency bands
+        for (const node of this.neuralNodes) {
+            if (node.layer === 0) node.active = bass;
+            else if (node.layer === 1) node.active = mids;
+            else node.active = treble;
+        }
+
+        // Draw connections that flash with amplitude
+        for (let i = 0; i < this.neuralNodes.length; i++) {
+            const node1 = this.neuralNodes[i];
+            for (let j = i + 1; j < this.neuralNodes.length; j++) {
+                const node2 = this.neuralNodes[j];
+                if (Math.abs(node1.layer - node2.layer) === 1) {
+                    const intensity = (node1.active + node2.active) * 127.5;
+                    if (intensity > 50) {
+                        const thickness = intensity < 150 ? 1 : 2;
+                        this.ctx.strokeStyle = `rgb(${intensity}, ${intensity * 0.5}, ${intensity + 50})`;
+                        this.ctx.lineWidth = thickness;
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(node1.x, node1.y);
+                        this.ctx.lineTo(node2.x, node2.y);
+                        this.ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Draw pulsing nodes
+        for (const node of this.neuralNodes) {
+            const radius = 8 + node.active * 20;
+            const hue = 140 + node.layer * 30;
+            const intensity = 200 + node.active * 55;
+            const color = this.hsvToRgb(hue, 100, intensity / 255 * 100);
+
+            this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            this.ctx.strokeStyle = 'rgb(255, 255, 255)';
+            this.ctx.lineWidth = 1;
+            this.ctx.beginPath();
+            this.ctx.arc(node.x, node.y, radius + 3, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+    }
+
+    /**
+     * Mode 102: Liquid Mercury
+     * Metallic liquid that ripples with physics
+     */
+    renderLiquidMercury(magnitudes) {
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const mids = magnitudes.slice(Math.floor(magnitudes.length * 0.25), Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.5);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        if (!this.liquidMercuryParticles) this.liquidMercuryParticles = [];
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Spawn mercury droplets on high treble
+        if (treble > 0.5 && this.frameCounter % 3 === 0) {
+            this.liquidMercuryParticles.push({
+                x: 100 + Math.random() * (this.canvas.width - 200),
+                y: 100,
+                vx: (Math.random() - 0.5) * 4,
+                vy: 0,
+                radius: 10 + treble * 20
+            });
+        }
+
+        // Update and draw mercury particles
+        const newParticles = [];
+        for (const particle of this.liquidMercuryParticles) {
+            particle.vy += 0.5;  // Gravity
+            particle.y += particle.vy;
+            particle.x += particle.vx;
+
+            // Boundary bouncing
+            if (particle.y > this.canvas.height - 100) {
+                particle.vy *= -0.7;
+                particle.y = this.canvas.height - 100;
+            }
+
+            if (particle.x < 50 || particle.x > this.canvas.width - 50) {
+                particle.vx *= -0.7;
+            }
+
+            if (particle.y < this.canvas.height) {
+                // Draw with metallic shading
+                this.ctx.fillStyle = 'rgb(200, 200, 200)';
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                // Highlight
+                this.ctx.fillStyle = 'rgb(255, 255, 255)';
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x - 5, particle.y - 5, particle.radius / 3, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                newParticles.push(particle);
+            }
+        }
+        this.liquidMercuryParticles = newParticles;
+
+        // Mid-range creates surface ripples
+        for (let i = 0; i < mids * 5; i++) {
+            const rippleX = this.canvas.width / 2 + Math.sin(this.frameCounter * 0.1 + i) * 200;
+            const rippleY = this.canvas.height - 100;
+            const rippleRadius = 30 + i * 20 + mids * 30;
+            this.ctx.strokeStyle = 'rgb(150, 150, 150)';
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(rippleX, rippleY, rippleRadius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+    }
+
+    /**
+     * Mode 103: Cosmic Strings
+     * Vibrating strings in space like guitar strings
+     */
+    renderCosmicStrings(magnitudes) {
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        // Initialize strings
+        if (!this.cosmicStrings) {
+            this.cosmicStrings = [];
+            for (let i = 0; i < 12; i++) {
+                this.cosmicStrings.push({
+                    y: 100 + i * (this.canvas.height - 200) / 12,
+                    frequency: i + 1,
+                    magnitude: 0
+                });
+            }
+        }
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Update and draw vibrating strings
+        for (let i = 0; i < this.cosmicStrings.length; i++) {
+            const string = this.cosmicStrings[i];
+            string.magnitude = magnitudes[Math.min(i * 10, magnitudes.length - 1)];
+
+            const amplitude = string.magnitude * 100;
+
+            // Gold and white glowing strings
+            const hue = 30;  // Gold
+            const intensity = 200 + string.magnitude * 55;
+            const color = this.hsvToRgb(hue, 78, intensity / 255 * 100);
+
+            this.ctx.strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+
+            for (let x = 0; x < this.canvas.width; x += 10) {
+                const wave = Math.sin(x * 0.02 * string.frequency + this.frameCounter * 0.1);
+                const y = string.y + wave * amplitude;
+
+                if (x === 0) this.ctx.moveTo(x, y);
+                else this.ctx.lineTo(x, y);
+            }
+            this.ctx.stroke();
+
+            // Add glow
+            this.ctx.strokeStyle = 'rgb(255, 255, 255)';
+            this.ctx.lineWidth = 1;
+            this.ctx.stroke();
+        }
+    }
+
+    /**
+     * Mode 104: Particle Swarm
+     * Thousands of particles forming shapes
+     */
+    renderParticleSwarm(magnitudes) {
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const mids = magnitudes.slice(Math.floor(magnitudes.length * 0.25), Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.5);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        if (!this.particleSwarmArray) this.particleSwarmArray = [];
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
+
+        // Spawn particles
+        if (this.particleSwarmArray.length < 1000) {
+            for (let i = 0; i < 10; i++) {
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = Math.random() * 200;
+                this.particleSwarmArray.push({
+                    x: centerX + Math.cos(angle) * distance,
+                    y: centerY + Math.sin(angle) * distance,
+                    vx: 0,
+                    vy: 0,
+                    trail: []
+                });
+            }
+        }
+
+        const targetRadius = 150 + bass * 200;
+
+        // Update particle positions
+        for (const particle of this.particleSwarmArray) {
+            const dx = centerX - particle.x;
+            const dy = centerY - particle.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance > 0) {
+                const angle = Math.atan2(dy, dx);
+
+                let targetX, targetY;
+                if (bass > 0.5) {
+                    targetX = centerX + Math.cos(angle) * targetRadius;
+                    targetY = centerY + Math.sin(angle) * targetRadius;
+                } else {
+                    targetX = centerX + Math.cos(angle + treble * Math.PI) * (distance + treble * 100);
+                    targetY = centerY + Math.sin(angle + treble * Math.PI) * (distance + treble * 100);
+                }
+
+                particle.vx = (targetX - particle.x) * 0.05;
+                particle.vy = (targetY - particle.y) * 0.05;
+            }
+
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+
+            // Update trail
+            particle.trail.push({ x: particle.x, y: particle.y });
+            if (particle.trail.length > 5) particle.trail.shift();
+
+            // Velocity-based color
+            const velocity = Math.sqrt(particle.vx ** 2 + particle.vy ** 2);
+            const hue = 120 - Math.min(velocity * 50, 120);
+            const color = this.hsvToRgb(hue, 100, 100);
+
+            // Draw trail
+            if (particle.trail.length > 1) {
+                this.ctx.strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+                this.ctx.lineWidth = 1;
+                this.ctx.beginPath();
+                this.ctx.moveTo(particle.trail[0].x, particle.trail[0].y);
+                for (let i = 1; i < particle.trail.length; i++) {
+                    this.ctx.lineTo(particle.trail[i].x, particle.trail[i].y);
+                }
+                this.ctx.stroke();
+            }
+
+            // Draw particle
+            this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            this.ctx.fillRect(particle.x - 1, particle.y - 1, 2, 2);
+        }
+    }
+
+    /**
+     * Mode 105: Crystal Lattice
+     * 3D crystal structure with pulsing nodes
+     */
+    renderCrystalLattice(magnitudes) {
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const mids = magnitudes.slice(Math.floor(magnitudes.length * 0.25), Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.5);
+
+        // Initialize crystal lattice nodes
+        if (!this.crystalLatticeNodes) {
+            this.crystalLatticeNodes = [];
+            const gridSize = 5;
+            const spacing = Math.min(this.canvas.width, this.canvas.height) / (gridSize + 1);
+            for (let i = 0; i < gridSize; i++) {
+                for (let j = 0; j < gridSize; j++) {
+                    for (let k = 0; k < gridSize; k++) {
+                        this.crystalLatticeNodes.push({
+                            x3d: (i - gridSize / 2) * spacing,
+                            y3d: (j - gridSize / 2) * spacing,
+                            z3d: (k - gridSize / 2) * spacing,
+                            magnitude: 0
+                        });
+                    }
+                }
+            }
+        }
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        const angle = this.frameCounter * 0.02;
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
+
+        // Update magnitudes and project nodes
+        for (let i = 0; i < this.crystalLatticeNodes.length; i++) {
+            const node = this.crystalLatticeNodes[i];
+            node.magnitude = magnitudes[Math.min(i * 2, magnitudes.length - 1)];
+
+            // 3D rotation
+            let x = node.x3d;
+            let y = node.y3d * Math.cos(angle) - node.z3d * Math.sin(angle);
+            let z = node.y3d * Math.sin(angle) + node.z3d * Math.cos(angle);
+
+            const xRot = x * Math.cos(angle) - z * Math.sin(angle);
+            const zRot = x * Math.sin(angle) + z * Math.cos(angle);
+
+            // Perspective projection
+            const scale = 300 / (300 + zRot);
+            node.x2d = centerX + xRot * scale;
+            node.y2d = centerY + y * scale;
+            node.z2d = zRot;
+        }
+
+        // Draw connections between nearby nodes
+        for (let i = 0; i < this.crystalLatticeNodes.length; i++) {
+            const node1 = this.crystalLatticeNodes[i];
+            for (let j = i + 1; j < Math.min(i + 10, this.crystalLatticeNodes.length); j++) {
+                const node2 = this.crystalLatticeNodes[j];
+                const dist = Math.sqrt(
+                    (node1.x3d - node2.x3d) ** 2 +
+                    (node1.y3d - node2.y3d) ** 2 +
+                    (node1.z3d - node2.z3d) ** 2
+                );
+
+                if (dist < 250) {
+                    const intensity = (node1.magnitude + node2.magnitude) * 127.5;
+                    if (intensity > 30) {
+                        this.ctx.strokeStyle = `rgb(${intensity}, ${intensity}, ${intensity + 50})`;
+                        this.ctx.lineWidth = 1;
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(node1.x2d, node1.y2d);
+                        this.ctx.lineTo(node2.x2d, node2.y2d);
+                        this.ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Draw nodes
+        for (const node of this.crystalLatticeNodes) {
+            const radius = 5 + node.magnitude * 15;
+            const hue = ((node.z2d + 300) / 600) * 180;
+            const color = this.hsvToRgb(hue, 100, 100);
+
+            this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(node.x2d, node.y2d, radius, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            this.ctx.strokeStyle = 'rgb(255, 255, 255)';
+            this.ctx.lineWidth = 1;
+            this.ctx.beginPath();
+            this.ctx.arc(node.x2d, node.y2d, radius + 2, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
     }
 
     /**

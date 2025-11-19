@@ -24586,9 +24586,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Spiral Vortex visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Spiral Vortex', 901);
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const brightness = Math.floor(100 + mag * 155);
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -24607,9 +24621,20 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Concentric Circles visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Concentric Circles', 902);
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -24628,9 +24653,22 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Expanding Rings visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Expanding Rings', 903);
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -24649,9 +24687,22 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Contracting Circles visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Contracting Circles', 904);
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (1 - i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -24670,9 +24721,20 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Pulsing Orb visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Pulsing Orb', 905);
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -24691,9 +24753,22 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Oscillating Wave visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Oscillating Wave', 906);
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -24712,9 +24787,22 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Pendulum Swing visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Pendulum Swing', 907);
+        const numPendulums = Math.floor(complexity * 10);
+        for (let i = 0; i < numPendulums; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numPendulums);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -24733,9 +24821,22 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Hypnotic Swirl visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Hypnotic Swirl', 908);
+        const numSwirls = Math.floor(complexity * 10);
+        for (let i = 0; i < numSwirls; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numSwirls);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -24754,9 +24855,22 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Tunnel Zoom visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Tunnel Zoom', 909);
+        const numCircles = Math.floor(complexity * 10);
+        for (let i = 0; i < numCircles; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numCircles);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -24775,9 +24889,22 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Perspective Shift visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Perspective Shift', 910);
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -24796,9 +24923,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Rotating Polygon visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Rotating Polygon', 911);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -24817,9 +24956,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Morphing Shape visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Morphing Shape', 912);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -24838,9 +24991,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Flowing Liquid visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Flowing Liquid', 913);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -24859,9 +25024,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Ripple Effect visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Ripple Effect', 914);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -24880,9 +25059,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Interference Pattern visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Interference Pattern', 915);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -24901,9 +25094,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Moire Effect visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Moire Effect', 916);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -24922,9 +25129,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Strobing Light visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Strobing Light', 917);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -24943,9 +25162,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Flickering visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Flickering', 918);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -24964,9 +25195,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Pulsating visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Pulsating', 919);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -24985,9 +25230,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Breathing Pattern visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Breathing Pattern', 920);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25006,9 +25265,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Expansion Contraction visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Expansion Contraction', 921);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25027,9 +25298,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Growth Decay visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Growth Decay', 922);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25048,9 +25333,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Birth Death visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Birth Death', 923);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25069,9 +25368,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Ebb Flow visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Ebb Flow', 924);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25090,9 +25403,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Inhale Exhale visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Inhale Exhale', 925);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25111,9 +25438,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Systole Diastole visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Systole Diastole', 926);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25132,9 +25471,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Tension Release visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Tension Release', 927);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25153,9 +25506,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Charge Discharge visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Charge Discharge', 928);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25174,9 +25541,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Loading Unloading visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Loading Unloading', 929);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25195,9 +25576,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Compression Rarefaction visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Compression Rarefaction', 930);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25216,9 +25611,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Dense Sparse visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Dense Sparse', 931);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25237,9 +25646,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Thick Thin visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Thick Thin', 932);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25258,9 +25681,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Heavy Light visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Heavy Light', 933);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25279,9 +25716,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Dark Bright visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Dark Bright', 934);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25300,9 +25751,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Shadow Highlight visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Shadow Highlight', 935);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25321,9 +25784,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Positive Negative visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Positive Negative', 936);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25342,9 +25819,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Convex Concave visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Convex Concave', 937);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25363,9 +25854,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Inside Outside visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Inside Outside', 938);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25384,9 +25889,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Figure Ground visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Figure Ground', 939);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25405,9 +25924,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Foreground Background visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Foreground Background', 940);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25426,9 +25959,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Solid Void visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Solid Void', 941);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25447,9 +25994,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Matter Antimatter visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Matter Antimatter', 942);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25468,9 +26029,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Particle Wave visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Particle Wave', 943);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25489,9 +26064,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Discrete Continuous visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Discrete Continuous', 944);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25510,9 +26097,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Quantized Smooth visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Quantized Smooth', 945);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25531,9 +26130,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Digital Analog visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Digital Analog', 946);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25552,9 +26165,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Binary Fluid visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Binary Fluid', 947);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25573,9 +26200,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement On Off visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'On Off', 948);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25594,9 +26235,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Yes No visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Yes No', 949);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25615,9 +26268,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Zero One visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Zero One', 950);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25636,9 +26303,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Presence Absence visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Presence Absence', 951);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25657,9 +26338,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Being Nothingness visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Being Nothingness', 952);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25678,9 +26373,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Existence Void visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Existence Void', 953);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25699,9 +26406,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Form Emptiness visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Form Emptiness', 954);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25720,9 +26441,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Substance Essence visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Substance Essence', 955);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25741,9 +26476,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Appearance Reality visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Appearance Reality', 956);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25762,9 +26511,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Illusion Truth visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Illusion Truth', 957);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25783,9 +26546,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Maya Brahman visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Maya Brahman', 958);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25804,9 +26579,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Phenomena Noumena visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Phenomena Noumena', 959);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25825,9 +26612,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Relative Absolute visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Relative Absolute', 960);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25846,9 +26647,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Changing Unchanging visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Changing Unchanging', 961);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25867,9 +26680,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Temporal Eternal visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Temporal Eternal', 962);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25888,9 +26715,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Finite Infinite visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Finite Infinite', 963);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25909,9 +26750,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Limited Boundless visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Limited Boundless', 964);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25930,9 +26785,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Mortal Immortal visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Mortal Immortal', 965);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25951,9 +26820,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Perishable Imperishable visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Perishable Imperishable', 966);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25972,9 +26853,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Transient Permanent visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Transient Permanent', 967);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -25993,9 +26886,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Fleeting Lasting visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Fleeting Lasting', 968);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26014,9 +26921,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Ephemeral Enduring visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Ephemeral Enduring', 969);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26035,9 +26954,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Momentary Timeless visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Momentary Timeless', 970);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26056,9 +26987,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Local Universal visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Local Universal', 971);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26077,9 +27022,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Particular General visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Particular General', 972);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26098,9 +27057,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Specific Generic visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Specific Generic', 973);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26119,9 +27092,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Unique Common visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Unique Common', 974);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26140,9 +27125,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Individual Collective visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Individual Collective', 975);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26161,9 +27160,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement One Many visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'One Many', 976);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26182,9 +27195,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Unity Multiplicity visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Unity Multiplicity', 977);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26203,9 +27230,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Simple Complex visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Simple Complex', 978);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26224,9 +27263,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Elementary Composite visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Elementary Composite', 979);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26245,9 +27296,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Atomic Molecular visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Atomic Molecular', 980);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26266,9 +27329,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Fundamental Derived visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Fundamental Derived', 981);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26287,9 +27362,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Primary Secondary visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Primary Secondary', 982);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26308,9 +27397,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Essential Accidental visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Essential Accidental', 983);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26329,9 +27432,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Necessary Contingent visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Necessary Contingent', 984);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26350,9 +27467,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement A Priori A Posteriori visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'A Priori A Posteriori', 985);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26371,9 +27502,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Analytic Synthetic visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Analytic Synthetic', 986);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26392,9 +27537,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Deductive Inductive visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Deductive Inductive', 987);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26413,9 +27572,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Logical Empirical visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Logical Empirical', 988);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26434,9 +27607,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Rational Experiential visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Rational Experiential', 989);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26455,9 +27640,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Abstract Concrete visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Abstract Concrete', 990);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26476,9 +27675,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Theoretical Practical visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Theoretical Practical', 991);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26497,9 +27708,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Ideal Real visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Ideal Real', 992);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26518,9 +27743,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Conceptual Actual visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Conceptual Actual', 993);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26539,9 +27778,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Possible Necessary visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Possible Necessary', 994);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26560,9 +27813,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Potential Actual visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Potential Actual', 995);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26581,9 +27846,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Virtual Real visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Virtual Real', 996);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26602,9 +27881,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Simulated Genuine visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Simulated Genuine', 997);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26623,9 +27916,21 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Artificial Natural visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Artificial Natural', 998);
+
+        const numRings = Math.floor(complexity * 2);
+        for (let r = 0; r < numRings; r++) {
+            const radius = 50 + r * 30 + Math.sin(this.frameCounter * 0.1 + r) * bass * 40 * intensity;
+            const alpha = (255 - r * (255 / numRings)) / 255;
+
+            const color = this.getColor(r, numRings);
+            this.ctx.strokeStyle = color;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.lineWidth = 2;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26644,9 +27949,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Synthetic Organic visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Synthetic Organic', 999);
+
+        const numElements = Math.floor(complexity * 10);
+        for (let i = 0; i < numElements; i++) {
+            const magIdx = i % magnitudes.length;
+            const mag = magnitudes[magIdx] * intensity;
+            const phase = this.frameCounter * 0.05 * speed + i * 0.1;
+            const x = this.centerX + Math.sin(phase) * 200 * mag;
+            const y = this.centerY + Math.cos(phase * 1.3) * 200 * mag;
+
+            const color = this.getColor(i, numElements);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 4, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**
@@ -26665,9 +27984,23 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Mechanical Living visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Mechanical Living', 1000);
+
+        const phase = this.frameCounter * 0.1 * speed;
+        for (let i = 0; i < magnitudes.length; i++) {
+            const mag = magnitudes[i] * intensity;
+            const angle = (i / magnitudes.length) * 4 * Math.PI * complexity + phase;
+            const radius = (i / magnitudes.length) * this.maxRadius * mag;
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const color = this.getColor(i, magnitudes.length);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = mag;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1.0;
     }
 
     /**

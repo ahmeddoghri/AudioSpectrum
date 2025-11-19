@@ -18278,17 +18278,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Nebula visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Nebula', 601);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18299,17 +18328,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Galaxy Spiral visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Galaxy Spiral', 602);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18320,17 +18384,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Black Hole visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Black Hole', 603);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18341,17 +18429,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Pulsar visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Pulsar', 604);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18362,17 +18479,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Quasar visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Quasar', 605);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18383,17 +18529,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Supernova visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Supernova', 606);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18404,17 +18579,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Star Cluster visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Star Cluster', 607);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18425,17 +18624,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Asteroid Belt visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Asteroid Belt', 608);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18446,17 +18674,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Comet Tail visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Comet Tail', 609);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18467,17 +18730,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Meteor Shower visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Meteor Shower', 610);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18488,17 +18780,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Planetary Rings visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Planetary Rings', 611);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18509,17 +18825,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Solar Flare visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Solar Flare', 612);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18530,17 +18881,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Coronal Mass Ejection visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Coronal Mass Ejection', 613);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18551,17 +18926,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Cosmic Ray visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Cosmic Ray', 614);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18572,17 +18982,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Gamma Ray Burst visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Gamma Ray Burst', 615);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18593,17 +19027,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Gravitational Lens visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Gravitational Lens', 616);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18614,17 +19072,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Dark Matter Halo visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Dark Matter Halo', 617);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18635,17 +19128,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Cosmic Web visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Cosmic Web', 618);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18656,17 +19184,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Void visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Void', 619);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18677,17 +19234,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Filament Structure visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Filament Structure', 620);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18698,17 +19284,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Hubble Deep Field visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Hubble Deep Field', 621);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18719,17 +19329,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Galaxy Collision visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Galaxy Collision', 622);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18740,17 +19379,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Tidal Tail visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Tidal Tail', 623);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18761,17 +19424,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Starburst Galaxy visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Starburst Galaxy', 624);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18782,17 +19480,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Active Galactic Nucleus visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Active Galactic Nucleus', 625);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18803,17 +19536,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Blazar visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Blazar', 626);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18824,17 +19592,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Seyfert Galaxy visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Seyfert Galaxy', 627);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18845,17 +19637,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Radio Galaxy visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Radio Galaxy', 628);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18866,17 +19687,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Elliptical Galaxy visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Elliptical Galaxy', 629);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18887,17 +19732,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Irregular Galaxy visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Irregular Galaxy', 630);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18908,17 +19788,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Dwarf Galaxy visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Dwarf Galaxy', 631);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18929,17 +19833,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Globular Cluster visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Globular Cluster', 632);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18950,17 +19889,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Open Cluster visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Open Cluster', 633);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18971,17 +19934,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Protoplanetary Disk visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Protoplanetary Disk', 634);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -18992,17 +19979,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Accretion Disk visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Accretion Disk', 635);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19013,17 +20029,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Jets From Black Hole visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Jets From Black Hole', 636);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19034,17 +20085,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Event Horizon visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Event Horizon', 637);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19055,17 +20141,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Photon Sphere visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Photon Sphere', 638);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19076,17 +20191,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Ergosphere visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Ergosphere', 639);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19097,17 +20241,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Singularity visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Singularity', 640);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19118,17 +20297,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Wormhole visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Wormhole', 641);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19139,17 +20353,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement White Hole visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'White Hole', 642);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19160,17 +20409,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Naked Singularity visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Naked Singularity', 643);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19181,17 +20454,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Hawking Radiation visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Hawking Radiation', 644);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19202,17 +20499,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Information Paradox visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Information Paradox', 645);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19223,17 +20544,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Multiverse Bubble visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Multiverse Bubble', 646);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19244,17 +20594,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Parallel Universe visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Parallel Universe', 647);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19265,17 +20650,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Brane Collision visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Brane Collision', 648);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19286,17 +20695,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Extra Dimensions visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Extra Dimensions', 649);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19307,17 +20740,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Calabi Yau Manifold visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Calabi Yau Manifold', 650);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19328,17 +20790,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement String Theory Vibration visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'String Theory Vibration', 651);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19349,17 +20846,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Quantum Foam visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Quantum Foam', 652);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19370,17 +20891,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Planck Scale visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Planck Scale', 653);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19391,17 +20941,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Big Bang visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Big Bang', 654);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19412,17 +20997,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Cosmic Microwave Background visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Cosmic Microwave Background', 655);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19433,17 +21053,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Inflation Field visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Inflation Field', 656);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19454,17 +21109,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Density Fluctuations visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Density Fluctuations', 657);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19475,17 +21165,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Baryon Acoustic Oscillations visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Baryon Acoustic Oscillations', 658);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19496,17 +21210,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Dark Energy visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Dark Energy', 659);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19517,17 +21266,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Cosmological Constant visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Cosmological Constant', 660);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19538,17 +21316,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Quintessence Field visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Quintessence Field', 661);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19559,17 +21372,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Heat Death visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Heat Death', 662);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19580,17 +21428,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Big Rip visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Big Rip', 663);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19601,17 +21484,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Big Crunch visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Big Crunch', 664);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19622,17 +21529,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Big Bounce visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Big Bounce', 665);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19643,17 +21585,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Cyclic Universe visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Cyclic Universe', 666);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19664,17 +21641,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Conformal Cyclic Cosmology visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Conformal Cyclic Cosmology', 667);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19685,17 +21697,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Eternal Inflation visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Eternal Inflation', 668);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19706,17 +21742,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Landscape Multiverse visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Landscape Multiverse', 669);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19727,17 +21787,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Quantum Decoherence visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Quantum Decoherence', 670);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19748,17 +21837,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Many Worlds visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Many Worlds', 671);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19769,17 +21893,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Pilot Wave visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Pilot Wave', 672);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19790,17 +21938,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Spontaneous Collapse visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Spontaneous Collapse', 673);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19811,17 +21988,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Transactional Interpretation visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Transactional Interpretation', 674);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19832,17 +22044,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Relational Quantum Mechanics visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Relational Quantum Mechanics', 675);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19853,17 +22094,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Quantum Bayesianism visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Quantum Bayesianism', 676);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19874,17 +22144,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Consistent Histories visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Consistent Histories', 677);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19895,17 +22194,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Bohemian Mechanics visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Bohemian Mechanics', 678);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19916,17 +22239,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Stochastic Mechanics visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Stochastic Mechanics', 679);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19937,17 +22284,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Quantum Darwinism visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Quantum Darwinism', 680);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19958,17 +22334,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Einselection visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Einselection', 681);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -19979,17 +22384,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Pointer States visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Pointer States', 682);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -20000,17 +22429,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Branching Spacetime visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Branching Spacetime', 683);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -20021,17 +22485,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Worldline visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Worldline', 684);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -20042,17 +22541,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Light Cone visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Light Cone', 685);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -20063,17 +22586,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Cauchy Surface visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Cauchy Surface', 686);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -20084,17 +22636,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Spacelike Hypersurface visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Spacelike Hypersurface', 687);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -20105,17 +22686,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Timelike Curve visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Timelike Curve', 688);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -20126,17 +22736,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Closed Timelike Curve visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Closed Timelike Curve', 689);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -20147,17 +22792,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Chronology Protection visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Chronology Protection', 690);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -20168,17 +22837,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Novikov Self Consistency visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Novikov Self Consistency', 691);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -20189,17 +22893,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Grandfather Paradox visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Grandfather Paradox', 692);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -20210,17 +22943,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Bootstrap Paradox visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Bootstrap Paradox', 693);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -20231,17 +22999,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Predestination Paradox visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Predestination Paradox', 694);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -20252,17 +23044,52 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Causal Loop visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Causal Loop', 695);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        // Center core
+        if (bass > 0.3) {
+            this.ctx.fillStyle = this.getColor(Math.floor(this.frameCounter % numBars), numBars);
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, 30, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.globalAlpha = 1;
+        }
+
+        // Particle field
+        const particleCount = Math.floor(bass * 50 * complexity * intensity);
+        for (let i = 0; i < particleCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const dist = 40 + Math.random() * (this.maxRadius * 0.8);
+            const x = this.centerX + Math.cos(angle) * dist;
+            const y = this.centerY + Math.sin(angle) * dist;
+
+            const brightness = Math.floor(Math.random() * 200 + 55);
+            const colorIdx = Math.floor((angle / (Math.PI * 2)) * numBars);
+            const color = this.getColor(colorIdx, numBars);
+
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.6 * intensity;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -20273,17 +23100,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Retrocausality visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Retrocausality', 696);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -20294,17 +23150,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Advanced Wave visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Advanced Wave', 697);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -20315,17 +23200,41 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Wheeler Feynman Absorber visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Wheeler Feynman Absorber', 698);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / 40;
+        for (let i = 0; i < Math.min(40, magnitudes.length / 3); i++) {
+            const magnitude = magnitudes[Math.floor((i / 40) * magnitudes.length)] || 0;
+            const angle = (i / 40) * Math.PI * 2 + this.frameCounter * 0.05;
+            const radius = 50 + i * magnitude * 8 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+            const size = 2 + magnitude * 10 * intensity;
+
+            const color = this.getColor(i, 40);
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -20336,17 +23245,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Transactional Interpretation visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Transactional Interpretation', 699);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**
@@ -20357,17 +23295,46 @@ class Visualizer {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
+        // Get frequency ranges
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // TODO: Implement Two State Vector visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Two State Vector', 700);
+        // Use configurable settings
+        const numBars = this.settings.numBars || 72;
+        const innerRadius = this.settings.innerRadius || 180;
+        const barWidth = (this.settings.barWidthMultiplier || 0.8) * 8;
+
+
+        const angleStep = (Math.PI * 2) / numBars;
+        for (let i = 0; i < numBars; i++) {
+            const magnitude = magnitudes[Math.floor((i / numBars) * magnitudes.length)] || 0;
+            const angle = i * angleStep;
+            const barLength = magnitude * this.maxRadius * 0.6 * intensity;
+
+            const startX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const startY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6));
+            const endX = this.centerX + Math.cos(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+            const endY = this.centerY + Math.sin(angle) * (innerRadius * (0.3 + magnitude * 0.6) + barLength);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = barWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.globalAlpha = 0.7 + magnitude * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+        this.ctx.globalAlpha = 1;
+
     }
 
     /**

@@ -42769,28 +42769,293 @@ class Visualizer {
      * Provides audio-reactive circular visualization
      */
     renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Enhanced stub implementation - generates unique visualizations based on mode
+        const modeId = this.settings.mode || '';
+        const modeNum = parseInt(modeId.match(/\d+/)?.[0] || '0');
+
+        // Use mode number as seed for variation
+        const seed = modeNum;
+        const variant = seed % 10;
+
         const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
         const numBars = Math.min(magnitudes.length, this.settings.numBars || 64);
 
-        // Circular particle visualization
-        for (let i = 0; i < numBars; i++) {
+        // Generate unique visualization based on mode variant
+        switch (variant) {
+            case 0: // Orbital rings
+                this.renderOrbitalRings(magnitudes, bass, mids, treble, intensity, speed, complexity, seed);
+                break;
+            case 1: // Spiral waves
+                this.renderSpiralWaves(magnitudes, bass, mids, treble, intensity, speed, complexity, seed);
+                break;
+            case 2: // Radial burst
+                this.renderRadialBurst(magnitudes, bass, mids, treble, intensity, speed, complexity, seed);
+                break;
+            case 3: // Wave interference
+                this.renderWaveInterferencePattern(magnitudes, bass, mids, treble, intensity, speed, complexity, seed);
+                break;
+            case 4: // Particle field
+                this.renderParticleField(magnitudes, bass, mids, treble, intensity, speed, complexity, seed);
+                break;
+            case 5: // Geometric patterns
+                this.renderGeometricPattern(magnitudes, bass, mids, treble, intensity, speed, complexity, seed);
+                break;
+            case 6: // Energy pulses
+                this.renderEnergyPulses(magnitudes, bass, mids, treble, intensity, speed, complexity, seed);
+                break;
+            case 7: // Frequency bands
+                this.renderFrequencyBands(magnitudes, bass, mids, treble, intensity, speed, complexity, seed);
+                break;
+            case 8: // Circular flow
+                this.renderCircularFlow(magnitudes, bass, mids, treble, intensity, speed, complexity, seed);
+                break;
+            case 9: // Crystal formation
+                this.renderCrystalFormation(magnitudes, bass, mids, treble, intensity, speed, complexity, seed);
+                break;
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    // Variant implementations for mode stub system
+    renderOrbitalRings(magnitudes, bass, mids, treble, intensity, speed, complexity, seed) {
+        const numRings = 3 + Math.floor(complexity / 3);
+        for (let ring = 0; ring < numRings; ring++) {
+            const ringRadius = this.maxRadius * (0.2 + ring * 0.15);
+            const numPoints = 16 + ring * 8;
+            for (let i = 0; i < numPoints; i++) {
+                const mag = magnitudes[i % magnitudes.length];
+                const angle = (i / numPoints) * Math.PI * 2 + this.frameCounter * 0.02 * speed * (1 + ring * 0.5);
+                const r = ringRadius + mag * 40 * intensity;
+                const x = this.centerX + Math.cos(angle) * r;
+                const y = this.centerY + Math.sin(angle) * r;
+                const size = 2 + mag * 6 * intensity;
+                this.ctx.fillStyle = this.getColor(i + ring * 20, numPoints * numRings);
+                this.ctx.globalAlpha = 0.6 + mag * 0.4;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+    }
+
+    renderSpiralWaves(magnitudes, bass, mids, treble, intensity, speed, complexity, seed) {
+        const numSpirals = 2 + Math.floor(complexity / 4);
+        for (let spiral = 0; spiral < numSpirals; spiral++) {
+            const spiralOffset = (spiral / numSpirals) * Math.PI * 2;
+            for (let i = 0; i < magnitudes.length; i++) {
+                const mag = magnitudes[i];
+                const t = i / magnitudes.length;
+                const angle = spiralOffset + t * Math.PI * 4 + this.frameCounter * 0.01 * speed;
+                const r = this.maxRadius * (0.2 + t * 0.6) + mag * 50 * intensity;
+                const x = this.centerX + Math.cos(angle) * r;
+                const y = this.centerY + Math.sin(angle) * r;
+                const size = 2 + mag * 5 * intensity;
+                this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+                this.ctx.globalAlpha = 0.5 + mag * 0.5;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+    }
+
+    renderRadialBurst(magnitudes, bass, mids, treble, intensity, speed, complexity, seed) {
+        const numRays = Math.min(magnitudes.length, 72);
+        for (let i = 0; i < numRays; i++) {
             const mag = magnitudes[i];
-            const angle = (i / numBars) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
-            const baseRadius = this.maxRadius * 0.3;
-            const radius = baseRadius + mag * this.maxRadius * 0.5 * intensity;
+            const angle = (i / numRays) * Math.PI * 2;
+            const baseR = this.maxRadius * 0.15;
+            const maxR = baseR + mag * this.maxRadius * 0.7 * intensity;
 
-            const x = this.centerX + Math.cos(angle) * radius;
-            const y = this.centerY + Math.sin(angle) * radius;
+            // Draw ray as line of circles
+            const steps = 10 + Math.floor(complexity);
+            for (let step = 0; step < steps; step++) {
+                const t = step / steps;
+                const r = Utils.lerp(baseR, maxR, t);
+                const x = this.centerX + Math.cos(angle) * r;
+                const y = this.centerY + Math.sin(angle) * r;
+                const size = (1 + mag * 4 * intensity) * (1 - t * 0.5);
+                this.ctx.fillStyle = this.getColor(i, numRays);
+                this.ctx.globalAlpha = (0.7 - t * 0.5) * (0.5 + mag * 0.5);
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+    }
 
-            const size = 2 + mag * 8 * intensity;
-            this.ctx.fillStyle = this.getColor(i, numBars);
-            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+    renderWaveInterferencePattern(magnitudes, bass, mids, treble, intensity, speed, complexity, seed) {
+        const gridSize = 8 + Math.floor(complexity);
+        const cellSize = (this.maxRadius * 2) / gridSize;
+
+        for (let i = 0; i < gridSize; i++) {
+            for (let j = 0; j < gridSize; j++) {
+                const x = this.centerX - this.maxRadius + i * cellSize;
+                const y = this.centerY - this.maxRadius + j * cellSize;
+                const dx = x - this.centerX;
+                const dy = y - this.centerY;
+                const dist = Math.sqrt(dx * dx + dy * dy) / this.maxRadius;
+                const magIndex = Math.floor(dist * magnitudes.length) % magnitudes.length;
+                const mag = magnitudes[magIndex];
+                const wave = Math.sin(dist * 8 - this.frameCounter * 0.05 * speed + mag * 2) * 0.5 + 0.5;
+                const size = cellSize * 0.3 * wave * mag * intensity;
+
+                if (size > 1) {
+                    this.ctx.fillStyle = this.getColor(magIndex, magnitudes.length);
+                    this.ctx.globalAlpha = 0.4 + mag * 0.6;
+                    this.ctx.beginPath();
+                    this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                    this.ctx.fill();
+                }
+            }
+        }
+    }
+
+    renderParticleField(magnitudes, bass, mids, treble, intensity, speed, complexity, seed) {
+        const numParticles = Math.min(magnitudes.length * 2, 128);
+        for (let i = 0; i < numParticles; i++) {
+            const mag = magnitudes[i % magnitudes.length];
+            const angle1 = (i / numParticles) * Math.PI * 2;
+            const angle2 = angle1 + this.frameCounter * 0.02 * speed;
+            const r1 = this.maxRadius * (0.3 + Math.sin(this.frameCounter * 0.01 + i) * 0.2);
+            const r2 = r1 + mag * 100 * intensity;
+            const x = this.centerX + Math.cos(angle2) * r2;
+            const y = this.centerY + Math.sin(angle2) * r2;
+            const size = 1 + mag * 4 * intensity;
+            this.ctx.fillStyle = this.getColor(i, numParticles);
+            this.ctx.globalAlpha = 0.4 + mag * 0.6;
             this.ctx.beginPath();
             this.ctx.arc(x, y, size, 0, Math.PI * 2);
             this.ctx.fill();
         }
+    }
 
-        this.ctx.globalAlpha = 1;
+    renderGeometricPattern(magnitudes, bass, mids, treble, intensity, speed, complexity, seed) {
+        const numShapes = 6 + Math.floor(complexity);
+        for (let i = 0; i < numShapes; i++) {
+            const mag = magnitudes[Math.floor((i / numShapes) * magnitudes.length)];
+            const angle = (i / numShapes) * Math.PI * 2 + this.frameCounter * 0.02 * speed;
+            const r = this.maxRadius * (0.3 + mag * 0.4 * intensity);
+            const x = this.centerX + Math.cos(angle) * r;
+            const y = this.centerY + Math.sin(angle) * r;
+            const sides = 3 + (i % 5);
+            const size = 20 + mag * 40 * intensity;
+
+            this.ctx.strokeStyle = this.getColor(i, numShapes);
+            this.ctx.lineWidth = 2 + mag * 3 * intensity;
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            for (let s = 0; s <= sides; s++) {
+                const a = (s / sides) * Math.PI * 2 + this.frameCounter * 0.01 * speed;
+                const px = x + Math.cos(a) * size;
+                const py = y + Math.sin(a) * size;
+                if (s === 0) this.ctx.moveTo(px, py);
+                else this.ctx.lineTo(px, py);
+            }
+            this.ctx.stroke();
+        }
+    }
+
+    renderEnergyPulses(magnitudes, bass, mids, treble, intensity, speed, complexity, seed) {
+        const numPulses = 5 + Math.floor(complexity / 2);
+        for (let i = 0; i < numPulses; i++) {
+            const mag = bass * (i % 2) + mids * ((i + 1) % 2);
+            const t = (this.frameCounter * 0.02 * speed + i * 0.3) % 1;
+            const r = this.maxRadius * t * (0.5 + mag * 0.5 * intensity);
+            const alpha = (1 - t) * (0.3 + mag * 0.7);
+
+            this.ctx.strokeStyle = this.getColor(i * 30, numPulses * 30);
+            this.ctx.lineWidth = 2 + mag * 4 * intensity;
+            this.ctx.globalAlpha = alpha;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, r, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+    }
+
+    renderFrequencyBands(magnitudes, bass, mids, treble, intensity, speed, complexity, seed) {
+        const bands = 5 + Math.floor(complexity / 2);
+        const bandSize = magnitudes.length / bands;
+
+        for (let band = 0; band < bands; band++) {
+            const start = Math.floor(band * bandSize);
+            const end = Math.floor((band + 1) * bandSize);
+            const bandMag = magnitudes.slice(start, end).reduce((a, b) => a + b, 0) / bandSize;
+
+            const innerR = this.maxRadius * (0.2 + band * 0.15);
+            const outerR = innerR + bandMag * 80 * intensity;
+            const numBars = 24 + band * 12;
+
+            for (let i = 0; i < numBars; i++) {
+                const angle = (i / numBars) * Math.PI * 2 + this.frameCounter * 0.01 * speed * (1 + band * 0.2);
+                const x1 = this.centerX + Math.cos(angle) * innerR;
+                const y1 = this.centerY + Math.sin(angle) * innerR;
+                const x2 = this.centerX + Math.cos(angle) * outerR;
+                const y2 = this.centerY + Math.sin(angle) * outerR;
+
+                this.ctx.strokeStyle = this.getColor(band * 30 + i, bands * 30 + numBars);
+                this.ctx.lineWidth = 2 + bandMag * 3 * intensity;
+                this.ctx.globalAlpha = 0.5 + bandMag * 0.5;
+                this.ctx.beginPath();
+                this.ctx.moveTo(x1, y1);
+                this.ctx.lineTo(x2, y2);
+                this.ctx.stroke();
+            }
+        }
+    }
+
+    renderCircularFlow(magnitudes, bass, mids, treble, intensity, speed, complexity, seed) {
+        const numFlows = 3 + Math.floor(complexity / 3);
+        for (let flow = 0; flow < numFlows; flow++) {
+            const flowAngle = (flow / numFlows) * Math.PI * 2;
+            const numPoints = 32;
+
+            for (let i = 0; i < numPoints; i++) {
+                const mag = magnitudes[Math.floor((i / numPoints) * magnitudes.length)];
+                const t = i / numPoints;
+                const angle = flowAngle + t * Math.PI * 2 + this.frameCounter * 0.03 * speed * (flow + 1);
+                const baseR = this.maxRadius * (0.25 + flow * 0.15);
+                const r = baseR + Math.sin(t * Math.PI * 4 + this.frameCounter * 0.1) * 30 * mag * intensity;
+                const x = this.centerX + Math.cos(angle) * r;
+                const y = this.centerY + Math.sin(angle) * r;
+                const size = 2 + mag * 5 * intensity;
+
+                this.ctx.fillStyle = this.getColor(flow * 40 + i, numFlows * 40 + numPoints);
+                this.ctx.globalAlpha = 0.5 + mag * 0.5;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+    }
+
+    renderCrystalFormation(magnitudes, bass, mids, treble, intensity, speed, complexity, seed) {
+        const numCrystals = 8 + Math.floor(complexity);
+        for (let i = 0; i < numCrystals; i++) {
+            const angle = (i / numCrystals) * Math.PI * 2 + this.frameCounter * 0.01 * speed;
+            const mag = magnitudes[Math.floor((i / numCrystals) * magnitudes.length)];
+            const r = this.maxRadius * (0.3 + mag * 0.4 * intensity);
+            const x = this.centerX + Math.cos(angle) * r;
+            const y = this.centerY + Math.sin(angle) * r;
+
+            // Draw crystal shape
+            const size = 15 + mag * 35 * intensity;
+            const points = 6;
+            this.ctx.fillStyle = this.getColor(i, numCrystals);
+            this.ctx.globalAlpha = 0.4 + mag * 0.6;
+            this.ctx.beginPath();
+            for (let p = 0; p < points; p++) {
+                const pa = (p / points) * Math.PI * 2;
+                const pr = size * (p % 2 === 0 ? 1 : 0.5);
+                const px = x + Math.cos(pa) * pr;
+                const py = y + Math.sin(pa) * pr;
+                if (p === 0) this.ctx.moveTo(px, py);
+                else this.ctx.lineTo(px, py);
+            }
+            this.ctx.closePath();
+            this.ctx.fill();
+        }
     }
 
     dispose() {

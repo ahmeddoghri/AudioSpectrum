@@ -6829,7 +6829,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_601_nebula',
         name: 'Nebula',
         description: 'Mode 601: Nebula visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 601,
         tags: ["nebula"],
         parameters: {
@@ -6842,7 +6842,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_602_galaxy_spiral',
         name: 'Galaxy Spiral',
         description: 'Mode 602: Galaxy spiral visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 602,
         tags: ["galaxy", "spiral"],
         parameters: {
@@ -6855,7 +6855,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_603_black_hole',
         name: 'Black Hole',
         description: 'Mode 603: Black hole visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 603,
         tags: ["black", "hole"],
         parameters: {
@@ -6868,7 +6868,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_604_pulsar',
         name: 'Pulsar',
         description: 'Mode 604: Pulsar visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 604,
         tags: ["pulsar"],
         parameters: {
@@ -6881,7 +6881,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_605_quasar',
         name: 'Quasar',
         description: 'Mode 605: Quasar visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 605,
         tags: ["quasar"],
         parameters: {
@@ -6894,7 +6894,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_606_supernova',
         name: 'Supernova',
         description: 'Mode 606: Supernova visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 606,
         tags: ["supernova"],
         parameters: {
@@ -6907,7 +6907,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_607_star_cluster',
         name: 'Star Cluster',
         description: 'Mode 607: Star cluster visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 607,
         tags: ["star", "cluster"],
         parameters: {
@@ -6920,7 +6920,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_608_asteroid_belt',
         name: 'Asteroid Belt',
         description: 'Mode 608: Asteroid belt visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 608,
         tags: ["asteroid", "belt"],
         parameters: {
@@ -6946,7 +6946,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_610_meteor_shower',
         name: 'Meteor Shower',
         description: 'Mode 610: Meteor shower visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 610,
         tags: ["meteor", "shower"],
         parameters: {
@@ -6959,7 +6959,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_611_planetary_rings',
         name: 'Planetary Rings',
         description: 'Mode 611: Planetary rings visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 611,
         tags: ["planetary", "rings"],
         parameters: {
@@ -6972,7 +6972,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_612_solar_flare',
         name: 'Solar Flare',
         description: 'Mode 612: Solar flare visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 612,
         tags: ["solar", "flare"],
         parameters: {
@@ -6985,7 +6985,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_613_coronal_mass_ejection',
         name: 'Coronal Mass Ejection',
         description: 'Mode 613: Coronal mass ejection visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 613,
         tags: ["coronal", "mass", "ejection"],
         parameters: {
@@ -6998,7 +6998,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_614_cosmic_ray',
         name: 'Cosmic Ray',
         description: 'Mode 614: Cosmic ray visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 614,
         tags: ["cosmic"],
         parameters: {
@@ -7011,7 +7011,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_615_gamma_ray_burst',
         name: 'Gamma Ray Burst',
         description: 'Mode 615: Gamma ray burst visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 615,
         tags: ["gamma", "burst"],
         parameters: {
@@ -7024,7 +7024,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_616_gravitational_lens',
         name: 'Gravitational Lens',
         description: 'Mode 616: Gravitational lens visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 616,
         tags: ["gravitational", "lens"],
         parameters: {
@@ -7037,7 +7037,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_617_dark_matter_halo',
         name: 'Dark Matter Halo',
         description: 'Mode 617: Dark matter halo visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 617,
         tags: ["dark", "matter", "halo"],
         parameters: {
@@ -7050,7 +7050,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_618_cosmic_web',
         name: 'Cosmic Web',
         description: 'Mode 618: Cosmic web visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 618,
         tags: ["cosmic"],
         parameters: {
@@ -7063,7 +7063,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_619_void',
         name: 'Void',
         description: 'Mode 619: Void visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 619,
         tags: ["void"],
         parameters: {
@@ -7076,7 +7076,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_620_filament_structure',
         name: 'Filament Structure',
         description: 'Mode 620: Filament structure visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 620,
         tags: ["filament", "structure"],
         parameters: {
@@ -7089,7 +7089,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_621_hubble_deep_field',
         name: 'Hubble Deep Field',
         description: 'Mode 621: Hubble deep field visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 621,
         tags: ["hubble", "deep", "field"],
         parameters: {
@@ -7102,7 +7102,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_622_galaxy_collision',
         name: 'Galaxy Collision',
         description: 'Mode 622: Galaxy collision visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 622,
         tags: ["galaxy", "collision"],
         parameters: {
@@ -7128,7 +7128,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_624_starburst_galaxy',
         name: 'Starburst Galaxy',
         description: 'Mode 624: Starburst galaxy visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 624,
         tags: ["starburst", "galaxy"],
         parameters: {
@@ -7141,7 +7141,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_625_active_galactic_nucleus',
         name: 'Active Galactic Nucleus',
         description: 'Mode 625: Active galactic nucleus visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 625,
         tags: ["active", "galactic", "nucleus"],
         parameters: {
@@ -7154,7 +7154,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_626_blazar',
         name: 'Blazar',
         description: 'Mode 626: Blazar visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 626,
         tags: ["blazar"],
         parameters: {
@@ -7167,7 +7167,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_627_seyfert_galaxy',
         name: 'Seyfert Galaxy',
         description: 'Mode 627: Seyfert galaxy visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 627,
         tags: ["seyfert", "galaxy"],
         parameters: {
@@ -7180,7 +7180,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_628_radio_galaxy',
         name: 'Radio Galaxy',
         description: 'Mode 628: Radio galaxy visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 628,
         tags: ["radio", "galaxy"],
         parameters: {
@@ -7193,7 +7193,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_629_elliptical_galaxy',
         name: 'Elliptical Galaxy',
         description: 'Mode 629: Elliptical galaxy visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 629,
         tags: ["elliptical", "galaxy"],
         parameters: {
@@ -7206,7 +7206,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_630_irregular_galaxy',
         name: 'Irregular Galaxy',
         description: 'Mode 630: Irregular galaxy visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 630,
         tags: ["irregular", "galaxy"],
         parameters: {
@@ -7219,7 +7219,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_631_dwarf_galaxy',
         name: 'Dwarf Galaxy',
         description: 'Mode 631: Dwarf galaxy visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 631,
         tags: ["dwarf", "galaxy"],
         parameters: {
@@ -7232,7 +7232,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_632_globular_cluster',
         name: 'Globular Cluster',
         description: 'Mode 632: Globular cluster visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 632,
         tags: ["globular", "cluster"],
         parameters: {
@@ -7245,7 +7245,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_633_open_cluster',
         name: 'Open Cluster',
         description: 'Mode 633: Open cluster visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 633,
         tags: ["open", "cluster"],
         parameters: {
@@ -7258,7 +7258,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_634_protoplanetary_disk',
         name: 'Protoplanetary Disk',
         description: 'Mode 634: Protoplanetary disk visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 634,
         tags: ["protoplanetary", "disk"],
         parameters: {
@@ -7271,7 +7271,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_635_accretion_disk',
         name: 'Accretion Disk',
         description: 'Mode 635: Accretion disk visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 635,
         tags: ["accretion", "disk"],
         parameters: {
@@ -7284,7 +7284,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_636_jets_from_black_hole',
         name: 'Jets From Black Hole',
         description: 'Mode 636: Jets from black hole visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 636,
         tags: ["jets", "from", "black"],
         parameters: {
@@ -7297,7 +7297,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_637_event_horizon',
         name: 'Event Horizon',
         description: 'Mode 637: Event horizon visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 637,
         tags: ["event", "horizon"],
         parameters: {
@@ -7310,7 +7310,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_638_photon_sphere',
         name: 'Photon Sphere',
         description: 'Mode 638: Photon sphere visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 638,
         tags: ["photon", "sphere"],
         parameters: {
@@ -7323,7 +7323,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_639_ergosphere',
         name: 'Ergosphere',
         description: 'Mode 639: Ergosphere visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 639,
         tags: ["ergosphere"],
         parameters: {
@@ -7336,7 +7336,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_640_singularity',
         name: 'Singularity',
         description: 'Mode 640: Singularity visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 640,
         tags: ["singularity"],
         parameters: {
@@ -7349,7 +7349,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_641_wormhole',
         name: 'Wormhole',
         description: 'Mode 641: Wormhole visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 641,
         tags: ["wormhole"],
         parameters: {
@@ -7362,7 +7362,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_642_white_hole',
         name: 'White Hole',
         description: 'Mode 642: White hole visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 642,
         tags: ["white", "hole"],
         parameters: {
@@ -7375,7 +7375,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_643_naked_singularity',
         name: 'Naked Singularity',
         description: 'Mode 643: Naked singularity visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 643,
         tags: ["naked", "singularity"],
         parameters: {
@@ -7388,7 +7388,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_644_hawking_radiation',
         name: 'Hawking Radiation',
         description: 'Mode 644: Hawking radiation visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 644,
         tags: ["hawking", "radiation"],
         parameters: {
@@ -7401,7 +7401,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_645_information_paradox',
         name: 'Information Paradox',
         description: 'Mode 645: Information paradox visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 645,
         tags: ["information", "paradox"],
         parameters: {
@@ -7427,7 +7427,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_647_parallel_universe',
         name: 'Parallel Universe',
         description: 'Mode 647: Parallel universe visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 647,
         tags: ["parallel", "universe"],
         parameters: {
@@ -7440,7 +7440,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_648_brane_collision',
         name: 'Brane Collision',
         description: 'Mode 648: Brane collision visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 648,
         tags: ["brane", "collision"],
         parameters: {
@@ -7453,7 +7453,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_649_extra_dimensions',
         name: 'Extra Dimensions',
         description: 'Mode 649: Extra dimensions visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 649,
         tags: ["extra", "dimensions"],
         parameters: {
@@ -7466,7 +7466,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_650_calabi_yau_manifold',
         name: 'Calabi Yau Manifold',
         description: 'Mode 650: Calabi-yau manifold visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 650,
         tags: ["calabi", "manifold"],
         parameters: {
@@ -7479,7 +7479,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_651_string_theory_vibration',
         name: 'String Theory Vibration',
         description: 'Mode 651: String theory vibration visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 651,
         tags: ["string", "theory", "vibration"],
         parameters: {
@@ -7505,7 +7505,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_653_planck_scale',
         name: 'Planck Scale',
         description: 'Mode 653: Planck scale visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 653,
         tags: ["planck", "scale"],
         parameters: {
@@ -7518,7 +7518,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_654_big_bang',
         name: 'Big Bang',
         description: 'Mode 654: Big bang visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 654,
         tags: ["bang"],
         parameters: {
@@ -7531,7 +7531,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_655_cosmic_microwave_background',
         name: 'Cosmic Microwave Background',
         description: 'Mode 655: Cosmic microwave background visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 655,
         tags: ["cosmic", "microwave", "background"],
         parameters: {
@@ -7544,7 +7544,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_656_inflation_field',
         name: 'Inflation Field',
         description: 'Mode 656: Inflation field visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 656,
         tags: ["inflation", "field"],
         parameters: {
@@ -7557,7 +7557,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_657_density_fluctuations',
         name: 'Density Fluctuations',
         description: 'Mode 657: Density fluctuations visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 657,
         tags: ["density", "fluctuations"],
         parameters: {
@@ -7570,7 +7570,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_658_baryon_acoustic_oscillations',
         name: 'Baryon Acoustic Oscillations',
         description: 'Mode 658: Baryon acoustic oscillations visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 658,
         tags: ["baryon", "acoustic", "oscillations"],
         parameters: {
@@ -7596,7 +7596,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_660_cosmological_constant',
         name: 'Cosmological Constant',
         description: 'Mode 660: Cosmological constant visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 660,
         tags: ["cosmological", "constant"],
         parameters: {
@@ -7609,7 +7609,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_661_quintessence_field',
         name: 'Quintessence Field',
         description: 'Mode 661: Quintessence field visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 661,
         tags: ["quintessence", "field"],
         parameters: {
@@ -7622,7 +7622,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_662_heat_death',
         name: 'Heat Death',
         description: 'Mode 662: Heat death visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 662,
         tags: ["heat", "death"],
         parameters: {
@@ -7635,7 +7635,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_663_big_rip',
         name: 'Big Rip',
         description: 'Mode 663: Big rip visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 663,
         tags: [],
         parameters: {
@@ -7648,7 +7648,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_664_big_crunch',
         name: 'Big Crunch',
         description: 'Mode 664: Big crunch visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 664,
         tags: ["crunch"],
         parameters: {
@@ -7661,7 +7661,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_665_big_bounce',
         name: 'Big Bounce',
         description: 'Mode 665: Big bounce visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 665,
         tags: ["bounce"],
         parameters: {
@@ -7674,7 +7674,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_666_cyclic_universe',
         name: 'Cyclic Universe',
         description: 'Mode 666: Cyclic universe visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 666,
         tags: ["cyclic", "universe"],
         parameters: {
@@ -7687,7 +7687,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_667_conformal_cyclic_cosmology',
         name: 'Conformal Cyclic Cosmology',
         description: 'Mode 667: Conformal cyclic cosmology visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 667,
         tags: ["conformal", "cyclic", "cosmology"],
         parameters: {
@@ -7700,7 +7700,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_668_eternal_inflation',
         name: 'Eternal Inflation',
         description: 'Mode 668: Eternal inflation visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 668,
         tags: ["eternal", "inflation"],
         parameters: {
@@ -7713,7 +7713,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_669_landscape_multiverse',
         name: 'Landscape Multiverse',
         description: 'Mode 669: Landscape multiverse visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 669,
         tags: ["landscape", "multiverse"],
         parameters: {
@@ -7739,7 +7739,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_671_many_worlds',
         name: 'Many Worlds',
         description: 'Mode 671: Many worlds visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 671,
         tags: ["many", "worlds"],
         parameters: {
@@ -7752,7 +7752,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_672_pilot_wave',
         name: 'Pilot Wave',
         description: 'Mode 672: Pilot wave visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 672,
         tags: ["pilot", "wave"],
         parameters: {
@@ -7765,7 +7765,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_673_spontaneous_collapse',
         name: 'Spontaneous Collapse',
         description: 'Mode 673: Spontaneous collapse visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 673,
         tags: ["spontaneous", "collapse"],
         parameters: {
@@ -7778,7 +7778,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_674_transactional_interpretation',
         name: 'Transactional Interpretation',
         description: 'Mode 674: Transactional interpretation visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 674,
         tags: ["transactional", "interpretation"],
         parameters: {
@@ -7817,7 +7817,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_677_consistent_histories',
         name: 'Consistent Histories',
         description: 'Mode 677: Consistent histories visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 677,
         tags: ["consistent", "histories"],
         parameters: {
@@ -7830,7 +7830,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_678_bohemian_mechanics',
         name: 'Bohemian Mechanics',
         description: 'Mode 678: Bohemian mechanics visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 678,
         tags: ["bohemian", "mechanics"],
         parameters: {
@@ -7843,7 +7843,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_679_stochastic_mechanics',
         name: 'Stochastic Mechanics',
         description: 'Mode 679: Stochastic mechanics visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 679,
         tags: ["stochastic", "mechanics"],
         parameters: {
@@ -7869,7 +7869,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_681_einselection',
         name: 'Einselection',
         description: 'Mode 681: Einselection visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 681,
         tags: ["einselection"],
         parameters: {
@@ -7882,7 +7882,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_682_pointer_states',
         name: 'Pointer States',
         description: 'Mode 682: Pointer states visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 682,
         tags: ["pointer", "states"],
         parameters: {
@@ -7895,7 +7895,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_683_branching_spacetime',
         name: 'Branching Spacetime',
         description: 'Mode 683: Branching spacetime visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 683,
         tags: ["branching", "spacetime"],
         parameters: {
@@ -7908,7 +7908,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_684_worldline',
         name: 'Worldline',
         description: 'Mode 684: Worldline visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 684,
         tags: ["worldline"],
         parameters: {
@@ -7921,7 +7921,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_685_light_cone',
         name: 'Light Cone',
         description: 'Mode 685: Light cone visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 685,
         tags: ["light", "cone"],
         parameters: {
@@ -7934,7 +7934,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_686_cauchy_surface',
         name: 'Cauchy Surface',
         description: 'Mode 686: Cauchy surface visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 686,
         tags: ["cauchy", "surface"],
         parameters: {
@@ -7947,7 +7947,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_687_spacelike_hypersurface',
         name: 'Spacelike Hypersurface',
         description: 'Mode 687: Spacelike hypersurface visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 687,
         tags: ["spacelike", "hypersurface"],
         parameters: {
@@ -7960,7 +7960,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_688_timelike_curve',
         name: 'Timelike Curve',
         description: 'Mode 688: Timelike curve visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 688,
         tags: ["timelike", "curve"],
         parameters: {
@@ -7973,7 +7973,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_689_closed_timelike_curve',
         name: 'Closed Timelike Curve',
         description: 'Mode 689: Closed timelike curve visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 689,
         tags: ["closed", "timelike", "curve"],
         parameters: {
@@ -7986,7 +7986,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_690_chronology_protection',
         name: 'Chronology Protection',
         description: 'Mode 690: Chronology protection visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 690,
         tags: ["chronology", "protection"],
         parameters: {
@@ -7999,7 +7999,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_691_novikov_self_consistency',
         name: 'Novikov Self Consistency',
         description: 'Mode 691: Novikov self-consistency visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 691,
         tags: ["novikov", "self", "consistency"],
         parameters: {
@@ -8012,7 +8012,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_692_grandfather_paradox',
         name: 'Grandfather Paradox',
         description: 'Mode 692: Grandfather paradox visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 692,
         tags: ["grandfather", "paradox"],
         parameters: {
@@ -8025,7 +8025,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_693_bootstrap_paradox',
         name: 'Bootstrap Paradox',
         description: 'Mode 693: Bootstrap paradox visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 693,
         tags: ["bootstrap", "paradox"],
         parameters: {
@@ -8038,7 +8038,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_694_predestination_paradox',
         name: 'Predestination Paradox',
         description: 'Mode 694: Predestination paradox visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 694,
         tags: ["predestination", "paradox"],
         parameters: {
@@ -8051,7 +8051,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_695_causal_loop',
         name: 'Causal Loop',
         description: 'Mode 695: Causal loop visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 695,
         tags: ["causal", "loop"],
         parameters: {
@@ -8077,7 +8077,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_697_advanced_wave',
         name: 'Advanced Wave',
         description: 'Mode 697: Advanced wave visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 697,
         tags: ["advanced", "wave"],
         parameters: {
@@ -8090,7 +8090,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_698_wheeler_feynman_absorber',
         name: 'Wheeler Feynman Absorber',
         description: 'Mode 698: Wheeler-feynman absorber visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 698,
         tags: ["wheeler", "feynman", "absorber"],
         parameters: {
@@ -8103,7 +8103,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_699_transactional_interpretation',
         name: 'Transactional Interpretation',
         description: 'Mode 699: Transactional interpretation visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 699,
         tags: ["transactional", "interpretation"],
         parameters: {
@@ -8116,7 +8116,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_700_two_state_vector',
         name: 'Two State Vector',
         description: 'Mode 700: Two-state vector visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 700,
         tags: ["state", "vector"],
         parameters: {
@@ -8142,7 +8142,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_702_hexadecimal_grid',
         name: 'Hexadecimal Grid',
         description: 'Mode 702: Hexadecimal grid visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 702,
         tags: ["hexadecimal", "grid"],
         parameters: {
@@ -8168,7 +8168,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_704_data_flow',
         name: 'Data Flow',
         description: 'Mode 704: Data flow visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 704,
         tags: ["data", "flow"],
         parameters: {
@@ -8181,7 +8181,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_705_packet_transmission',
         name: 'Packet Transmission',
         description: 'Mode 705: Packet transmission visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 705,
         tags: ["packet", "transmission"],
         parameters: {
@@ -8194,7 +8194,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_706_network_topology',
         name: 'Network Topology',
         description: 'Mode 706: Network topology visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 706,
         tags: ["network", "topology"],
         parameters: {
@@ -8207,7 +8207,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_707_server_cluster',
         name: 'Server Cluster',
         description: 'Mode 707: Server cluster visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 707,
         tags: ["server", "cluster"],
         parameters: {
@@ -8220,7 +8220,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_708_cloud_computing',
         name: 'Cloud Computing',
         description: 'Mode 708: Cloud computing visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 708,
         tags: ["cloud", "computing"],
         parameters: {
@@ -8233,7 +8233,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_709_distributed_system',
         name: 'Distributed System',
         description: 'Mode 709: Distributed system visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 709,
         tags: ["distributed", "system"],
         parameters: {
@@ -8246,7 +8246,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_710_peer_to_peer',
         name: 'Peer To Peer',
         description: 'Mode 710: Peer-to-peer visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 710,
         tags: ["peer", "peer"],
         parameters: {
@@ -8272,7 +8272,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_712_hash_function',
         name: 'Hash Function',
         description: 'Mode 712: Hash function visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 712,
         tags: ["hash", "function"],
         parameters: {
@@ -8285,7 +8285,7 @@ const VISUALIZATION_MODES = {
         id: 'mode_713_encryption',
         name: 'Encryption',
         description: 'Mode 713: Encryption visualization',
-        category: 'Geometric',
+        category: 'Space & Cosmic',
         mode: 713,
         tags: ["encryption"],
         parameters: {

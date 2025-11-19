@@ -225,6 +225,19 @@ const VISUALIZATION_MODES = {
     },
 
     // Particle Effects
+    jazzy_fireworks: {
+        id: 'jazzy_fireworks',
+        name: 'Jazzy Fireworks',
+        description: 'Bursting particles from center with jazz energy',
+        category: 'Particles',
+        mode: 47,
+        tags: ['particles', 'explosive', 'jazz', 'rainbow'],
+        parameters: {
+            particleCount: { min: 50, max: 400, default: 200, label: 'Particle Count' },
+            speed: { min: 5, max: 20, default: 10, label: 'Burst Speed' },
+            secondaryBursts: { min: 0, max: 5, default: 3, label: 'Secondary Bursts' }
+        }
+    },
     particles: {
         id: 'particles',
         name: 'Particles',
@@ -267,6 +280,44 @@ const VISUALIZATION_MODES = {
     },
 
     // Retro & Vintage
+    retro_cassette_new: {
+        id: 'retro_cassette_new',
+        name: 'Retro Cassette (Detailed)',
+        description: 'Authentic cassette tape with rotating reels and VU meters',
+        category: 'Retro',
+        mode: 48,
+        tags: ['vintage', 'cassette', 'analog', 'vu-meter'],
+        parameters: {
+            reelSpeed: { min: 1, max: 15, default: 5, label: 'Reel Speed' },
+            vuSensitivity: { min: 0.5, max: 2, default: 1, label: 'VU Sensitivity' }
+        }
+    },
+    soul_aura: {
+        id: 'soul_aura',
+        name: 'Soul Aura',
+        description: 'Pulsing organic blob with soul/RnB vibe',
+        category: 'Organic',
+        mode: 49,
+        tags: ['organic', 'soul', 'rnb', 'pulsing', 'aura'],
+        parameters: {
+            numPoints: { min: 30, max: 120, default: 60, label: 'Shape Complexity' },
+            baseRadius: { min: 0.3, max: 0.8, default: 0.5, label: 'Base Size' },
+            glowLayers: { min: 3, max: 8, default: 5, label: 'Glow Layers' }
+        }
+    },
+    neon_rain: {
+        id: 'neon_rain',
+        name: 'Neon Rain',
+        description: 'Cyberpunk neon droplets cascading down',
+        category: 'Retro',
+        mode: 46,
+        tags: ['cyberpunk', 'neon', 'particles', 'rain'],
+        parameters: {
+            particleSize: { min: 2, max: 10, default: 5, label: 'Particle Size' },
+            speed: { min: 3, max: 20, default: 10, label: 'Rain Speed' },
+            spawnRate: { min: 0.1, max: 0.5, default: 0.3, label: 'Spawn Rate' }
+        }
+    },
     vinyl_grooves: {
         id: 'vinyl_grooves',
         name: 'Vinyl Grooves',
@@ -558,6 +609,12721 @@ const VISUALIZATION_MODES = {
         category: 'Energy',
         mode: 45,
         tags: ['rainbow', 'spectrum', 'colorful']
+    },
+
+    // Extended Modes (51-60)
+    fractal_tree: {
+        id: 'fractal_tree',
+        name: 'Fractal Tree',
+        description: 'Generative tree with bass branches and treble blooms',
+        category: 'Nature',
+        mode: 51,
+        tags: ['organic', 'tree', 'generative']
+    },
+    cityscape_extrusion: {
+        id: 'cityscape_extrusion',
+        name: 'Cityscape Extrusion',
+        description: '3D city blocks that extrude with frequency',
+        category: 'Tech',
+        mode: 52,
+        tags: ['3d', 'urban', 'architecture']
+    },
+    gravity_well: {
+        id: 'gravity_well',
+        name: 'Gravity Well',
+        description: 'Particles pulled by pulsing bass center',
+        category: 'Scientific',
+        mode: 53,
+        tags: ['physics', 'particles', 'gravity']
+    },
+    metaball_fluid: {
+        id: 'metaball_fluid',
+        name: 'Metaball Fluid',
+        description: 'Lava lamp metaballs with frequency pulsing',
+        category: 'Fluid',
+        mode: 54,
+        tags: ['organic', 'fluid', 'smooth']
+    },
+    aurora_borealis: {
+        id: 'aurora_borealis',
+        name: 'Aurora Borealis',
+        description: 'Northern lights curtains with shimmer',
+        category: 'Nature',
+        mode: 55,
+        tags: ['ethereal', 'waves', 'aurora']
+    },
+    stained_glass: {
+        id: 'stained_glass',
+        name: 'Stained Glass',
+        description: 'Glowing window panes with frequency',
+        category: 'Classic',
+        mode: 56,
+        tags: ['artistic', 'colorful', 'mosaic']
+    },
+    neon_nerve_network: {
+        id: 'neural_network',
+        name: 'Neural Network',
+        description: 'Pulsing nodes with synapse firings',
+        category: 'Tech',
+        mode: 57,
+        tags: ['network', 'ai', 'connections']
+    },
+    glitch_artifact: {
+        id: 'glitch_artifact',
+        name: 'Glitch Artifact',
+        description: 'Clean bars corrupted by glitch effects',
+        category: 'Tech',
+        mode: 58,
+        tags: ['glitch', 'digital', 'corruption']
+    },
+    warp_tunnel: {
+        id: 'warp_tunnel',
+        name: 'Warp Tunnel',
+        description: 'Hyperspace tunnel of pulsing rings',
+        category: 'Tech',
+        mode: 59,
+        tags: ['hyperspace', 'tunnel', '3d']
+    },
+    conway_life: {
+        id: 'conway_life',
+        name: "Conway Game of Life",
+        description: 'Cellular automaton modulated by audio',
+        category: 'Scientific',
+        mode: 60,
+        tags: ['generative', 'cellular', 'algorithm']
+    },
+    ascii_art: {
+        id: 'ascii_art',
+        name: 'ASCII Art Bars',
+        description: 'Spectrum displayed as ASCII characters',
+        category: 'Retro',
+        mode: 61,
+        tags: ['text', 'ascii', 'retro']
+    },
+    rippling_water: {
+        id: 'rippling_water',
+        name: 'Rippling Water',
+        description: 'Expanding ripples from frequency sources',
+        category: 'Nature',
+        mode: 62,
+        tags: ['water', 'ripples', 'fluid']
+    },
+    terrain_flyover: {
+        id: 'terrain_flyover',
+        name: 'Terrain Flyover',
+        description: '3D wireframe terrain from audio waveform',
+        category: 'Tech',
+        mode: 63,
+        tags: ['3d', 'wireframe', 'terrain']
+    },
+    string_art: {
+        id: 'string_art',
+        name: 'String Art',
+        description: 'Points on circle with connecting lines modulated by audio',
+        category: 'Geometric',
+        mode: 64,
+        tags: ['geometric', 'lines', 'circular']
+    },
+    fire_embers: {
+        id: 'fire_embers',
+        name: 'Fire Embers',
+        description: 'Central fire with sparks rising on treble hits',
+        category: 'Nature',
+        mode: 65,
+        tags: ['fire', 'particles', 'heat']
+    },
+    radial_kaleidoscope: {
+        id: 'radial_kaleidoscope',
+        name: 'Radial Kaleidoscope',
+        description: 'Mirrored segments with rotating particles',
+        category: 'Geometric',
+        mode: 66,
+        tags: ['kaleidoscope', 'mirror', 'radial']
+    },
+    pulsing_jellyfish: {
+        id: 'pulsing_jellyfish',
+        name: 'Pulsing Jellyfish',
+        description: 'Translucent jellyfish with pulsing bell and waveform tentacles',
+        category: 'Nature',
+        mode: 67,
+        tags: ['organic', 'underwater', 'creature']
+    },
+    orbital_system: {
+        id: 'orbital_system',
+        name: 'Orbital System',
+        description: 'Central sun with orbiting planets and moons',
+        category: 'Scientific',
+        mode: 68,
+        tags: ['space', 'planets', 'orbit']
+    },
+    spectrum_cube: {
+        id: 'spectrum_cube',
+        name: 'Spectrum Cube',
+        description: 'Rotating 3D cube with audio visualizers',
+        category: 'Tech',
+        mode: 69,
+        tags: ['3d', 'cube', 'rotation']
+    },
+    typographic_flow: {
+        id: 'typographic_flow',
+        name: 'Typographic Flow',
+        description: 'Floating words with size based on bass',
+        category: 'Tech',
+        mode: 70,
+        tags: ['text', 'typography', 'words']
+    },
+    sonar_ping: {
+        id: 'sonar_ping',
+        name: 'Sonar Ping',
+        description: 'Rotating radar sweep with frequency blips',
+        category: 'Tech',
+        mode: 71,
+        tags: ['radar', 'sonar', 'sweep']
+    },
+    vu_meters: {
+        id: 'vu_meters',
+        name: 'VU Meters',
+        description: 'Analog stereo VU meters with needle physics',
+        category: 'Retro',
+        mode: 72,
+        tags: ['analog', 'meters', 'stereo']
+    },
+    lightning_cloud: {
+        id: 'lightning_cloud',
+        name: 'Lightning Cloud',
+        description: 'Storm cloud with lightning bolts on treble hits',
+        category: 'Nature',
+        mode: 73,
+        tags: ['storm', 'lightning', 'weather']
+    },
+    bouncing_balls: {
+        id: 'bouncing_balls',
+        name: 'Bouncing Balls',
+        description: 'Physics-based bouncing balls with gravity',
+        category: 'Particles',
+        mode: 74,
+        tags: ['physics', 'bounce', 'balls']
+    },
+    liquid_ink: {
+        id: 'liquid_ink',
+        name: 'Liquid Ink',
+        description: 'Ink blooms and splatters responding to audio',
+        category: 'Art',
+        mode: 75,
+        tags: ['ink', 'fluid', 'artistic']
+    },
+    stereo_landscape: {
+        id: 'stereo_landscape',
+        name: 'Stereo Landscape',
+        description: '3D perspective with left/right stereo mountains',
+        category: 'Classic',
+        mode: 76,
+        tags: ['stereo', '3d', 'mountains']
+    },
+    ai_latent_walk: {
+        id: 'ai_latent_walk',
+        name: 'AI Latent Walk',
+        description: 'Abstract morphing shapes simulating latent space',
+        category: 'Tech',
+        mode: 77,
+        tags: ['ai', 'abstract', 'morphing']
+    },
+    pixel_storm: {
+        id: 'pixel_storm',
+        name: 'Pixel Storm',
+        description: 'Blizzard of 8-bit pixels with stereo wind direction',
+        category: 'Retro',
+        mode: 78,
+        tags: ['8bit', 'pixels', 'storm']
+    },
+    growing_vine: {
+        id: 'growing_vine',
+        name: 'Growing Vine',
+        description: 'Organic vine growth with leaves sprouting on beats',
+        category: 'Nature',
+        mode: 79,
+        tags: ['vine', 'organic', 'growth']
+    },
+    haunted_faces: {
+        id: 'haunted_faces',
+        name: 'Haunted Faces',
+        description: 'Ghostly faces with glowing eyes on bass hits',
+        category: 'Nature',
+        mode: 80,
+        tags: ['ghost', 'spooky', 'faces']
+    },
+    connecting_constellations: {
+        id: 'connecting_constellations',
+        name: 'Connecting Constellations',
+        description: 'Stars that connect when their frequencies pass threshold',
+        category: 'Nature',
+        mode: 81,
+        tags: ['stars', 'constellation', 'connections']
+    },
+    matrix_rain: {
+        id: 'matrix_rain',
+        name: 'Matrix Rain',
+        description: 'Falling Matrix-style characters with audio-reactive speed',
+        category: 'Tech',
+        mode: 82,
+        tags: ['matrix', 'digital', 'rain']
+    },
+    voxel_world: {
+        id: 'voxel_world',
+        name: 'Voxel World',
+        description: '3D voxel grid with audio shockwave',
+        category: 'Tech',
+        mode: 83,
+        tags: ['3d', 'voxel', 'grid']
+    },
+    dna_helix_rungs: {
+        id: 'dna_helix_rungs',
+        name: 'DNA Helix Rungs',
+        description: 'DNA double helix with rungs lighting up per frequency',
+        category: 'Scientific',
+        mode: 84,
+        tags: ['dna', 'helix', 'biology']
+    },
+    audio_reactive_shader: {
+        id: 'audio_reactive_shader',
+        name: 'Audio Reactive Shader',
+        description: 'Procedural shader-like effect with audio modulation',
+        category: 'Tech',
+        mode: 85,
+        tags: ['shader', 'procedural', 'abstract']
+    },
+    spirograph: {
+        id: 'spirograph',
+        name: 'Spirograph',
+        description: 'Spirograph pattern with radii controlled by frequencies',
+        category: 'Geometric',
+        mode: 86,
+        tags: ['spirograph', 'pattern', 'geometric']
+    },
+    equalizer_tower: {
+        id: 'equalizer_tower',
+        name: 'Equalizer Tower',
+        description: '3D tower of stacked glowing rings',
+        category: 'Tech',
+        mode: 87,
+        tags: ['3d', 'tower', 'rings']
+    },
+    audio_driven_doodles: {
+        id: 'audio_driven_doodles',
+        name: 'Audio Driven Doodles',
+        description: 'Generative doodle bot with bass turns and treble shakiness',
+        category: 'Geometric',
+        mode: 88,
+        tags: ['doodle', 'generative', 'path']
+    },
+    firework_show: {
+        id: 'firework_show',
+        name: 'Firework Show',
+        description: 'Bass launches rockets that explode with colored particles',
+        category: 'Particles',
+        mode: 89,
+        tags: ['fireworks', 'particles', 'explosion']
+    },
+    microscopic_view: {
+        id: 'microscopic_view',
+        name: 'Microscopic View',
+        description: 'Cells jiggle and divide based on frequency',
+        category: 'Scientific',
+        mode: 90,
+        tags: ['cells', 'biology', 'division']
+    },
+    burning_paper: {
+        id: 'burning_paper',
+        name: 'Burning Paper',
+        description: 'Spectrum bars as flames, embers on high freq, paper curls on bass',
+        category: 'Energy',
+        mode: 91,
+        tags: ['fire', 'flames', 'heat']
+    },
+    swarm_intelligence: {
+        id: 'swarm_intelligence',
+        name: 'Swarm Intelligence',
+        description: 'Boid flocking - cohesion/separation modulated by audio',
+        category: 'Nature',
+        mode: 92,
+        tags: ['boids', 'flocking', 'swarm']
+    },
+    pendulum_wave: {
+        id: 'pendulum_wave',
+        name: 'Pendulum Wave',
+        description: 'Multiple pendulums with slightly different periods - force from frequency',
+        category: 'Geometric',
+        mode: 93,
+        tags: ['pendulum', 'wave', 'physics']
+    },
+    retro_scanlines: {
+        id: 'retro_scanlines',
+        name: 'Retro Scanlines',
+        description: 'Waveform on old CRT with scanlines and static',
+        category: 'Retro',
+        mode: 94,
+        tags: ['crt', 'scanlines', 'vintage']
+    },
+    pulsing_polygon: {
+        id: 'pulsing_polygon',
+        name: 'Pulsing Polygon',
+        description: 'Central polygon with vertices pushed by frequency bands',
+        category: 'Geometric',
+        mode: 95,
+        tags: ['polygon', 'pulse', 'geometric']
+    },
+    chromatic_orb: {
+        id: 'chromatic_orb',
+        name: 'Chromatic Orb',
+        description: '3D sphere with chromatic shader and moving light source',
+        category: 'Geometric',
+        mode: 96,
+        tags: ['3d', 'sphere', 'lighting']
+    },
+    textured_bars: {
+        id: 'textured_bars',
+        name: 'Textured Bars',
+        description: 'Bars filled with scrolling animated texture',
+        category: 'Classic',
+        mode: 97,
+        tags: ['bars', 'texture', 'pattern']
+    },
+    voronoi_tessellation: {
+        id: 'voronoi_tessellation',
+        name: 'Voronoi Tessellation',
+        description: 'Voronoi diagram with cells pulsing and seed points moving',
+        category: 'Geometric',
+        mode: 98,
+        tags: ['voronoi', 'tessellation', 'cells']
+    },
+    shattering_glass: {
+        id: 'shattering_glass',
+        name: 'Shattering Glass',
+        description: 'Glass pane with cracks appearing on beats',
+        category: 'Energy',
+        mode: 99,
+        tags: ['glass', 'cracks', 'impact']
+    },
+    sunrise_sunset: {
+        id: 'sunrise_sunset',
+        name: 'Sunrise Sunset',
+        description: 'Gradient sky with pulsing sun and glittering stars',
+        category: 'Nature',
+        mode: 100,
+        tags: ['sky', 'sun', 'stars']
+    },
+    neural_pulse: {
+        id: 'neural_pulse',
+        name: 'Neural Pulse',
+        description: 'Neural network with pulsing nodes and lighting connections',
+        category: 'Tech',
+        mode: 101,
+        tags: ['neural', 'network', 'ai']
+    },
+    liquid_mercury: {
+        id: 'liquid_mercury',
+        name: 'Liquid Mercury',
+        description: 'Metallic liquid that ripples with physics',
+        category: 'Fluid',
+        mode: 102,
+        tags: ['mercury', 'liquid', 'physics']
+    },
+    cosmic_strings: {
+        id: 'cosmic_strings',
+        name: 'Cosmic Strings',
+        description: 'Vibrating strings in space like guitar strings',
+        category: 'Nature',
+        mode: 103,
+        tags: ['strings', 'vibration', 'cosmic']
+    },
+    particle_swarm: {
+        id: 'particle_swarm',
+        name: 'Particle Swarm',
+        description: 'Thousands of particles forming shapes',
+        category: 'Particles',
+        mode: 104,
+        tags: ['particles', 'swarm', 'formation']
+    },
+    crystal_lattice: {
+        id: 'crystal_lattice',
+        name: 'Crystal Lattice',
+        description: '3D crystal structure with pulsing nodes',
+        category: 'Geometric',
+        mode: 105,
+        tags: ['3d', 'crystal', 'lattice']
+    }
+,
+    mode_106_aurora_waves: {
+        id: 'mode_106_aurora_waves',
+        name: 'Aurora Waves',
+        description: 'Mode 106: Aurora borealis flowing curtains',
+        category: 'Nature',
+        mode: 106,
+        tags: ["aurora", "waves"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_107_dna_helix: {
+        id: 'mode_107_dna_helix',
+        name: 'Dna Helix',
+        description: 'Mode 107: Rotating DNA double helix with pulsing base pairs',
+        category: 'Scientific',
+        mode: 107,
+        tags: ["helix"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_108_fractal_bloom: {
+        id: 'mode_108_fractal_bloom',
+        name: 'Fractal Bloom',
+        description: 'Mode 108: Fractal flower blooming and contracting',
+        category: 'Geometric',
+        mode: 108,
+        tags: ["fractal", "bloom"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_109_circuit_board: {
+        id: 'mode_109_circuit_board',
+        name: 'Circuit Board',
+        description: 'Mode 109: Electronic circuit with flowing electricity',
+        category: 'Scientific',
+        mode: 109,
+        tags: ["circuit", "board"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_110_quantum_field: {
+        id: 'mode_110_quantum_field',
+        name: 'Quantum Field',
+        description: 'Mode 110: Quantum probability field with wave function collapse',
+        category: 'Scientific',
+        mode: 110,
+        tags: ["quantum", "field"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_111_origami_unfold: {
+        id: 'mode_111_origami_unfold',
+        name: 'Origami Unfold',
+        description: 'Mode 111: Geometric origami folding rhythmically',
+        category: 'Geometric',
+        mode: 111,
+        tags: ["origami", "unfold"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_112_galaxy_spiral: {
+        id: 'mode_112_galaxy_spiral',
+        name: 'Galaxy Spiral',
+        description: 'Mode 112: Spiral galaxy with pulsing stars',
+        category: 'Geometric',
+        mode: 112,
+        tags: ["galaxy", "spiral"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_113_rubber_bands: {
+        id: 'mode_113_rubber_bands',
+        name: 'Rubber Bands',
+        description: 'Mode 113: Vibrating rubber bands with physics',
+        category: 'Geometric',
+        mode: 113,
+        tags: ["rubber", "bands"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_114_ink_diffusion: {
+        id: 'mode_114_ink_diffusion',
+        name: 'Ink Diffusion',
+        description: 'Mode 114: Ink diffusing in water',
+        category: 'Fluid',
+        mode: 114,
+        tags: ["diffusion"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_115_geometric_kaleidoscope: {
+        id: 'mode_115_geometric_kaleidoscope',
+        name: 'Geometric Kaleidoscope',
+        description: 'Mode 115: Rotating kaleidoscope with morphing shapes',
+        category: 'Geometric',
+        mode: 115,
+        tags: ["geometric", "kaleidoscope"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_116_lightning_storm: {
+        id: 'mode_116_lightning_storm',
+        name: 'Lightning Storm',
+        description: 'Mode 116: Lightning bolts with branching',
+        category: 'Energy',
+        mode: 116,
+        tags: ["lightning", "storm"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_117_cellular_growth: {
+        id: 'mode_117_cellular_growth',
+        name: 'Cellular Growth',
+        description: 'Mode 117: Biological cell division and growth',
+        category: 'Geometric',
+        mode: 117,
+        tags: ["cellular", "growth"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_118_sound_ribbons: {
+        id: 'mode_118_sound_ribbons',
+        name: 'Sound Ribbons',
+        description: 'Mode 118: 3D ribbons twisting through space',
+        category: 'Geometric',
+        mode: 118,
+        tags: ["sound", "ribbons"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_119_matrix_rain: {
+        id: 'mode_119_matrix_rain',
+        name: 'Matrix Rain',
+        description: 'Mode 119: Matrix code rain',
+        category: 'Scientific',
+        mode: 119,
+        tags: ["matrix", "rain"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_120_fire_mandala: {
+        id: 'mode_120_fire_mandala',
+        name: 'Fire Mandala',
+        description: 'Mode 120: Circular mandala made of flames',
+        category: 'Nature',
+        mode: 120,
+        tags: ["fire", "mandala"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_121_tessellation_shift: {
+        id: 'mode_121_tessellation_shift',
+        name: 'Tessellation Shift',
+        description: 'Mode 121: Escher-style morphing tessellations',
+        category: 'Geometric',
+        mode: 121,
+        tags: ["tessellation", "shift"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_122_seismic_waves: {
+        id: 'mode_122_seismic_waves',
+        name: 'Seismic Waves',
+        description: 'Mode 122: Seismograph readings with P-waves and S-waves',
+        category: 'Geometric',
+        mode: 122,
+        tags: ["seismic", "waves"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_123_neon_city: {
+        id: 'mode_123_neon_city',
+        name: 'Neon City',
+        description: 'Mode 123: Cyberpunk city with pulsing lights',
+        category: 'Tech',
+        mode: 123,
+        tags: ["neon", "city"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_124_magnetic_field: {
+        id: 'mode_124_magnetic_field',
+        name: 'Magnetic Field',
+        description: 'Mode 124: Magnetic field lines with particle clustering',
+        category: 'Scientific',
+        mode: 124,
+        tags: ["magnetic", "field"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_125_bubble_fusion: {
+        id: 'mode_125_bubble_fusion',
+        name: 'Bubble Fusion',
+        description: 'Mode 125: Bubbles that float, merge, and pop',
+        category: 'Particles',
+        mode: 125,
+        tags: ["bubble", "fusion"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_126_tribal_drums: {
+        id: 'mode_126_tribal_drums',
+        name: 'Tribal Drums',
+        description: 'Mode 126: Tribal patterns pulsing like drum skins',
+        category: 'Geometric',
+        mode: 126,
+        tags: ["tribal", "drums"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_127_glass_shatter: {
+        id: 'mode_127_glass_shatter',
+        name: 'Glass Shatter',
+        description: 'Mode 127: Glass forming and shattering',
+        category: 'Geometric',
+        mode: 127,
+        tags: ["glass", "shatter"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_128_bioluminescence: {
+        id: 'mode_128_bioluminescence',
+        name: 'Bioluminescence',
+        description: 'Mode 128: Deep ocean bioluminescent creatures',
+        category: 'Geometric',
+        mode: 128,
+        tags: ["bioluminescence"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_129_sound_architecture: {
+        id: 'mode_129_sound_architecture',
+        name: 'Sound Architecture',
+        description: 'Mode 129: Impossible architecture constructing/deconstructing',
+        category: 'Geometric',
+        mode: 129,
+        tags: ["sound", "architecture"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_130_plasma_ball: {
+        id: 'mode_130_plasma_ball',
+        name: 'Plasma Ball',
+        description: 'Mode 130: Plasma globe with electrical tendrils',
+        category: 'Energy',
+        mode: 130,
+        tags: ["plasma", "ball"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_131_sand_mandala: {
+        id: 'mode_131_sand_mandala',
+        name: 'Sand Mandala',
+        description: 'Mode 131: Tibetan sand mandala forming grain by grain',
+        category: 'Geometric',
+        mode: 131,
+        tags: ["sand", "mandala"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_132_laser_show: {
+        id: 'mode_132_laser_show',
+        name: 'Laser Show',
+        description: 'Mode 132: Concert laser beams sweeping and bouncing',
+        category: 'Geometric',
+        mode: 132,
+        tags: ["laser", "show"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_133_coral_reef: {
+        id: 'mode_133_coral_reef',
+        name: 'Coral Reef',
+        description: 'Mode 133: Growing coral reef with swaying polyps',
+        category: 'Nature',
+        mode: 133,
+        tags: ["coral", "reef"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_134_wireframe_morph: {
+        id: 'mode_134_wireframe_morph',
+        name: 'Wireframe Morph',
+        description: 'Mode 134: 3D wireframe objects morphing between shapes',
+        category: 'Geometric',
+        mode: 134,
+        tags: ["wireframe", "morph"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_135_sound_garden: {
+        id: 'mode_135_sound_garden',
+        name: 'Sound Garden',
+        description: 'Mode 135: Abstract garden with blooming flowers',
+        category: 'Geometric',
+        mode: 135,
+        tags: ["sound", "garden"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_136_hologram_glitch: {
+        id: 'mode_136_hologram_glitch',
+        name: 'Hologram Glitch',
+        description: 'Mode 136: Glitching holographic interface',
+        category: 'Geometric',
+        mode: 136,
+        tags: ["hologram", "glitch"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_137_pendulum_wave: {
+        id: 'mode_137_pendulum_wave',
+        name: 'Pendulum Wave',
+        description: 'Mode 137: Multiple pendulums creating wave patterns',
+        category: 'Geometric',
+        mode: 137,
+        tags: ["pendulum", "wave"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_138_volcano_eruption: {
+        id: 'mode_138_volcano_eruption',
+        name: 'Volcano Eruption',
+        description: 'Mode 138: Volcano erupting with lava and ash',
+        category: 'Geometric',
+        mode: 138,
+        tags: ["volcano", "eruption"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_139_butterfly_effect: {
+        id: 'mode_139_butterfly_effect',
+        name: 'Butterfly Effect',
+        description: 'Mode 139: Chaos theory Lorenz attractor',
+        category: 'Geometric',
+        mode: 139,
+        tags: ["butterfly", "effect"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_140_silk_weaving: {
+        id: 'mode_140_silk_weaving',
+        name: 'Silk Weaving',
+        description: 'Mode 140: Silk threads weaving patterns',
+        category: 'Geometric',
+        mode: 140,
+        tags: ["silk", "weaving"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_141_clock_gears: {
+        id: 'mode_141_clock_gears',
+        name: 'Clock Gears',
+        description: 'Mode 141: Interlocking clockwork gears turning',
+        category: 'Geometric',
+        mode: 141,
+        tags: ["clock", "gears"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_142_smoke_signals: {
+        id: 'mode_142_smoke_signals',
+        name: 'Smoke Signals',
+        description: 'Mode 142: Rising smoke plumes forming patterns',
+        category: 'Geometric',
+        mode: 142,
+        tags: ["smoke", "signals"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_143_stained_glass: {
+        id: 'mode_143_stained_glass',
+        name: 'Stained Glass',
+        description: 'Mode 143: Glowing stained glass window',
+        category: 'Scientific',
+        mode: 143,
+        tags: ["stained", "glass"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_144_string_theory: {
+        id: 'mode_144_string_theory',
+        name: 'String Theory',
+        description: 'Mode 144: Theoretical strings vibrating in multiple dimensions',
+        category: 'Geometric',
+        mode: 144,
+        tags: ["string", "theory"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_145_paper_craft: {
+        id: 'mode_145_paper_craft',
+        name: 'Paper Craft',
+        description: 'Mode 145: Paper cutouts folding into 3D shapes',
+        category: 'Geometric',
+        mode: 145,
+        tags: ["paper", "craft"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_146_northern_lights: {
+        id: 'mode_146_northern_lights',
+        name: 'Northern Lights',
+        description: 'Mode 146: Realistic aurora borealis dancing',
+        category: 'Geometric',
+        mode: 146,
+        tags: ["northern", "lights"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_147_cellular_automata: {
+        id: 'mode_147_cellular_automata',
+        name: 'Cellular Automata',
+        description: 'Mode 147: Conway Game of Life with audio triggers',
+        category: 'Geometric',
+        mode: 147,
+        tags: ["cellular", "automata"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_148_dragon_curve: {
+        id: 'mode_148_dragon_curve',
+        name: 'Dragon Curve',
+        description: 'Mode 148: Fractal dragon curve growing',
+        category: 'Geometric',
+        mode: 148,
+        tags: ["dragon", "curve"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_149_rain_circles: {
+        id: 'mode_149_rain_circles',
+        name: 'Rain Circles',
+        description: 'Mode 149: Concentric circles like raindrops',
+        category: 'Scientific',
+        mode: 149,
+        tags: ["rain", "circles"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_150_fourier_epicycles: {
+        id: 'mode_150_fourier_epicycles',
+        name: 'Fourier Epicycles',
+        description: 'Mode 150: Rotating circles tracing Fourier series',
+        category: 'Geometric',
+        mode: 150,
+        tags: ["fourier", "epicycles"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_151_neon_halo_burst: {
+        id: 'mode_151_neon_halo_burst',
+        name: 'Neon Halo Burst',
+        description: 'Mode 151: Circular ring whose radius pulses with kick; emits radial spikes on snare',
+        category: 'Tech',
+        mode: 151,
+        tags: ["neon", "halo", "burst"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_152_twin_orbiters: {
+        id: 'mode_152_twin_orbiters',
+        name: 'Twin Orbiters',
+        description: 'Mode 152: Two dots orbit a center with elastic distance; trails draw lissajous figure',
+        category: 'Geometric',
+        mode: 152,
+        tags: ["twin", "orbiters"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_153_bar_spiral_galaxy: {
+        id: 'mode_153_bar_spiral_galaxy',
+        name: 'Bar Spiral Galaxy',
+        description: 'Mode 153: Bars arranged in a spiral. Each bar length follows its band',
+        category: 'Geometric',
+        mode: 153,
+        tags: ["spiral", "galaxy"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_154_ribbon_wave: {
+        id: 'mode_154_ribbon_wave',
+        name: 'Ribbon Wave',
+        description: 'Mode 154: Wide ribbon undulates like cloth; bass lifts amplitude',
+        category: 'Geometric',
+        mode: 154,
+        tags: ["ribbon", "wave"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_155_voxel_city: {
+        id: 'mode_155_voxel_city',
+        name: 'Voxel City',
+        description: 'Mode 155: 3D grid of extruded cubes like skyline; building heights react per frequency',
+        category: 'Geometric',
+        mode: 155,
+        tags: ["voxel", "city"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_156_sunburst_dial: {
+        id: 'mode_156_sunburst_dial',
+        name: 'Sunburst Dial',
+        description: 'Mode 156: 360° radial meter with ticks; ticks bend outward on mids',
+        category: 'Geometric',
+        mode: 156,
+        tags: ["sunburst", "dial"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_157_waterline_oscilloscope: {
+        id: 'mode_157_waterline_oscilloscope',
+        name: 'Waterline Oscilloscope',
+        description: 'Mode 157: Horizontal waveform floats like water surface',
+        category: 'Fluid',
+        mode: 157,
+        tags: ["waterline", "oscilloscope"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_158_laser_tunnel: {
+        id: 'mode_158_laser_tunnel',
+        name: 'Laser Tunnel',
+        description: 'Mode 158: Perspective tunnel of rings; ring scale follows kick',
+        category: 'Geometric',
+        mode: 158,
+        tags: ["laser", "tunnel"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_159_vector_field_sprites: {
+        id: 'mode_159_vector_field_sprites',
+        name: 'Vector Field Sprites',
+        description: 'Mode 159: Thousands of particles follow a noise flow; velocity multiplies on mids',
+        category: 'Geometric',
+        mode: 159,
+        tags: ["vector", "field", "sprites"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_160_orbit_rings_meter: {
+        id: 'mode_160_orbit_rings_meter',
+        name: 'Orbit Rings Meter',
+        description: 'Mode 160: Nested orbits with dots; each ring maps to a band',
+        category: 'Geometric',
+        mode: 160,
+        tags: ["orbit", "rings", "meter"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_161_stitch_bars: {
+        id: 'mode_161_stitch_bars',
+        name: 'Stitch Bars',
+        description: 'Mode 161: Stacked micro-bars like embroidered stitches',
+        category: 'Geometric',
+        mode: 161,
+        tags: ["stitch", "bars"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_162_aurora_curtain: {
+        id: 'mode_162_aurora_curtain',
+        name: 'Aurora Curtain',
+        description: 'Mode 162: Vertical curtains waving; bass widens curtain',
+        category: 'Scientific',
+        mode: 162,
+        tags: ["aurora", "curtain"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_164_polygon_heartbeat: {
+        id: 'mode_164_polygon_heartbeat',
+        name: 'Polygon Heartbeat',
+        description: 'Mode 164: Regular polygon in the center inflates on kicks',
+        category: 'Geometric',
+        mode: 164,
+        tags: ["polygon", "heartbeat"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_165_confetti_impulse: {
+        id: 'mode_165_confetti_impulse',
+        name: 'Confetti Impulse',
+        description: 'Mode 165: On peaks, spawn confetti bursts',
+        category: 'Geometric',
+        mode: 165,
+        tags: ["confetti", "impulse"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_166_wireframe_dome: {
+        id: 'mode_166_wireframe_dome',
+        name: 'Wireframe Dome',
+        description: 'Mode 166: Hemispherical mesh; vertices displace along normals',
+        category: 'Geometric',
+        mode: 166,
+        tags: ["wireframe", "dome"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_167_pulse_dashes: {
+        id: 'mode_167_pulse_dashes',
+        name: 'Pulse Dashes',
+        description: 'Mode 167: Circular dashed stroke; dash length oscillates with mids',
+        category: 'Geometric',
+        mode: 167,
+        tags: ["pulse", "dashes"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_168_terrain_sweep: {
+        id: 'mode_168_terrain_sweep',
+        name: 'Terrain Sweep',
+        description: 'Mode 168: Scrolling heightmap like synthwave hills',
+        category: 'Scientific',
+        mode: 168,
+        tags: ["terrain", "sweep"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_169_chromatic_bars_mirror: {
+        id: 'mode_169_chromatic_bars_mirror',
+        name: 'Chromatic Bars Mirror',
+        description: 'Mode 169: Mirrored bars with central symmetry; hue rotates',
+        category: 'Geometric',
+        mode: 169,
+        tags: ["chromatic", "bars", "mirror"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_170_bubble_choir: {
+        id: 'mode_170_bubble_choir',
+        name: 'Bubble Choir',
+        description: 'Mode 170: Bubbles rise; size from band energy; pop on snare',
+        category: 'Particles',
+        mode: 170,
+        tags: ["bubble", "choir"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_171_starfield_quantizer: {
+        id: 'mode_171_starfield_quantizer',
+        name: 'Starfield Quantizer',
+        description: 'Mode 171: Stars quantized to a grid; cell brightness follows local band',
+        category: 'Geometric',
+        mode: 171,
+        tags: ["starfield", "quantizer"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_172_dna_ladder: {
+        id: 'mode_172_dna_ladder',
+        name: 'Dna Ladder',
+        description: 'Mode 172: Two sinusoid strands; rung length follows mids',
+        category: 'Scientific',
+        mode: 172,
+        tags: ["ladder"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_173_arc_meter_trio: {
+        id: 'mode_173_arc_meter_trio',
+        name: 'Arc Meter Trio',
+        description: 'Mode 173: Three concentric arcs for lows/mids/highs',
+        category: 'Geometric',
+        mode: 173,
+        tags: ["meter", "trio"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_174_ink_splatter_scope: {
+        id: 'mode_174_ink_splatter_scope',
+        name: 'Ink Splatter Scope',
+        description: 'Mode 174: Oscilloscope line with ink-style splats at transients',
+        category: 'Fluid',
+        mode: 174,
+        tags: ["splatter", "scope"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_175_hex_cell_bloom: {
+        id: 'mode_175_hex_cell_bloom',
+        name: 'Hex Cell Bloom',
+        description: 'Mode 175: Hex grid; cells bloom outward with frequency bucket',
+        category: 'Geometric',
+        mode: 175,
+        tags: ["cell", "bloom"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_176_event_horizon_lattice: {
+        id: 'mode_176_event_horizon_lattice',
+        name: 'Event Horizon Lattice',
+        description: 'Mode 176: Event Horizon Lattice - warped grid bends toward a black hole; streaks on transients',
+        category: 'Geometric',
+        mode: 176,
+        tags: ["event", "horizon", "lattice"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_177_comet_conveyor: {
+        id: 'mode_177_comet_conveyor',
+        name: 'Comet Conveyor',
+        description: 'Mode 177: Comet Conveyor - endless belt carries comets; tails shear on treble',
+        category: 'Geometric',
+        mode: 177,
+        tags: ["comet", "conveyor"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_178_quantum_foam_micro: {
+        id: 'mode_178_quantum_foam_micro',
+        name: 'Quantum Foam Micro',
+        description: 'Mode 178: Quantum Foam Micro - foamy micro-bubbles pop; cascades on peaks',
+        category: 'Scientific',
+        mode: 178,
+        tags: ["quantum", "foam", "micro"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_179_aurora_crown: {
+        id: 'mode_179_aurora_crown',
+        name: 'Aurora Crown',
+        description: 'Mode 179: Aurora Crown - polar aurora dome overhead; ribbons brighten by mids',
+        category: 'Nature',
+        mode: 179,
+        tags: ["aurora", "crown"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_180_asteroid_excavator: {
+        id: 'mode_180_asteroid_excavator',
+        name: 'Asteroid Excavator',
+        description: 'Mode 180: Asteroid Excavator - drill depth increases with bass; debris size follows highs',
+        category: 'Geometric',
+        mode: 180,
+        tags: ["asteroid", "excavator"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_181_hyperloop_spectrotrain: {
+        id: 'mode_181_hyperloop_spectrotrain',
+        name: 'Hyperloop Spectrotrain',
+        description: 'Mode 181: Hyperloop Spectrotrain - car length scales to energy; station lights strobe',
+        category: 'Scientific',
+        mode: 181,
+        tags: ["hyperloop", "spectrotrain"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_182_galactic_pinball: {
+        id: 'mode_182_galactic_pinball',
+        name: 'Galactic Pinball',
+        description: 'Mode 182: Galactic Pinball - bumpers map to bands; ball boosts on peaks',
+        category: 'Geometric',
+        mode: 182,
+        tags: ["galactic", "pinball"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_183_nebula_inkblot: {
+        id: 'mode_183_nebula_inkblot',
+        name: 'Nebula Inkblot',
+        description: 'Mode 183: Nebula Inkblot - mirrored volumetric smoke; hue by dominant band',
+        category: 'Fluid',
+        mode: 183,
+        tags: ["nebula", "inkblot"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_184_satellite_telemetry_rings: {
+        id: 'mode_184_satellite_telemetry_rings',
+        name: 'Satellite Telemetry Rings',
+        description: 'Mode 184: Satellite Telemetry Rings - rippling rings with dashed spectrum',
+        category: 'Geometric',
+        mode: 184,
+        tags: ["satellite", "telemetry", "rings"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_185_wormhole_origami: {
+        id: 'mode_185_wormhole_origami',
+        name: 'Wormhole Origami',
+        description: 'Mode 185: Wormhole Origami - sheet folds into portal; depth by bass',
+        category: 'Geometric',
+        mode: 185,
+        tags: ["wormhole", "origami"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_186_holographic_jellyfish: {
+        id: 'mode_186_holographic_jellyfish',
+        name: 'Holographic Jellyfish',
+        description: 'Mode 186: Holographic Jellyfish - bell pulsates with lows; tentacles sparkle with highs',
+        category: 'Geometric',
+        mode: 186,
+        tags: ["holographic", "jellyfish"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_187_moon_quarry_crane: {
+        id: 'mode_187_moon_quarry_crane',
+        name: 'Moon Quarry Crane',
+        description: 'Mode 187: Moon Quarry Crane - bins heights equal band magnitude; dust on kicks',
+        category: 'Geometric',
+        mode: 187,
+        tags: ["moon", "quarry", "crane"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_188_constellation_typoplot: {
+        id: 'mode_188_constellation_typoplot',
+        name: 'Constellation Typoplot',
+        description: 'Mode 188: Constellation TypoPlot - letters as stars; lines draw when band is hot',
+        category: 'Geometric',
+        mode: 188,
+        tags: ["constellation", "typoplot"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_189_cryo_crystal_garden: {
+        id: 'mode_189_cryo_crystal_garden',
+        name: 'Cryo Crystal Garden',
+        description: 'Mode 189: Cryo Crystal Garden - crystals grow per frequency slice; flare on treble',
+        category: 'Nature',
+        mode: 189,
+        tags: ["cryo", "crystal", "garden"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_190_meteorite_blueprint: {
+        id: 'mode_190_meteorite_blueprint',
+        name: 'Meteorite Blueprint',
+        description: 'Mode 190: Meteorite Blueprint - technical UI; callouts to bands; red stamp on peaks',
+        category: 'Geometric',
+        mode: 190,
+        tags: ["meteorite", "blueprint"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_191_lunar_tide_pool: {
+        id: 'mode_191_lunar_tide_pool',
+        name: 'Lunar Tide Pool',
+        description: 'Mode 191: Lunar Tide Pool - water level by bass; caustics sharpen with highs',
+        category: 'Geometric',
+        mode: 191,
+        tags: ["lunar", "tide", "pool"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_192_orbital_barcode_slicer: {
+        id: 'mode_192_orbital_barcode_slicer',
+        name: 'Orbital Barcode Slicer',
+        description: 'Mode 192: Orbital Barcode Slicer - rings slice vertical barcode; brightness per band',
+        category: 'Geometric',
+        mode: 192,
+        tags: ["orbital", "barcode", "slicer"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_193_satellite_swarm_flocking: {
+        id: 'mode_193_satellite_swarm_flocking',
+        name: 'Satellite Swarm Flocking',
+        description: 'Mode 193: Satellite Swarm Flocking - simple flock; thrust bursts on kick',
+        category: 'Particles',
+        mode: 193,
+        tags: ["satellite", "swarm", "flocking"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_194_astro_pulse_weave: {
+        id: 'mode_194_astro_pulse_weave',
+        name: 'Astro Pulse Weave',
+        description: 'Mode 194: Astro Pulse Weave - two opposing spiral waves; brightness sum of bands',
+        category: 'Geometric',
+        mode: 194,
+        tags: ["astro", "pulse", "weave"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_195_zero_g_paint_spheres: {
+        id: 'mode_195_zero_g_paint_spheres',
+        name: 'Zero G Paint Spheres',
+        description: 'Mode 195: Zero-G Paint Spheres - spheres merge on peaks and split on highs',
+        category: 'Scientific',
+        mode: 195,
+        tags: ["zero", "paint", "spheres"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_196_supernova_countdown: {
+        id: 'mode_196_supernova_countdown',
+        name: 'Supernova Countdown',
+        description: 'Mode 196: Supernova Countdown - star swells with energy; blasts at threshold',
+        category: 'Geometric',
+        mode: 196,
+        tags: ["supernova", "countdown"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_197_martian_wind_harp: {
+        id: 'mode_197_martian_wind_harp',
+        name: 'Martian Wind Harp',
+        description: 'Mode 197: Martian Wind Harp - dunes as strings; ripples by mids; dust devils on snares',
+        category: 'Geometric',
+        mode: 197,
+        tags: ["martian", "wind", "harp"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_198_teleporting_bar_choir: {
+        id: 'mode_198_teleporting_bar_choir',
+        name: 'Teleporting Bar Choir',
+        description: 'Mode 198: Teleporting Bar Choir - bars pop at random radial positions; decay persists',
+        category: 'Geometric',
+        mode: 198,
+        tags: ["teleporting", "choir"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_199_cosmic_vinyl_halo: {
+        id: 'mode_199_cosmic_vinyl_halo',
+        name: 'Cosmic Vinyl Halo',
+        description: 'Mode 199: Cosmic Vinyl Halo - record edge-on; grooves shimmer with spectrum',
+        category: 'Geometric',
+        mode: 199,
+        tags: ["cosmic", "vinyl", "halo"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_200_photon_origination_chamber: {
+        id: 'mode_200_photon_origination_chamber',
+        name: 'Photon Origination Chamber',
+        description: 'Mode 200: Photon Origination Chamber - photons exit slits; rate per band bucket',
+        category: 'Geometric',
+        mode: 200,
+        tags: ["photon", "origination", "chamber"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_201_meteor_net: {
+        id: 'mode_201_meteor_net',
+        name: 'Meteor Net',
+        description: 'Mode 201: Meteor Net - hex net catches meteors; nodes glow by band',
+        category: 'Geometric',
+        mode: 201,
+        tags: ["meteor"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_202_deep_space_garden_hose: {
+        id: 'mode_202_deep_space_garden_hose',
+        name: 'Deep Space Garden Hose',
+        description: 'Mode 202: Deep-Space Garden Hose - spray pressure by amplitude; droplets chime on highs',
+        category: 'Geometric',
+        mode: 202,
+        tags: ["deep", "space", "garden"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_203_horizon_monoliths: {
+        id: 'mode_203_horizon_monoliths',
+        name: 'Horizon Monoliths',
+        description: 'Mode 203: Horizon Monoliths - distant monoliths rise with band; shadow sweeps on kicks',
+        category: 'Geometric',
+        mode: 203,
+        tags: ["horizon", "monoliths"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_204_gravity_slingshot_trails: {
+        id: 'mode_204_gravity_slingshot_trails',
+        name: 'Gravity Slingshot Trails',
+        description: 'Mode 204: Gravity Slingshot Trails - probes slingshot around planet; trail length by highs',
+        category: 'Scientific',
+        mode: 204,
+        tags: ["gravity", "slingshot", "trails"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_205_solar_flare_notches: {
+        id: 'mode_205_solar_flare_notches',
+        name: 'Solar Flare Notches',
+        description: 'Mode 205: Solar Flare Notches - solar disc with notch flares per bin',
+        category: 'Geometric',
+        mode: 205,
+        tags: ["solar", "flare", "notches"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_206_tesseract_window: {
+        id: 'mode_206_tesseract_window',
+        name: 'Tesseract Window',
+        description: 'Mode 206: Tesseract Window - 4D cube projection; face alpha by band energy',
+        category: 'Geometric',
+        mode: 206,
+        tags: ["tesseract", "window"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_207_interstellar_postcards: {
+        id: 'mode_207_interstellar_postcards',
+        name: 'Interstellar Postcards',
+        description: 'Mode 207: Interstellar Postcards - tiles flip; each hosts tiny spectrum motif',
+        category: 'Geometric',
+        mode: 207,
+        tags: ["interstellar", "postcards"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_208_cosmic_braille: {
+        id: 'mode_208_cosmic_braille',
+        name: 'Cosmic Braille',
+        description: 'Mode 208: Cosmic Braille - raised dots scroll; dot height by band',
+        category: 'Scientific',
+        mode: 208,
+        tags: ["cosmic", "braille"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_209_stellar_harpoon: {
+        id: 'mode_209_stellar_harpoon',
+        name: 'Stellar Harpoon',
+        description: 'Mode 209: Stellar Harpoon - line tension by amplitude; vibrato with highs',
+        category: 'Geometric',
+        mode: 209,
+        tags: ["stellar", "harpoon"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_210_galaxy_ticker_tape: {
+        id: 'mode_210_galaxy_ticker_tape',
+        name: 'Galaxy Ticker Tape',
+        description: 'Mode 210: Galaxy Ticker Tape - ticker snakes; character scale by band',
+        category: 'Geometric',
+        mode: 210,
+        tags: ["galaxy", "ticker", "tape"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_211_antimatter_chess: {
+        id: 'mode_211_antimatter_chess',
+        name: 'Antimatter Chess',
+        description: 'Mode 211: Antimatter Chess - pieces phase in/out; height maps to band',
+        category: 'Geometric',
+        mode: 211,
+        tags: ["antimatter", "chess"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_212_star_nursery_conveyor: {
+        id: 'mode_212_star_nursery_conveyor',
+        name: 'Star Nursery Conveyor',
+        description: 'Mode 212: Star Nursery Conveyor - progression speed from energy',
+        category: 'Geometric',
+        mode: 212,
+        tags: ["star", "nursery", "conveyor"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_213_magnetar_lines: {
+        id: 'mode_213_magnetar_lines',
+        name: 'Magnetar Lines',
+        description: 'Mode 213: Magnetar Lines - field lines whip; gamma flashes on transients',
+        category: 'Geometric',
+        mode: 213,
+        tags: ["magnetar", "lines"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_214_zero_kelvin_diamonds: {
+        id: 'mode_214_zero_kelvin_diamonds',
+        name: 'Zero Kelvin Diamonds',
+        description: 'Mode 214: Zero-Kelvin Diamonds - refracted beams thickness tracks bands; spin with tempo',
+        category: 'Geometric',
+        mode: 214,
+        tags: ["zero", "kelvin", "diamonds"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_215_orbital_time_garden: {
+        id: 'mode_215_orbital_time_garden',
+        name: 'Orbital Time Garden',
+        description: 'Mode 215: Orbital Time Garden - planets are clock markers; orbits expand with bass',
+        category: 'Geometric',
+        mode: 215,
+        tags: ["orbital", "time", "garden"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_216_subspace_ribbon_printer: {
+        id: 'mode_216_subspace_ribbon_printer',
+        name: 'Subspace Ribbon Printer',
+        description: 'Mode 216: Subspace Ribbon Printer - ribbon thickness equals summed band energy at slice',
+        category: 'Geometric',
+        mode: 216,
+        tags: ["subspace", "ribbon", "printer"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_217_dark_matter_drizzle: {
+        id: 'mode_217_dark_matter_drizzle',
+        name: 'Dark Matter Drizzle',
+        description: 'Mode 217: Dark-Matter Drizzle - invisible drizzle reveals when bands exceed threshold',
+        category: 'Geometric',
+        mode: 217,
+        tags: ["dark", "matter", "drizzle"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_218_meteor_choir_cones: {
+        id: 'mode_218_meteor_choir_cones',
+        name: 'Meteor Choir Cones',
+        description: 'Mode 218: Meteor Choir Cones - cone aperture by band; inner rings harmonics',
+        category: 'Geometric',
+        mode: 218,
+        tags: ["meteor", "choir", "cones"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_219_folded_galaxy_map: {
+        id: 'mode_219_folded_galaxy_map',
+        name: 'Folded Galaxy Map',
+        description: 'Mode 219: Folded Galaxy Map - folds reveal bar clusters; refolds during breakdown',
+        category: 'Geometric',
+        mode: 219,
+        tags: ["folded", "galaxy"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_220_ion_thruster_plume: {
+        id: 'mode_220_ion_thruster_plume',
+        name: 'Ion Thruster Plume',
+        description: 'Mode 220: Ion Thruster Plume - plume length maps to amplitude; shock diamonds on peaks',
+        category: 'Geometric',
+        mode: 220,
+        tags: ["thruster", "plume"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_221_cosmic_dominoes: {
+        id: 'mode_221_cosmic_dominoes',
+        name: 'Cosmic Dominoes',
+        description: 'Mode 221: Cosmic Dominoes - curved domino line; fall rate by energy; tiles display local bars',
+        category: 'Geometric',
+        mode: 221,
+        tags: ["cosmic", "dominoes"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_222_spacesuit_hud: {
+        id: 'mode_222_spacesuit_hud',
+        name: 'Spacesuit Hud',
+        description: 'Mode 222: Spacesuit HUD - HUD overlays with spectrum wedges; warning flashes on peaks',
+        category: 'Geometric',
+        mode: 222,
+        tags: ["spacesuit"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_223_pulsar_barcode_beam: {
+        id: 'mode_223_pulsar_barcode_beam',
+        name: 'Pulsar Barcode Beam',
+        description: 'Mode 223: Pulsar Barcode Beam - rotating beam; bar lengths by band; bloom on peaks',
+        category: 'Geometric',
+        mode: 223,
+        tags: ["pulsar", "barcode", "beam"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_224_astro_terrarium: {
+        id: 'mode_224_astro_terrarium',
+        name: 'Astro Terrarium',
+        description: 'Mode 224: Astro Terrarium - micro planet ecosystem; eruptions on kicks; biolume with highs',
+        category: 'Geometric',
+        mode: 224,
+        tags: ["astro", "terrarium"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_225_micrometeor_spark_curtain: {
+        id: 'mode_225_micrometeor_spark_curtain',
+        name: 'Micrometeor Spark Curtain',
+        description: 'Mode 225: Micrometeor Spark Curtain - diagonal sparks; density with amplitude',
+        category: 'Scientific',
+        mode: 225,
+        tags: ["micrometeor", "spark", "curtain"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_276_quantum_lattice: {
+        id: 'mode_276_quantum_lattice',
+        name: 'Quantum Lattice',
+        description: '3D-looking quantum lattice that shifts with bass',
+        category: 'Scientific',
+        mode: 276,
+        tags: ["quantum", "lattice"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_277_prism_rays: {
+        id: 'mode_277_prism_rays',
+        name: 'Prism Rays',
+        description: 'Light rays splitting through a prism',
+        category: 'Geometric',
+        mode: 277,
+        tags: ["prism", "rays"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_278_liquid_nitrogen: {
+        id: 'mode_278_liquid_nitrogen',
+        name: 'Liquid Nitrogen',
+        description: 'Freezing and shattering effects',
+        category: 'Fluid',
+        mode: 278,
+        tags: ["liquid", "nitrogen"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_279_silk_road_caravan: {
+        id: 'mode_279_silk_road_caravan',
+        name: 'Silk Road Caravan',
+        description: 'Moving lights across the screen like a caravan',
+        category: 'Geometric',
+        mode: 279,
+        tags: ["silk", "road", "caravan"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_280_steampunk_gears: {
+        id: 'mode_280_steampunk_gears',
+        name: 'Steampunk Gears',
+        description: 'Rotating mechanical gears',
+        category: 'Geometric',
+        mode: 280,
+        tags: ["steampunk", "gears"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_281_dragon_scales: {
+        id: 'mode_281_dragon_scales',
+        name: 'Dragon Scales',
+        description: 'Overlapping scale patterns like dragon skin',
+        category: 'Geometric',
+        mode: 281,
+        tags: ["dragon", "scales"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_282_time_dilation_grid: {
+        id: 'mode_282_time_dilation_grid',
+        name: 'Time Dilation Grid',
+        description: 'Warped spacetime grid',
+        category: 'Geometric',
+        mode: 282,
+        tags: ["time", "dilation", "grid"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_283_fiber_bundle: {
+        id: 'mode_283_fiber_bundle',
+        name: 'Fiber Bundle',
+        description: 'Mathematical fiber bundle visualization',
+        category: 'Geometric',
+        mode: 283,
+        tags: ["fiber", "bundle"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_284_moth_wing_shimmer: {
+        id: 'mode_284_moth_wing_shimmer',
+        name: 'Moth Wing Shimmer',
+        description: 'Iridescent shimmer patterns like moth wings',
+        category: 'Geometric',
+        mode: 284,
+        tags: ["moth", "wing", "shimmer"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_285_cathedral_rose: {
+        id: 'mode_285_cathedral_rose',
+        name: 'Cathedral Rose',
+        description: 'Rose window geometry like a cathedral',
+        category: 'Geometric',
+        mode: 285,
+        tags: ["cathedral", "rose"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_286_neon_veins_pulse: {
+        id: 'mode_286_neon_veins_pulse',
+        name: 'Neon Veins Pulse',
+        description: 'Pulsing vein-like network',
+        category: 'Tech',
+        mode: 286,
+        tags: ["neon", "veins", "pulse"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_287_glacial_crack: {
+        id: 'mode_287_glacial_crack',
+        name: 'Glacial Crack',
+        description: 'Spreading ice crack patterns',
+        category: 'Geometric',
+        mode: 287,
+        tags: ["glacial", "crack"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_288_quantum_dots: {
+        id: 'mode_288_quantum_dots',
+        name: 'Quantum Dots',
+        description: 'Floating quantum dot particles',
+        category: 'Scientific',
+        mode: 288,
+        tags: ["quantum", "dots"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_289_origami_crane_flight: {
+        id: 'mode_289_origami_crane_flight',
+        name: 'Origami Crane Flight',
+        description: 'Geometric origami birds in flight',
+        category: 'Geometric',
+        mode: 289,
+        tags: ["origami", "crane", "flight"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_290_magma_chamber: {
+        id: 'mode_290_magma_chamber',
+        name: 'Magma Chamber',
+        description: 'Bubbling lava effects',
+        category: 'Geometric',
+        mode: 290,
+        tags: ["magma", "chamber"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_291_spider_web_dew: {
+        id: 'mode_291_spider_web_dew',
+        name: 'Spider Web Dew',
+        description: 'Dew drops on spider web',
+        category: 'Geometric',
+        mode: 291,
+        tags: ["spider"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_292_nebula_birth: {
+        id: 'mode_292_nebula_birth',
+        name: 'Nebula Birth',
+        description: 'Gas cloud formation',
+        category: 'Geometric',
+        mode: 292,
+        tags: ["nebula", "birth"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_293_circuit_board_live: {
+        id: 'mode_293_circuit_board_live',
+        name: 'Circuit Board Live',
+        description: 'Live electric circuit patterns',
+        category: 'Scientific',
+        mode: 293,
+        tags: ["circuit", "board", "live"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_294_bioluminescent_tide: {
+        id: 'mode_294_bioluminescent_tide',
+        name: 'Bioluminescent Tide',
+        description: 'Glowing wave patterns',
+        category: 'Geometric',
+        mode: 294,
+        tags: ["bioluminescent", "tide"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_295_tesseract_projection: {
+        id: 'mode_295_tesseract_projection',
+        name: 'Tesseract Projection',
+        description: '4D hypercube projection',
+        category: 'Geometric',
+        mode: 295,
+        tags: ["tesseract", "projection"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_296_frost_crystal_growth: {
+        id: 'mode_296_frost_crystal_growth',
+        name: 'Frost Crystal Growth',
+        description: 'Growing ice crystals',
+        category: 'Nature',
+        mode: 296,
+        tags: ["frost", "crystal", "growth"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_297_sound_wave_interference: {
+        id: 'mode_297_sound_wave_interference',
+        name: 'Sound Wave Interference',
+        description: 'Wave interference patterns',
+        category: 'Geometric',
+        mode: 297,
+        tags: ["sound", "wave", "interference"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_298_holographic_fracture: {
+        id: 'mode_298_holographic_fracture',
+        name: 'Holographic Fracture',
+        description: 'Broken hologram effect',
+        category: 'Geometric',
+        mode: 298,
+        tags: ["holographic", "fracture"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_299_plasma_ball_arc: {
+        id: 'mode_299_plasma_ball_arc',
+        name: 'Plasma Ball Arc',
+        description: 'Electric plasma arcs',
+        category: 'Energy',
+        mode: 299,
+        tags: ["plasma", "ball"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_300_eternal_flame_dance: {
+        id: 'mode_300_eternal_flame_dance',
+        name: 'Eternal Flame Dance',
+        description: 'Flowing fire patterns',
+        category: 'Geometric',
+        mode: 300,
+        tags: ["eternal", "flame", "dance"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_301_forest_canopy: {
+        id: 'mode_301_forest_canopy',
+        name: 'Forest Canopy',
+        description: 'Mode 301: Tree canopy with swaying branches',
+        category: 'Nature',
+        mode: 301,
+        tags: ["forest", "canopy"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_302_ocean_waves: {
+        id: 'mode_302_ocean_waves',
+        name: 'Ocean Waves',
+        description: 'Mode 302: Flowing ocean waves with foam',
+        category: 'Nature',
+        mode: 302,
+        tags: ["ocean", "waves"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_303_coral_reef: {
+        id: 'mode_303_coral_reef',
+        name: 'Coral Reef',
+        description: 'Mode 303: Coral formations with flowing tentacles',
+        category: 'Nature',
+        mode: 303,
+        tags: ["coral", "reef"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_304_butterfly_swarm: {
+        id: 'mode_304_butterfly_swarm',
+        name: 'Butterfly Swarm',
+        description: 'Mode 304: Butterflies dancing to music',
+        category: 'Particles',
+        mode: 304,
+        tags: ["butterfly", "swarm"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_305_mountain_peaks: {
+        id: 'mode_305_mountain_peaks',
+        name: 'Mountain Peaks',
+        description: 'Mode 305: Mountain ranges responding to frequencies',
+        category: 'Scientific',
+        mode: 305,
+        tags: ["mountain", "peaks"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_306_fireflies: {
+        id: 'mode_306_fireflies',
+        name: 'Fireflies',
+        description: 'Mode 306: Fireflies glowing and flickering',
+        category: 'Nature',
+        mode: 306,
+        tags: ["fireflies"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_307_flower_bloom: {
+        id: 'mode_307_flower_bloom',
+        name: 'Flower Bloom',
+        description: 'Mode 307: Flowers blooming radially',
+        category: 'Nature',
+        mode: 307,
+        tags: ["flower", "bloom"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_308_rain_ripples: {
+        id: 'mode_308_rain_ripples',
+        name: 'Rain Ripples',
+        description: 'Mode 308: Rain creating ripples on water surface',
+        category: 'Scientific',
+        mode: 308,
+        tags: ["rain", "ripples"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_309_leaf_fall: {
+        id: 'mode_309_leaf_fall',
+        name: 'Leaf Fall',
+        description: 'Mode 309: Autumn leaves falling',
+        category: 'Geometric',
+        mode: 309,
+        tags: ["leaf", "fall"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_310_tree_rings: {
+        id: 'mode_310_tree_rings',
+        name: 'Tree Rings',
+        description: 'Mode 310: Growth rings of a tree',
+        category: 'Nature',
+        mode: 310,
+        tags: ["tree", "rings"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_311_lightning_storm: {
+        id: 'mode_311_lightning_storm',
+        name: 'Lightning Storm',
+        description: 'Mode 311: Lightning bolts during storm',
+        category: 'Energy',
+        mode: 311,
+        tags: ["lightning", "storm"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_312_pond_koi: {
+        id: 'mode_312_pond_koi',
+        name: 'Pond Koi',
+        description: 'Mode 312: Koi fish swimming in pond',
+        category: 'Geometric',
+        mode: 312,
+        tags: ["pond"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_313_moss_growth: {
+        id: 'mode_313_moss_growth',
+        name: 'Moss Growth',
+        description: 'Mode 313: Moss spreading organically',
+        category: 'Geometric',
+        mode: 313,
+        tags: ["moss", "growth"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_314_aurora_forest: {
+        id: 'mode_314_aurora_forest',
+        name: 'Aurora Forest',
+        description: 'Mode 314: Northern lights over forest',
+        category: 'Nature',
+        mode: 314,
+        tags: ["aurora", "forest"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_315_dandelion_seeds: {
+        id: 'mode_315_dandelion_seeds',
+        name: 'Dandelion Seeds',
+        description: 'Mode 315: Dandelion seeds floating in wind',
+        category: 'Geometric',
+        mode: 315,
+        tags: ["dandelion", "seeds"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_316_fern_fractals: {
+        id: 'mode_316_fern_fractals',
+        name: 'Fern Fractals',
+        description: 'Mode 316: Fractal fern patterns',
+        category: 'Geometric',
+        mode: 316,
+        tags: ["fern", "fractals"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_317_beehive_cells: {
+        id: 'mode_317_beehive_cells',
+        name: 'Beehive Cells',
+        description: 'Mode 317: Hexagonal honeycomb pattern',
+        category: 'Geometric',
+        mode: 317,
+        tags: ["beehive", "cells"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_318_wheat_field: {
+        id: 'mode_318_wheat_field',
+        name: 'Wheat Field',
+        description: 'Mode 318: Wheat swaying in wind',
+        category: 'Geometric',
+        mode: 318,
+        tags: ["wheat", "field"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_319_spider_web: {
+        id: 'mode_319_spider_web',
+        name: 'Spider Web',
+        description: 'Mode 319: Spider web with dew drops',
+        category: 'Geometric',
+        mode: 319,
+        tags: ["spider"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_320_mushroom_spores: {
+        id: 'mode_320_mushroom_spores',
+        name: 'Mushroom Spores',
+        description: 'Mode 320: Mushroom spores floating',
+        category: 'Geometric',
+        mode: 320,
+        tags: ["mushroom", "spores"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_321_bamboo_forest: {
+        id: 'mode_321_bamboo_forest',
+        name: 'Bamboo Forest',
+        description: 'Mode 321: Bamboo stalks swaying',
+        category: 'Nature',
+        mode: 321,
+        tags: ["bamboo", "forest"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_322_tide_pools: {
+        id: 'mode_322_tide_pools',
+        name: 'Tide Pools',
+        description: 'Mode 322: Tide pools with sea life',
+        category: 'Geometric',
+        mode: 322,
+        tags: ["tide", "pools"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_323_vine_tendrils: {
+        id: 'mode_323_vine_tendrils',
+        name: 'Vine Tendrils',
+        description: 'Mode 323: Growing vine tendrils',
+        category: 'Geometric',
+        mode: 323,
+        tags: ["vine", "tendrils"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_324_crystal_cave: {
+        id: 'mode_324_crystal_cave',
+        name: 'Crystal Cave',
+        description: 'Mode 324: Crystalline cave formations',
+        category: 'Nature',
+        mode: 324,
+        tags: ["crystal", "cave"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_325_bird_murmuration: {
+        id: 'mode_325_bird_murmuration',
+        name: 'Bird Murmuration',
+        description: 'Mode 325: Flock of birds in murmuration',
+        category: 'Geometric',
+        mode: 325,
+        tags: ["bird", "murmuration"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_326_river_flow: {
+        id: 'mode_326_river_flow',
+        name: 'River Flow',
+        description: 'Mode 326: River flowing with currents',
+        category: 'Geometric',
+        mode: 326,
+        tags: ["river", "flow"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_327_seed_pods: {
+        id: 'mode_327_seed_pods',
+        name: 'Seed Pods',
+        description: 'Mode 327: Seed pods bursting open',
+        category: 'Geometric',
+        mode: 327,
+        tags: ["seed", "pods"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_328_algae_bloom: {
+        id: 'mode_328_algae_bloom',
+        name: 'Algae Bloom',
+        description: 'Mode 328: Algae blooming in water',
+        category: 'Geometric',
+        mode: 328,
+        tags: ["algae", "bloom"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_329_cactus_spines: {
+        id: 'mode_329_cactus_spines',
+        name: 'Cactus Spines',
+        description: 'Mode 329: Cactus with radiating spines',
+        category: 'Geometric',
+        mode: 329,
+        tags: ["cactus", "spines"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_330_snowflakes: {
+        id: 'mode_330_snowflakes',
+        name: 'Snowflakes',
+        description: 'Mode 330: Unique snowflakes falling',
+        category: 'Geometric',
+        mode: 330,
+        tags: ["snowflakes"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_331_lava_flow: {
+        id: 'mode_331_lava_flow',
+        name: 'Lava Flow',
+        description: 'Mode 331: Molten lava flowing',
+        category: 'Fluid',
+        mode: 331,
+        tags: ["lava", "flow"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_332_ice_crystals: {
+        id: 'mode_332_ice_crystals',
+        name: 'Ice Crystals',
+        description: 'Mode 332: Ice crystal formations',
+        category: 'Nature',
+        mode: 332,
+        tags: ["crystals"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_333_pine_cones: {
+        id: 'mode_333_pine_cones',
+        name: 'Pine Cones',
+        description: 'Mode 333: Pine cone spiral patterns',
+        category: 'Geometric',
+        mode: 333,
+        tags: ["pine", "cones"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_334_geyser_eruption: {
+        id: 'mode_334_geyser_eruption',
+        name: 'Geyser Eruption',
+        description: 'Mode 334: Geyser water erupting',
+        category: 'Geometric',
+        mode: 334,
+        tags: ["geyser", "eruption"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_335_pollen_cloud: {
+        id: 'mode_335_pollen_cloud',
+        name: 'Pollen Cloud',
+        description: 'Mode 335: Pollen drifting in air',
+        category: 'Geometric',
+        mode: 335,
+        tags: ["pollen", "cloud"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_336_desert_dunes: {
+        id: 'mode_336_desert_dunes',
+        name: 'Desert Dunes',
+        description: 'Mode 336: Sand dunes in wind',
+        category: 'Geometric',
+        mode: 336,
+        tags: ["desert", "dunes"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_337_lily_pads: {
+        id: 'mode_337_lily_pads',
+        name: 'Lily Pads',
+        description: 'Mode 337: Water lilies on pond',
+        category: 'Geometric',
+        mode: 337,
+        tags: ["lily", "pads"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_338_termite_mound: {
+        id: 'mode_338_termite_mound',
+        name: 'Termite Mound',
+        description: 'Mode 338: Termite mound structure',
+        category: 'Geometric',
+        mode: 338,
+        tags: ["termite", "mound"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_339_cherry_blossoms: {
+        id: 'mode_339_cherry_blossoms',
+        name: 'Cherry Blossoms',
+        description: 'Mode 339: Cherry blossom petals falling',
+        category: 'Geometric',
+        mode: 339,
+        tags: ["cherry", "blossoms"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_340_root_system: {
+        id: 'mode_340_root_system',
+        name: 'Root System',
+        description: 'Mode 340: Underground root network',
+        category: 'Geometric',
+        mode: 340,
+        tags: ["root", "system"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_341_plankton_swarm: {
+        id: 'mode_341_plankton_swarm',
+        name: 'Plankton Swarm',
+        description: 'Mode 341: Bioluminescent plankton',
+        category: 'Particles',
+        mode: 341,
+        tags: ["plankton", "swarm"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_342_frost_patterns: {
+        id: 'mode_342_frost_patterns',
+        name: 'Frost Patterns',
+        description: 'Mode 342: Frost forming on glass',
+        category: 'Geometric',
+        mode: 342,
+        tags: ["frost", "patterns"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_343_ant_trails: {
+        id: 'mode_343_ant_trails',
+        name: 'Ant Trails',
+        description: 'Mode 343: Ant colony foraging trails',
+        category: 'Scientific',
+        mode: 343,
+        tags: ["trails"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_344_seaweed_sway: {
+        id: 'mode_344_seaweed_sway',
+        name: 'Seaweed Sway',
+        description: 'Mode 344: Seaweed swaying underwater',
+        category: 'Geometric',
+        mode: 344,
+        tags: ["seaweed", "sway"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_345_volcano_ash: {
+        id: 'mode_345_volcano_ash',
+        name: 'Volcano Ash',
+        description: 'Mode 345: Volcanic ash cloud',
+        category: 'Geometric',
+        mode: 345,
+        tags: ["volcano"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_346_dragonfly_wings: {
+        id: 'mode_346_dragonfly_wings',
+        name: 'Dragonfly Wings',
+        description: 'Mode 346: Dragonfly wing patterns',
+        category: 'Geometric',
+        mode: 346,
+        tags: ["dragonfly", "wings"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_347_pebble_ripples: {
+        id: 'mode_347_pebble_ripples',
+        name: 'Pebble Ripples',
+        description: 'Mode 347: Pebbles dropping in water',
+        category: 'Geometric',
+        mode: 347,
+        tags: ["pebble", "ripples"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_348_moss_tendrils: {
+        id: 'mode_348_moss_tendrils',
+        name: 'Moss Tendrils',
+        description: 'Mode 348: Moss growing on stone',
+        category: 'Geometric',
+        mode: 348,
+        tags: ["moss", "tendrils"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_349_starfish_arms: {
+        id: 'mode_349_starfish_arms',
+        name: 'Starfish Arms',
+        description: 'Mode 349: Starfish with moving arms',
+        category: 'Geometric',
+        mode: 349,
+        tags: ["starfish", "arms"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_350_venus_flytrap: {
+        id: 'mode_350_venus_flytrap',
+        name: 'Venus Flytrap',
+        description: 'Mode 350: Venus flytrap opening and closing',
+        category: 'Geometric',
+        mode: 350,
+        tags: ["venus", "flytrap"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_351_rainbow_mist: {
+        id: 'mode_351_rainbow_mist',
+        name: 'Rainbow Mist',
+        description: 'Mode 351: Rainbow appearing in mist',
+        category: 'Scientific',
+        mode: 351,
+        tags: ["rainbow", "mist"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_352_geode_crystals: {
+        id: 'mode_352_geode_crystals',
+        name: 'Geode Crystals',
+        description: 'Mode 352: Crystal formations inside geode',
+        category: 'Nature',
+        mode: 352,
+        tags: ["geode", "crystals"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_353_snake_scales: {
+        id: 'mode_353_snake_scales',
+        name: 'Snake Scales',
+        description: 'Mode 353: Snake skin scale pattern',
+        category: 'Geometric',
+        mode: 353,
+        tags: ["snake", "scales"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_354_whirlpool: {
+        id: 'mode_354_whirlpool',
+        name: 'Whirlpool',
+        description: 'Mode 354: Water spiraling into whirlpool',
+        category: 'Geometric',
+        mode: 354,
+        tags: ["whirlpool"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_355_owl_eyes: {
+        id: 'mode_355_owl_eyes',
+        name: 'Owl Eyes',
+        description: 'Mode 355: Owl eyes blinking',
+        category: 'Geometric',
+        mode: 355,
+        tags: ["eyes"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_356_tornado_funnel: {
+        id: 'mode_356_tornado_funnel',
+        name: 'Tornado Funnel',
+        description: 'Mode 356: Tornado funnel with debris',
+        category: 'Geometric',
+        mode: 356,
+        tags: ["tornado", "funnel"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_357_peacock_feathers: {
+        id: 'mode_357_peacock_feathers',
+        name: 'Peacock Feathers',
+        description: 'Mode 357: Peacock tail feather display',
+        category: 'Geometric',
+        mode: 357,
+        tags: ["peacock", "feathers"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_358_jellyfish_pulse: {
+        id: 'mode_358_jellyfish_pulse',
+        name: 'Jellyfish Pulse',
+        description: 'Mode 358: Jellyfish pulsating',
+        category: 'Geometric',
+        mode: 358,
+        tags: ["jellyfish", "pulse"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_359_sand_ripples: {
+        id: 'mode_359_sand_ripples',
+        name: 'Sand Ripples',
+        description: 'Mode 359: Ripples in sand from wind',
+        category: 'Geometric',
+        mode: 359,
+        tags: ["sand", "ripples"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_360_bat_swarm: {
+        id: 'mode_360_bat_swarm',
+        name: 'Bat Swarm',
+        description: 'Mode 360: Bats swarming from cave',
+        category: 'Particles',
+        mode: 360,
+        tags: ["swarm"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_361_tide_motion: {
+        id: 'mode_361_tide_motion',
+        name: 'Tide Motion',
+        description: 'Mode 361: Tidal motion advancing and retreating',
+        category: 'Geometric',
+        mode: 361,
+        tags: ["tide", "motion"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_362_lichen_growth: {
+        id: 'mode_362_lichen_growth',
+        name: 'Lichen Growth',
+        description: 'Mode 362: Lichen spreading on rock',
+        category: 'Geometric',
+        mode: 362,
+        tags: ["lichen", "growth"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_363_eagle_soar: {
+        id: 'mode_363_eagle_soar',
+        name: 'Eagle Soar',
+        description: 'Mode 363: Eagle soaring in thermals',
+        category: 'Geometric',
+        mode: 363,
+        tags: ["eagle", "soar"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_364_mangrove_roots: {
+        id: 'mode_364_mangrove_roots',
+        name: 'Mangrove Roots',
+        description: 'Mode 364: Mangrove root system',
+        category: 'Geometric',
+        mode: 364,
+        tags: ["mangrove", "roots"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_365_aurora_waves: {
+        id: 'mode_365_aurora_waves',
+        name: 'Aurora Waves',
+        description: 'Mode 365: Aurora borealis curtain waves',
+        category: 'Nature',
+        mode: 365,
+        tags: ["aurora", "waves"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_366_dolphin_leap: {
+        id: 'mode_366_dolphin_leap',
+        name: 'Dolphin Leap',
+        description: 'Mode 366: Dolphins leaping from water',
+        category: 'Geometric',
+        mode: 366,
+        tags: ["dolphin", "leap"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_367_tumbleweed_roll: {
+        id: 'mode_367_tumbleweed_roll',
+        name: 'Tumbleweed Roll',
+        description: 'Mode 367: Tumbleweed rolling across desert',
+        category: 'Geometric',
+        mode: 367,
+        tags: ["tumbleweed", "roll"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_368_coral_polyps: {
+        id: 'mode_368_coral_polyps',
+        name: 'Coral Polyps',
+        description: 'Mode 368: Coral polyps extending tentacles',
+        category: 'Nature',
+        mode: 368,
+        tags: ["coral", "polyps"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_369_smoke_wisps: {
+        id: 'mode_369_smoke_wisps',
+        name: 'Smoke Wisps',
+        description: 'Mode 369: Smoke wisps rising',
+        category: 'Geometric',
+        mode: 369,
+        tags: ["smoke", "wisps"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_370_nautilus_shell: {
+        id: 'mode_370_nautilus_shell',
+        name: 'Nautilus Shell',
+        description: 'Mode 370: Nautilus shell spiral',
+        category: 'Geometric',
+        mode: 370,
+        tags: ["nautilus", "shell"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_371_wolf_howl: {
+        id: 'mode_371_wolf_howl',
+        name: 'Wolf Howl',
+        description: 'Mode 371: Wolf howling at moon with sound waves',
+        category: 'Geometric',
+        mode: 371,
+        tags: ["wolf", "howl"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_372_seashell_patterns: {
+        id: 'mode_372_seashell_patterns',
+        name: 'Seashell Patterns',
+        description: 'Mode 372: Various seashell patterns',
+        category: 'Geometric',
+        mode: 372,
+        tags: ["seashell", "patterns"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_373_grass_blades: {
+        id: 'mode_373_grass_blades',
+        name: 'Grass Blades',
+        description: 'Mode 373: Individual grass blades swaying',
+        category: 'Geometric',
+        mode: 373,
+        tags: ["grass", "blades"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_374_stalactites: {
+        id: 'mode_374_stalactites',
+        name: 'Stalactites',
+        description: 'Mode 374: Cave stalactites and stalagmites',
+        category: 'Geometric',
+        mode: 374,
+        tags: ["stalactites"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_375_amoeba_movement: {
+        id: 'mode_375_amoeba_movement',
+        name: 'Amoeba Movement',
+        description: 'Mode 375: Amoeba-like organic movement',
+        category: 'Geometric',
+        mode: 375,
+        tags: ["amoeba", "movement"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_376_pine_needles: {
+        id: 'mode_376_pine_needles',
+        name: 'Pine Needles',
+        description: 'Mode 376: Pine needle clusters',
+        category: 'Geometric',
+        mode: 376,
+        tags: ["pine", "needles"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_377_water_droplet: {
+        id: 'mode_377_water_droplet',
+        name: 'Water Droplet',
+        description: 'Mode 377: Water droplet impact and splash',
+        category: 'Fluid',
+        mode: 377,
+        tags: ["water", "droplet"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_378_succulent_rosette: {
+        id: 'mode_378_succulent_rosette',
+        name: 'Succulent Rosette',
+        description: 'Mode 378: Succulent plant rosette pattern',
+        category: 'Geometric',
+        mode: 378,
+        tags: ["succulent", "rosette"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_379_salmon_upstream: {
+        id: 'mode_379_salmon_upstream',
+        name: 'Salmon Upstream',
+        description: 'Mode 379: Salmon swimming upstream',
+        category: 'Geometric',
+        mode: 379,
+        tags: ["salmon", "upstream"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_380_cloud_formation: {
+        id: 'mode_380_cloud_formation',
+        name: 'Cloud Formation',
+        description: 'Mode 380: Clouds forming and dispersing',
+        category: 'Geometric',
+        mode: 380,
+        tags: ["cloud", "formation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_381_fox_tail: {
+        id: 'mode_381_fox_tail',
+        name: 'Fox Tail',
+        description: 'Mode 381: Fox tail swishing',
+        category: 'Scientific',
+        mode: 381,
+        tags: ["tail"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_382_clover_field: {
+        id: 'mode_382_clover_field',
+        name: 'Clover Field',
+        description: 'Mode 382: Field of four-leaf clovers',
+        category: 'Geometric',
+        mode: 382,
+        tags: ["clover", "field"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_383_geyser_field: {
+        id: 'mode_383_geyser_field',
+        name: 'Geyser Field',
+        description: 'Mode 383: Multiple geysers erupting',
+        category: 'Geometric',
+        mode: 383,
+        tags: ["geyser", "field"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_384_insect_compound_eye: {
+        id: 'mode_384_insect_compound_eye',
+        name: 'Insect Compound Eye',
+        description: 'Mode 384: Compound eye of an insect',
+        category: 'Geometric',
+        mode: 384,
+        tags: ["insect", "compound"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_385_moonflower_bloom: {
+        id: 'mode_385_moonflower_bloom',
+        name: 'Moonflower Bloom',
+        description: 'Mode 385: Moonflower blooming at night',
+        category: 'Nature',
+        mode: 385,
+        tags: ["moonflower", "bloom"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_386_sand_dollar: {
+        id: 'mode_386_sand_dollar',
+        name: 'Sand Dollar',
+        description: 'Mode 386: Sand dollar pattern',
+        category: 'Geometric',
+        mode: 386,
+        tags: ["sand", "dollar"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_387_glacier_crevasse: {
+        id: 'mode_387_glacier_crevasse',
+        name: 'Glacier Crevasse',
+        description: 'Mode 387: Deep crevasse in glacier',
+        category: 'Geometric',
+        mode: 387,
+        tags: ["glacier", "crevasse"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_388_antler_growth: {
+        id: 'mode_388_antler_growth',
+        name: 'Antler Growth',
+        description: 'Mode 388: Deer antler branching pattern',
+        category: 'Geometric',
+        mode: 388,
+        tags: ["antler", "growth"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_389_plume_worm: {
+        id: 'mode_389_plume_worm',
+        name: 'Plume Worm',
+        description: 'Mode 389: Feather duster worm plume',
+        category: 'Geometric',
+        mode: 389,
+        tags: ["plume", "worm"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_390_reed_marsh: {
+        id: 'mode_390_reed_marsh',
+        name: 'Reed Marsh',
+        description: 'Mode 390: Reeds swaying in marsh',
+        category: 'Geometric',
+        mode: 390,
+        tags: ["reed", "marsh"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_391_beetle_shell: {
+        id: 'mode_391_beetle_shell',
+        name: 'Beetle Shell',
+        description: 'Mode 391: Iridescent beetle shell pattern',
+        category: 'Geometric',
+        mode: 391,
+        tags: ["beetle", "shell"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_392_tide_anemone: {
+        id: 'mode_392_tide_anemone',
+        name: 'Tide Anemone',
+        description: 'Mode 392: Sea anemone in tidal zone',
+        category: 'Geometric',
+        mode: 392,
+        tags: ["tide", "anemone"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_393_earthquake_waves: {
+        id: 'mode_393_earthquake_waves',
+        name: 'Earthquake Waves',
+        description: 'Mode 393: Seismic waves propagating',
+        category: 'Geometric',
+        mode: 393,
+        tags: ["earthquake", "waves"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_394_butterfly_lifecycle: {
+        id: 'mode_394_butterfly_lifecycle',
+        name: 'Butterfly Lifecycle',
+        description: 'Mode 394: Butterfly metamorphosis stages',
+        category: 'Geometric',
+        mode: 394,
+        tags: ["butterfly", "lifecycle"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_395_coconut_palm: {
+        id: 'mode_395_coconut_palm',
+        name: 'Coconut Palm',
+        description: 'Mode 395: Palm tree with coconuts',
+        category: 'Geometric',
+        mode: 395,
+        tags: ["coconut", "palm"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_396_frost_ferns: {
+        id: 'mode_396_frost_ferns',
+        name: 'Frost Ferns',
+        description: 'Mode 396: Frost fern patterns on window',
+        category: 'Geometric',
+        mode: 396,
+        tags: ["frost", "ferns"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_397_bioluminescent_bay: {
+        id: 'mode_397_bioluminescent_bay',
+        name: 'Bioluminescent Bay',
+        description: 'Mode 397: Bioluminescent organisms in bay',
+        category: 'Geometric',
+        mode: 397,
+        tags: ["bioluminescent"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_398_erosion_patterns: {
+        id: 'mode_398_erosion_patterns',
+        name: 'Erosion Patterns',
+        description: 'Mode 398: Water erosion creating patterns',
+        category: 'Geometric',
+        mode: 398,
+        tags: ["erosion", "patterns"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_399_hedge_maze: {
+        id: 'mode_399_hedge_maze',
+        name: 'Hedge Maze',
+        description: 'Mode 399: Hedge maze from above',
+        category: 'Geometric',
+        mode: 399,
+        tags: ["hedge", "maze"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_400_water_lily_reflection: {
+        id: 'mode_400_water_lily_reflection',
+        name: 'Water Lily Reflection',
+        description: 'Mode 400: Water lily with mirror reflection',
+        category: 'Fluid',
+        mode: 400,
+        tags: ["water", "lily", "reflection"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_401_atom_model: {
+        id: 'mode_401_atom_model',
+        name: 'Atom Model',
+        description: 'Mode 401: Atomic orbital model with electrons',
+        category: 'Scientific',
+        mode: 401,
+        tags: ["atom", "model"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_402_double_helix: {
+        id: 'mode_402_double_helix',
+        name: 'Double Helix',
+        description: 'Mode 402: DNA double helix structure',
+        category: 'Geometric',
+        mode: 402,
+        tags: ["double", "helix"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_403_magnetic_field: {
+        id: 'mode_403_magnetic_field',
+        name: 'Magnetic Field',
+        description: 'Mode 403: Magnetic field lines',
+        category: 'Scientific',
+        mode: 403,
+        tags: ["magnetic", "field"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_404_wave_interference: {
+        id: 'mode_404_wave_interference',
+        name: 'Wave Interference',
+        description: 'Mode 404: Wave interference patterns',
+        category: 'Geometric',
+        mode: 404,
+        tags: ["wave", "interference"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_405_particle_accelerator: {
+        id: 'mode_405_particle_accelerator',
+        name: 'Particle Accelerator',
+        description: 'Mode 405: Particle accelerator ring',
+        category: 'Particles',
+        mode: 405,
+        tags: ["particle", "accelerator"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_406_crystal_lattice: {
+        id: 'mode_406_crystal_lattice',
+        name: 'Crystal Lattice',
+        description: 'Mode 406: 3D crystal lattice structure',
+        category: 'Nature',
+        mode: 406,
+        tags: ["crystal", "lattice"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_407_electromagnetic_wave: {
+        id: 'mode_407_electromagnetic_wave',
+        name: 'Electromagnetic Wave',
+        description: 'Mode 407: Electromagnetic wave propagation',
+        category: 'Scientific',
+        mode: 407,
+        tags: ["electromagnetic", "wave"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_408_quantum_tunneling: {
+        id: 'mode_408_quantum_tunneling',
+        name: 'Quantum Tunneling',
+        description: 'Mode 408: Quantum tunneling through barrier',
+        category: 'Scientific',
+        mode: 408,
+        tags: ["quantum", "tunneling"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_409_fission_reaction: {
+        id: 'mode_409_fission_reaction',
+        name: 'Fission Reaction',
+        description: 'Mode 409: Nuclear fission chain reaction',
+        category: 'Geometric',
+        mode: 409,
+        tags: ["fission", "reaction"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_410_doppler_effect: {
+        id: 'mode_410_doppler_effect',
+        name: 'Doppler Effect',
+        description: 'Mode 410: Doppler effect wave compression',
+        category: 'Geometric',
+        mode: 410,
+        tags: ["doppler", "effect"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_411_gravity_well: {
+        id: 'mode_411_gravity_well',
+        name: 'Gravity Well',
+        description: 'Mode 411: Gravitational well spacetime curvature',
+        category: 'Geometric',
+        mode: 411,
+        tags: ["gravity", "well"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_412_prism_spectrum: {
+        id: 'mode_412_prism_spectrum',
+        name: 'Prism Spectrum',
+        description: 'Mode 412: Light dispersing through prism',
+        category: 'Geometric',
+        mode: 412,
+        tags: ["prism", "spectrum"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_413_molecular_bonds: {
+        id: 'mode_413_molecular_bonds',
+        name: 'Molecular Bonds',
+        description: 'Mode 413: Molecular bonding and vibration',
+        category: 'Geometric',
+        mode: 413,
+        tags: ["molecular", "bonds"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_414_standing_wave: {
+        id: 'mode_414_standing_wave',
+        name: 'Standing Wave',
+        description: 'Mode 414: Standing wave with nodes and antinodes',
+        category: 'Geometric',
+        mode: 414,
+        tags: ["standing", "wave"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_415_brownian_motion: {
+        id: 'mode_415_brownian_motion',
+        name: 'Brownian Motion',
+        description: 'Mode 415: Brownian motion of particles',
+        category: 'Geometric',
+        mode: 415,
+        tags: ["brownian", "motion"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_416_tesla_coil: {
+        id: 'mode_416_tesla_coil',
+        name: 'Tesla Coil',
+        description: 'Mode 416: Tesla coil electric arcs',
+        category: 'Geometric',
+        mode: 416,
+        tags: ["tesla", "coil"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_417_phase_transition: {
+        id: 'mode_417_phase_transition',
+        name: 'Phase Transition',
+        description: 'Mode 417: Phase transition (solid/liquid/gas)',
+        category: 'Geometric',
+        mode: 417,
+        tags: ["phase", "transition"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_418_superconductor: {
+        id: 'mode_418_superconductor',
+        name: 'Superconductor',
+        description: 'Mode 418: Superconductor Meissner effect',
+        category: 'Geometric',
+        mode: 418,
+        tags: ["superconductor"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_419_neuron_firing: {
+        id: 'mode_419_neuron_firing',
+        name: 'Neuron Firing',
+        description: 'Mode 419: Neuron action potential firing',
+        category: 'Geometric',
+        mode: 419,
+        tags: ["neuron", "firing"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_420_resonance_modes: {
+        id: 'mode_420_resonance_modes',
+        name: 'Resonance Modes',
+        description: 'Mode 420: Resonance modes of vibrating plate',
+        category: 'Geometric',
+        mode: 420,
+        tags: ["resonance", "modes"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_421_fractal_diffusion: {
+        id: 'mode_421_fractal_diffusion',
+        name: 'Fractal Diffusion',
+        description: 'Mode 421: Diffusion-limited aggregation',
+        category: 'Geometric',
+        mode: 421,
+        tags: ["fractal", "diffusion"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_422_plasma_ball: {
+        id: 'mode_422_plasma_ball',
+        name: 'Plasma Ball',
+        description: 'Mode 422: Plasma ball electric tendrils',
+        category: 'Energy',
+        mode: 422,
+        tags: ["plasma", "ball"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_423_coriolis_effect: {
+        id: 'mode_423_coriolis_effect',
+        name: 'Coriolis Effect',
+        description: 'Mode 423: Coriolis effect on rotating frame',
+        category: 'Geometric',
+        mode: 423,
+        tags: ["coriolis", "effect"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_424_photoelectric_effect: {
+        id: 'mode_424_photoelectric_effect',
+        name: 'Photoelectric Effect',
+        description: 'Mode 424: Photoelectric effect electron emission',
+        category: 'Geometric',
+        mode: 424,
+        tags: ["photoelectric", "effect"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_425_lorenz_attractor: {
+        id: 'mode_425_lorenz_attractor',
+        name: 'Lorenz Attractor',
+        description: 'Mode 425: Lorenz attractor chaos theory',
+        category: 'Geometric',
+        mode: 425,
+        tags: ["lorenz", "attractor"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_426_spin_precession: {
+        id: 'mode_426_spin_precession',
+        name: 'Spin Precession',
+        description: 'Mode 426: Quantum spin precession',
+        category: 'Geometric',
+        mode: 426,
+        tags: ["spin", "precession"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_427_compton_scattering: {
+        id: 'mode_427_compton_scattering',
+        name: 'Compton Scattering',
+        description: 'Mode 427: Compton scattering of photons',
+        category: 'Geometric',
+        mode: 427,
+        tags: ["compton", "scattering"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_428_ferrofluid: {
+        id: 'mode_428_ferrofluid',
+        name: 'Ferrofluid',
+        description: 'Mode 428: Ferrofluid spikes in magnetic field',
+        category: 'Fluid',
+        mode: 428,
+        tags: ["ferrofluid"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_429_sonoluminescence: {
+        id: 'mode_429_sonoluminescence',
+        name: 'Sonoluminescence',
+        description: 'Mode 429: Sonoluminescence bubble collapse',
+        category: 'Geometric',
+        mode: 429,
+        tags: ["sonoluminescence"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_430_cherenkov_radiation: {
+        id: 'mode_430_cherenkov_radiation',
+        name: 'Cherenkov Radiation',
+        description: 'Mode 430: Cherenkov radiation cone',
+        category: 'Geometric',
+        mode: 430,
+        tags: ["cherenkov", "radiation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_431_hall_effect: {
+        id: 'mode_431_hall_effect',
+        name: 'Hall Effect',
+        description: 'Mode 431: Hall effect charge separation',
+        category: 'Geometric',
+        mode: 431,
+        tags: ["hall", "effect"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_432_cymatics: {
+        id: 'mode_432_cymatics',
+        name: 'Cymatics',
+        description: 'Mode 432: Cymatic patterns from sound',
+        category: 'Geometric',
+        mode: 432,
+        tags: ["cymatics"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_433_klein_bottle: {
+        id: 'mode_433_klein_bottle',
+        name: 'Klein Bottle',
+        description: 'Mode 433: Klein bottle topology',
+        category: 'Geometric',
+        mode: 433,
+        tags: ["klein", "bottle"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_434_raman_scattering: {
+        id: 'mode_434_raman_scattering',
+        name: 'Raman Scattering',
+        description: 'Mode 434: Raman spectroscopy energy levels',
+        category: 'Geometric',
+        mode: 434,
+        tags: ["raman", "scattering"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_435_vortex_shedding: {
+        id: 'mode_435_vortex_shedding',
+        name: 'Vortex Shedding',
+        description: 'Mode 435: Von Kármán vortex street',
+        category: 'Geometric',
+        mode: 435,
+        tags: ["vortex", "shedding"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_436_polarization: {
+        id: 'mode_436_polarization',
+        name: 'Polarization',
+        description: 'Mode 436: Light polarization through filters',
+        category: 'Geometric',
+        mode: 436,
+        tags: ["polarization"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_437_higgs_field: {
+        id: 'mode_437_higgs_field',
+        name: 'Higgs Field',
+        description: 'Mode 437: Higgs field giving mass to particles',
+        category: 'Geometric',
+        mode: 437,
+        tags: ["higgs", "field"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_438_bose_einstein: {
+        id: 'mode_438_bose_einstein',
+        name: 'Bose Einstein',
+        description: 'Mode 438: Bose-Einstein condensate formation',
+        category: 'Geometric',
+        mode: 438,
+        tags: ["bose", "einstein"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_439_schrodinger_cat: {
+        id: 'mode_439_schrodinger_cat',
+        name: 'Schrodinger Cat',
+        description: 'Mode 439: Schrodinger cat superposition',
+        category: 'Geometric',
+        mode: 439,
+        tags: ["schrodinger"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_440_string_vibration: {
+        id: 'mode_440_string_vibration',
+        name: 'String Vibration',
+        description: 'Mode 440: Vibrating string harmonics',
+        category: 'Geometric',
+        mode: 440,
+        tags: ["string", "vibration"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_441_electron_cloud: {
+        id: 'mode_441_electron_cloud',
+        name: 'Electron Cloud',
+        description: 'Mode 441: Electron probability cloud',
+        category: 'Geometric',
+        mode: 441,
+        tags: ["electron", "cloud"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_442_thermoelectric: {
+        id: 'mode_442_thermoelectric',
+        name: 'Thermoelectric',
+        description: 'Mode 442: Thermoelectric Seebeck effect',
+        category: 'Geometric',
+        mode: 442,
+        tags: ["thermoelectric"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_443_photon_entanglement: {
+        id: 'mode_443_photon_entanglement',
+        name: 'Photon Entanglement',
+        description: 'Mode 443: Quantum entangled photon pairs',
+        category: 'Geometric',
+        mode: 443,
+        tags: ["photon", "entanglement"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_444_superfluidity: {
+        id: 'mode_444_superfluidity',
+        name: 'Superfluidity',
+        description: 'Mode 444: Superfluid helium climbing walls',
+        category: 'Fluid',
+        mode: 444,
+        tags: ["superfluidity"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_445_piezoelectric: {
+        id: 'mode_445_piezoelectric',
+        name: 'Piezoelectric',
+        description: 'Mode 445: Piezoelectric crystal stress/voltage',
+        category: 'Geometric',
+        mode: 445,
+        tags: ["piezoelectric"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_446_zeeman_effect: {
+        id: 'mode_446_zeeman_effect',
+        name: 'Zeeman Effect',
+        description: 'Mode 446: Zeeman effect spectral line splitting',
+        category: 'Geometric',
+        mode: 446,
+        tags: ["zeeman", "effect"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_447_cyclotron_motion: {
+        id: 'mode_447_cyclotron_motion',
+        name: 'Cyclotron Motion',
+        description: 'Mode 447: Charged particle in magnetic field',
+        category: 'Geometric',
+        mode: 447,
+        tags: ["cyclotron", "motion"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_448_fusion_reactor: {
+        id: 'mode_448_fusion_reactor',
+        name: 'Fusion Reactor',
+        description: 'Mode 448: Tokamak fusion reactor plasma',
+        category: 'Geometric',
+        mode: 448,
+        tags: ["fusion", "reactor"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_449_antimatter: {
+        id: 'mode_449_antimatter',
+        name: 'Antimatter',
+        description: 'Mode 449: Matter-antimatter annihilation',
+        category: 'Geometric',
+        mode: 449,
+        tags: ["antimatter"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_450_hawking_radiation: {
+        id: 'mode_450_hawking_radiation',
+        name: 'Hawking Radiation',
+        description: 'Mode 450: Black hole Hawking radiation',
+        category: 'Geometric',
+        mode: 450,
+        tags: ["hawking", "radiation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_451_heisenberg_uncertainty: {
+        id: 'mode_451_heisenberg_uncertainty',
+        name: 'Heisenberg Uncertainty',
+        description: 'Mode 451: Heisenberg uncertainty principle visualization',
+        category: 'Scientific',
+        mode: 451,
+        tags: ["heisenberg", "uncertainty"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_452_particle_decay: {
+        id: 'mode_452_particle_decay',
+        name: 'Particle Decay',
+        description: 'Mode 452: Radioactive particle decay chain',
+        category: 'Particles',
+        mode: 452,
+        tags: ["particle", "decay"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_453_laser_cavity: {
+        id: 'mode_453_laser_cavity',
+        name: 'Laser Cavity',
+        description: 'Mode 453: Laser optical cavity resonance',
+        category: 'Geometric',
+        mode: 453,
+        tags: ["laser", "cavity"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_454_dielectric_breakdown: {
+        id: 'mode_454_dielectric_breakdown',
+        name: 'Dielectric Breakdown',
+        description: 'Mode 454: Electric breakdown in dielectric',
+        category: 'Geometric',
+        mode: 454,
+        tags: ["dielectric", "breakdown"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_455_casimir_effect: {
+        id: 'mode_455_casimir_effect',
+        name: 'Casimir Effect',
+        description: 'Mode 455: Casimir effect between plates',
+        category: 'Geometric',
+        mode: 455,
+        tags: ["casimir", "effect"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_456_sonochemistry: {
+        id: 'mode_456_sonochemistry',
+        name: 'Sonochemistry',
+        description: 'Mode 456: Sonochemistry cavitation bubbles',
+        category: 'Geometric',
+        mode: 456,
+        tags: ["sonochemistry"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_457_phonon_propagation: {
+        id: 'mode_457_phonon_propagation',
+        name: 'Phonon Propagation',
+        description: 'Mode 457: Phonons in crystal lattice',
+        category: 'Geometric',
+        mode: 457,
+        tags: ["phonon", "propagation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_458_pair_production: {
+        id: 'mode_458_pair_production',
+        name: 'Pair Production',
+        description: 'Mode 458: Photon pair production',
+        category: 'Scientific',
+        mode: 458,
+        tags: ["pair", "production"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_459_stefan_boltzmann: {
+        id: 'mode_459_stefan_boltzmann',
+        name: 'Stefan Boltzmann',
+        description: 'Mode 459: Stefan-Boltzmann radiation law',
+        category: 'Geometric',
+        mode: 459,
+        tags: ["stefan", "boltzmann"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_460_eddy_currents: {
+        id: 'mode_460_eddy_currents',
+        name: 'Eddy Currents',
+        description: 'Mode 460: Eddy currents in conductor',
+        category: 'Geometric',
+        mode: 460,
+        tags: ["eddy", "currents"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_461_wavefunction_collapse: {
+        id: 'mode_461_wavefunction_collapse',
+        name: 'Wavefunction Collapse',
+        description: 'Mode 461: Quantum wavefunction collapse on measurement',
+        category: 'Geometric',
+        mode: 461,
+        tags: ["wavefunction", "collapse"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_462_qed_feynman: {
+        id: 'mode_462_qed_feynman',
+        name: 'Qed Feynman',
+        description: 'Mode 462: QED Feynman diagram',
+        category: 'Geometric',
+        mode: 462,
+        tags: ["feynman"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_463_holography: {
+        id: 'mode_463_holography',
+        name: 'Holography',
+        description: 'Mode 463: Holographic interference pattern',
+        category: 'Geometric',
+        mode: 463,
+        tags: ["holography"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_464_metamaterial: {
+        id: 'mode_464_metamaterial',
+        name: 'Metamaterial',
+        description: 'Mode 464: Metamaterial negative refraction',
+        category: 'Geometric',
+        mode: 464,
+        tags: ["metamaterial"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_465_photodiode: {
+        id: 'mode_465_photodiode',
+        name: 'Photodiode',
+        description: 'Mode 465: Photodiode photocurrent generation',
+        category: 'Geometric',
+        mode: 465,
+        tags: ["photodiode"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_466_bremsstrahlung: {
+        id: 'mode_466_bremsstrahlung',
+        name: 'Bremsstrahlung',
+        description: 'Mode 466: Bremsstrahlung X-ray emission',
+        category: 'Geometric',
+        mode: 466,
+        tags: ["bremsstrahlung"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_467_optogenetics: {
+        id: 'mode_467_optogenetics',
+        name: 'Optogenetics',
+        description: 'Mode 467: Optogenetics light-controlled neurons',
+        category: 'Geometric',
+        mode: 467,
+        tags: ["optogenetics"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_468_topological_insulator: {
+        id: 'mode_468_topological_insulator',
+        name: 'Topological Insulator',
+        description: 'Mode 468: Topological insulator edge states',
+        category: 'Geometric',
+        mode: 468,
+        tags: ["topological", "insulator"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_469_nernst_equation: {
+        id: 'mode_469_nernst_equation',
+        name: 'Nernst Equation',
+        description: 'Mode 469: Nernst equation ion concentration',
+        category: 'Geometric',
+        mode: 469,
+        tags: ["nernst", "equation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_470_mri_precession: {
+        id: 'mode_470_mri_precession',
+        name: 'Mri Precession',
+        description: 'Mode 470: MRI nuclear magnetic resonance',
+        category: 'Geometric',
+        mode: 470,
+        tags: ["precession"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_471_josephson_junction: {
+        id: 'mode_471_josephson_junction',
+        name: 'Josephson Junction',
+        description: 'Mode 471: Josephson junction supercurrent',
+        category: 'Geometric',
+        mode: 471,
+        tags: ["josephson", "junction"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_472_liquid_crystal: {
+        id: 'mode_472_liquid_crystal',
+        name: 'Liquid Crystal',
+        description: 'Mode 472: Liquid crystal alignment',
+        category: 'Nature',
+        mode: 472,
+        tags: ["liquid", "crystal"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_473_rydberg_atoms: {
+        id: 'mode_473_rydberg_atoms',
+        name: 'Rydberg Atoms',
+        description: 'Mode 473: Rydberg atoms with large orbitals',
+        category: 'Scientific',
+        mode: 473,
+        tags: ["rydberg", "atoms"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_474_cavity_qed: {
+        id: 'mode_474_cavity_qed',
+        name: 'Cavity Qed',
+        description: 'Mode 474: Cavity QED atom-photon coupling',
+        category: 'Geometric',
+        mode: 474,
+        tags: ["cavity"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_475_quantum_dots: {
+        id: 'mode_475_quantum_dots',
+        name: 'Quantum Dots',
+        description: 'Mode 475: Quantum dots emission',
+        category: 'Scientific',
+        mode: 475,
+        tags: ["quantum", "dots"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_476_soliton_wave: {
+        id: 'mode_476_soliton_wave',
+        name: 'Soliton Wave',
+        description: 'Mode 476: Soliton solitary wave',
+        category: 'Geometric',
+        mode: 476,
+        tags: ["soliton", "wave"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_477_acoustic_levitation: {
+        id: 'mode_477_acoustic_levitation',
+        name: 'Acoustic Levitation',
+        description: 'Mode 477: Acoustic levitation standing wave',
+        category: 'Geometric',
+        mode: 477,
+        tags: ["acoustic", "levitation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_478_mosfet_channel: {
+        id: 'mode_478_mosfet_channel',
+        name: 'Mosfet Channel',
+        description: 'Mode 478: MOSFET inversion channel',
+        category: 'Geometric',
+        mode: 478,
+        tags: ["mosfet", "channel"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_479_spintronics: {
+        id: 'mode_479_spintronics',
+        name: 'Spintronics',
+        description: 'Mode 479: Spintronics spin current',
+        category: 'Geometric',
+        mode: 479,
+        tags: ["spintronics"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_480_electrochemistry: {
+        id: 'mode_480_electrochemistry',
+        name: 'Electrochemistry',
+        description: 'Mode 480: Electrochemical cell redox reaction',
+        category: 'Geometric',
+        mode: 480,
+        tags: ["electrochemistry"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_481_langmuir_wave: {
+        id: 'mode_481_langmuir_wave',
+        name: 'Langmuir Wave',
+        description: 'Mode 481: Langmuir plasma oscillations',
+        category: 'Geometric',
+        mode: 481,
+        tags: ["langmuir", "wave"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_482_bloch_sphere: {
+        id: 'mode_482_bloch_sphere',
+        name: 'Bloch Sphere',
+        description: 'Mode 482: Bloch sphere qubit state',
+        category: 'Geometric',
+        mode: 482,
+        tags: ["bloch", "sphere"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_483_curie_temperature: {
+        id: 'mode_483_curie_temperature',
+        name: 'Curie Temperature',
+        description: 'Mode 483: Curie temperature magnetic ordering',
+        category: 'Geometric',
+        mode: 483,
+        tags: ["curie", "temperature"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_484_dyson_sphere: {
+        id: 'mode_484_dyson_sphere',
+        name: 'Dyson Sphere',
+        description: 'Mode 484: Dyson sphere energy collection',
+        category: 'Geometric',
+        mode: 484,
+        tags: ["dyson", "sphere"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_485_graphene_lattice: {
+        id: 'mode_485_graphene_lattice',
+        name: 'Graphene Lattice',
+        description: 'Mode 485: Graphene hexagonal lattice',
+        category: 'Geometric',
+        mode: 485,
+        tags: ["graphene", "lattice"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_486_memristor: {
+        id: 'mode_486_memristor',
+        name: 'Memristor',
+        description: 'Mode 486: Memristor resistance switching',
+        category: 'Geometric',
+        mode: 486,
+        tags: ["memristor"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_487_quantum_hall: {
+        id: 'mode_487_quantum_hall',
+        name: 'Quantum Hall',
+        description: 'Mode 487: Quantum Hall effect edge states',
+        category: 'Scientific',
+        mode: 487,
+        tags: ["quantum", "hall"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_488_optomechanics: {
+        id: 'mode_488_optomechanics',
+        name: 'Optomechanics',
+        description: 'Mode 488: Cavity optomechanics',
+        category: 'Geometric',
+        mode: 488,
+        tags: ["optomechanics"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_489_exciton: {
+        id: 'mode_489_exciton',
+        name: 'Exciton',
+        description: 'Mode 489: Exciton electron-hole pair',
+        category: 'Geometric',
+        mode: 489,
+        tags: ["exciton"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_490_photonic_crystal: {
+        id: 'mode_490_photonic_crystal',
+        name: 'Photonic Crystal',
+        description: 'Mode 490: Photonic crystal band gap',
+        category: 'Nature',
+        mode: 490,
+        tags: ["photonic", "crystal"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_491_skyrmion: {
+        id: 'mode_491_skyrmion',
+        name: 'Skyrmion',
+        description: 'Mode 491: Magnetic skyrmion texture',
+        category: 'Geometric',
+        mode: 491,
+        tags: ["skyrmion"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_492_mott_insulator: {
+        id: 'mode_492_mott_insulator',
+        name: 'Mott Insulator',
+        description: 'Mode 492: Mott insulator transition',
+        category: 'Geometric',
+        mode: 492,
+        tags: ["mott", "insulator"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_493_squeezing: {
+        id: 'mode_493_squeezing',
+        name: 'Squeezing',
+        description: 'Mode 493: Quantum squeezing uncertainty',
+        category: 'Geometric',
+        mode: 493,
+        tags: ["squeezing"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_494_andreev_reflection: {
+        id: 'mode_494_andreev_reflection',
+        name: 'Andreev Reflection',
+        description: 'Mode 494: Andreev reflection at NS interface',
+        category: 'Geometric',
+        mode: 494,
+        tags: ["andreev", "reflection"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_495_casimir_polder: {
+        id: 'mode_495_casimir_polder',
+        name: 'Casimir Polder',
+        description: 'Mode 495: Casimir-Polder force on atom',
+        category: 'Geometric',
+        mode: 495,
+        tags: ["casimir", "polder"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_496_fano_resonance: {
+        id: 'mode_496_fano_resonance',
+        name: 'Fano Resonance',
+        description: 'Mode 496: Fano resonance asymmetric lineshape',
+        category: 'Geometric',
+        mode: 496,
+        tags: ["fano", "resonance"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_497_quantum_zeno: {
+        id: 'mode_497_quantum_zeno',
+        name: 'Quantum Zeno',
+        description: 'Mode 497: Quantum Zeno effect frequent measurement',
+        category: 'Scientific',
+        mode: 497,
+        tags: ["quantum", "zeno"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_498_rabi_oscillation: {
+        id: 'mode_498_rabi_oscillation',
+        name: 'Rabi Oscillation',
+        description: 'Mode 498: Rabi oscillation between states',
+        category: 'Geometric',
+        mode: 498,
+        tags: ["rabi", "oscillation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_499_aharonov_bohm: {
+        id: 'mode_499_aharonov_bohm',
+        name: 'Aharonov Bohm',
+        description: 'Mode 499: Aharonov-Bohm effect phase shift',
+        category: 'Geometric',
+        mode: 499,
+        tags: ["aharonov", "bohm"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_500_berry_phase: {
+        id: 'mode_500_berry_phase',
+        name: 'Berry Phase',
+        description: 'Mode 500: Berry phase geometric phase',
+        category: 'Geometric',
+        mode: 500,
+        tags: ["berry", "phase"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_501_impressionist: {
+        id: 'mode_501_impressionist',
+        name: 'Impressionist',
+        description: 'Mode 501: Impressionist visualization',
+        category: 'Geometric',
+        mode: 501,
+        tags: ["impressionist"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_502_cubist: {
+        id: 'mode_502_cubist',
+        name: 'Cubist',
+        description: 'Mode 502: Cubist visualization',
+        category: 'Geometric',
+        mode: 502,
+        tags: ["cubist"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_503_surreal: {
+        id: 'mode_503_surreal',
+        name: 'Surreal',
+        description: 'Mode 503: Surreal visualization',
+        category: 'Geometric',
+        mode: 503,
+        tags: ["surreal"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_504_abstract_expressionist: {
+        id: 'mode_504_abstract_expressionist',
+        name: 'Abstract Expressionist',
+        description: 'Mode 504: Abstract expressionist visualization',
+        category: 'Geometric',
+        mode: 504,
+        tags: ["abstract", "expressionist"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_505_pop_art: {
+        id: 'mode_505_pop_art',
+        name: 'Pop Art',
+        description: 'Mode 505: Pop art visualization',
+        category: 'Geometric',
+        mode: 505,
+        tags: [],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_506_minimalist: {
+        id: 'mode_506_minimalist',
+        name: 'Minimalist',
+        description: 'Mode 506: Minimalist visualization',
+        category: 'Geometric',
+        mode: 506,
+        tags: ["minimalist"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_507_pointillist: {
+        id: 'mode_507_pointillist',
+        name: 'Pointillist',
+        description: 'Mode 507: Pointillist visualization',
+        category: 'Geometric',
+        mode: 507,
+        tags: ["pointillist"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_508_art_deco: {
+        id: 'mode_508_art_deco',
+        name: 'Art Deco',
+        description: 'Mode 508: Art deco visualization',
+        category: 'Geometric',
+        mode: 508,
+        tags: ["deco"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_509_art_nouveau: {
+        id: 'mode_509_art_nouveau',
+        name: 'Art Nouveau',
+        description: 'Mode 509: Art nouveau visualization',
+        category: 'Geometric',
+        mode: 509,
+        tags: ["nouveau"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_510_bauhaus: {
+        id: 'mode_510_bauhaus',
+        name: 'Bauhaus',
+        description: 'Mode 510: Bauhaus visualization',
+        category: 'Geometric',
+        mode: 510,
+        tags: ["bauhaus"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_511_futurist: {
+        id: 'mode_511_futurist',
+        name: 'Futurist',
+        description: 'Mode 511: Futurist visualization',
+        category: 'Geometric',
+        mode: 511,
+        tags: ["futurist"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_512_dadaist: {
+        id: 'mode_512_dadaist',
+        name: 'Dadaist',
+        description: 'Mode 512: Dadaist visualization',
+        category: 'Scientific',
+        mode: 512,
+        tags: ["dadaist"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_513_expressionist: {
+        id: 'mode_513_expressionist',
+        name: 'Expressionist',
+        description: 'Mode 513: Expressionist visualization',
+        category: 'Geometric',
+        mode: 513,
+        tags: ["expressionist"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_514_fauvism: {
+        id: 'mode_514_fauvism',
+        name: 'Fauvism',
+        description: 'Mode 514: Fauvism visualization',
+        category: 'Geometric',
+        mode: 514,
+        tags: ["fauvism"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_515_constructivist: {
+        id: 'mode_515_constructivist',
+        name: 'Constructivist',
+        description: 'Mode 515: Constructivist visualization',
+        category: 'Geometric',
+        mode: 515,
+        tags: ["constructivist"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_516_suprematist: {
+        id: 'mode_516_suprematist',
+        name: 'Suprematist',
+        description: 'Mode 516: Suprematist visualization',
+        category: 'Geometric',
+        mode: 516,
+        tags: ["suprematist"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_517_vorticism: {
+        id: 'mode_517_vorticism',
+        name: 'Vorticism',
+        description: 'Mode 517: Vorticism visualization',
+        category: 'Geometric',
+        mode: 517,
+        tags: ["vorticism"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_518_orphism: {
+        id: 'mode_518_orphism',
+        name: 'Orphism',
+        description: 'Mode 518: Orphism visualization',
+        category: 'Geometric',
+        mode: 518,
+        tags: ["orphism"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_519_rayonism: {
+        id: 'mode_519_rayonism',
+        name: 'Rayonism',
+        description: 'Mode 519: Rayonism visualization',
+        category: 'Geometric',
+        mode: 519,
+        tags: ["rayonism"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_520_synchromism: {
+        id: 'mode_520_synchromism',
+        name: 'Synchromism',
+        description: 'Mode 520: Synchromism visualization',
+        category: 'Geometric',
+        mode: 520,
+        tags: ["synchromism"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_521_precisionism: {
+        id: 'mode_521_precisionism',
+        name: 'Precisionism',
+        description: 'Mode 521: Precisionism visualization',
+        category: 'Geometric',
+        mode: 521,
+        tags: ["precisionism"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_522_regionalism: {
+        id: 'mode_522_regionalism',
+        name: 'Regionalism',
+        description: 'Mode 522: Regionalism visualization',
+        category: 'Geometric',
+        mode: 522,
+        tags: ["regionalism"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_523_social_realism: {
+        id: 'mode_523_social_realism',
+        name: 'Social Realism',
+        description: 'Mode 523: Social realism visualization',
+        category: 'Geometric',
+        mode: 523,
+        tags: ["social", "realism"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_524_neo_plasticism: {
+        id: 'mode_524_neo_plasticism',
+        name: 'Neo Plasticism',
+        description: 'Mode 524: Neo-plasticism visualization',
+        category: 'Geometric',
+        mode: 524,
+        tags: ["plasticism"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_525_de_stijl: {
+        id: 'mode_525_de_stijl',
+        name: 'De Stijl',
+        description: 'Mode 525: De stijl visualization',
+        category: 'Geometric',
+        mode: 525,
+        tags: ["stijl"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_526_color_field: {
+        id: 'mode_526_color_field',
+        name: 'Color Field',
+        description: 'Mode 526: Color field visualization',
+        category: 'Geometric',
+        mode: 526,
+        tags: ["color", "field"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_527_hard_edge: {
+        id: 'mode_527_hard_edge',
+        name: 'Hard Edge',
+        description: 'Mode 527: Hard edge visualization',
+        category: 'Geometric',
+        mode: 527,
+        tags: ["hard", "edge"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_528_lyrical_abstraction: {
+        id: 'mode_528_lyrical_abstraction',
+        name: 'Lyrical Abstraction',
+        description: 'Mode 528: Lyrical abstraction visualization',
+        category: 'Geometric',
+        mode: 528,
+        tags: ["lyrical", "abstraction"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_529_tachisme: {
+        id: 'mode_529_tachisme',
+        name: 'Tachisme',
+        description: 'Mode 529: Tachisme visualization',
+        category: 'Geometric',
+        mode: 529,
+        tags: ["tachisme"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_530_action_painting: {
+        id: 'mode_530_action_painting',
+        name: 'Action Painting',
+        description: 'Mode 530: Action painting visualization',
+        category: 'Scientific',
+        mode: 530,
+        tags: ["action", "painting"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_531_stain_painting: {
+        id: 'mode_531_stain_painting',
+        name: 'Stain Painting',
+        description: 'Mode 531: Stain painting visualization',
+        category: 'Scientific',
+        mode: 531,
+        tags: ["stain", "painting"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_532_shaped_canvas: {
+        id: 'mode_532_shaped_canvas',
+        name: 'Shaped Canvas',
+        description: 'Mode 532: Shaped canvas visualization',
+        category: 'Geometric',
+        mode: 532,
+        tags: ["shaped", "canvas"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_533_monochrome: {
+        id: 'mode_533_monochrome',
+        name: 'Monochrome',
+        description: 'Mode 533: Monochrome visualization',
+        category: 'Geometric',
+        mode: 533,
+        tags: ["monochrome"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_534_kinetic_art: {
+        id: 'mode_534_kinetic_art',
+        name: 'Kinetic Art',
+        description: 'Mode 534: Kinetic art visualization',
+        category: 'Geometric',
+        mode: 534,
+        tags: ["kinetic"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_535_op_art: {
+        id: 'mode_535_op_art',
+        name: 'Op Art',
+        description: 'Mode 535: Op art visualization',
+        category: 'Geometric',
+        mode: 535,
+        tags: [],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_536_light_art: {
+        id: 'mode_536_light_art',
+        name: 'Light Art',
+        description: 'Mode 536: Light art visualization',
+        category: 'Geometric',
+        mode: 536,
+        tags: ["light"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_537_land_art: {
+        id: 'mode_537_land_art',
+        name: 'Land Art',
+        description: 'Mode 537: Land art visualization',
+        category: 'Geometric',
+        mode: 537,
+        tags: ["land"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_538_earth_art: {
+        id: 'mode_538_earth_art',
+        name: 'Earth Art',
+        description: 'Mode 538: Earth art visualization',
+        category: 'Geometric',
+        mode: 538,
+        tags: ["earth"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_539_environmental_art: {
+        id: 'mode_539_environmental_art',
+        name: 'Environmental Art',
+        description: 'Mode 539: Environmental art visualization',
+        category: 'Geometric',
+        mode: 539,
+        tags: ["environmental"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_540_installation_art: {
+        id: 'mode_540_installation_art',
+        name: 'Installation Art',
+        description: 'Mode 540: Installation art visualization',
+        category: 'Geometric',
+        mode: 540,
+        tags: ["installation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_541_video_art: {
+        id: 'mode_541_video_art',
+        name: 'Video Art',
+        description: 'Mode 541: Video art visualization',
+        category: 'Geometric',
+        mode: 541,
+        tags: ["video"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_542_digital_art: {
+        id: 'mode_542_digital_art',
+        name: 'Digital Art',
+        description: 'Mode 542: Digital art visualization',
+        category: 'Geometric',
+        mode: 542,
+        tags: ["digital"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_543_glitch_art: {
+        id: 'mode_543_glitch_art',
+        name: 'Glitch Art',
+        description: 'Mode 543: Glitch art visualization',
+        category: 'Geometric',
+        mode: 543,
+        tags: ["glitch"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_544_pixel_art: {
+        id: 'mode_544_pixel_art',
+        name: 'Pixel Art',
+        description: 'Mode 544: Pixel art visualization',
+        category: 'Geometric',
+        mode: 544,
+        tags: ["pixel"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_545_ascii_art: {
+        id: 'mode_545_ascii_art',
+        name: 'Ascii Art',
+        description: 'Mode 545: Ascii art visualization',
+        category: 'Geometric',
+        mode: 545,
+        tags: ["ascii"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_546_vector_art: {
+        id: 'mode_546_vector_art',
+        name: 'Vector Art',
+        description: 'Mode 546: Vector art visualization',
+        category: 'Geometric',
+        mode: 546,
+        tags: ["vector"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_547_fractal_art: {
+        id: 'mode_547_fractal_art',
+        name: 'Fractal Art',
+        description: 'Mode 547: Fractal art visualization',
+        category: 'Geometric',
+        mode: 547,
+        tags: ["fractal"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_548_algorithmic_art: {
+        id: 'mode_548_algorithmic_art',
+        name: 'Algorithmic Art',
+        description: 'Mode 548: Algorithmic art visualization',
+        category: 'Geometric',
+        mode: 548,
+        tags: ["algorithmic"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_549_generative_art: {
+        id: 'mode_549_generative_art',
+        name: 'Generative Art',
+        description: 'Mode 549: Generative art visualization',
+        category: 'Geometric',
+        mode: 549,
+        tags: ["generative"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_550_data_art: {
+        id: 'mode_550_data_art',
+        name: 'Data Art',
+        description: 'Mode 550: Data art visualization',
+        category: 'Geometric',
+        mode: 550,
+        tags: ["data"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_551_bio_art: {
+        id: 'mode_551_bio_art',
+        name: 'Bio Art',
+        description: 'Mode 551: Bio art visualization',
+        category: 'Geometric',
+        mode: 551,
+        tags: [],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_552_net_art: {
+        id: 'mode_552_net_art',
+        name: 'Net Art',
+        description: 'Mode 552: Net art visualization',
+        category: 'Geometric',
+        mode: 552,
+        tags: [],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_553_software_art: {
+        id: 'mode_553_software_art',
+        name: 'Software Art',
+        description: 'Mode 553: Software art visualization',
+        category: 'Geometric',
+        mode: 553,
+        tags: ["software"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_554_robotic_art: {
+        id: 'mode_554_robotic_art',
+        name: 'Robotic Art',
+        description: 'Mode 554: Robotic art visualization',
+        category: 'Geometric',
+        mode: 554,
+        tags: ["robotic"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_555_interactive_art: {
+        id: 'mode_555_interactive_art',
+        name: 'Interactive Art',
+        description: 'Mode 555: Interactive art visualization',
+        category: 'Geometric',
+        mode: 555,
+        tags: ["interactive"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_556_projection_mapping: {
+        id: 'mode_556_projection_mapping',
+        name: 'Projection Mapping',
+        description: 'Mode 556: Projection mapping visualization',
+        category: 'Geometric',
+        mode: 556,
+        tags: ["projection", "mapping"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_557_holographic_art: {
+        id: 'mode_557_holographic_art',
+        name: 'Holographic Art',
+        description: 'Mode 557: Holographic art visualization',
+        category: 'Geometric',
+        mode: 557,
+        tags: ["holographic"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_558_augmented_reality_art: {
+        id: 'mode_558_augmented_reality_art',
+        name: 'Augmented Reality Art',
+        description: 'Mode 558: Augmented reality art visualization',
+        category: 'Geometric',
+        mode: 558,
+        tags: ["augmented", "reality"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_559_vr_art: {
+        id: 'mode_559_vr_art',
+        name: 'Vr Art',
+        description: 'Mode 559: Vr art visualization',
+        category: 'Geometric',
+        mode: 559,
+        tags: [],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_560_procedural_art: {
+        id: 'mode_560_procedural_art',
+        name: 'Procedural Art',
+        description: 'Mode 560: Procedural art visualization',
+        category: 'Geometric',
+        mode: 560,
+        tags: ["procedural"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_561_parametric_art: {
+        id: 'mode_561_parametric_art',
+        name: 'Parametric Art',
+        description: 'Mode 561: Parametric art visualization',
+        category: 'Geometric',
+        mode: 561,
+        tags: ["parametric"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_562_mathematical_art: {
+        id: 'mode_562_mathematical_art',
+        name: 'Mathematical Art',
+        description: 'Mode 562: Mathematical art visualization',
+        category: 'Geometric',
+        mode: 562,
+        tags: ["mathematical"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_563_geometric_art: {
+        id: 'mode_563_geometric_art',
+        name: 'Geometric Art',
+        description: 'Mode 563: Geometric art visualization',
+        category: 'Geometric',
+        mode: 563,
+        tags: ["geometric"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_564_tessellation_art: {
+        id: 'mode_564_tessellation_art',
+        name: 'Tessellation Art',
+        description: 'Mode 564: Tessellation art visualization',
+        category: 'Geometric',
+        mode: 564,
+        tags: ["tessellation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_565_symmetry_art: {
+        id: 'mode_565_symmetry_art',
+        name: 'Symmetry Art',
+        description: 'Mode 565: Symmetry art visualization',
+        category: 'Geometric',
+        mode: 565,
+        tags: ["symmetry"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_566_kaleidoscope_art: {
+        id: 'mode_566_kaleidoscope_art',
+        name: 'Kaleidoscope Art',
+        description: 'Mode 566: Kaleidoscope art visualization',
+        category: 'Geometric',
+        mode: 566,
+        tags: ["kaleidoscope"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_567_mandala_art: {
+        id: 'mode_567_mandala_art',
+        name: 'Mandala Art',
+        description: 'Mode 567: Mandala art visualization',
+        category: 'Geometric',
+        mode: 567,
+        tags: ["mandala"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_568_zentangle_art: {
+        id: 'mode_568_zentangle_art',
+        name: 'Zentangle Art',
+        description: 'Mode 568: Zentangle art visualization',
+        category: 'Geometric',
+        mode: 568,
+        tags: ["zentangle"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_569_doodle_art: {
+        id: 'mode_569_doodle_art',
+        name: 'Doodle Art',
+        description: 'Mode 569: Doodle art visualization',
+        category: 'Geometric',
+        mode: 569,
+        tags: ["doodle"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_570_street_art: {
+        id: 'mode_570_street_art',
+        name: 'Street Art',
+        description: 'Mode 570: Street art visualization',
+        category: 'Nature',
+        mode: 570,
+        tags: ["street"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_571_graffiti_art: {
+        id: 'mode_571_graffiti_art',
+        name: 'Graffiti Art',
+        description: 'Mode 571: Graffiti art visualization',
+        category: 'Geometric',
+        mode: 571,
+        tags: ["graffiti"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_572_mural_art: {
+        id: 'mode_572_mural_art',
+        name: 'Mural Art',
+        description: 'Mode 572: Mural art visualization',
+        category: 'Geometric',
+        mode: 572,
+        tags: ["mural"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_573_stencil_art: {
+        id: 'mode_573_stencil_art',
+        name: 'Stencil Art',
+        description: 'Mode 573: Stencil art visualization',
+        category: 'Geometric',
+        mode: 573,
+        tags: ["stencil"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_574_wheat_paste_art: {
+        id: 'mode_574_wheat_paste_art',
+        name: 'Wheat Paste Art',
+        description: 'Mode 574: Wheat paste art visualization',
+        category: 'Geometric',
+        mode: 574,
+        tags: ["wheat", "paste"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_575_spray_paint_art: {
+        id: 'mode_575_spray_paint_art',
+        name: 'Spray Paint Art',
+        description: 'Mode 575: Spray paint art visualization',
+        category: 'Scientific',
+        mode: 575,
+        tags: ["spray", "paint"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_576_mosaic_art: {
+        id: 'mode_576_mosaic_art',
+        name: 'Mosaic Art',
+        description: 'Mode 576: Mosaic art visualization',
+        category: 'Scientific',
+        mode: 576,
+        tags: ["mosaic"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_577_collage_art: {
+        id: 'mode_577_collage_art',
+        name: 'Collage Art',
+        description: 'Mode 577: Collage art visualization',
+        category: 'Geometric',
+        mode: 577,
+        tags: ["collage"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_578_mixed_media_art: {
+        id: 'mode_578_mixed_media_art',
+        name: 'Mixed Media Art',
+        description: 'Mode 578: Mixed media art visualization',
+        category: 'Geometric',
+        mode: 578,
+        tags: ["mixed", "media"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_579_assemblage_art: {
+        id: 'mode_579_assemblage_art',
+        name: 'Assemblage Art',
+        description: 'Mode 579: Assemblage art visualization',
+        category: 'Geometric',
+        mode: 579,
+        tags: ["assemblage"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_580_found_object_art: {
+        id: 'mode_580_found_object_art',
+        name: 'Found Object Art',
+        description: 'Mode 580: Found object art visualization',
+        category: 'Geometric',
+        mode: 580,
+        tags: ["found", "object"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_581_readymade_art: {
+        id: 'mode_581_readymade_art',
+        name: 'Readymade Art',
+        description: 'Mode 581: Readymade art visualization',
+        category: 'Geometric',
+        mode: 581,
+        tags: ["readymade"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_582_appropriation_art: {
+        id: 'mode_582_appropriation_art',
+        name: 'Appropriation Art',
+        description: 'Mode 582: Appropriation art visualization',
+        category: 'Geometric',
+        mode: 582,
+        tags: ["appropriation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_583_sampling_art: {
+        id: 'mode_583_sampling_art',
+        name: 'Sampling Art',
+        description: 'Mode 583: Sampling art visualization',
+        category: 'Geometric',
+        mode: 583,
+        tags: ["sampling"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_584_remix_art: {
+        id: 'mode_584_remix_art',
+        name: 'Remix Art',
+        description: 'Mode 584: Remix art visualization',
+        category: 'Geometric',
+        mode: 584,
+        tags: ["remix"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_585_mashup_art: {
+        id: 'mode_585_mashup_art',
+        name: 'Mashup Art',
+        description: 'Mode 585: Mashup art visualization',
+        category: 'Geometric',
+        mode: 585,
+        tags: ["mashup"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_586_photomontage: {
+        id: 'mode_586_photomontage',
+        name: 'Photomontage',
+        description: 'Mode 586: Photomontage visualization',
+        category: 'Geometric',
+        mode: 586,
+        tags: ["photomontage"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_587_cut_up_technique: {
+        id: 'mode_587_cut_up_technique',
+        name: 'Cut Up Technique',
+        description: 'Mode 587: Cut-up technique visualization',
+        category: 'Geometric',
+        mode: 587,
+        tags: ["technique"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_588_exquisite_corpse: {
+        id: 'mode_588_exquisite_corpse',
+        name: 'Exquisite Corpse',
+        description: 'Mode 588: Exquisite corpse visualization',
+        category: 'Geometric',
+        mode: 588,
+        tags: ["exquisite", "corpse"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_589_automatic_drawing: {
+        id: 'mode_589_automatic_drawing',
+        name: 'Automatic Drawing',
+        description: 'Mode 589: Automatic drawing visualization',
+        category: 'Geometric',
+        mode: 589,
+        tags: ["automatic", "drawing"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_590_chance_art: {
+        id: 'mode_590_chance_art',
+        name: 'Chance Art',
+        description: 'Mode 590: Chance art visualization',
+        category: 'Geometric',
+        mode: 590,
+        tags: ["chance"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_591_indeterminacy_art: {
+        id: 'mode_591_indeterminacy_art',
+        name: 'Indeterminacy Art',
+        description: 'Mode 591: Indeterminacy art visualization',
+        category: 'Geometric',
+        mode: 591,
+        tags: ["indeterminacy"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_592_aleatory_art: {
+        id: 'mode_592_aleatory_art',
+        name: 'Aleatory Art',
+        description: 'Mode 592: Aleatory art visualization',
+        category: 'Geometric',
+        mode: 592,
+        tags: ["aleatory"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_593_stochastic_art: {
+        id: 'mode_593_stochastic_art',
+        name: 'Stochastic Art',
+        description: 'Mode 593: Stochastic art visualization',
+        category: 'Geometric',
+        mode: 593,
+        tags: ["stochastic"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_594_entropy_art: {
+        id: 'mode_594_entropy_art',
+        name: 'Entropy Art',
+        description: 'Mode 594: Entropy art visualization',
+        category: 'Geometric',
+        mode: 594,
+        tags: ["entropy"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_595_chaos_art: {
+        id: 'mode_595_chaos_art',
+        name: 'Chaos Art',
+        description: 'Mode 595: Chaos art visualization',
+        category: 'Geometric',
+        mode: 595,
+        tags: ["chaos"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_596_complexity_art: {
+        id: 'mode_596_complexity_art',
+        name: 'Complexity Art',
+        description: 'Mode 596: Complexity art visualization',
+        category: 'Geometric',
+        mode: 596,
+        tags: ["complexity"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_597_emergence_art: {
+        id: 'mode_597_emergence_art',
+        name: 'Emergence Art',
+        description: 'Mode 597: Emergence art visualization',
+        category: 'Geometric',
+        mode: 597,
+        tags: ["emergence"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_598_self_organization_art: {
+        id: 'mode_598_self_organization_art',
+        name: 'Self Organization Art',
+        description: 'Mode 598: Self-organization art visualization',
+        category: 'Geometric',
+        mode: 598,
+        tags: ["self", "organization"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_599_swarm_art: {
+        id: 'mode_599_swarm_art',
+        name: 'Swarm Art',
+        description: 'Mode 599: Swarm art visualization',
+        category: 'Particles',
+        mode: 599,
+        tags: ["swarm"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_600_flocking_art: {
+        id: 'mode_600_flocking_art',
+        name: 'Flocking Art',
+        description: 'Mode 600: Flocking art visualization',
+        category: 'Geometric',
+        mode: 600,
+        tags: ["flocking"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_601_nebula: {
+        id: 'mode_601_nebula',
+        name: 'Nebula',
+        description: 'Mode 601: Nebula visualization',
+        category: 'Geometric',
+        mode: 601,
+        tags: ["nebula"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_602_galaxy_spiral: {
+        id: 'mode_602_galaxy_spiral',
+        name: 'Galaxy Spiral',
+        description: 'Mode 602: Galaxy spiral visualization',
+        category: 'Geometric',
+        mode: 602,
+        tags: ["galaxy", "spiral"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_603_black_hole: {
+        id: 'mode_603_black_hole',
+        name: 'Black Hole',
+        description: 'Mode 603: Black hole visualization',
+        category: 'Geometric',
+        mode: 603,
+        tags: ["black", "hole"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_604_pulsar: {
+        id: 'mode_604_pulsar',
+        name: 'Pulsar',
+        description: 'Mode 604: Pulsar visualization',
+        category: 'Geometric',
+        mode: 604,
+        tags: ["pulsar"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_605_quasar: {
+        id: 'mode_605_quasar',
+        name: 'Quasar',
+        description: 'Mode 605: Quasar visualization',
+        category: 'Geometric',
+        mode: 605,
+        tags: ["quasar"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_606_supernova: {
+        id: 'mode_606_supernova',
+        name: 'Supernova',
+        description: 'Mode 606: Supernova visualization',
+        category: 'Geometric',
+        mode: 606,
+        tags: ["supernova"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_607_star_cluster: {
+        id: 'mode_607_star_cluster',
+        name: 'Star Cluster',
+        description: 'Mode 607: Star cluster visualization',
+        category: 'Geometric',
+        mode: 607,
+        tags: ["star", "cluster"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_608_asteroid_belt: {
+        id: 'mode_608_asteroid_belt',
+        name: 'Asteroid Belt',
+        description: 'Mode 608: Asteroid belt visualization',
+        category: 'Geometric',
+        mode: 608,
+        tags: ["asteroid", "belt"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_609_comet_tail: {
+        id: 'mode_609_comet_tail',
+        name: 'Comet Tail',
+        description: 'Mode 609: Comet tail visualization',
+        category: 'Scientific',
+        mode: 609,
+        tags: ["comet", "tail"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_610_meteor_shower: {
+        id: 'mode_610_meteor_shower',
+        name: 'Meteor Shower',
+        description: 'Mode 610: Meteor shower visualization',
+        category: 'Geometric',
+        mode: 610,
+        tags: ["meteor", "shower"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_611_planetary_rings: {
+        id: 'mode_611_planetary_rings',
+        name: 'Planetary Rings',
+        description: 'Mode 611: Planetary rings visualization',
+        category: 'Geometric',
+        mode: 611,
+        tags: ["planetary", "rings"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_612_solar_flare: {
+        id: 'mode_612_solar_flare',
+        name: 'Solar Flare',
+        description: 'Mode 612: Solar flare visualization',
+        category: 'Geometric',
+        mode: 612,
+        tags: ["solar", "flare"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_613_coronal_mass_ejection: {
+        id: 'mode_613_coronal_mass_ejection',
+        name: 'Coronal Mass Ejection',
+        description: 'Mode 613: Coronal mass ejection visualization',
+        category: 'Geometric',
+        mode: 613,
+        tags: ["coronal", "mass", "ejection"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_614_cosmic_ray: {
+        id: 'mode_614_cosmic_ray',
+        name: 'Cosmic Ray',
+        description: 'Mode 614: Cosmic ray visualization',
+        category: 'Geometric',
+        mode: 614,
+        tags: ["cosmic"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_615_gamma_ray_burst: {
+        id: 'mode_615_gamma_ray_burst',
+        name: 'Gamma Ray Burst',
+        description: 'Mode 615: Gamma ray burst visualization',
+        category: 'Geometric',
+        mode: 615,
+        tags: ["gamma", "burst"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_616_gravitational_lens: {
+        id: 'mode_616_gravitational_lens',
+        name: 'Gravitational Lens',
+        description: 'Mode 616: Gravitational lens visualization',
+        category: 'Geometric',
+        mode: 616,
+        tags: ["gravitational", "lens"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_617_dark_matter_halo: {
+        id: 'mode_617_dark_matter_halo',
+        name: 'Dark Matter Halo',
+        description: 'Mode 617: Dark matter halo visualization',
+        category: 'Geometric',
+        mode: 617,
+        tags: ["dark", "matter", "halo"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_618_cosmic_web: {
+        id: 'mode_618_cosmic_web',
+        name: 'Cosmic Web',
+        description: 'Mode 618: Cosmic web visualization',
+        category: 'Geometric',
+        mode: 618,
+        tags: ["cosmic"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_619_void: {
+        id: 'mode_619_void',
+        name: 'Void',
+        description: 'Mode 619: Void visualization',
+        category: 'Geometric',
+        mode: 619,
+        tags: ["void"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_620_filament_structure: {
+        id: 'mode_620_filament_structure',
+        name: 'Filament Structure',
+        description: 'Mode 620: Filament structure visualization',
+        category: 'Geometric',
+        mode: 620,
+        tags: ["filament", "structure"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_621_hubble_deep_field: {
+        id: 'mode_621_hubble_deep_field',
+        name: 'Hubble Deep Field',
+        description: 'Mode 621: Hubble deep field visualization',
+        category: 'Geometric',
+        mode: 621,
+        tags: ["hubble", "deep", "field"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_622_galaxy_collision: {
+        id: 'mode_622_galaxy_collision',
+        name: 'Galaxy Collision',
+        description: 'Mode 622: Galaxy collision visualization',
+        category: 'Geometric',
+        mode: 622,
+        tags: ["galaxy", "collision"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_623_tidal_tail: {
+        id: 'mode_623_tidal_tail',
+        name: 'Tidal Tail',
+        description: 'Mode 623: Tidal tail visualization',
+        category: 'Scientific',
+        mode: 623,
+        tags: ["tidal", "tail"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_624_starburst_galaxy: {
+        id: 'mode_624_starburst_galaxy',
+        name: 'Starburst Galaxy',
+        description: 'Mode 624: Starburst galaxy visualization',
+        category: 'Geometric',
+        mode: 624,
+        tags: ["starburst", "galaxy"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_625_active_galactic_nucleus: {
+        id: 'mode_625_active_galactic_nucleus',
+        name: 'Active Galactic Nucleus',
+        description: 'Mode 625: Active galactic nucleus visualization',
+        category: 'Geometric',
+        mode: 625,
+        tags: ["active", "galactic", "nucleus"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_626_blazar: {
+        id: 'mode_626_blazar',
+        name: 'Blazar',
+        description: 'Mode 626: Blazar visualization',
+        category: 'Geometric',
+        mode: 626,
+        tags: ["blazar"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_627_seyfert_galaxy: {
+        id: 'mode_627_seyfert_galaxy',
+        name: 'Seyfert Galaxy',
+        description: 'Mode 627: Seyfert galaxy visualization',
+        category: 'Geometric',
+        mode: 627,
+        tags: ["seyfert", "galaxy"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_628_radio_galaxy: {
+        id: 'mode_628_radio_galaxy',
+        name: 'Radio Galaxy',
+        description: 'Mode 628: Radio galaxy visualization',
+        category: 'Geometric',
+        mode: 628,
+        tags: ["radio", "galaxy"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_629_elliptical_galaxy: {
+        id: 'mode_629_elliptical_galaxy',
+        name: 'Elliptical Galaxy',
+        description: 'Mode 629: Elliptical galaxy visualization',
+        category: 'Geometric',
+        mode: 629,
+        tags: ["elliptical", "galaxy"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_630_irregular_galaxy: {
+        id: 'mode_630_irregular_galaxy',
+        name: 'Irregular Galaxy',
+        description: 'Mode 630: Irregular galaxy visualization',
+        category: 'Geometric',
+        mode: 630,
+        tags: ["irregular", "galaxy"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_631_dwarf_galaxy: {
+        id: 'mode_631_dwarf_galaxy',
+        name: 'Dwarf Galaxy',
+        description: 'Mode 631: Dwarf galaxy visualization',
+        category: 'Geometric',
+        mode: 631,
+        tags: ["dwarf", "galaxy"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_632_globular_cluster: {
+        id: 'mode_632_globular_cluster',
+        name: 'Globular Cluster',
+        description: 'Mode 632: Globular cluster visualization',
+        category: 'Geometric',
+        mode: 632,
+        tags: ["globular", "cluster"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_633_open_cluster: {
+        id: 'mode_633_open_cluster',
+        name: 'Open Cluster',
+        description: 'Mode 633: Open cluster visualization',
+        category: 'Geometric',
+        mode: 633,
+        tags: ["open", "cluster"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_634_protoplanetary_disk: {
+        id: 'mode_634_protoplanetary_disk',
+        name: 'Protoplanetary Disk',
+        description: 'Mode 634: Protoplanetary disk visualization',
+        category: 'Geometric',
+        mode: 634,
+        tags: ["protoplanetary", "disk"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_635_accretion_disk: {
+        id: 'mode_635_accretion_disk',
+        name: 'Accretion Disk',
+        description: 'Mode 635: Accretion disk visualization',
+        category: 'Geometric',
+        mode: 635,
+        tags: ["accretion", "disk"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_636_jets_from_black_hole: {
+        id: 'mode_636_jets_from_black_hole',
+        name: 'Jets From Black Hole',
+        description: 'Mode 636: Jets from black hole visualization',
+        category: 'Geometric',
+        mode: 636,
+        tags: ["jets", "from", "black"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_637_event_horizon: {
+        id: 'mode_637_event_horizon',
+        name: 'Event Horizon',
+        description: 'Mode 637: Event horizon visualization',
+        category: 'Geometric',
+        mode: 637,
+        tags: ["event", "horizon"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_638_photon_sphere: {
+        id: 'mode_638_photon_sphere',
+        name: 'Photon Sphere',
+        description: 'Mode 638: Photon sphere visualization',
+        category: 'Geometric',
+        mode: 638,
+        tags: ["photon", "sphere"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_639_ergosphere: {
+        id: 'mode_639_ergosphere',
+        name: 'Ergosphere',
+        description: 'Mode 639: Ergosphere visualization',
+        category: 'Geometric',
+        mode: 639,
+        tags: ["ergosphere"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_640_singularity: {
+        id: 'mode_640_singularity',
+        name: 'Singularity',
+        description: 'Mode 640: Singularity visualization',
+        category: 'Geometric',
+        mode: 640,
+        tags: ["singularity"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_641_wormhole: {
+        id: 'mode_641_wormhole',
+        name: 'Wormhole',
+        description: 'Mode 641: Wormhole visualization',
+        category: 'Geometric',
+        mode: 641,
+        tags: ["wormhole"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_642_white_hole: {
+        id: 'mode_642_white_hole',
+        name: 'White Hole',
+        description: 'Mode 642: White hole visualization',
+        category: 'Geometric',
+        mode: 642,
+        tags: ["white", "hole"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_643_naked_singularity: {
+        id: 'mode_643_naked_singularity',
+        name: 'Naked Singularity',
+        description: 'Mode 643: Naked singularity visualization',
+        category: 'Geometric',
+        mode: 643,
+        tags: ["naked", "singularity"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_644_hawking_radiation: {
+        id: 'mode_644_hawking_radiation',
+        name: 'Hawking Radiation',
+        description: 'Mode 644: Hawking radiation visualization',
+        category: 'Geometric',
+        mode: 644,
+        tags: ["hawking", "radiation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_645_information_paradox: {
+        id: 'mode_645_information_paradox',
+        name: 'Information Paradox',
+        description: 'Mode 645: Information paradox visualization',
+        category: 'Geometric',
+        mode: 645,
+        tags: ["information", "paradox"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_646_multiverse_bubble: {
+        id: 'mode_646_multiverse_bubble',
+        name: 'Multiverse Bubble',
+        description: 'Mode 646: Multiverse bubble visualization',
+        category: 'Particles',
+        mode: 646,
+        tags: ["multiverse", "bubble"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_647_parallel_universe: {
+        id: 'mode_647_parallel_universe',
+        name: 'Parallel Universe',
+        description: 'Mode 647: Parallel universe visualization',
+        category: 'Geometric',
+        mode: 647,
+        tags: ["parallel", "universe"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_648_brane_collision: {
+        id: 'mode_648_brane_collision',
+        name: 'Brane Collision',
+        description: 'Mode 648: Brane collision visualization',
+        category: 'Geometric',
+        mode: 648,
+        tags: ["brane", "collision"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_649_extra_dimensions: {
+        id: 'mode_649_extra_dimensions',
+        name: 'Extra Dimensions',
+        description: 'Mode 649: Extra dimensions visualization',
+        category: 'Geometric',
+        mode: 649,
+        tags: ["extra", "dimensions"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_650_calabi_yau_manifold: {
+        id: 'mode_650_calabi_yau_manifold',
+        name: 'Calabi Yau Manifold',
+        description: 'Mode 650: Calabi-yau manifold visualization',
+        category: 'Geometric',
+        mode: 650,
+        tags: ["calabi", "manifold"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_651_string_theory_vibration: {
+        id: 'mode_651_string_theory_vibration',
+        name: 'String Theory Vibration',
+        description: 'Mode 651: String theory vibration visualization',
+        category: 'Geometric',
+        mode: 651,
+        tags: ["string", "theory", "vibration"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_652_quantum_foam: {
+        id: 'mode_652_quantum_foam',
+        name: 'Quantum Foam',
+        description: 'Mode 652: Quantum foam visualization',
+        category: 'Scientific',
+        mode: 652,
+        tags: ["quantum", "foam"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_653_planck_scale: {
+        id: 'mode_653_planck_scale',
+        name: 'Planck Scale',
+        description: 'Mode 653: Planck scale visualization',
+        category: 'Geometric',
+        mode: 653,
+        tags: ["planck", "scale"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_654_big_bang: {
+        id: 'mode_654_big_bang',
+        name: 'Big Bang',
+        description: 'Mode 654: Big bang visualization',
+        category: 'Geometric',
+        mode: 654,
+        tags: ["bang"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_655_cosmic_microwave_background: {
+        id: 'mode_655_cosmic_microwave_background',
+        name: 'Cosmic Microwave Background',
+        description: 'Mode 655: Cosmic microwave background visualization',
+        category: 'Geometric',
+        mode: 655,
+        tags: ["cosmic", "microwave", "background"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_656_inflation_field: {
+        id: 'mode_656_inflation_field',
+        name: 'Inflation Field',
+        description: 'Mode 656: Inflation field visualization',
+        category: 'Geometric',
+        mode: 656,
+        tags: ["inflation", "field"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_657_density_fluctuations: {
+        id: 'mode_657_density_fluctuations',
+        name: 'Density Fluctuations',
+        description: 'Mode 657: Density fluctuations visualization',
+        category: 'Geometric',
+        mode: 657,
+        tags: ["density", "fluctuations"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_658_baryon_acoustic_oscillations: {
+        id: 'mode_658_baryon_acoustic_oscillations',
+        name: 'Baryon Acoustic Oscillations',
+        description: 'Mode 658: Baryon acoustic oscillations visualization',
+        category: 'Geometric',
+        mode: 658,
+        tags: ["baryon", "acoustic", "oscillations"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_659_dark_energy: {
+        id: 'mode_659_dark_energy',
+        name: 'Dark Energy',
+        description: 'Mode 659: Dark energy visualization',
+        category: 'Energy',
+        mode: 659,
+        tags: ["dark", "energy"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_660_cosmological_constant: {
+        id: 'mode_660_cosmological_constant',
+        name: 'Cosmological Constant',
+        description: 'Mode 660: Cosmological constant visualization',
+        category: 'Geometric',
+        mode: 660,
+        tags: ["cosmological", "constant"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_661_quintessence_field: {
+        id: 'mode_661_quintessence_field',
+        name: 'Quintessence Field',
+        description: 'Mode 661: Quintessence field visualization',
+        category: 'Geometric',
+        mode: 661,
+        tags: ["quintessence", "field"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_662_heat_death: {
+        id: 'mode_662_heat_death',
+        name: 'Heat Death',
+        description: 'Mode 662: Heat death visualization',
+        category: 'Geometric',
+        mode: 662,
+        tags: ["heat", "death"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_663_big_rip: {
+        id: 'mode_663_big_rip',
+        name: 'Big Rip',
+        description: 'Mode 663: Big rip visualization',
+        category: 'Geometric',
+        mode: 663,
+        tags: [],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_664_big_crunch: {
+        id: 'mode_664_big_crunch',
+        name: 'Big Crunch',
+        description: 'Mode 664: Big crunch visualization',
+        category: 'Geometric',
+        mode: 664,
+        tags: ["crunch"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_665_big_bounce: {
+        id: 'mode_665_big_bounce',
+        name: 'Big Bounce',
+        description: 'Mode 665: Big bounce visualization',
+        category: 'Geometric',
+        mode: 665,
+        tags: ["bounce"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_666_cyclic_universe: {
+        id: 'mode_666_cyclic_universe',
+        name: 'Cyclic Universe',
+        description: 'Mode 666: Cyclic universe visualization',
+        category: 'Geometric',
+        mode: 666,
+        tags: ["cyclic", "universe"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_667_conformal_cyclic_cosmology: {
+        id: 'mode_667_conformal_cyclic_cosmology',
+        name: 'Conformal Cyclic Cosmology',
+        description: 'Mode 667: Conformal cyclic cosmology visualization',
+        category: 'Geometric',
+        mode: 667,
+        tags: ["conformal", "cyclic", "cosmology"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_668_eternal_inflation: {
+        id: 'mode_668_eternal_inflation',
+        name: 'Eternal Inflation',
+        description: 'Mode 668: Eternal inflation visualization',
+        category: 'Geometric',
+        mode: 668,
+        tags: ["eternal", "inflation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_669_landscape_multiverse: {
+        id: 'mode_669_landscape_multiverse',
+        name: 'Landscape Multiverse',
+        description: 'Mode 669: Landscape multiverse visualization',
+        category: 'Geometric',
+        mode: 669,
+        tags: ["landscape", "multiverse"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_670_quantum_decoherence: {
+        id: 'mode_670_quantum_decoherence',
+        name: 'Quantum Decoherence',
+        description: 'Mode 670: Quantum decoherence visualization',
+        category: 'Scientific',
+        mode: 670,
+        tags: ["quantum", "decoherence"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_671_many_worlds: {
+        id: 'mode_671_many_worlds',
+        name: 'Many Worlds',
+        description: 'Mode 671: Many worlds visualization',
+        category: 'Geometric',
+        mode: 671,
+        tags: ["many", "worlds"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_672_pilot_wave: {
+        id: 'mode_672_pilot_wave',
+        name: 'Pilot Wave',
+        description: 'Mode 672: Pilot wave visualization',
+        category: 'Geometric',
+        mode: 672,
+        tags: ["pilot", "wave"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_673_spontaneous_collapse: {
+        id: 'mode_673_spontaneous_collapse',
+        name: 'Spontaneous Collapse',
+        description: 'Mode 673: Spontaneous collapse visualization',
+        category: 'Geometric',
+        mode: 673,
+        tags: ["spontaneous", "collapse"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_674_transactional_interpretation: {
+        id: 'mode_674_transactional_interpretation',
+        name: 'Transactional Interpretation',
+        description: 'Mode 674: Transactional interpretation visualization',
+        category: 'Geometric',
+        mode: 674,
+        tags: ["transactional", "interpretation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_675_relational_quantum_mechanics: {
+        id: 'mode_675_relational_quantum_mechanics',
+        name: 'Relational Quantum Mechanics',
+        description: 'Mode 675: Relational quantum mechanics visualization',
+        category: 'Scientific',
+        mode: 675,
+        tags: ["relational", "quantum", "mechanics"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_676_quantum_bayesianism: {
+        id: 'mode_676_quantum_bayesianism',
+        name: 'Quantum Bayesianism',
+        description: 'Mode 676: Quantum bayesianism visualization',
+        category: 'Scientific',
+        mode: 676,
+        tags: ["quantum", "bayesianism"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_677_consistent_histories: {
+        id: 'mode_677_consistent_histories',
+        name: 'Consistent Histories',
+        description: 'Mode 677: Consistent histories visualization',
+        category: 'Geometric',
+        mode: 677,
+        tags: ["consistent", "histories"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_678_bohemian_mechanics: {
+        id: 'mode_678_bohemian_mechanics',
+        name: 'Bohemian Mechanics',
+        description: 'Mode 678: Bohemian mechanics visualization',
+        category: 'Geometric',
+        mode: 678,
+        tags: ["bohemian", "mechanics"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_679_stochastic_mechanics: {
+        id: 'mode_679_stochastic_mechanics',
+        name: 'Stochastic Mechanics',
+        description: 'Mode 679: Stochastic mechanics visualization',
+        category: 'Geometric',
+        mode: 679,
+        tags: ["stochastic", "mechanics"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_680_quantum_darwinism: {
+        id: 'mode_680_quantum_darwinism',
+        name: 'Quantum Darwinism',
+        description: 'Mode 680: Quantum darwinism visualization',
+        category: 'Scientific',
+        mode: 680,
+        tags: ["quantum", "darwinism"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_681_einselection: {
+        id: 'mode_681_einselection',
+        name: 'Einselection',
+        description: 'Mode 681: Einselection visualization',
+        category: 'Geometric',
+        mode: 681,
+        tags: ["einselection"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_682_pointer_states: {
+        id: 'mode_682_pointer_states',
+        name: 'Pointer States',
+        description: 'Mode 682: Pointer states visualization',
+        category: 'Geometric',
+        mode: 682,
+        tags: ["pointer", "states"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_683_branching_spacetime: {
+        id: 'mode_683_branching_spacetime',
+        name: 'Branching Spacetime',
+        description: 'Mode 683: Branching spacetime visualization',
+        category: 'Geometric',
+        mode: 683,
+        tags: ["branching", "spacetime"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_684_worldline: {
+        id: 'mode_684_worldline',
+        name: 'Worldline',
+        description: 'Mode 684: Worldline visualization',
+        category: 'Geometric',
+        mode: 684,
+        tags: ["worldline"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_685_light_cone: {
+        id: 'mode_685_light_cone',
+        name: 'Light Cone',
+        description: 'Mode 685: Light cone visualization',
+        category: 'Geometric',
+        mode: 685,
+        tags: ["light", "cone"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_686_cauchy_surface: {
+        id: 'mode_686_cauchy_surface',
+        name: 'Cauchy Surface',
+        description: 'Mode 686: Cauchy surface visualization',
+        category: 'Geometric',
+        mode: 686,
+        tags: ["cauchy", "surface"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_687_spacelike_hypersurface: {
+        id: 'mode_687_spacelike_hypersurface',
+        name: 'Spacelike Hypersurface',
+        description: 'Mode 687: Spacelike hypersurface visualization',
+        category: 'Geometric',
+        mode: 687,
+        tags: ["spacelike", "hypersurface"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_688_timelike_curve: {
+        id: 'mode_688_timelike_curve',
+        name: 'Timelike Curve',
+        description: 'Mode 688: Timelike curve visualization',
+        category: 'Geometric',
+        mode: 688,
+        tags: ["timelike", "curve"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_689_closed_timelike_curve: {
+        id: 'mode_689_closed_timelike_curve',
+        name: 'Closed Timelike Curve',
+        description: 'Mode 689: Closed timelike curve visualization',
+        category: 'Geometric',
+        mode: 689,
+        tags: ["closed", "timelike", "curve"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_690_chronology_protection: {
+        id: 'mode_690_chronology_protection',
+        name: 'Chronology Protection',
+        description: 'Mode 690: Chronology protection visualization',
+        category: 'Geometric',
+        mode: 690,
+        tags: ["chronology", "protection"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_691_novikov_self_consistency: {
+        id: 'mode_691_novikov_self_consistency',
+        name: 'Novikov Self Consistency',
+        description: 'Mode 691: Novikov self-consistency visualization',
+        category: 'Geometric',
+        mode: 691,
+        tags: ["novikov", "self", "consistency"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_692_grandfather_paradox: {
+        id: 'mode_692_grandfather_paradox',
+        name: 'Grandfather Paradox',
+        description: 'Mode 692: Grandfather paradox visualization',
+        category: 'Geometric',
+        mode: 692,
+        tags: ["grandfather", "paradox"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_693_bootstrap_paradox: {
+        id: 'mode_693_bootstrap_paradox',
+        name: 'Bootstrap Paradox',
+        description: 'Mode 693: Bootstrap paradox visualization',
+        category: 'Geometric',
+        mode: 693,
+        tags: ["bootstrap", "paradox"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_694_predestination_paradox: {
+        id: 'mode_694_predestination_paradox',
+        name: 'Predestination Paradox',
+        description: 'Mode 694: Predestination paradox visualization',
+        category: 'Geometric',
+        mode: 694,
+        tags: ["predestination", "paradox"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_695_causal_loop: {
+        id: 'mode_695_causal_loop',
+        name: 'Causal Loop',
+        description: 'Mode 695: Causal loop visualization',
+        category: 'Geometric',
+        mode: 695,
+        tags: ["causal", "loop"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_696_retrocausality: {
+        id: 'mode_696_retrocausality',
+        name: 'Retrocausality',
+        description: 'Mode 696: Retrocausality visualization',
+        category: 'Tech',
+        mode: 696,
+        tags: ["retrocausality"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_697_advanced_wave: {
+        id: 'mode_697_advanced_wave',
+        name: 'Advanced Wave',
+        description: 'Mode 697: Advanced wave visualization',
+        category: 'Geometric',
+        mode: 697,
+        tags: ["advanced", "wave"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_698_wheeler_feynman_absorber: {
+        id: 'mode_698_wheeler_feynman_absorber',
+        name: 'Wheeler Feynman Absorber',
+        description: 'Mode 698: Wheeler-feynman absorber visualization',
+        category: 'Geometric',
+        mode: 698,
+        tags: ["wheeler", "feynman", "absorber"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_699_transactional_interpretation: {
+        id: 'mode_699_transactional_interpretation',
+        name: 'Transactional Interpretation',
+        description: 'Mode 699: Transactional interpretation visualization',
+        category: 'Geometric',
+        mode: 699,
+        tags: ["transactional", "interpretation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_700_two_state_vector: {
+        id: 'mode_700_two_state_vector',
+        name: 'Two State Vector',
+        description: 'Mode 700: Two-state vector visualization',
+        category: 'Geometric',
+        mode: 700,
+        tags: ["state", "vector"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_701_binary_rain: {
+        id: 'mode_701_binary_rain',
+        name: 'Binary Rain',
+        description: 'Mode 701: Binary rain visualization',
+        category: 'Scientific',
+        mode: 701,
+        tags: ["binary", "rain"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_702_hexadecimal_grid: {
+        id: 'mode_702_hexadecimal_grid',
+        name: 'Hexadecimal Grid',
+        description: 'Mode 702: Hexadecimal grid visualization',
+        category: 'Geometric',
+        mode: 702,
+        tags: ["hexadecimal", "grid"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_703_circuit_board: {
+        id: 'mode_703_circuit_board',
+        name: 'Circuit Board',
+        description: 'Mode 703: Circuit board visualization',
+        category: 'Scientific',
+        mode: 703,
+        tags: ["circuit", "board"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_704_data_flow: {
+        id: 'mode_704_data_flow',
+        name: 'Data Flow',
+        description: 'Mode 704: Data flow visualization',
+        category: 'Geometric',
+        mode: 704,
+        tags: ["data", "flow"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_705_packet_transmission: {
+        id: 'mode_705_packet_transmission',
+        name: 'Packet Transmission',
+        description: 'Mode 705: Packet transmission visualization',
+        category: 'Geometric',
+        mode: 705,
+        tags: ["packet", "transmission"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_706_network_topology: {
+        id: 'mode_706_network_topology',
+        name: 'Network Topology',
+        description: 'Mode 706: Network topology visualization',
+        category: 'Geometric',
+        mode: 706,
+        tags: ["network", "topology"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_707_server_cluster: {
+        id: 'mode_707_server_cluster',
+        name: 'Server Cluster',
+        description: 'Mode 707: Server cluster visualization',
+        category: 'Geometric',
+        mode: 707,
+        tags: ["server", "cluster"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_708_cloud_computing: {
+        id: 'mode_708_cloud_computing',
+        name: 'Cloud Computing',
+        description: 'Mode 708: Cloud computing visualization',
+        category: 'Geometric',
+        mode: 708,
+        tags: ["cloud", "computing"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_709_distributed_system: {
+        id: 'mode_709_distributed_system',
+        name: 'Distributed System',
+        description: 'Mode 709: Distributed system visualization',
+        category: 'Geometric',
+        mode: 709,
+        tags: ["distributed", "system"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_710_peer_to_peer: {
+        id: 'mode_710_peer_to_peer',
+        name: 'Peer To Peer',
+        description: 'Mode 710: Peer-to-peer visualization',
+        category: 'Geometric',
+        mode: 710,
+        tags: ["peer", "peer"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_711_blockchain: {
+        id: 'mode_711_blockchain',
+        name: 'Blockchain',
+        description: 'Mode 711: Blockchain visualization',
+        category: 'Scientific',
+        mode: 711,
+        tags: ["blockchain"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_712_hash_function: {
+        id: 'mode_712_hash_function',
+        name: 'Hash Function',
+        description: 'Mode 712: Hash function visualization',
+        category: 'Geometric',
+        mode: 712,
+        tags: ["hash", "function"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_713_encryption: {
+        id: 'mode_713_encryption',
+        name: 'Encryption',
+        description: 'Mode 713: Encryption visualization',
+        category: 'Geometric',
+        mode: 713,
+        tags: ["encryption"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_714_public_key: {
+        id: 'mode_714_public_key',
+        name: 'Public Key',
+        description: 'Mode 714: Public key visualization',
+        category: 'Geometric',
+        mode: 714,
+        tags: ["public"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_715_digital_signature: {
+        id: 'mode_715_digital_signature',
+        name: 'Digital Signature',
+        description: 'Mode 715: Digital signature visualization',
+        category: 'Nature',
+        mode: 715,
+        tags: ["digital", "signature"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_716_zero_knowledge_proof: {
+        id: 'mode_716_zero_knowledge_proof',
+        name: 'Zero Knowledge Proof',
+        description: 'Mode 716: Zero knowledge proof visualization',
+        category: 'Geometric',
+        mode: 716,
+        tags: ["zero", "knowledge", "proof"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_717_homomorphic_encryption: {
+        id: 'mode_717_homomorphic_encryption',
+        name: 'Homomorphic Encryption',
+        description: 'Mode 717: Homomorphic encryption visualization',
+        category: 'Geometric',
+        mode: 717,
+        tags: ["homomorphic", "encryption"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_718_secure_multiparty_computation: {
+        id: 'mode_718_secure_multiparty_computation',
+        name: 'Secure Multiparty Computation',
+        description: 'Mode 718: Secure multiparty computation visualization',
+        category: 'Geometric',
+        mode: 718,
+        tags: ["secure", "multiparty", "computation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_719_differential_privacy: {
+        id: 'mode_719_differential_privacy',
+        name: 'Differential Privacy',
+        description: 'Mode 719: Differential privacy visualization',
+        category: 'Geometric',
+        mode: 719,
+        tags: ["differential", "privacy"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_720_federated_learning: {
+        id: 'mode_720_federated_learning',
+        name: 'Federated Learning',
+        description: 'Mode 720: Federated learning visualization',
+        category: 'Geometric',
+        mode: 720,
+        tags: ["federated", "learning"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_721_neural_network: {
+        id: 'mode_721_neural_network',
+        name: 'Neural Network',
+        description: 'Mode 721: Neural network visualization',
+        category: 'Scientific',
+        mode: 721,
+        tags: ["neural", "network"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_722_deep_learning: {
+        id: 'mode_722_deep_learning',
+        name: 'Deep Learning',
+        description: 'Mode 722: Deep learning visualization',
+        category: 'Geometric',
+        mode: 722,
+        tags: ["deep", "learning"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_723_convolutional_layer: {
+        id: 'mode_723_convolutional_layer',
+        name: 'Convolutional Layer',
+        description: 'Mode 723: Convolutional layer visualization',
+        category: 'Geometric',
+        mode: 723,
+        tags: ["convolutional", "layer"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_724_recurrent_connection: {
+        id: 'mode_724_recurrent_connection',
+        name: 'Recurrent Connection',
+        description: 'Mode 724: Recurrent connection visualization',
+        category: 'Geometric',
+        mode: 724,
+        tags: ["recurrent", "connection"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_725_attention_mechanism: {
+        id: 'mode_725_attention_mechanism',
+        name: 'Attention Mechanism',
+        description: 'Mode 725: Attention mechanism visualization',
+        category: 'Geometric',
+        mode: 725,
+        tags: ["attention", "mechanism"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_726_transformer_architecture: {
+        id: 'mode_726_transformer_architecture',
+        name: 'Transformer Architecture',
+        description: 'Mode 726: Transformer architecture visualization',
+        category: 'Geometric',
+        mode: 726,
+        tags: ["transformer", "architecture"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_727_residual_connection: {
+        id: 'mode_727_residual_connection',
+        name: 'Residual Connection',
+        description: 'Mode 727: Residual connection visualization',
+        category: 'Geometric',
+        mode: 727,
+        tags: ["residual", "connection"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_728_skip_connection: {
+        id: 'mode_728_skip_connection',
+        name: 'Skip Connection',
+        description: 'Mode 728: Skip connection visualization',
+        category: 'Geometric',
+        mode: 728,
+        tags: ["skip", "connection"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_729_batch_normalization: {
+        id: 'mode_729_batch_normalization',
+        name: 'Batch Normalization',
+        description: 'Mode 729: Batch normalization visualization',
+        category: 'Geometric',
+        mode: 729,
+        tags: ["batch", "normalization"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_730_dropout_regularization: {
+        id: 'mode_730_dropout_regularization',
+        name: 'Dropout Regularization',
+        description: 'Mode 730: Dropout regularization visualization',
+        category: 'Geometric',
+        mode: 730,
+        tags: ["dropout", "regularization"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_731_activation_function: {
+        id: 'mode_731_activation_function',
+        name: 'Activation Function',
+        description: 'Mode 731: Activation function visualization',
+        category: 'Geometric',
+        mode: 731,
+        tags: ["activation", "function"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_732_gradient_descent: {
+        id: 'mode_732_gradient_descent',
+        name: 'Gradient Descent',
+        description: 'Mode 732: Gradient descent visualization',
+        category: 'Geometric',
+        mode: 732,
+        tags: ["gradient", "descent"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_733_backpropagation: {
+        id: 'mode_733_backpropagation',
+        name: 'Backpropagation',
+        description: 'Mode 733: Backpropagation visualization',
+        category: 'Geometric',
+        mode: 733,
+        tags: ["backpropagation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_734_loss_landscape: {
+        id: 'mode_734_loss_landscape',
+        name: 'Loss Landscape',
+        description: 'Mode 734: Loss landscape visualization',
+        category: 'Geometric',
+        mode: 734,
+        tags: ["loss", "landscape"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_735_optimizer_trajectory: {
+        id: 'mode_735_optimizer_trajectory',
+        name: 'Optimizer Trajectory',
+        description: 'Mode 735: Optimizer trajectory visualization',
+        category: 'Geometric',
+        mode: 735,
+        tags: ["optimizer", "trajectory"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_736_learning_rate_schedule: {
+        id: 'mode_736_learning_rate_schedule',
+        name: 'Learning Rate Schedule',
+        description: 'Mode 736: Learning rate schedule visualization',
+        category: 'Geometric',
+        mode: 736,
+        tags: ["learning", "rate", "schedule"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_737_momentum: {
+        id: 'mode_737_momentum',
+        name: 'Momentum',
+        description: 'Mode 737: Momentum visualization',
+        category: 'Geometric',
+        mode: 737,
+        tags: ["momentum"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_738_adaptive_learning: {
+        id: 'mode_738_adaptive_learning',
+        name: 'Adaptive Learning',
+        description: 'Mode 738: Adaptive learning visualization',
+        category: 'Geometric',
+        mode: 738,
+        tags: ["adaptive", "learning"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_739_weight_decay: {
+        id: 'mode_739_weight_decay',
+        name: 'Weight Decay',
+        description: 'Mode 739: Weight decay visualization',
+        category: 'Geometric',
+        mode: 739,
+        tags: ["weight", "decay"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_740_early_stopping: {
+        id: 'mode_740_early_stopping',
+        name: 'Early Stopping',
+        description: 'Mode 740: Early stopping visualization',
+        category: 'Geometric',
+        mode: 740,
+        tags: ["early", "stopping"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_741_cross_validation: {
+        id: 'mode_741_cross_validation',
+        name: 'Cross Validation',
+        description: 'Mode 741: Cross validation visualization',
+        category: 'Geometric',
+        mode: 741,
+        tags: ["cross", "validation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_742_ensemble_method: {
+        id: 'mode_742_ensemble_method',
+        name: 'Ensemble Method',
+        description: 'Mode 742: Ensemble method visualization',
+        category: 'Geometric',
+        mode: 742,
+        tags: ["ensemble", "method"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_743_boosting: {
+        id: 'mode_743_boosting',
+        name: 'Boosting',
+        description: 'Mode 743: Boosting visualization',
+        category: 'Geometric',
+        mode: 743,
+        tags: ["boosting"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_744_bagging: {
+        id: 'mode_744_bagging',
+        name: 'Bagging',
+        description: 'Mode 744: Bagging visualization',
+        category: 'Geometric',
+        mode: 744,
+        tags: ["bagging"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_745_random_forest: {
+        id: 'mode_745_random_forest',
+        name: 'Random Forest',
+        description: 'Mode 745: Random forest visualization',
+        category: 'Nature',
+        mode: 745,
+        tags: ["random", "forest"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_746_decision_tree: {
+        id: 'mode_746_decision_tree',
+        name: 'Decision Tree',
+        description: 'Mode 746: Decision tree visualization',
+        category: 'Nature',
+        mode: 746,
+        tags: ["decision", "tree"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_747_support_vector_machine: {
+        id: 'mode_747_support_vector_machine',
+        name: 'Support Vector Machine',
+        description: 'Mode 747: Support vector machine visualization',
+        category: 'Geometric',
+        mode: 747,
+        tags: ["support", "vector", "machine"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_748_kernel_trick: {
+        id: 'mode_748_kernel_trick',
+        name: 'Kernel Trick',
+        description: 'Mode 748: Kernel trick visualization',
+        category: 'Geometric',
+        mode: 748,
+        tags: ["kernel", "trick"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_749_feature_space: {
+        id: 'mode_749_feature_space',
+        name: 'Feature Space',
+        description: 'Mode 749: Feature space visualization',
+        category: 'Geometric',
+        mode: 749,
+        tags: ["feature", "space"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_750_dimensionality_reduction: {
+        id: 'mode_750_dimensionality_reduction',
+        name: 'Dimensionality Reduction',
+        description: 'Mode 750: Dimensionality reduction visualization',
+        category: 'Geometric',
+        mode: 750,
+        tags: ["dimensionality", "reduction"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_751_principal_component_analysis: {
+        id: 'mode_751_principal_component_analysis',
+        name: 'Principal Component Analysis',
+        description: 'Mode 751: Principal component analysis visualization',
+        category: 'Geometric',
+        mode: 751,
+        tags: ["principal", "component", "analysis"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_752_t_sne_embedding: {
+        id: 'mode_752_t_sne_embedding',
+        name: 'T Sne Embedding',
+        description: 'Mode 752: T-sne embedding visualization',
+        category: 'Geometric',
+        mode: 752,
+        tags: ["embedding"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_753_autoencoder_latent_space: {
+        id: 'mode_753_autoencoder_latent_space',
+        name: 'Autoencoder Latent Space',
+        description: 'Mode 753: Autoencoder latent space visualization',
+        category: 'Geometric',
+        mode: 753,
+        tags: ["autoencoder", "latent", "space"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_754_variational_autoencoder: {
+        id: 'mode_754_variational_autoencoder',
+        name: 'Variational Autoencoder',
+        description: 'Mode 754: Variational autoencoder visualization',
+        category: 'Geometric',
+        mode: 754,
+        tags: ["variational", "autoencoder"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_755_generative_adversarial_network: {
+        id: 'mode_755_generative_adversarial_network',
+        name: 'Generative Adversarial Network',
+        description: 'Mode 755: Generative adversarial network visualization',
+        category: 'Geometric',
+        mode: 755,
+        tags: ["generative", "adversarial", "network"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_756_discriminator_network: {
+        id: 'mode_756_discriminator_network',
+        name: 'Discriminator Network',
+        description: 'Mode 756: Discriminator network visualization',
+        category: 'Geometric',
+        mode: 756,
+        tags: ["discriminator", "network"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_757_generator_network: {
+        id: 'mode_757_generator_network',
+        name: 'Generator Network',
+        description: 'Mode 757: Generator network visualization',
+        category: 'Geometric',
+        mode: 757,
+        tags: ["generator", "network"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_758_style_transfer: {
+        id: 'mode_758_style_transfer',
+        name: 'Style Transfer',
+        description: 'Mode 758: Style transfer visualization',
+        category: 'Geometric',
+        mode: 758,
+        tags: ["style", "transfer"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_759_content_loss: {
+        id: 'mode_759_content_loss',
+        name: 'Content Loss',
+        description: 'Mode 759: Content loss visualization',
+        category: 'Geometric',
+        mode: 759,
+        tags: ["content", "loss"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_760_gram_matrix: {
+        id: 'mode_760_gram_matrix',
+        name: 'Gram Matrix',
+        description: 'Mode 760: Gram matrix visualization',
+        category: 'Tech',
+        mode: 760,
+        tags: ["gram", "matrix"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_761_perceptual_loss: {
+        id: 'mode_761_perceptual_loss',
+        name: 'Perceptual Loss',
+        description: 'Mode 761: Perceptual loss visualization',
+        category: 'Geometric',
+        mode: 761,
+        tags: ["perceptual", "loss"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_762_adversarial_loss: {
+        id: 'mode_762_adversarial_loss',
+        name: 'Adversarial Loss',
+        description: 'Mode 762: Adversarial loss visualization',
+        category: 'Geometric',
+        mode: 762,
+        tags: ["adversarial", "loss"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_763_cycle_consistency: {
+        id: 'mode_763_cycle_consistency',
+        name: 'Cycle Consistency',
+        description: 'Mode 763: Cycle consistency visualization',
+        category: 'Geometric',
+        mode: 763,
+        tags: ["cycle", "consistency"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_764_identity_loss: {
+        id: 'mode_764_identity_loss',
+        name: 'Identity Loss',
+        description: 'Mode 764: Identity loss visualization',
+        category: 'Geometric',
+        mode: 764,
+        tags: ["identity", "loss"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_765_reconstruction_loss: {
+        id: 'mode_765_reconstruction_loss',
+        name: 'Reconstruction Loss',
+        description: 'Mode 765: Reconstruction loss visualization',
+        category: 'Geometric',
+        mode: 765,
+        tags: ["reconstruction", "loss"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_766_kl_divergence: {
+        id: 'mode_766_kl_divergence',
+        name: 'Kl Divergence',
+        description: 'Mode 766: Kl divergence visualization',
+        category: 'Geometric',
+        mode: 766,
+        tags: ["divergence"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_767_wasserstein_distance: {
+        id: 'mode_767_wasserstein_distance',
+        name: 'Wasserstein Distance',
+        description: 'Mode 767: Wasserstein distance visualization',
+        category: 'Geometric',
+        mode: 767,
+        tags: ["wasserstein", "distance"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_768_earth_mover_distance: {
+        id: 'mode_768_earth_mover_distance',
+        name: 'Earth Mover Distance',
+        description: 'Mode 768: Earth mover distance visualization',
+        category: 'Geometric',
+        mode: 768,
+        tags: ["earth", "mover", "distance"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_769_inception_score: {
+        id: 'mode_769_inception_score',
+        name: 'Inception Score',
+        description: 'Mode 769: Inception score visualization',
+        category: 'Geometric',
+        mode: 769,
+        tags: ["inception", "score"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_770_frechet_inception_distance: {
+        id: 'mode_770_frechet_inception_distance',
+        name: 'Frechet Inception Distance',
+        description: 'Mode 770: Frechet inception distance visualization',
+        category: 'Geometric',
+        mode: 770,
+        tags: ["frechet", "inception", "distance"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_771_bleu_score: {
+        id: 'mode_771_bleu_score',
+        name: 'Bleu Score',
+        description: 'Mode 771: Bleu score visualization',
+        category: 'Geometric',
+        mode: 771,
+        tags: ["bleu", "score"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_772_rouge_score: {
+        id: 'mode_772_rouge_score',
+        name: 'Rouge Score',
+        description: 'Mode 772: Rouge score visualization',
+        category: 'Geometric',
+        mode: 772,
+        tags: ["rouge", "score"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_773_perplexity: {
+        id: 'mode_773_perplexity',
+        name: 'Perplexity',
+        description: 'Mode 773: Perplexity visualization',
+        category: 'Geometric',
+        mode: 773,
+        tags: ["perplexity"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_774_cross_entropy: {
+        id: 'mode_774_cross_entropy',
+        name: 'Cross Entropy',
+        description: 'Mode 774: Cross entropy visualization',
+        category: 'Geometric',
+        mode: 774,
+        tags: ["cross", "entropy"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_775_mutual_information: {
+        id: 'mode_775_mutual_information',
+        name: 'Mutual Information',
+        description: 'Mode 775: Mutual information visualization',
+        category: 'Geometric',
+        mode: 775,
+        tags: ["mutual", "information"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_776_information_bottleneck: {
+        id: 'mode_776_information_bottleneck',
+        name: 'Information Bottleneck',
+        description: 'Mode 776: Information bottleneck visualization',
+        category: 'Geometric',
+        mode: 776,
+        tags: ["information", "bottleneck"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_777_rate_distortion: {
+        id: 'mode_777_rate_distortion',
+        name: 'Rate Distortion',
+        description: 'Mode 777: Rate distortion visualization',
+        category: 'Geometric',
+        mode: 777,
+        tags: ["rate", "distortion"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_778_source_coding: {
+        id: 'mode_778_source_coding',
+        name: 'Source Coding',
+        description: 'Mode 778: Source coding visualization',
+        category: 'Geometric',
+        mode: 778,
+        tags: ["source", "coding"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_779_channel_coding: {
+        id: 'mode_779_channel_coding',
+        name: 'Channel Coding',
+        description: 'Mode 779: Channel coding visualization',
+        category: 'Geometric',
+        mode: 779,
+        tags: ["channel", "coding"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_780_error_correction: {
+        id: 'mode_780_error_correction',
+        name: 'Error Correction',
+        description: 'Mode 780: Error correction visualization',
+        category: 'Geometric',
+        mode: 780,
+        tags: ["error", "correction"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_781_hamming_distance: {
+        id: 'mode_781_hamming_distance',
+        name: 'Hamming Distance',
+        description: 'Mode 781: Hamming distance visualization',
+        category: 'Geometric',
+        mode: 781,
+        tags: ["hamming", "distance"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_782_reed_solomon: {
+        id: 'mode_782_reed_solomon',
+        name: 'Reed Solomon',
+        description: 'Mode 782: Reed solomon visualization',
+        category: 'Geometric',
+        mode: 782,
+        tags: ["reed", "solomon"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_783_turbo_code: {
+        id: 'mode_783_turbo_code',
+        name: 'Turbo Code',
+        description: 'Mode 783: Turbo code visualization',
+        category: 'Geometric',
+        mode: 783,
+        tags: ["turbo", "code"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_784_ldpc_code: {
+        id: 'mode_784_ldpc_code',
+        name: 'Ldpc Code',
+        description: 'Mode 784: Ldpc code visualization',
+        category: 'Geometric',
+        mode: 784,
+        tags: ["ldpc", "code"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_785_polar_code: {
+        id: 'mode_785_polar_code',
+        name: 'Polar Code',
+        description: 'Mode 785: Polar code visualization',
+        category: 'Geometric',
+        mode: 785,
+        tags: ["polar", "code"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_786_quantum_error_correction: {
+        id: 'mode_786_quantum_error_correction',
+        name: 'Quantum Error Correction',
+        description: 'Mode 786: Quantum error correction visualization',
+        category: 'Scientific',
+        mode: 786,
+        tags: ["quantum", "error", "correction"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_787_surface_code: {
+        id: 'mode_787_surface_code',
+        name: 'Surface Code',
+        description: 'Mode 787: Surface code visualization',
+        category: 'Geometric',
+        mode: 787,
+        tags: ["surface", "code"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_788_toric_code: {
+        id: 'mode_788_toric_code',
+        name: 'Toric Code',
+        description: 'Mode 788: Toric code visualization',
+        category: 'Geometric',
+        mode: 788,
+        tags: ["toric", "code"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_789_color_code: {
+        id: 'mode_789_color_code',
+        name: 'Color Code',
+        description: 'Mode 789: Color code visualization',
+        category: 'Geometric',
+        mode: 789,
+        tags: ["color", "code"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_790_stabilizer_formalism: {
+        id: 'mode_790_stabilizer_formalism',
+        name: 'Stabilizer Formalism',
+        description: 'Mode 790: Stabilizer formalism visualization',
+        category: 'Geometric',
+        mode: 790,
+        tags: ["stabilizer", "formalism"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_791_clifford_gate: {
+        id: 'mode_791_clifford_gate',
+        name: 'Clifford Gate',
+        description: 'Mode 791: Clifford gate visualization',
+        category: 'Geometric',
+        mode: 791,
+        tags: ["clifford", "gate"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_792_pauli_group: {
+        id: 'mode_792_pauli_group',
+        name: 'Pauli Group',
+        description: 'Mode 792: Pauli group visualization',
+        category: 'Geometric',
+        mode: 792,
+        tags: ["pauli", "group"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_793_measurement_based_quantum_computing: {
+        id: 'mode_793_measurement_based_quantum_computing',
+        name: 'Measurement Based Quantum Computing',
+        description: 'Mode 793: Measurement based quantum computing visualization',
+        category: 'Scientific',
+        mode: 793,
+        tags: ["measurement", "based", "quantum"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_794_one_way_quantum_computer: {
+        id: 'mode_794_one_way_quantum_computer',
+        name: 'One Way Quantum Computer',
+        description: 'Mode 794: One way quantum computer visualization',
+        category: 'Scientific',
+        mode: 794,
+        tags: ["quantum", "computer"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_795_adiabatic_quantum_computation: {
+        id: 'mode_795_adiabatic_quantum_computation',
+        name: 'Adiabatic Quantum Computation',
+        description: 'Mode 795: Adiabatic quantum computation visualization',
+        category: 'Scientific',
+        mode: 795,
+        tags: ["adiabatic", "quantum", "computation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_796_quantum_annealing: {
+        id: 'mode_796_quantum_annealing',
+        name: 'Quantum Annealing',
+        description: 'Mode 796: Quantum annealing visualization',
+        category: 'Scientific',
+        mode: 796,
+        tags: ["quantum", "annealing"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_797_variational_quantum_eigensolver: {
+        id: 'mode_797_variational_quantum_eigensolver',
+        name: 'Variational Quantum Eigensolver',
+        description: 'Mode 797: Variational quantum eigensolver visualization',
+        category: 'Scientific',
+        mode: 797,
+        tags: ["variational", "quantum", "eigensolver"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_798_quantum_approximate_optimization: {
+        id: 'mode_798_quantum_approximate_optimization',
+        name: 'Quantum Approximate Optimization',
+        description: 'Mode 798: Quantum approximate optimization visualization',
+        category: 'Scientific',
+        mode: 798,
+        tags: ["quantum", "approximate", "optimization"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_799_quantum_phase_estimation: {
+        id: 'mode_799_quantum_phase_estimation',
+        name: 'Quantum Phase Estimation',
+        description: 'Mode 799: Quantum phase estimation visualization',
+        category: 'Scientific',
+        mode: 799,
+        tags: ["quantum", "phase", "estimation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_800_quantum_fourier_transform: {
+        id: 'mode_800_quantum_fourier_transform',
+        name: 'Quantum Fourier Transform',
+        description: 'Mode 800: Quantum fourier transform visualization',
+        category: 'Scientific',
+        mode: 800,
+        tags: ["quantum", "fourier", "transform"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_801_mandala: {
+        id: 'mode_801_mandala',
+        name: 'Mandala',
+        description: 'Mode 801: Mandala visualization',
+        category: 'Geometric',
+        mode: 801,
+        tags: ["mandala"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_802_yantra: {
+        id: 'mode_802_yantra',
+        name: 'Yantra',
+        description: 'Mode 802: Yantra visualization',
+        category: 'Geometric',
+        mode: 802,
+        tags: ["yantra"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_803_lotus: {
+        id: 'mode_803_lotus',
+        name: 'Lotus',
+        description: 'Mode 803: Lotus visualization',
+        category: 'Geometric',
+        mode: 803,
+        tags: ["lotus"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_804_om_symbol: {
+        id: 'mode_804_om_symbol',
+        name: 'Om Symbol',
+        description: 'Mode 804: Om symbol visualization',
+        category: 'Geometric',
+        mode: 804,
+        tags: ["symbol"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_805_chakra: {
+        id: 'mode_805_chakra',
+        name: 'Chakra',
+        description: 'Mode 805: Chakra visualization',
+        category: 'Geometric',
+        mode: 805,
+        tags: ["chakra"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_806_aura_field: {
+        id: 'mode_806_aura_field',
+        name: 'Aura Field',
+        description: 'Mode 806: Aura field visualization',
+        category: 'Geometric',
+        mode: 806,
+        tags: ["aura", "field"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_807_third_eye: {
+        id: 'mode_807_third_eye',
+        name: 'Third Eye',
+        description: 'Mode 807: Third eye visualization',
+        category: 'Geometric',
+        mode: 807,
+        tags: ["third"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_808_kundalini: {
+        id: 'mode_808_kundalini',
+        name: 'Kundalini',
+        description: 'Mode 808: Kundalini visualization',
+        category: 'Geometric',
+        mode: 808,
+        tags: ["kundalini"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_809_merkaba: {
+        id: 'mode_809_merkaba',
+        name: 'Merkaba',
+        description: 'Mode 809: Merkaba visualization',
+        category: 'Geometric',
+        mode: 809,
+        tags: ["merkaba"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_810_flower_of_life: {
+        id: 'mode_810_flower_of_life',
+        name: 'Flower Of Life',
+        description: 'Mode 810: Flower of life visualization',
+        category: 'Nature',
+        mode: 810,
+        tags: ["flower", "life"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_811_seed_of_life: {
+        id: 'mode_811_seed_of_life',
+        name: 'Seed Of Life',
+        description: 'Mode 811: Seed of life visualization',
+        category: 'Geometric',
+        mode: 811,
+        tags: ["seed", "life"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_812_tree_of_life: {
+        id: 'mode_812_tree_of_life',
+        name: 'Tree Of Life',
+        description: 'Mode 812: Tree of life visualization',
+        category: 'Nature',
+        mode: 812,
+        tags: ["tree", "life"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_813_metatron_cube: {
+        id: 'mode_813_metatron_cube',
+        name: 'Metatron Cube',
+        description: 'Mode 813: Metatron cube visualization',
+        category: 'Geometric',
+        mode: 813,
+        tags: ["metatron", "cube"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_814_sri_yantra: {
+        id: 'mode_814_sri_yantra',
+        name: 'Sri Yantra',
+        description: 'Mode 814: Sri yantra visualization',
+        category: 'Geometric',
+        mode: 814,
+        tags: ["yantra"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_815_shri_yantra: {
+        id: 'mode_815_shri_yantra',
+        name: 'Shri Yantra',
+        description: 'Mode 815: Shri yantra visualization',
+        category: 'Geometric',
+        mode: 815,
+        tags: ["shri", "yantra"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_816_tibetan_sand_mandala: {
+        id: 'mode_816_tibetan_sand_mandala',
+        name: 'Tibetan Sand Mandala',
+        description: 'Mode 816: Tibetan sand mandala visualization',
+        category: 'Geometric',
+        mode: 816,
+        tags: ["tibetan", "sand", "mandala"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_817_zen_circle: {
+        id: 'mode_817_zen_circle',
+        name: 'Zen Circle',
+        description: 'Mode 817: Zen circle visualization',
+        category: 'Geometric',
+        mode: 817,
+        tags: ["circle"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_818_yin_yang: {
+        id: 'mode_818_yin_yang',
+        name: 'Yin Yang',
+        description: 'Mode 818: Yin yang visualization',
+        category: 'Geometric',
+        mode: 818,
+        tags: ["yang"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_819_tao_symbol: {
+        id: 'mode_819_tao_symbol',
+        name: 'Tao Symbol',
+        description: 'Mode 819: Tao symbol visualization',
+        category: 'Geometric',
+        mode: 819,
+        tags: ["symbol"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_820_bagua: {
+        id: 'mode_820_bagua',
+        name: 'Bagua',
+        description: 'Mode 820: Bagua visualization',
+        category: 'Geometric',
+        mode: 820,
+        tags: ["bagua"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_821_i_ching_hexagram: {
+        id: 'mode_821_i_ching_hexagram',
+        name: 'I Ching Hexagram',
+        description: 'Mode 821: I ching hexagram visualization',
+        category: 'Geometric',
+        mode: 821,
+        tags: ["ching", "hexagram"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_822_trigram: {
+        id: 'mode_822_trigram',
+        name: 'Trigram',
+        description: 'Mode 822: Trigram visualization',
+        category: 'Geometric',
+        mode: 822,
+        tags: ["trigram"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_823_medicine_wheel: {
+        id: 'mode_823_medicine_wheel',
+        name: 'Medicine Wheel',
+        description: 'Mode 823: Medicine wheel visualization',
+        category: 'Geometric',
+        mode: 823,
+        tags: ["medicine", "wheel"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_824_dreamcatcher: {
+        id: 'mode_824_dreamcatcher',
+        name: 'Dreamcatcher',
+        description: 'Mode 824: Dreamcatcher visualization',
+        category: 'Geometric',
+        mode: 824,
+        tags: ["dreamcatcher"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_825_totem: {
+        id: 'mode_825_totem',
+        name: 'Totem',
+        description: 'Mode 825: Totem visualization',
+        category: 'Geometric',
+        mode: 825,
+        tags: ["totem"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_826_spirit_animal: {
+        id: 'mode_826_spirit_animal',
+        name: 'Spirit Animal',
+        description: 'Mode 826: Spirit animal visualization',
+        category: 'Geometric',
+        mode: 826,
+        tags: ["spirit", "animal"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_827_shamanic_journey: {
+        id: 'mode_827_shamanic_journey',
+        name: 'Shamanic Journey',
+        description: 'Mode 827: Shamanic journey visualization',
+        category: 'Geometric',
+        mode: 827,
+        tags: ["shamanic", "journey"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_828_ayahuasca_vision: {
+        id: 'mode_828_ayahuasca_vision',
+        name: 'Ayahuasca Vision',
+        description: 'Mode 828: Ayahuasca vision visualization',
+        category: 'Geometric',
+        mode: 828,
+        tags: ["ayahuasca", "vision"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_829_dmt_realm: {
+        id: 'mode_829_dmt_realm',
+        name: 'Dmt Realm',
+        description: 'Mode 829: Dmt realm visualization',
+        category: 'Geometric',
+        mode: 829,
+        tags: ["realm"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_830_astral_projection: {
+        id: 'mode_830_astral_projection',
+        name: 'Astral Projection',
+        description: 'Mode 830: Astral projection visualization',
+        category: 'Geometric',
+        mode: 830,
+        tags: ["astral", "projection"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_831_out_of_body_experience: {
+        id: 'mode_831_out_of_body_experience',
+        name: 'Out Of Body Experience',
+        description: 'Mode 831: Out of body experience visualization',
+        category: 'Geometric',
+        mode: 831,
+        tags: ["body", "experience"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_832_near_death_experience: {
+        id: 'mode_832_near_death_experience',
+        name: 'Near Death Experience',
+        description: 'Mode 832: Near death experience visualization',
+        category: 'Geometric',
+        mode: 832,
+        tags: ["near", "death", "experience"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_833_tunnel_of_light: {
+        id: 'mode_833_tunnel_of_light',
+        name: 'Tunnel Of Light',
+        description: 'Mode 833: Tunnel of light visualization',
+        category: 'Geometric',
+        mode: 833,
+        tags: ["tunnel", "light"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_834_life_review: {
+        id: 'mode_834_life_review',
+        name: 'Life Review',
+        description: 'Mode 834: Life review visualization',
+        category: 'Geometric',
+        mode: 834,
+        tags: ["life", "review"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_835_soul_retrieval: {
+        id: 'mode_835_soul_retrieval',
+        name: 'Soul Retrieval',
+        description: 'Mode 835: Soul retrieval visualization',
+        category: 'Geometric',
+        mode: 835,
+        tags: ["soul", "retrieval"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_836_past_life_regression: {
+        id: 'mode_836_past_life_regression',
+        name: 'Past Life Regression',
+        description: 'Mode 836: Past life regression visualization',
+        category: 'Geometric',
+        mode: 836,
+        tags: ["past", "life", "regression"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_837_akashic_records: {
+        id: 'mode_837_akashic_records',
+        name: 'Akashic Records',
+        description: 'Mode 837: Akashic records visualization',
+        category: 'Geometric',
+        mode: 837,
+        tags: ["akashic", "records"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_838_collective_unconscious: {
+        id: 'mode_838_collective_unconscious',
+        name: 'Collective Unconscious',
+        description: 'Mode 838: Collective unconscious visualization',
+        category: 'Geometric',
+        mode: 838,
+        tags: ["collective", "unconscious"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_839_archetypal_realm: {
+        id: 'mode_839_archetypal_realm',
+        name: 'Archetypal Realm',
+        description: 'Mode 839: Archetypal realm visualization',
+        category: 'Geometric',
+        mode: 839,
+        tags: ["archetypal", "realm"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_840_synchronicity: {
+        id: 'mode_840_synchronicity',
+        name: 'Synchronicity',
+        description: 'Mode 840: Synchronicity visualization',
+        category: 'Geometric',
+        mode: 840,
+        tags: ["synchronicity"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_841_meaningful_coincidence: {
+        id: 'mode_841_meaningful_coincidence',
+        name: 'Meaningful Coincidence',
+        description: 'Mode 841: Meaningful coincidence visualization',
+        category: 'Geometric',
+        mode: 841,
+        tags: ["meaningful", "coincidence"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_842_serendipity: {
+        id: 'mode_842_serendipity',
+        name: 'Serendipity',
+        description: 'Mode 842: Serendipity visualization',
+        category: 'Geometric',
+        mode: 842,
+        tags: ["serendipity"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_843_providence: {
+        id: 'mode_843_providence',
+        name: 'Providence',
+        description: 'Mode 843: Providence visualization',
+        category: 'Geometric',
+        mode: 843,
+        tags: ["providence"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_844_fate: {
+        id: 'mode_844_fate',
+        name: 'Fate',
+        description: 'Mode 844: Fate visualization',
+        category: 'Geometric',
+        mode: 844,
+        tags: ["fate"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_845_destiny: {
+        id: 'mode_845_destiny',
+        name: 'Destiny',
+        description: 'Mode 845: Destiny visualization',
+        category: 'Geometric',
+        mode: 845,
+        tags: ["destiny"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_846_karma: {
+        id: 'mode_846_karma',
+        name: 'Karma',
+        description: 'Mode 846: Karma visualization',
+        category: 'Geometric',
+        mode: 846,
+        tags: ["karma"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_847_dharma: {
+        id: 'mode_847_dharma',
+        name: 'Dharma',
+        description: 'Mode 847: Dharma visualization',
+        category: 'Geometric',
+        mode: 847,
+        tags: ["dharma"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_848_samsara: {
+        id: 'mode_848_samsara',
+        name: 'Samsara',
+        description: 'Mode 848: Samsara visualization',
+        category: 'Geometric',
+        mode: 848,
+        tags: ["samsara"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_849_nirvana: {
+        id: 'mode_849_nirvana',
+        name: 'Nirvana',
+        description: 'Mode 849: Nirvana visualization',
+        category: 'Geometric',
+        mode: 849,
+        tags: ["nirvana"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_850_enlightenment: {
+        id: 'mode_850_enlightenment',
+        name: 'Enlightenment',
+        description: 'Mode 850: Enlightenment visualization',
+        category: 'Geometric',
+        mode: 850,
+        tags: ["enlightenment"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_851_samadhi: {
+        id: 'mode_851_samadhi',
+        name: 'Samadhi',
+        description: 'Mode 851: Samadhi visualization',
+        category: 'Geometric',
+        mode: 851,
+        tags: ["samadhi"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_852_satori: {
+        id: 'mode_852_satori',
+        name: 'Satori',
+        description: 'Mode 852: Satori visualization',
+        category: 'Geometric',
+        mode: 852,
+        tags: ["satori"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_853_kensho: {
+        id: 'mode_853_kensho',
+        name: 'Kensho',
+        description: 'Mode 853: Kensho visualization',
+        category: 'Geometric',
+        mode: 853,
+        tags: ["kensho"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_854_moksha: {
+        id: 'mode_854_moksha',
+        name: 'Moksha',
+        description: 'Mode 854: Moksha visualization',
+        category: 'Geometric',
+        mode: 854,
+        tags: ["moksha"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_855_liberation: {
+        id: 'mode_855_liberation',
+        name: 'Liberation',
+        description: 'Mode 855: Liberation visualization',
+        category: 'Geometric',
+        mode: 855,
+        tags: ["liberation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_856_self_realization: {
+        id: 'mode_856_self_realization',
+        name: 'Self Realization',
+        description: 'Mode 856: Self realization visualization',
+        category: 'Geometric',
+        mode: 856,
+        tags: ["self", "realization"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_857_god_consciousness: {
+        id: 'mode_857_god_consciousness',
+        name: 'God Consciousness',
+        description: 'Mode 857: God consciousness visualization',
+        category: 'Geometric',
+        mode: 857,
+        tags: ["consciousness"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_858_cosmic_consciousness: {
+        id: 'mode_858_cosmic_consciousness',
+        name: 'Cosmic Consciousness',
+        description: 'Mode 858: Cosmic consciousness visualization',
+        category: 'Geometric',
+        mode: 858,
+        tags: ["cosmic", "consciousness"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_859_unity_consciousness: {
+        id: 'mode_859_unity_consciousness',
+        name: 'Unity Consciousness',
+        description: 'Mode 859: Unity consciousness visualization',
+        category: 'Geometric',
+        mode: 859,
+        tags: ["unity", "consciousness"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_860_non_dual_awareness: {
+        id: 'mode_860_non_dual_awareness',
+        name: 'Non Dual Awareness',
+        description: 'Mode 860: Non-dual awareness visualization',
+        category: 'Geometric',
+        mode: 860,
+        tags: ["dual", "awareness"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_861_witness_consciousness: {
+        id: 'mode_861_witness_consciousness',
+        name: 'Witness Consciousness',
+        description: 'Mode 861: Witness consciousness visualization',
+        category: 'Geometric',
+        mode: 861,
+        tags: ["witness", "consciousness"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_862_pure_awareness: {
+        id: 'mode_862_pure_awareness',
+        name: 'Pure Awareness',
+        description: 'Mode 862: Pure awareness visualization',
+        category: 'Geometric',
+        mode: 862,
+        tags: ["pure", "awareness"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_863_presence: {
+        id: 'mode_863_presence',
+        name: 'Presence',
+        description: 'Mode 863: Presence visualization',
+        category: 'Geometric',
+        mode: 863,
+        tags: ["presence"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_864_now_moment: {
+        id: 'mode_864_now_moment',
+        name: 'Now Moment',
+        description: 'Mode 864: Now moment visualization',
+        category: 'Geometric',
+        mode: 864,
+        tags: ["moment"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_865_eternal_present: {
+        id: 'mode_865_eternal_present',
+        name: 'Eternal Present',
+        description: 'Mode 865: Eternal present visualization',
+        category: 'Geometric',
+        mode: 865,
+        tags: ["eternal", "present"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_866_timeless_being: {
+        id: 'mode_866_timeless_being',
+        name: 'Timeless Being',
+        description: 'Mode 866: Timeless being visualization',
+        category: 'Geometric',
+        mode: 866,
+        tags: ["timeless", "being"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_867_infinite_space: {
+        id: 'mode_867_infinite_space',
+        name: 'Infinite Space',
+        description: 'Mode 867: Infinite space visualization',
+        category: 'Geometric',
+        mode: 867,
+        tags: ["infinite", "space"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_868_boundless_compassion: {
+        id: 'mode_868_boundless_compassion',
+        name: 'Boundless Compassion',
+        description: 'Mode 868: Boundless compassion visualization',
+        category: 'Geometric',
+        mode: 868,
+        tags: ["boundless", "compassion"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_869_unconditional_love: {
+        id: 'mode_869_unconditional_love',
+        name: 'Unconditional Love',
+        description: 'Mode 869: Unconditional love visualization',
+        category: 'Geometric',
+        mode: 869,
+        tags: ["unconditional", "love"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_870_divine_grace: {
+        id: 'mode_870_divine_grace',
+        name: 'Divine Grace',
+        description: 'Mode 870: Divine grace visualization',
+        category: 'Geometric',
+        mode: 870,
+        tags: ["divine", "grace"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_871_holy_spirit: {
+        id: 'mode_871_holy_spirit',
+        name: 'Holy Spirit',
+        description: 'Mode 871: Holy spirit visualization',
+        category: 'Geometric',
+        mode: 871,
+        tags: ["holy", "spirit"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_872_shekinah: {
+        id: 'mode_872_shekinah',
+        name: 'Shekinah',
+        description: 'Mode 872: Shekinah visualization',
+        category: 'Geometric',
+        mode: 872,
+        tags: ["shekinah"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_873_divine_feminine: {
+        id: 'mode_873_divine_feminine',
+        name: 'Divine Feminine',
+        description: 'Mode 873: Divine feminine visualization',
+        category: 'Geometric',
+        mode: 873,
+        tags: ["divine", "feminine"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_874_goddess_energy: {
+        id: 'mode_874_goddess_energy',
+        name: 'Goddess Energy',
+        description: 'Mode 874: Goddess energy visualization',
+        category: 'Energy',
+        mode: 874,
+        tags: ["goddess", "energy"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_875_sacred_masculine: {
+        id: 'mode_875_sacred_masculine',
+        name: 'Sacred Masculine',
+        description: 'Mode 875: Sacred masculine visualization',
+        category: 'Geometric',
+        mode: 875,
+        tags: ["sacred", "masculine"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_876_hieros_gamos: {
+        id: 'mode_876_hieros_gamos',
+        name: 'Hieros Gamos',
+        description: 'Mode 876: Hieros gamos visualization',
+        category: 'Geometric',
+        mode: 876,
+        tags: ["hieros", "gamos"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_877_alchemical_wedding: {
+        id: 'mode_877_alchemical_wedding',
+        name: 'Alchemical Wedding',
+        description: 'Mode 877: Alchemical wedding visualization',
+        category: 'Geometric',
+        mode: 877,
+        tags: ["alchemical", "wedding"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_878_coniunctio: {
+        id: 'mode_878_coniunctio',
+        name: 'Coniunctio',
+        description: 'Mode 878: Coniunctio visualization',
+        category: 'Geometric',
+        mode: 878,
+        tags: ["coniunctio"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_879_philosopher_stone: {
+        id: 'mode_879_philosopher_stone',
+        name: 'Philosopher Stone',
+        description: 'Mode 879: Philosopher stone visualization',
+        category: 'Geometric',
+        mode: 879,
+        tags: ["philosopher", "stone"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_880_prima_materia: {
+        id: 'mode_880_prima_materia',
+        name: 'Prima Materia',
+        description: 'Mode 880: Prima materia visualization',
+        category: 'Geometric',
+        mode: 880,
+        tags: ["prima", "materia"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_881_nigredo: {
+        id: 'mode_881_nigredo',
+        name: 'Nigredo',
+        description: 'Mode 881: Nigredo visualization',
+        category: 'Geometric',
+        mode: 881,
+        tags: ["nigredo"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_882_albedo: {
+        id: 'mode_882_albedo',
+        name: 'Albedo',
+        description: 'Mode 882: Albedo visualization',
+        category: 'Geometric',
+        mode: 882,
+        tags: ["albedo"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_883_citrinitas: {
+        id: 'mode_883_citrinitas',
+        name: 'Citrinitas',
+        description: 'Mode 883: Citrinitas visualization',
+        category: 'Geometric',
+        mode: 883,
+        tags: ["citrinitas"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_884_rubedo: {
+        id: 'mode_884_rubedo',
+        name: 'Rubedo',
+        description: 'Mode 884: Rubedo visualization',
+        category: 'Geometric',
+        mode: 884,
+        tags: ["rubedo"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_885_seven_stages: {
+        id: 'mode_885_seven_stages',
+        name: 'Seven Stages',
+        description: 'Mode 885: Seven stages visualization',
+        category: 'Geometric',
+        mode: 885,
+        tags: ["seven", "stages"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_886_hermetic_principle: {
+        id: 'mode_886_hermetic_principle',
+        name: 'Hermetic Principle',
+        description: 'Mode 886: Hermetic principle visualization',
+        category: 'Geometric',
+        mode: 886,
+        tags: ["hermetic", "principle"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_887_as_above_so_below: {
+        id: 'mode_887_as_above_so_below',
+        name: 'As Above So Below',
+        description: 'Mode 887: As above so below visualization',
+        category: 'Geometric',
+        mode: 887,
+        tags: ["above", "below"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_888_microcosm_macrocosm: {
+        id: 'mode_888_microcosm_macrocosm',
+        name: 'Microcosm Macrocosm',
+        description: 'Mode 888: Microcosm macrocosm visualization',
+        category: 'Geometric',
+        mode: 888,
+        tags: ["microcosm", "macrocosm"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_889_correspondence: {
+        id: 'mode_889_correspondence',
+        name: 'Correspondence',
+        description: 'Mode 889: Correspondence visualization',
+        category: 'Geometric',
+        mode: 889,
+        tags: ["correspondence"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_890_vibration: {
+        id: 'mode_890_vibration',
+        name: 'Vibration',
+        description: 'Mode 890: Vibration visualization',
+        category: 'Geometric',
+        mode: 890,
+        tags: ["vibration"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_891_polarity: {
+        id: 'mode_891_polarity',
+        name: 'Polarity',
+        description: 'Mode 891: Polarity visualization',
+        category: 'Geometric',
+        mode: 891,
+        tags: ["polarity"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_892_rhythm: {
+        id: 'mode_892_rhythm',
+        name: 'Rhythm',
+        description: 'Mode 892: Rhythm visualization',
+        category: 'Geometric',
+        mode: 892,
+        tags: ["rhythm"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_893_cause_and_effect: {
+        id: 'mode_893_cause_and_effect',
+        name: 'Cause And Effect',
+        description: 'Mode 893: Cause and effect visualization',
+        category: 'Geometric',
+        mode: 893,
+        tags: ["cause", "effect"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_894_gender_principle: {
+        id: 'mode_894_gender_principle',
+        name: 'Gender Principle',
+        description: 'Mode 894: Gender principle visualization',
+        category: 'Geometric',
+        mode: 894,
+        tags: ["gender", "principle"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_895_mentalism: {
+        id: 'mode_895_mentalism',
+        name: 'Mentalism',
+        description: 'Mode 895: Mentalism visualization',
+        category: 'Geometric',
+        mode: 895,
+        tags: ["mentalism"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_896_emerald_tablet: {
+        id: 'mode_896_emerald_tablet',
+        name: 'Emerald Tablet',
+        description: 'Mode 896: Emerald tablet visualization',
+        category: 'Geometric',
+        mode: 896,
+        tags: ["emerald", "tablet"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_897_kybalion: {
+        id: 'mode_897_kybalion',
+        name: 'Kybalion',
+        description: 'Mode 897: Kybalion visualization',
+        category: 'Geometric',
+        mode: 897,
+        tags: ["kybalion"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_898_corpus_hermeticum: {
+        id: 'mode_898_corpus_hermeticum',
+        name: 'Corpus Hermeticum',
+        description: 'Mode 898: Corpus hermeticum visualization',
+        category: 'Geometric',
+        mode: 898,
+        tags: ["corpus", "hermeticum"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_899_gnostic_vision: {
+        id: 'mode_899_gnostic_vision',
+        name: 'Gnostic Vision',
+        description: 'Mode 899: Gnostic vision visualization',
+        category: 'Geometric',
+        mode: 899,
+        tags: ["gnostic", "vision"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_900_sophia: {
+        id: 'mode_900_sophia',
+        name: 'Sophia',
+        description: 'Mode 900: Sophia visualization',
+        category: 'Geometric',
+        mode: 900,
+        tags: ["sophia"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_901_spiral_vortex: {
+        id: 'mode_901_spiral_vortex',
+        name: 'Spiral Vortex',
+        description: 'Mode 901: Spiral vortex visualization',
+        category: 'Geometric',
+        mode: 901,
+        tags: ["spiral", "vortex"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_902_concentric_circles: {
+        id: 'mode_902_concentric_circles',
+        name: 'Concentric Circles',
+        description: 'Mode 902: Concentric circles visualization',
+        category: 'Geometric',
+        mode: 902,
+        tags: ["concentric", "circles"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_903_expanding_rings: {
+        id: 'mode_903_expanding_rings',
+        name: 'Expanding Rings',
+        description: 'Mode 903: Expanding rings visualization',
+        category: 'Geometric',
+        mode: 903,
+        tags: ["expanding", "rings"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_904_contracting_circles: {
+        id: 'mode_904_contracting_circles',
+        name: 'Contracting Circles',
+        description: 'Mode 904: Contracting circles visualization',
+        category: 'Geometric',
+        mode: 904,
+        tags: ["contracting", "circles"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_905_pulsing_orb: {
+        id: 'mode_905_pulsing_orb',
+        name: 'Pulsing Orb',
+        description: 'Mode 905: Pulsing orb visualization',
+        category: 'Geometric',
+        mode: 905,
+        tags: ["pulsing"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_906_oscillating_wave: {
+        id: 'mode_906_oscillating_wave',
+        name: 'Oscillating Wave',
+        description: 'Mode 906: Oscillating wave visualization',
+        category: 'Geometric',
+        mode: 906,
+        tags: ["oscillating", "wave"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_907_pendulum_swing: {
+        id: 'mode_907_pendulum_swing',
+        name: 'Pendulum Swing',
+        description: 'Mode 907: Pendulum swing visualization',
+        category: 'Geometric',
+        mode: 907,
+        tags: ["pendulum", "swing"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_908_hypnotic_swirl: {
+        id: 'mode_908_hypnotic_swirl',
+        name: 'Hypnotic Swirl',
+        description: 'Mode 908: Hypnotic swirl visualization',
+        category: 'Geometric',
+        mode: 908,
+        tags: ["hypnotic", "swirl"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_909_tunnel_zoom: {
+        id: 'mode_909_tunnel_zoom',
+        name: 'Tunnel Zoom',
+        description: 'Mode 909: Tunnel zoom visualization',
+        category: 'Geometric',
+        mode: 909,
+        tags: ["tunnel", "zoom"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_910_perspective_shift: {
+        id: 'mode_910_perspective_shift',
+        name: 'Perspective Shift',
+        description: 'Mode 910: Perspective shift visualization',
+        category: 'Geometric',
+        mode: 910,
+        tags: ["perspective", "shift"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_911_rotating_polygon: {
+        id: 'mode_911_rotating_polygon',
+        name: 'Rotating Polygon',
+        description: 'Mode 911: Rotating polygon visualization',
+        category: 'Geometric',
+        mode: 911,
+        tags: ["rotating", "polygon"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_912_morphing_shape: {
+        id: 'mode_912_morphing_shape',
+        name: 'Morphing Shape',
+        description: 'Mode 912: Morphing shape visualization',
+        category: 'Geometric',
+        mode: 912,
+        tags: ["morphing", "shape"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_913_flowing_liquid: {
+        id: 'mode_913_flowing_liquid',
+        name: 'Flowing Liquid',
+        description: 'Mode 913: Flowing liquid visualization',
+        category: 'Fluid',
+        mode: 913,
+        tags: ["flowing", "liquid"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_914_ripple_effect: {
+        id: 'mode_914_ripple_effect',
+        name: 'Ripple Effect',
+        description: 'Mode 914: Ripple effect visualization',
+        category: 'Geometric',
+        mode: 914,
+        tags: ["ripple", "effect"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_915_interference_pattern: {
+        id: 'mode_915_interference_pattern',
+        name: 'Interference Pattern',
+        description: 'Mode 915: Interference pattern visualization',
+        category: 'Geometric',
+        mode: 915,
+        tags: ["interference", "pattern"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_916_moire_effect: {
+        id: 'mode_916_moire_effect',
+        name: 'Moire Effect',
+        description: 'Mode 916: Moire effect visualization',
+        category: 'Geometric',
+        mode: 916,
+        tags: ["moire", "effect"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_917_strobing_light: {
+        id: 'mode_917_strobing_light',
+        name: 'Strobing Light',
+        description: 'Mode 917: Strobing light visualization',
+        category: 'Geometric',
+        mode: 917,
+        tags: ["strobing", "light"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_918_flickering: {
+        id: 'mode_918_flickering',
+        name: 'Flickering',
+        description: 'Mode 918: Flickering visualization',
+        category: 'Geometric',
+        mode: 918,
+        tags: ["flickering"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_919_pulsating: {
+        id: 'mode_919_pulsating',
+        name: 'Pulsating',
+        description: 'Mode 919: Pulsating visualization',
+        category: 'Geometric',
+        mode: 919,
+        tags: ["pulsating"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_920_breathing_pattern: {
+        id: 'mode_920_breathing_pattern',
+        name: 'Breathing Pattern',
+        description: 'Mode 920: Breathing pattern visualization',
+        category: 'Geometric',
+        mode: 920,
+        tags: ["breathing", "pattern"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_921_expansion_contraction: {
+        id: 'mode_921_expansion_contraction',
+        name: 'Expansion Contraction',
+        description: 'Mode 921: Expansion contraction visualization',
+        category: 'Geometric',
+        mode: 921,
+        tags: ["expansion", "contraction"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_922_growth_decay: {
+        id: 'mode_922_growth_decay',
+        name: 'Growth Decay',
+        description: 'Mode 922: Growth decay visualization',
+        category: 'Geometric',
+        mode: 922,
+        tags: ["growth", "decay"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_923_birth_death: {
+        id: 'mode_923_birth_death',
+        name: 'Birth Death',
+        description: 'Mode 923: Birth death visualization',
+        category: 'Geometric',
+        mode: 923,
+        tags: ["birth", "death"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_924_ebb_flow: {
+        id: 'mode_924_ebb_flow',
+        name: 'Ebb Flow',
+        description: 'Mode 924: Ebb flow visualization',
+        category: 'Geometric',
+        mode: 924,
+        tags: ["flow"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_925_inhale_exhale: {
+        id: 'mode_925_inhale_exhale',
+        name: 'Inhale Exhale',
+        description: 'Mode 925: Inhale exhale visualization',
+        category: 'Geometric',
+        mode: 925,
+        tags: ["inhale", "exhale"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_926_systole_diastole: {
+        id: 'mode_926_systole_diastole',
+        name: 'Systole Diastole',
+        description: 'Mode 926: Systole diastole visualization',
+        category: 'Geometric',
+        mode: 926,
+        tags: ["systole", "diastole"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_927_tension_release: {
+        id: 'mode_927_tension_release',
+        name: 'Tension Release',
+        description: 'Mode 927: Tension release visualization',
+        category: 'Geometric',
+        mode: 927,
+        tags: ["tension", "release"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_928_charge_discharge: {
+        id: 'mode_928_charge_discharge',
+        name: 'Charge Discharge',
+        description: 'Mode 928: Charge discharge visualization',
+        category: 'Geometric',
+        mode: 928,
+        tags: ["charge", "discharge"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_929_loading_unloading: {
+        id: 'mode_929_loading_unloading',
+        name: 'Loading Unloading',
+        description: 'Mode 929: Loading unloading visualization',
+        category: 'Geometric',
+        mode: 929,
+        tags: ["loading", "unloading"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_930_compression_rarefaction: {
+        id: 'mode_930_compression_rarefaction',
+        name: 'Compression Rarefaction',
+        description: 'Mode 930: Compression rarefaction visualization',
+        category: 'Geometric',
+        mode: 930,
+        tags: ["compression", "rarefaction"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_931_dense_sparse: {
+        id: 'mode_931_dense_sparse',
+        name: 'Dense Sparse',
+        description: 'Mode 931: Dense sparse visualization',
+        category: 'Geometric',
+        mode: 931,
+        tags: ["dense", "sparse"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_932_thick_thin: {
+        id: 'mode_932_thick_thin',
+        name: 'Thick Thin',
+        description: 'Mode 932: Thick thin visualization',
+        category: 'Geometric',
+        mode: 932,
+        tags: ["thick", "thin"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_933_heavy_light: {
+        id: 'mode_933_heavy_light',
+        name: 'Heavy Light',
+        description: 'Mode 933: Heavy light visualization',
+        category: 'Geometric',
+        mode: 933,
+        tags: ["heavy", "light"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_934_dark_bright: {
+        id: 'mode_934_dark_bright',
+        name: 'Dark Bright',
+        description: 'Mode 934: Dark bright visualization',
+        category: 'Geometric',
+        mode: 934,
+        tags: ["dark", "bright"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_935_shadow_highlight: {
+        id: 'mode_935_shadow_highlight',
+        name: 'Shadow Highlight',
+        description: 'Mode 935: Shadow highlight visualization',
+        category: 'Geometric',
+        mode: 935,
+        tags: ["shadow", "highlight"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_936_positive_negative: {
+        id: 'mode_936_positive_negative',
+        name: 'Positive Negative',
+        description: 'Mode 936: Positive negative visualization',
+        category: 'Geometric',
+        mode: 936,
+        tags: ["positive", "negative"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_937_convex_concave: {
+        id: 'mode_937_convex_concave',
+        name: 'Convex Concave',
+        description: 'Mode 937: Convex concave visualization',
+        category: 'Geometric',
+        mode: 937,
+        tags: ["convex", "concave"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_938_inside_outside: {
+        id: 'mode_938_inside_outside',
+        name: 'Inside Outside',
+        description: 'Mode 938: Inside outside visualization',
+        category: 'Geometric',
+        mode: 938,
+        tags: ["inside", "outside"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_939_figure_ground: {
+        id: 'mode_939_figure_ground',
+        name: 'Figure Ground',
+        description: 'Mode 939: Figure ground visualization',
+        category: 'Geometric',
+        mode: 939,
+        tags: ["figure", "ground"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_940_foreground_background: {
+        id: 'mode_940_foreground_background',
+        name: 'Foreground Background',
+        description: 'Mode 940: Foreground background visualization',
+        category: 'Geometric',
+        mode: 940,
+        tags: ["foreground", "background"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_941_solid_void: {
+        id: 'mode_941_solid_void',
+        name: 'Solid Void',
+        description: 'Mode 941: Solid void visualization',
+        category: 'Geometric',
+        mode: 941,
+        tags: ["solid", "void"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_942_matter_antimatter: {
+        id: 'mode_942_matter_antimatter',
+        name: 'Matter Antimatter',
+        description: 'Mode 942: Matter antimatter visualization',
+        category: 'Geometric',
+        mode: 942,
+        tags: ["matter", "antimatter"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_943_particle_wave: {
+        id: 'mode_943_particle_wave',
+        name: 'Particle Wave',
+        description: 'Mode 943: Particle wave visualization',
+        category: 'Particles',
+        mode: 943,
+        tags: ["particle", "wave"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_944_discrete_continuous: {
+        id: 'mode_944_discrete_continuous',
+        name: 'Discrete Continuous',
+        description: 'Mode 944: Discrete continuous visualization',
+        category: 'Geometric',
+        mode: 944,
+        tags: ["discrete", "continuous"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_945_quantized_smooth: {
+        id: 'mode_945_quantized_smooth',
+        name: 'Quantized Smooth',
+        description: 'Mode 945: Quantized smooth visualization',
+        category: 'Geometric',
+        mode: 945,
+        tags: ["quantized", "smooth"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_946_digital_analog: {
+        id: 'mode_946_digital_analog',
+        name: 'Digital Analog',
+        description: 'Mode 946: Digital analog visualization',
+        category: 'Geometric',
+        mode: 946,
+        tags: ["digital", "analog"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_947_binary_fluid: {
+        id: 'mode_947_binary_fluid',
+        name: 'Binary Fluid',
+        description: 'Mode 947: Binary fluid visualization',
+        category: 'Fluid',
+        mode: 947,
+        tags: ["binary", "fluid"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_948_on_off: {
+        id: 'mode_948_on_off',
+        name: 'On Off',
+        description: 'Mode 948: On off visualization',
+        category: 'Geometric',
+        mode: 948,
+        tags: [],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_949_yes_no: {
+        id: 'mode_949_yes_no',
+        name: 'Yes No',
+        description: 'Mode 949: Yes no visualization',
+        category: 'Geometric',
+        mode: 949,
+        tags: [],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_950_zero_one: {
+        id: 'mode_950_zero_one',
+        name: 'Zero One',
+        description: 'Mode 950: Zero one visualization',
+        category: 'Geometric',
+        mode: 950,
+        tags: ["zero"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_951_presence_absence: {
+        id: 'mode_951_presence_absence',
+        name: 'Presence Absence',
+        description: 'Mode 951: Presence absence visualization',
+        category: 'Geometric',
+        mode: 951,
+        tags: ["presence", "absence"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_952_being_nothingness: {
+        id: 'mode_952_being_nothingness',
+        name: 'Being Nothingness',
+        description: 'Mode 952: Being nothingness visualization',
+        category: 'Geometric',
+        mode: 952,
+        tags: ["being", "nothingness"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_953_existence_void: {
+        id: 'mode_953_existence_void',
+        name: 'Existence Void',
+        description: 'Mode 953: Existence void visualization',
+        category: 'Geometric',
+        mode: 953,
+        tags: ["existence", "void"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_954_form_emptiness: {
+        id: 'mode_954_form_emptiness',
+        name: 'Form Emptiness',
+        description: 'Mode 954: Form emptiness visualization',
+        category: 'Geometric',
+        mode: 954,
+        tags: ["form", "emptiness"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_955_substance_essence: {
+        id: 'mode_955_substance_essence',
+        name: 'Substance Essence',
+        description: 'Mode 955: Substance essence visualization',
+        category: 'Geometric',
+        mode: 955,
+        tags: ["substance", "essence"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_956_appearance_reality: {
+        id: 'mode_956_appearance_reality',
+        name: 'Appearance Reality',
+        description: 'Mode 956: Appearance reality visualization',
+        category: 'Geometric',
+        mode: 956,
+        tags: ["appearance", "reality"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_957_illusion_truth: {
+        id: 'mode_957_illusion_truth',
+        name: 'Illusion Truth',
+        description: 'Mode 957: Illusion truth visualization',
+        category: 'Geometric',
+        mode: 957,
+        tags: ["illusion", "truth"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_958_maya_brahman: {
+        id: 'mode_958_maya_brahman',
+        name: 'Maya Brahman',
+        description: 'Mode 958: Maya brahman visualization',
+        category: 'Geometric',
+        mode: 958,
+        tags: ["maya", "brahman"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_959_phenomena_noumena: {
+        id: 'mode_959_phenomena_noumena',
+        name: 'Phenomena Noumena',
+        description: 'Mode 959: Phenomena noumena visualization',
+        category: 'Geometric',
+        mode: 959,
+        tags: ["phenomena", "noumena"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_960_relative_absolute: {
+        id: 'mode_960_relative_absolute',
+        name: 'Relative Absolute',
+        description: 'Mode 960: Relative absolute visualization',
+        category: 'Geometric',
+        mode: 960,
+        tags: ["relative", "absolute"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_961_changing_unchanging: {
+        id: 'mode_961_changing_unchanging',
+        name: 'Changing Unchanging',
+        description: 'Mode 961: Changing unchanging visualization',
+        category: 'Geometric',
+        mode: 961,
+        tags: ["changing", "unchanging"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_962_temporal_eternal: {
+        id: 'mode_962_temporal_eternal',
+        name: 'Temporal Eternal',
+        description: 'Mode 962: Temporal eternal visualization',
+        category: 'Geometric',
+        mode: 962,
+        tags: ["temporal", "eternal"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_963_finite_infinite: {
+        id: 'mode_963_finite_infinite',
+        name: 'Finite Infinite',
+        description: 'Mode 963: Finite infinite visualization',
+        category: 'Geometric',
+        mode: 963,
+        tags: ["finite", "infinite"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_964_limited_boundless: {
+        id: 'mode_964_limited_boundless',
+        name: 'Limited Boundless',
+        description: 'Mode 964: Limited boundless visualization',
+        category: 'Geometric',
+        mode: 964,
+        tags: ["limited", "boundless"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_965_mortal_immortal: {
+        id: 'mode_965_mortal_immortal',
+        name: 'Mortal Immortal',
+        description: 'Mode 965: Mortal immortal visualization',
+        category: 'Geometric',
+        mode: 965,
+        tags: ["mortal", "immortal"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_966_perishable_imperishable: {
+        id: 'mode_966_perishable_imperishable',
+        name: 'Perishable Imperishable',
+        description: 'Mode 966: Perishable imperishable visualization',
+        category: 'Geometric',
+        mode: 966,
+        tags: ["perishable", "imperishable"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_967_transient_permanent: {
+        id: 'mode_967_transient_permanent',
+        name: 'Transient Permanent',
+        description: 'Mode 967: Transient permanent visualization',
+        category: 'Geometric',
+        mode: 967,
+        tags: ["transient", "permanent"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_968_fleeting_lasting: {
+        id: 'mode_968_fleeting_lasting',
+        name: 'Fleeting Lasting',
+        description: 'Mode 968: Fleeting lasting visualization',
+        category: 'Geometric',
+        mode: 968,
+        tags: ["fleeting", "lasting"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_969_ephemeral_enduring: {
+        id: 'mode_969_ephemeral_enduring',
+        name: 'Ephemeral Enduring',
+        description: 'Mode 969: Ephemeral enduring visualization',
+        category: 'Geometric',
+        mode: 969,
+        tags: ["ephemeral", "enduring"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_970_momentary_timeless: {
+        id: 'mode_970_momentary_timeless',
+        name: 'Momentary Timeless',
+        description: 'Mode 970: Momentary timeless visualization',
+        category: 'Geometric',
+        mode: 970,
+        tags: ["momentary", "timeless"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_971_local_universal: {
+        id: 'mode_971_local_universal',
+        name: 'Local Universal',
+        description: 'Mode 971: Local universal visualization',
+        category: 'Geometric',
+        mode: 971,
+        tags: ["local", "universal"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_972_particular_general: {
+        id: 'mode_972_particular_general',
+        name: 'Particular General',
+        description: 'Mode 972: Particular general visualization',
+        category: 'Geometric',
+        mode: 972,
+        tags: ["particular", "general"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_973_specific_generic: {
+        id: 'mode_973_specific_generic',
+        name: 'Specific Generic',
+        description: 'Mode 973: Specific generic visualization',
+        category: 'Geometric',
+        mode: 973,
+        tags: ["specific", "generic"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_974_unique_common: {
+        id: 'mode_974_unique_common',
+        name: 'Unique Common',
+        description: 'Mode 974: Unique common visualization',
+        category: 'Geometric',
+        mode: 974,
+        tags: ["unique", "common"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_975_individual_collective: {
+        id: 'mode_975_individual_collective',
+        name: 'Individual Collective',
+        description: 'Mode 975: Individual collective visualization',
+        category: 'Geometric',
+        mode: 975,
+        tags: ["individual", "collective"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_976_one_many: {
+        id: 'mode_976_one_many',
+        name: 'One Many',
+        description: 'Mode 976: One many visualization',
+        category: 'Geometric',
+        mode: 976,
+        tags: ["many"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_977_unity_multiplicity: {
+        id: 'mode_977_unity_multiplicity',
+        name: 'Unity Multiplicity',
+        description: 'Mode 977: Unity multiplicity visualization',
+        category: 'Geometric',
+        mode: 977,
+        tags: ["unity", "multiplicity"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_978_simple_complex: {
+        id: 'mode_978_simple_complex',
+        name: 'Simple Complex',
+        description: 'Mode 978: Simple complex visualization',
+        category: 'Geometric',
+        mode: 978,
+        tags: ["simple", "complex"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_979_elementary_composite: {
+        id: 'mode_979_elementary_composite',
+        name: 'Elementary Composite',
+        description: 'Mode 979: Elementary composite visualization',
+        category: 'Geometric',
+        mode: 979,
+        tags: ["elementary", "composite"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_980_atomic_molecular: {
+        id: 'mode_980_atomic_molecular',
+        name: 'Atomic Molecular',
+        description: 'Mode 980: Atomic molecular visualization',
+        category: 'Scientific',
+        mode: 980,
+        tags: ["atomic", "molecular"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_981_fundamental_derived: {
+        id: 'mode_981_fundamental_derived',
+        name: 'Fundamental Derived',
+        description: 'Mode 981: Fundamental derived visualization',
+        category: 'Geometric',
+        mode: 981,
+        tags: ["fundamental", "derived"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_982_primary_secondary: {
+        id: 'mode_982_primary_secondary',
+        name: 'Primary Secondary',
+        description: 'Mode 982: Primary secondary visualization',
+        category: 'Geometric',
+        mode: 982,
+        tags: ["primary", "secondary"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_983_essential_accidental: {
+        id: 'mode_983_essential_accidental',
+        name: 'Essential Accidental',
+        description: 'Mode 983: Essential accidental visualization',
+        category: 'Geometric',
+        mode: 983,
+        tags: ["essential", "accidental"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_984_necessary_contingent: {
+        id: 'mode_984_necessary_contingent',
+        name: 'Necessary Contingent',
+        description: 'Mode 984: Necessary contingent visualization',
+        category: 'Geometric',
+        mode: 984,
+        tags: ["necessary", "contingent"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_985_a_priori_a_posteriori: {
+        id: 'mode_985_a_priori_a_posteriori',
+        name: 'A Priori A Posteriori',
+        description: 'Mode 985: A priori a posteriori visualization',
+        category: 'Geometric',
+        mode: 985,
+        tags: ["priori", "posteriori"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_986_analytic_synthetic: {
+        id: 'mode_986_analytic_synthetic',
+        name: 'Analytic Synthetic',
+        description: 'Mode 986: Analytic synthetic visualization',
+        category: 'Geometric',
+        mode: 986,
+        tags: ["analytic", "synthetic"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_987_deductive_inductive: {
+        id: 'mode_987_deductive_inductive',
+        name: 'Deductive Inductive',
+        description: 'Mode 987: Deductive inductive visualization',
+        category: 'Geometric',
+        mode: 987,
+        tags: ["deductive", "inductive"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_988_logical_empirical: {
+        id: 'mode_988_logical_empirical',
+        name: 'Logical Empirical',
+        description: 'Mode 988: Logical empirical visualization',
+        category: 'Geometric',
+        mode: 988,
+        tags: ["logical", "empirical"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_989_rational_experiential: {
+        id: 'mode_989_rational_experiential',
+        name: 'Rational Experiential',
+        description: 'Mode 989: Rational experiential visualization',
+        category: 'Geometric',
+        mode: 989,
+        tags: ["rational", "experiential"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_990_abstract_concrete: {
+        id: 'mode_990_abstract_concrete',
+        name: 'Abstract Concrete',
+        description: 'Mode 990: Abstract concrete visualization',
+        category: 'Geometric',
+        mode: 990,
+        tags: ["abstract", "concrete"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_991_theoretical_practical: {
+        id: 'mode_991_theoretical_practical',
+        name: 'Theoretical Practical',
+        description: 'Mode 991: Theoretical practical visualization',
+        category: 'Geometric',
+        mode: 991,
+        tags: ["theoretical", "practical"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_992_ideal_real: {
+        id: 'mode_992_ideal_real',
+        name: 'Ideal Real',
+        description: 'Mode 992: Ideal real visualization',
+        category: 'Geometric',
+        mode: 992,
+        tags: ["ideal", "real"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_993_conceptual_actual: {
+        id: 'mode_993_conceptual_actual',
+        name: 'Conceptual Actual',
+        description: 'Mode 993: Conceptual actual visualization',
+        category: 'Geometric',
+        mode: 993,
+        tags: ["conceptual", "actual"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_994_possible_necessary: {
+        id: 'mode_994_possible_necessary',
+        name: 'Possible Necessary',
+        description: 'Mode 994: Possible necessary visualization',
+        category: 'Geometric',
+        mode: 994,
+        tags: ["possible", "necessary"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_995_potential_actual: {
+        id: 'mode_995_potential_actual',
+        name: 'Potential Actual',
+        description: 'Mode 995: Potential actual visualization',
+        category: 'Geometric',
+        mode: 995,
+        tags: ["potential", "actual"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_996_virtual_real: {
+        id: 'mode_996_virtual_real',
+        name: 'Virtual Real',
+        description: 'Mode 996: Virtual real visualization',
+        category: 'Geometric',
+        mode: 996,
+        tags: ["virtual", "real"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_997_simulated_genuine: {
+        id: 'mode_997_simulated_genuine',
+        name: 'Simulated Genuine',
+        description: 'Mode 997: Simulated genuine visualization',
+        category: 'Geometric',
+        mode: 997,
+        tags: ["simulated", "genuine"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_998_artificial_natural: {
+        id: 'mode_998_artificial_natural',
+        name: 'Artificial Natural',
+        description: 'Mode 998: Artificial natural visualization',
+        category: 'Geometric',
+        mode: 998,
+        tags: ["artificial", "natural"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_999_synthetic_organic: {
+        id: 'mode_999_synthetic_organic',
+        name: 'Synthetic Organic',
+        description: 'Mode 999: Synthetic organic visualization',
+        category: 'Geometric',
+        mode: 999,
+        tags: ["synthetic", "organic"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1000_mechanical_living: {
+        id: 'mode_1000_mechanical_living',
+        name: 'Mechanical Living',
+        description: 'Mode 1000: Mechanical living visualization',
+        category: 'Geometric',
+        mode: 1000,
+        tags: ["mechanical", "living"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1001_gothic_arch: {
+        id: 'mode_1001_gothic_arch',
+        name: 'Gothic Arch',
+        description: 'Mode 1001: Gothic arch visualization',
+        category: 'Geometric',
+        mode: 1001,
+        tags: ["gothic", "arch"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1002_flying_buttress: {
+        id: 'mode_1002_flying_buttress',
+        name: 'Flying Buttress',
+        description: 'Mode 1002: Flying buttress visualization',
+        category: 'Geometric',
+        mode: 1002,
+        tags: ["flying", "buttress"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1003_rose_window: {
+        id: 'mode_1003_rose_window',
+        name: 'Rose Window',
+        description: 'Mode 1003: Rose window visualization',
+        category: 'Geometric',
+        mode: 1003,
+        tags: ["rose", "window"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1004_ribbed_vault: {
+        id: 'mode_1004_ribbed_vault',
+        name: 'Ribbed Vault',
+        description: 'Mode 1004: Ribbed vault visualization',
+        category: 'Geometric',
+        mode: 1004,
+        tags: ["ribbed", "vault"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1005_pointed_arch: {
+        id: 'mode_1005_pointed_arch',
+        name: 'Pointed Arch',
+        description: 'Mode 1005: Pointed arch visualization',
+        category: 'Geometric',
+        mode: 1005,
+        tags: ["pointed", "arch"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1006_romanesque_arch: {
+        id: 'mode_1006_romanesque_arch',
+        name: 'Romanesque Arch',
+        description: 'Mode 1006: Romanesque arch visualization',
+        category: 'Geometric',
+        mode: 1006,
+        tags: ["romanesque", "arch"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1007_barrel_vault: {
+        id: 'mode_1007_barrel_vault',
+        name: 'Barrel Vault',
+        description: 'Mode 1007: Barrel vault visualization',
+        category: 'Geometric',
+        mode: 1007,
+        tags: ["barrel", "vault"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1008_groin_vault: {
+        id: 'mode_1008_groin_vault',
+        name: 'Groin Vault',
+        description: 'Mode 1008: Groin vault visualization',
+        category: 'Geometric',
+        mode: 1008,
+        tags: ["groin", "vault"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1009_clerestory: {
+        id: 'mode_1009_clerestory',
+        name: 'Clerestory',
+        description: 'Mode 1009: Clerestory visualization',
+        category: 'Geometric',
+        mode: 1009,
+        tags: ["clerestory"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1010_apse: {
+        id: 'mode_1010_apse',
+        name: 'Apse',
+        description: 'Mode 1010: Apse visualization',
+        category: 'Geometric',
+        mode: 1010,
+        tags: ["apse"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1011_nave: {
+        id: 'mode_1011_nave',
+        name: 'Nave',
+        description: 'Mode 1011: Nave visualization',
+        category: 'Geometric',
+        mode: 1011,
+        tags: ["nave"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1012_transept: {
+        id: 'mode_1012_transept',
+        name: 'Transept',
+        description: 'Mode 1012: Transept visualization',
+        category: 'Geometric',
+        mode: 1012,
+        tags: ["transept"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1013_crossing: {
+        id: 'mode_1013_crossing',
+        name: 'Crossing',
+        description: 'Mode 1013: Crossing visualization',
+        category: 'Geometric',
+        mode: 1013,
+        tags: ["crossing"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1014_ambulatory: {
+        id: 'mode_1014_ambulatory',
+        name: 'Ambulatory',
+        description: 'Mode 1014: Ambulatory visualization',
+        category: 'Geometric',
+        mode: 1014,
+        tags: ["ambulatory"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1015_triforium: {
+        id: 'mode_1015_triforium',
+        name: 'Triforium',
+        description: 'Mode 1015: Triforium visualization',
+        category: 'Geometric',
+        mode: 1015,
+        tags: ["triforium"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1016_colonnade: {
+        id: 'mode_1016_colonnade',
+        name: 'Colonnade',
+        description: 'Mode 1016: Colonnade visualization',
+        category: 'Geometric',
+        mode: 1016,
+        tags: ["colonnade"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1017_peristyle: {
+        id: 'mode_1017_peristyle',
+        name: 'Peristyle',
+        description: 'Mode 1017: Peristyle visualization',
+        category: 'Geometric',
+        mode: 1017,
+        tags: ["peristyle"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1018_portico: {
+        id: 'mode_1018_portico',
+        name: 'Portico',
+        description: 'Mode 1018: Portico visualization',
+        category: 'Geometric',
+        mode: 1018,
+        tags: ["portico"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1019_pediment: {
+        id: 'mode_1019_pediment',
+        name: 'Pediment',
+        description: 'Mode 1019: Pediment visualization',
+        category: 'Geometric',
+        mode: 1019,
+        tags: ["pediment"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1020_entablature: {
+        id: 'mode_1020_entablature',
+        name: 'Entablature',
+        description: 'Mode 1020: Entablature visualization',
+        category: 'Geometric',
+        mode: 1020,
+        tags: ["entablature"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1021_architrave: {
+        id: 'mode_1021_architrave',
+        name: 'Architrave',
+        description: 'Mode 1021: Architrave visualization',
+        category: 'Geometric',
+        mode: 1021,
+        tags: ["architrave"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1022_frieze: {
+        id: 'mode_1022_frieze',
+        name: 'Frieze',
+        description: 'Mode 1022: Frieze visualization',
+        category: 'Geometric',
+        mode: 1022,
+        tags: ["frieze"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1023_cornice: {
+        id: 'mode_1023_cornice',
+        name: 'Cornice',
+        description: 'Mode 1023: Cornice visualization',
+        category: 'Geometric',
+        mode: 1023,
+        tags: ["cornice"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1024_capital: {
+        id: 'mode_1024_capital',
+        name: 'Capital',
+        description: 'Mode 1024: Capital visualization',
+        category: 'Geometric',
+        mode: 1024,
+        tags: ["capital"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1025_shaft: {
+        id: 'mode_1025_shaft',
+        name: 'Shaft',
+        description: 'Mode 1025: Shaft visualization',
+        category: 'Geometric',
+        mode: 1025,
+        tags: ["shaft"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1026_base: {
+        id: 'mode_1026_base',
+        name: 'Base',
+        description: 'Mode 1026: Base visualization',
+        category: 'Geometric',
+        mode: 1026,
+        tags: ["base"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1027_plinth: {
+        id: 'mode_1027_plinth',
+        name: 'Plinth',
+        description: 'Mode 1027: Plinth visualization',
+        category: 'Geometric',
+        mode: 1027,
+        tags: ["plinth"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1028_stylobate: {
+        id: 'mode_1028_stylobate',
+        name: 'Stylobate',
+        description: 'Mode 1028: Stylobate visualization',
+        category: 'Geometric',
+        mode: 1028,
+        tags: ["stylobate"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1029_stereobate: {
+        id: 'mode_1029_stereobate',
+        name: 'Stereobate',
+        description: 'Mode 1029: Stereobate visualization',
+        category: 'Geometric',
+        mode: 1029,
+        tags: ["stereobate"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1030_crepidoma: {
+        id: 'mode_1030_crepidoma',
+        name: 'Crepidoma',
+        description: 'Mode 1030: Crepidoma visualization',
+        category: 'Geometric',
+        mode: 1030,
+        tags: ["crepidoma"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1031_doric_order: {
+        id: 'mode_1031_doric_order',
+        name: 'Doric Order',
+        description: 'Mode 1031: Doric order visualization',
+        category: 'Geometric',
+        mode: 1031,
+        tags: ["doric", "order"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1032_ionic_order: {
+        id: 'mode_1032_ionic_order',
+        name: 'Ionic Order',
+        description: 'Mode 1032: Ionic order visualization',
+        category: 'Geometric',
+        mode: 1032,
+        tags: ["ionic", "order"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1033_corinthian_order: {
+        id: 'mode_1033_corinthian_order',
+        name: 'Corinthian Order',
+        description: 'Mode 1033: Corinthian order visualization',
+        category: 'Geometric',
+        mode: 1033,
+        tags: ["corinthian", "order"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1034_tuscan_order: {
+        id: 'mode_1034_tuscan_order',
+        name: 'Tuscan Order',
+        description: 'Mode 1034: Tuscan order visualization',
+        category: 'Geometric',
+        mode: 1034,
+        tags: ["tuscan", "order"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1035_composite_order: {
+        id: 'mode_1035_composite_order',
+        name: 'Composite Order',
+        description: 'Mode 1035: Composite order visualization',
+        category: 'Geometric',
+        mode: 1035,
+        tags: ["composite", "order"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1036_pilaster: {
+        id: 'mode_1036_pilaster',
+        name: 'Pilaster',
+        description: 'Mode 1036: Pilaster visualization',
+        category: 'Geometric',
+        mode: 1036,
+        tags: ["pilaster"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1037_engaged_column: {
+        id: 'mode_1037_engaged_column',
+        name: 'Engaged Column',
+        description: 'Mode 1037: Engaged column visualization',
+        category: 'Geometric',
+        mode: 1037,
+        tags: ["engaged", "column"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1038_caryatid: {
+        id: 'mode_1038_caryatid',
+        name: 'Caryatid',
+        description: 'Mode 1038: Caryatid visualization',
+        category: 'Geometric',
+        mode: 1038,
+        tags: ["caryatid"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1039_atlantes: {
+        id: 'mode_1039_atlantes',
+        name: 'Atlantes',
+        description: 'Mode 1039: Atlantes visualization',
+        category: 'Geometric',
+        mode: 1039,
+        tags: ["atlantes"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1040_console: {
+        id: 'mode_1040_console',
+        name: 'Console',
+        description: 'Mode 1040: Console visualization',
+        category: 'Geometric',
+        mode: 1040,
+        tags: ["console"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1041_corbel: {
+        id: 'mode_1041_corbel',
+        name: 'Corbel',
+        description: 'Mode 1041: Corbel visualization',
+        category: 'Geometric',
+        mode: 1041,
+        tags: ["corbel"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1042_bracket: {
+        id: 'mode_1042_bracket',
+        name: 'Bracket',
+        description: 'Mode 1042: Bracket visualization',
+        category: 'Geometric',
+        mode: 1042,
+        tags: ["bracket"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1043_cantilever: {
+        id: 'mode_1043_cantilever',
+        name: 'Cantilever',
+        description: 'Mode 1043: Cantilever visualization',
+        category: 'Geometric',
+        mode: 1043,
+        tags: ["cantilever"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1044_beam: {
+        id: 'mode_1044_beam',
+        name: 'Beam',
+        description: 'Mode 1044: Beam visualization',
+        category: 'Geometric',
+        mode: 1044,
+        tags: ["beam"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1045_truss: {
+        id: 'mode_1045_truss',
+        name: 'Truss',
+        description: 'Mode 1045: Truss visualization',
+        category: 'Geometric',
+        mode: 1045,
+        tags: ["truss"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1046_arch: {
+        id: 'mode_1046_arch',
+        name: 'Arch',
+        description: 'Mode 1046: Arch visualization',
+        category: 'Geometric',
+        mode: 1046,
+        tags: ["arch"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1047_lintel: {
+        id: 'mode_1047_lintel',
+        name: 'Lintel',
+        description: 'Mode 1047: Lintel visualization',
+        category: 'Geometric',
+        mode: 1047,
+        tags: ["lintel"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1048_post: {
+        id: 'mode_1048_post',
+        name: 'Post',
+        description: 'Mode 1048: Post visualization',
+        category: 'Geometric',
+        mode: 1048,
+        tags: ["post"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1049_column: {
+        id: 'mode_1049_column',
+        name: 'Column',
+        description: 'Mode 1049: Column visualization',
+        category: 'Geometric',
+        mode: 1049,
+        tags: ["column"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1050_pier: {
+        id: 'mode_1050_pier',
+        name: 'Pier',
+        description: 'Mode 1050: Pier visualization',
+        category: 'Geometric',
+        mode: 1050,
+        tags: ["pier"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1051_wall: {
+        id: 'mode_1051_wall',
+        name: 'Wall',
+        description: 'Mode 1051: Wall visualization',
+        category: 'Geometric',
+        mode: 1051,
+        tags: ["wall"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1052_partition: {
+        id: 'mode_1052_partition',
+        name: 'Partition',
+        description: 'Mode 1052: Partition visualization',
+        category: 'Geometric',
+        mode: 1052,
+        tags: ["partition"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1053_facade: {
+        id: 'mode_1053_facade',
+        name: 'Facade',
+        description: 'Mode 1053: Facade visualization',
+        category: 'Geometric',
+        mode: 1053,
+        tags: ["facade"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1054_elevation: {
+        id: 'mode_1054_elevation',
+        name: 'Elevation',
+        description: 'Mode 1054: Elevation visualization',
+        category: 'Geometric',
+        mode: 1054,
+        tags: ["elevation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1055_section: {
+        id: 'mode_1055_section',
+        name: 'Section',
+        description: 'Mode 1055: Section visualization',
+        category: 'Geometric',
+        mode: 1055,
+        tags: ["section"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1056_plan: {
+        id: 'mode_1056_plan',
+        name: 'Plan',
+        description: 'Mode 1056: Plan visualization',
+        category: 'Geometric',
+        mode: 1056,
+        tags: ["plan"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1057_axonometric: {
+        id: 'mode_1057_axonometric',
+        name: 'Axonometric',
+        description: 'Mode 1057: Axonometric visualization',
+        category: 'Geometric',
+        mode: 1057,
+        tags: ["axonometric"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1058_isometric: {
+        id: 'mode_1058_isometric',
+        name: 'Isometric',
+        description: 'Mode 1058: Isometric visualization',
+        category: 'Geometric',
+        mode: 1058,
+        tags: ["isometric"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1059_perspective: {
+        id: 'mode_1059_perspective',
+        name: 'Perspective',
+        description: 'Mode 1059: Perspective visualization',
+        category: 'Geometric',
+        mode: 1059,
+        tags: ["perspective"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1060_orthogonal: {
+        id: 'mode_1060_orthogonal',
+        name: 'Orthogonal',
+        description: 'Mode 1060: Orthogonal visualization',
+        category: 'Geometric',
+        mode: 1060,
+        tags: ["orthogonal"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1061_grid: {
+        id: 'mode_1061_grid',
+        name: 'Grid',
+        description: 'Mode 1061: Grid visualization',
+        category: 'Geometric',
+        mode: 1061,
+        tags: ["grid"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1062_module: {
+        id: 'mode_1062_module',
+        name: 'Module',
+        description: 'Mode 1062: Module visualization',
+        category: 'Geometric',
+        mode: 1062,
+        tags: ["module"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1063_proportion: {
+        id: 'mode_1063_proportion',
+        name: 'Proportion',
+        description: 'Mode 1063: Proportion visualization',
+        category: 'Geometric',
+        mode: 1063,
+        tags: ["proportion"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1064_golden_ratio: {
+        id: 'mode_1064_golden_ratio',
+        name: 'Golden Ratio',
+        description: 'Mode 1064: Golden ratio visualization',
+        category: 'Geometric',
+        mode: 1064,
+        tags: ["golden", "ratio"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1065_fibonacci_sequence: {
+        id: 'mode_1065_fibonacci_sequence',
+        name: 'Fibonacci Sequence',
+        description: 'Mode 1065: Fibonacci sequence visualization',
+        category: 'Geometric',
+        mode: 1065,
+        tags: ["fibonacci", "sequence"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1066_symmetry: {
+        id: 'mode_1066_symmetry',
+        name: 'Symmetry',
+        description: 'Mode 1066: Symmetry visualization',
+        category: 'Geometric',
+        mode: 1066,
+        tags: ["symmetry"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1067_asymmetry: {
+        id: 'mode_1067_asymmetry',
+        name: 'Asymmetry',
+        description: 'Mode 1067: Asymmetry visualization',
+        category: 'Geometric',
+        mode: 1067,
+        tags: ["asymmetry"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1068_balance: {
+        id: 'mode_1068_balance',
+        name: 'Balance',
+        description: 'Mode 1068: Balance visualization',
+        category: 'Geometric',
+        mode: 1068,
+        tags: ["balance"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1069_rhythm: {
+        id: 'mode_1069_rhythm',
+        name: 'Rhythm',
+        description: 'Mode 1069: Rhythm visualization',
+        category: 'Geometric',
+        mode: 1069,
+        tags: ["rhythm"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1070_repetition: {
+        id: 'mode_1070_repetition',
+        name: 'Repetition',
+        description: 'Mode 1070: Repetition visualization',
+        category: 'Geometric',
+        mode: 1070,
+        tags: ["repetition"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1071_pattern: {
+        id: 'mode_1071_pattern',
+        name: 'Pattern',
+        description: 'Mode 1071: Pattern visualization',
+        category: 'Geometric',
+        mode: 1071,
+        tags: ["pattern"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1072_texture: {
+        id: 'mode_1072_texture',
+        name: 'Texture',
+        description: 'Mode 1072: Texture visualization',
+        category: 'Geometric',
+        mode: 1072,
+        tags: ["texture"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1073_material: {
+        id: 'mode_1073_material',
+        name: 'Material',
+        description: 'Mode 1073: Material visualization',
+        category: 'Geometric',
+        mode: 1073,
+        tags: ["material"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1074_surface: {
+        id: 'mode_1074_surface',
+        name: 'Surface',
+        description: 'Mode 1074: Surface visualization',
+        category: 'Geometric',
+        mode: 1074,
+        tags: ["surface"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1075_skin: {
+        id: 'mode_1075_skin',
+        name: 'Skin',
+        description: 'Mode 1075: Skin visualization',
+        category: 'Geometric',
+        mode: 1075,
+        tags: ["skin"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1076_envelope: {
+        id: 'mode_1076_envelope',
+        name: 'Envelope',
+        description: 'Mode 1076: Envelope visualization',
+        category: 'Geometric',
+        mode: 1076,
+        tags: ["envelope"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1077_shell: {
+        id: 'mode_1077_shell',
+        name: 'Shell',
+        description: 'Mode 1077: Shell visualization',
+        category: 'Geometric',
+        mode: 1077,
+        tags: ["shell"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1078_frame: {
+        id: 'mode_1078_frame',
+        name: 'Frame',
+        description: 'Mode 1078: Frame visualization',
+        category: 'Geometric',
+        mode: 1078,
+        tags: ["frame"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1079_structure: {
+        id: 'mode_1079_structure',
+        name: 'Structure',
+        description: 'Mode 1079: Structure visualization',
+        category: 'Geometric',
+        mode: 1079,
+        tags: ["structure"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1080_foundation: {
+        id: 'mode_1080_foundation',
+        name: 'Foundation',
+        description: 'Mode 1080: Foundation visualization',
+        category: 'Geometric',
+        mode: 1080,
+        tags: ["foundation"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1081_footprint: {
+        id: 'mode_1081_footprint',
+        name: 'Footprint',
+        description: 'Mode 1081: Footprint visualization',
+        category: 'Geometric',
+        mode: 1081,
+        tags: ["footprint"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1082_massing: {
+        id: 'mode_1082_massing',
+        name: 'Massing',
+        description: 'Mode 1082: Massing visualization',
+        category: 'Geometric',
+        mode: 1082,
+        tags: ["massing"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1083_volume: {
+        id: 'mode_1083_volume',
+        name: 'Volume',
+        description: 'Mode 1083: Volume visualization',
+        category: 'Geometric',
+        mode: 1083,
+        tags: ["volume"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1084_void: {
+        id: 'mode_1084_void',
+        name: 'Void',
+        description: 'Mode 1084: Void visualization',
+        category: 'Geometric',
+        mode: 1084,
+        tags: ["void"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1085_solid: {
+        id: 'mode_1085_solid',
+        name: 'Solid',
+        description: 'Mode 1085: Solid visualization',
+        category: 'Geometric',
+        mode: 1085,
+        tags: ["solid"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1086_compression: {
+        id: 'mode_1086_compression',
+        name: 'Compression',
+        description: 'Mode 1086: Compression visualization',
+        category: 'Geometric',
+        mode: 1086,
+        tags: ["compression"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1087_tension: {
+        id: 'mode_1087_tension',
+        name: 'Tension',
+        description: 'Mode 1087: Tension visualization',
+        category: 'Geometric',
+        mode: 1087,
+        tags: ["tension"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1088_shear: {
+        id: 'mode_1088_shear',
+        name: 'Shear',
+        description: 'Mode 1088: Shear visualization',
+        category: 'Geometric',
+        mode: 1088,
+        tags: ["shear"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1089_torsion: {
+        id: 'mode_1089_torsion',
+        name: 'Torsion',
+        description: 'Mode 1089: Torsion visualization',
+        category: 'Geometric',
+        mode: 1089,
+        tags: ["torsion"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1090_bending: {
+        id: 'mode_1090_bending',
+        name: 'Bending',
+        description: 'Mode 1090: Bending visualization',
+        category: 'Geometric',
+        mode: 1090,
+        tags: ["bending"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1091_moment: {
+        id: 'mode_1091_moment',
+        name: 'Moment',
+        description: 'Mode 1091: Moment visualization',
+        category: 'Geometric',
+        mode: 1091,
+        tags: ["moment"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1092_force: {
+        id: 'mode_1092_force',
+        name: 'Force',
+        description: 'Mode 1092: Force visualization',
+        category: 'Geometric',
+        mode: 1092,
+        tags: ["force"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1093_load: {
+        id: 'mode_1093_load',
+        name: 'Load',
+        description: 'Mode 1093: Load visualization',
+        category: 'Geometric',
+        mode: 1093,
+        tags: ["load"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1094_stress: {
+        id: 'mode_1094_stress',
+        name: 'Stress',
+        description: 'Mode 1094: Stress visualization',
+        category: 'Geometric',
+        mode: 1094,
+        tags: ["stress"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1095_strain: {
+        id: 'mode_1095_strain',
+        name: 'Strain',
+        description: 'Mode 1095: Strain visualization',
+        category: 'Scientific',
+        mode: 1095,
+        tags: ["strain"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1096_elasticity: {
+        id: 'mode_1096_elasticity',
+        name: 'Elasticity',
+        description: 'Mode 1096: Elasticity visualization',
+        category: 'Geometric',
+        mode: 1096,
+        tags: ["elasticity"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1097_plasticity: {
+        id: 'mode_1097_plasticity',
+        name: 'Plasticity',
+        description: 'Mode 1097: Plasticity visualization',
+        category: 'Geometric',
+        mode: 1097,
+        tags: ["plasticity"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1098_yield: {
+        id: 'mode_1098_yield',
+        name: 'Yield',
+        description: 'Mode 1098: Yield visualization',
+        category: 'Geometric',
+        mode: 1098,
+        tags: ["yield"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1099_failure: {
+        id: 'mode_1099_failure',
+        name: 'Failure',
+        description: 'Mode 1099: Failure visualization',
+        category: 'Scientific',
+        mode: 1099,
+        tags: ["failure"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1100_collapse: {
+        id: 'mode_1100_collapse',
+        name: 'Collapse',
+        description: 'Mode 1100: Collapse visualization',
+        category: 'Geometric',
+        mode: 1100,
+        tags: ["collapse"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
     }
 };
 

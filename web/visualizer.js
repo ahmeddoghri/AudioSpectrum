@@ -34471,2101 +34471,3056 @@ class Visualizer {
      * Mode 1001: Gothic Arch
      * Mode 1001: Gothic arch visualization
      */
+    /**
+     * Helper method to adjust color brightness
+     */
+    adjustBrightness(color, amount) {
+        // Extract RGB values from color string
+        const match = color.match(/\d+/g);
+        if (!match || match.length < 3) return color;
+
+        let [r, g, b] = match.map(Number);
+
+        // Adjust brightness
+        r = Math.max(0, Math.min(255, r + amount));
+        g = Math.max(0, Math.min(255, g + amount));
+        b = Math.max(0, Math.min(255, b + amount));
+
+        return `rgb(${r}, ${g}, ${b})`;
+    }
+
+    /**
+     * Mode 1001: GothicArch
+     * GothicArch visualization with configurable columns
+     */
     render1001GothicArch(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Gothic Arch visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Gothic Arch', 1001);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
-     * Mode 1002: Flying Buttress
-     * Mode 1002: Flying buttress visualization
+     * Mode 1002: FlyingButtress
+     * FlyingButtress visualization with configurable columns
      */
     render1002FlyingButtress(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Flying Buttress visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Flying Buttress', 1002);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
-     * Mode 1003: Rose Window
-     * Mode 1003: Rose window visualization
+     * Mode 1003: RoseWindow
+     * RoseWindow visualization with configurable layers
      */
     render1003RoseWindow(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Rose Window visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Rose Window', 1003);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
-     * Mode 1004: Ribbed Vault
-     * Mode 1004: Ribbed vault visualization
+     * Mode 1004: RibbedVault
+     * RibbedVault visualization with configurable layers
      */
     render1004RibbedVault(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Ribbed Vault visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Ribbed Vault', 1004);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
-     * Mode 1005: Pointed Arch
-     * Mode 1005: Pointed arch visualization
+     * Mode 1005: PointedArch
+     * PointedArch visualization with configurable columns
      */
     render1005PointedArch(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Pointed Arch visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Pointed Arch', 1005);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
-     * Mode 1006: Romanesque Arch
-     * Mode 1006: Romanesque arch visualization
+     * Mode 1006: RomanesqueArch
+     * RomanesqueArch visualization with configurable columns
      */
     render1006RomanesqueArch(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Romanesque Arch visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Romanesque Arch', 1006);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
-     * Mode 1007: Barrel Vault
-     * Mode 1007: Barrel vault visualization
+     * Mode 1007: BarrelVault
+     * BarrelVault visualization with configurable layers
      */
     render1007BarrelVault(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Barrel Vault visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Barrel Vault', 1007);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
-     * Mode 1008: Groin Vault
-     * Mode 1008: Groin vault visualization
+     * Mode 1008: GroinVault
+     * GroinVault visualization with configurable grid
      */
     render1008GroinVault(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Groin Vault visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Groin Vault', 1008);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1009: Clerestory
-     * Mode 1009: Clerestory visualization
+     * Clerestory visualization with configurable grid
      */
     render1009Clerestory(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Clerestory visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Clerestory', 1009);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1010: Apse
-     * Mode 1010: Apse visualization
+     * Apse visualization with configurable columns
      */
     render1010Apse(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Apse visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Apse', 1010);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1011: Nave
-     * Mode 1011: Nave visualization
+     * Nave visualization with configurable columns
      */
     render1011Nave(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Nave visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Nave', 1011);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1012: Transept
-     * Mode 1012: Transept visualization
+     * Transept visualization with configurable grid
      */
     render1012Transept(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Transept visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Transept', 1012);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1013: Crossing
-     * Mode 1013: Crossing visualization
+     * Crossing visualization with configurable columns
      */
     render1013Crossing(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Crossing visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Crossing', 1013);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1014: Ambulatory
-     * Mode 1014: Ambulatory visualization
+     * Ambulatory visualization with configurable grid
      */
     render1014Ambulatory(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Ambulatory visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Ambulatory', 1014);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1015: Triforium
-     * Mode 1015: Triforium visualization
+     * Triforium visualization with configurable columns
      */
     render1015Triforium(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Triforium visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Triforium', 1015);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1016: Colonnade
-     * Mode 1016: Colonnade visualization
+     * Colonnade visualization with configurable grid
      */
     render1016Colonnade(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Colonnade visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Colonnade', 1016);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1017: Peristyle
-     * Mode 1017: Peristyle visualization
+     * Peristyle visualization with configurable layers
      */
     render1017Peristyle(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Peristyle visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Peristyle', 1017);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1018: Portico
-     * Mode 1018: Portico visualization
+     * Portico visualization with configurable columns
      */
     render1018Portico(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Portico visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Portico', 1018);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1019: Pediment
-     * Mode 1019: Pediment visualization
+     * Pediment visualization with configurable grid
      */
     render1019Pediment(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Pediment visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Pediment', 1019);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1020: Entablature
-     * Mode 1020: Entablature visualization
+     * Entablature visualization with configurable layers
      */
     render1020Entablature(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Entablature visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Entablature', 1020);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1021: Architrave
-     * Mode 1021: Architrave visualization
+     * Architrave visualization with configurable columns
      */
     render1021Architrave(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Architrave visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Architrave', 1021);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1022: Frieze
-     * Mode 1022: Frieze visualization
+     * Frieze visualization with configurable grid
      */
     render1022Frieze(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Frieze visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Frieze', 1022);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1023: Cornice
-     * Mode 1023: Cornice visualization
+     * Cornice visualization with configurable grid
      */
     render1023Cornice(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Cornice visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Cornice', 1023);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1024: Capital
-     * Mode 1024: Capital visualization
+     * Capital visualization with configurable layers
      */
     render1024Capital(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Capital visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Capital', 1024);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1025: Shaft
-     * Mode 1025: Shaft visualization
+     * Shaft visualization with configurable layers
      */
     render1025Shaft(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Shaft visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Shaft', 1025);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1026: Base
-     * Mode 1026: Base visualization
+     * Base visualization with configurable layers
      */
     render1026Base(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Base visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Base', 1026);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1027: Plinth
-     * Mode 1027: Plinth visualization
+     * Plinth visualization with configurable grid
      */
     render1027Plinth(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Plinth visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Plinth', 1027);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1028: Stylobate
-     * Mode 1028: Stylobate visualization
+     * Stylobate visualization with configurable columns
      */
     render1028Stylobate(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Stylobate visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Stylobate', 1028);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1029: Stereobate
-     * Mode 1029: Stereobate visualization
+     * Stereobate visualization with configurable layers
      */
     render1029Stereobate(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Stereobate visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Stereobate', 1029);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1030: Crepidoma
-     * Mode 1030: Crepidoma visualization
+     * Crepidoma visualization with configurable columns
      */
     render1030Crepidoma(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Crepidoma visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Crepidoma', 1030);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
-     * Mode 1031: Doric Order
-     * Mode 1031: Doric order visualization
+     * Mode 1031: DoricOrder
+     * DoricOrder visualization with configurable grid
      */
     render1031DoricOrder(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Doric Order visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Doric Order', 1031);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
-     * Mode 1032: Ionic Order
-     * Mode 1032: Ionic order visualization
+     * Mode 1032: IonicOrder
+     * IonicOrder visualization with configurable grid
      */
     render1032IonicOrder(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Ionic Order visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Ionic Order', 1032);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
-     * Mode 1033: Corinthian Order
-     * Mode 1033: Corinthian order visualization
+     * Mode 1033: CorinthianOrder
+     * CorinthianOrder visualization with configurable layers
      */
     render1033CorinthianOrder(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Corinthian Order visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Corinthian Order', 1033);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
-     * Mode 1034: Tuscan Order
-     * Mode 1034: Tuscan order visualization
+     * Mode 1034: TuscanOrder
+     * TuscanOrder visualization with configurable layers
      */
     render1034TuscanOrder(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Tuscan Order visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Tuscan Order', 1034);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
-     * Mode 1035: Composite Order
-     * Mode 1035: Composite order visualization
+     * Mode 1035: CompositeOrder
+     * CompositeOrder visualization with configurable columns
      */
     render1035CompositeOrder(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Composite Order visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Composite Order', 1035);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1036: Pilaster
-     * Mode 1036: Pilaster visualization
+     * Pilaster visualization with configurable grid
      */
     render1036Pilaster(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Pilaster visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Pilaster', 1036);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
-     * Mode 1037: Engaged Column
-     * Mode 1037: Engaged column visualization
+     * Mode 1037: EngagedColumn
+     * EngagedColumn visualization with configurable layers
      */
     render1037EngagedColumn(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Engaged Column visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Engaged Column', 1037);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1038: Caryatid
-     * Mode 1038: Caryatid visualization
+     * Caryatid visualization with configurable layers
      */
     render1038Caryatid(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Caryatid visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Caryatid', 1038);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1039: Atlantes
-     * Mode 1039: Atlantes visualization
+     * Atlantes visualization with configurable grid
      */
     render1039Atlantes(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Atlantes visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Atlantes', 1039);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1040: Console
-     * Mode 1040: Console visualization
+     * Console visualization with configurable layers
      */
     render1040Console(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Console visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Console', 1040);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1041: Corbel
-     * Mode 1041: Corbel visualization
+     * Corbel visualization with configurable columns
      */
     render1041Corbel(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Corbel visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Corbel', 1041);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1042: Bracket
-     * Mode 1042: Bracket visualization
+     * Bracket visualization with configurable grid
      */
     render1042Bracket(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Bracket visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Bracket', 1042);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1043: Cantilever
-     * Mode 1043: Cantilever visualization
+     * Cantilever visualization with configurable grid
      */
     render1043Cantilever(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Cantilever visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Cantilever', 1043);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1044: Beam
-     * Mode 1044: Beam visualization
+     * Beam visualization with configurable columns
      */
     render1044Beam(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Beam visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Beam', 1044);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1045: Truss
-     * Mode 1045: Truss visualization
+     * Truss visualization with configurable layers
      */
     render1045Truss(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Truss visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Truss', 1045);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1046: Arch
-     * Mode 1046: Arch visualization
+     * Arch visualization with configurable columns
      */
     render1046Arch(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Arch visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Arch', 1046);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1047: Lintel
-     * Mode 1047: Lintel visualization
+     * Lintel visualization with configurable layers
      */
     render1047Lintel(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Lintel visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Lintel', 1047);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1048: Post
-     * Mode 1048: Post visualization
+     * Post visualization with configurable columns
      */
     render1048Post(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Post visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Post', 1048);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1049: Column
-     * Mode 1049: Column visualization
+     * Column visualization with configurable layers
      */
     render1049Column(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Column visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Column', 1049);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1050: Pier
-     * Mode 1050: Pier visualization
+     * Pier visualization with configurable layers
      */
     render1050Pier(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Pier visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Pier', 1050);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1051: Wall
-     * Mode 1051: Wall visualization
+     * Wall visualization with configurable columns
      */
     render1051Wall(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Wall visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Wall', 1051);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1052: Partition
-     * Mode 1052: Partition visualization
+     * Partition visualization with configurable layers
      */
     render1052Partition(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Partition visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Partition', 1052);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1053: Facade
-     * Mode 1053: Facade visualization
+     * Facade visualization with configurable layers
      */
     render1053Facade(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Facade visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Facade', 1053);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1054: Elevation
-     * Mode 1054: Elevation visualization
+     * Elevation visualization with configurable layers
      */
     render1054Elevation(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Elevation visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Elevation', 1054);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1055: Section
-     * Mode 1055: Section visualization
+     * Section visualization with configurable layers
      */
     render1055Section(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Section visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Section', 1055);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1056: Plan
-     * Mode 1056: Plan visualization
+     * Plan visualization with configurable columns
      */
     render1056Plan(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Plan visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Plan', 1056);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1057: Axonometric
-     * Mode 1057: Axonometric visualization
+     * Axonometric visualization with configurable layers
      */
     render1057Axonometric(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Axonometric visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Axonometric', 1057);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1058: Isometric
-     * Mode 1058: Isometric visualization
+     * Isometric visualization with configurable grid
      */
     render1058Isometric(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Isometric visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Isometric', 1058);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1059: Perspective
-     * Mode 1059: Perspective visualization
+     * Perspective visualization with configurable grid
      */
     render1059Perspective(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Perspective visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Perspective', 1059);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1060: Orthogonal
-     * Mode 1060: Orthogonal visualization
+     * Orthogonal visualization with configurable grid
      */
     render1060Orthogonal(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Orthogonal visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Orthogonal', 1060);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1061: Grid
-     * Mode 1061: Grid visualization
+     * Grid visualization with configurable columns
      */
     render1061Grid(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Grid visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Grid', 1061);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1062: Module
-     * Mode 1062: Module visualization
+     * Module visualization with configurable grid
      */
     render1062Module(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Module visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Module', 1062);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1063: Proportion
-     * Mode 1063: Proportion visualization
+     * Proportion visualization with configurable layers
      */
     render1063Proportion(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Proportion visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Proportion', 1063);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
-     * Mode 1064: Golden Ratio
-     * Mode 1064: Golden ratio visualization
+     * Mode 1064: GoldenRatio
+     * GoldenRatio visualization with configurable grid
      */
     render1064GoldenRatio(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Golden Ratio visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Golden Ratio', 1064);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
-     * Mode 1065: Fibonacci Sequence
-     * Mode 1065: Fibonacci sequence visualization
+     * Mode 1065: FibonacciSequence
+     * FibonacciSequence visualization with configurable grid
      */
     render1065FibonacciSequence(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Fibonacci Sequence visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Fibonacci Sequence', 1065);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1066: Symmetry
-     * Mode 1066: Symmetry visualization
+     * Symmetry visualization with configurable columns
      */
     render1066Symmetry(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Symmetry visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Symmetry', 1066);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1067: Asymmetry
-     * Mode 1067: Asymmetry visualization
+     * Asymmetry visualization with configurable layers
      */
     render1067Asymmetry(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Asymmetry visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Asymmetry', 1067);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1068: Balance
-     * Mode 1068: Balance visualization
+     * Balance visualization with configurable columns
      */
     render1068Balance(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Balance visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Balance', 1068);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1069: Rhythm
-     * Mode 1069: Rhythm visualization
+     * Rhythm visualization with configurable columns
      */
     render1069Rhythm(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Rhythm visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Rhythm', 1069);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1070: Repetition
-     * Mode 1070: Repetition visualization
+     * Repetition visualization with configurable columns
      */
     render1070Repetition(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Repetition visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Repetition', 1070);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1071: Pattern
-     * Mode 1071: Pattern visualization
+     * Pattern visualization with configurable grid
      */
     render1071Pattern(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Pattern visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Pattern', 1071);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1072: Texture
-     * Mode 1072: Texture visualization
+     * Texture visualization with configurable layers
      */
     render1072Texture(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Texture visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Texture', 1072);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1073: Material
-     * Mode 1073: Material visualization
+     * Material visualization with configurable columns
      */
     render1073Material(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Material visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Material', 1073);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1074: Surface
-     * Mode 1074: Surface visualization
+     * Surface visualization with configurable layers
      */
     render1074Surface(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Surface visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Surface', 1074);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1075: Skin
-     * Mode 1075: Skin visualization
+     * Skin visualization with configurable layers
      */
     render1075Skin(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Skin visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Skin', 1075);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1076: Envelope
-     * Mode 1076: Envelope visualization
+     * Envelope visualization with configurable grid
      */
     render1076Envelope(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Envelope visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Envelope', 1076);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1077: Shell
-     * Mode 1077: Shell visualization
+     * Shell visualization with configurable grid
      */
     render1077Shell(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Shell visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Shell', 1077);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1078: Frame
-     * Mode 1078: Frame visualization
+     * Frame visualization with configurable grid
      */
     render1078Frame(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Frame visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Frame', 1078);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1079: Structure
-     * Mode 1079: Structure visualization
+     * Structure visualization with configurable columns
      */
     render1079Structure(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Structure visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Structure', 1079);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1080: Foundation
-     * Mode 1080: Foundation visualization
+     * Foundation visualization with configurable grid
      */
     render1080Foundation(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Foundation visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Foundation', 1080);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1081: Footprint
-     * Mode 1081: Footprint visualization
+     * Footprint visualization with configurable layers
      */
     render1081Footprint(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Footprint visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Footprint', 1081);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1082: Massing
-     * Mode 1082: Massing visualization
+     * Massing visualization with configurable grid
      */
     render1082Massing(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Massing visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Massing', 1082);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1083: Volume
-     * Mode 1083: Volume visualization
+     * Volume visualization with configurable columns
      */
     render1083Volume(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Volume visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Volume', 1083);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1084: Void
-     * Mode 1084: Void visualization
+     * Void visualization with configurable grid
      */
     render1084Void(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Void visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Void', 1084);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1085: Solid
-     * Mode 1085: Solid visualization
+     * Solid visualization with configurable grid
      */
     render1085Solid(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Solid visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Solid', 1085);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1086: Compression
-     * Mode 1086: Compression visualization
+     * Compression visualization with configurable columns
      */
     render1086Compression(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Compression visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Compression', 1086);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1087: Tension
-     * Mode 1087: Tension visualization
+     * Tension visualization with configurable grid
      */
     render1087Tension(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Tension visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Tension', 1087);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1088: Shear
-     * Mode 1088: Shear visualization
+     * Shear visualization with configurable columns
      */
     render1088Shear(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Shear visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Shear', 1088);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1089: Torsion
-     * Mode 1089: Torsion visualization
+     * Torsion visualization with configurable grid
      */
     render1089Torsion(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Torsion visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Torsion', 1089);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1090: Bending
-     * Mode 1090: Bending visualization
+     * Bending visualization with configurable grid
      */
     render1090Bending(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Bending visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Bending', 1090);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1091: Moment
-     * Mode 1091: Moment visualization
+     * Moment visualization with configurable columns
      */
     render1091Moment(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Moment visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Moment', 1091);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1092: Force
-     * Mode 1092: Force visualization
+     * Force visualization with configurable layers
      */
     render1092Force(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Force visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Force', 1092);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1093: Load
-     * Mode 1093: Load visualization
+     * Load visualization with configurable columns
      */
     render1093Load(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Load visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Load', 1093);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
 
     /**
      * Mode 1094: Stress
-     * Mode 1094: Stress visualization
+     * Stress visualization with configurable layers
      */
     render1094Stress(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Stress visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Stress', 1094);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1095: Strain
-     * Mode 1095: Strain visualization
+     * Strain visualization with configurable layers
      */
     render1095Strain(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of layers (3-10 range)
+        const numLayers = Math.max(3, Math.min(10, complexity + 1));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let layer = 0; layer < numLayers; layer++) {
+            const y = this.height - (layer / numLayers) * this.height * 0.8;
+            const width = this.width * (0.7 - layer * (0.5 / numLayers));
+            const xStart = (this.width - width) / 2;
+            const magIdx = Math.floor((layer * magnitudes.length) / numLayers);
+            const mag = magnitudes[magIdx] * intensity;
+            const brightness = mag * 150 + 50;
 
-        // TODO: Implement Strain visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Strain', 1095);
+            const color = this.getColor(layer, numLayers);
+            const adjustedColor = this.adjustBrightness(color, brightness - 100);
+
+            this.ctx.fillStyle = adjustedColor;
+            this.ctx.fillRect(xStart, y, width, 40);
+        }
     }
 
     /**
      * Mode 1096: Elasticity
-     * Mode 1096: Elasticity visualization
+     * Elasticity visualization with configurable grid
      */
     render1096Elasticity(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Elasticity visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Elasticity', 1096);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1097: Plasticity
-     * Mode 1097: Plasticity visualization
+     * Plasticity visualization with configurable grid
      */
     render1097Plasticity(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Plasticity visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Plasticity', 1097);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1098: Yield
-     * Mode 1098: Yield visualization
+     * Yield visualization with configurable grid
      */
     render1098Yield(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Yield visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Yield', 1098);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1099: Failure
-     * Mode 1099: Failure visualization
+     * Failure visualization with configurable grid
      */
     render1099Failure(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine grid size (30-100 range)
+        const gridSize = Math.max(30, Math.min(100, 90 - complexity * 6));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let y = 0; y < this.height; y += gridSize) {
+            for (let x = 0; x < this.width; x += gridSize) {
+                const idx = (Math.floor(y / gridSize) * Math.floor(this.width / gridSize) + Math.floor(x / gridSize)) % magnitudes.length;
+                const mag = magnitudes[idx] * intensity;
 
-        // TODO: Implement Failure visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Failure', 1099);
+                if (mag > 0.3) {
+                    const size = mag * gridSize * 0.8;
+                    const color = this.getColor(idx, magnitudes.length);
+
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2;
+                    this.ctx.strokeRect(x + 5, y + 5, size, size);
+                }
+            }
+        }
     }
 
     /**
      * Mode 1100: Collapse
-     * Mode 1100: Collapse visualization
+     * Collapse visualization with configurable columns
      */
     render1100Collapse(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const complexity = Math.floor(params.complexity || 5);
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
 
-        // TODO: Implement Collapse visualization
-        // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Collapse', 1100);
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
     }
+
 
     generatePreview(magnitudes) {
         if (!magnitudes) {

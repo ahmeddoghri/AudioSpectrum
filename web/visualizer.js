@@ -14067,7 +14067,7 @@ class Visualizer {
 
         // TODO: Implement Water Lily Reflection visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Water Lily Reflection', 400);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14088,7 +14088,7 @@ class Visualizer {
 
         // TODO: Implement Atom Model visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Atom Model', 401);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14109,7 +14109,7 @@ class Visualizer {
 
         // TODO: Implement Double Helix visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Double Helix', 402);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14130,7 +14130,7 @@ class Visualizer {
 
         // TODO: Implement Magnetic Field visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Magnetic Field', 403);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14151,7 +14151,7 @@ class Visualizer {
 
         // TODO: Implement Wave Interference visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Wave Interference', 404);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14172,7 +14172,7 @@ class Visualizer {
 
         // TODO: Implement Particle Accelerator visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Particle Accelerator', 405);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14193,7 +14193,7 @@ class Visualizer {
 
         // TODO: Implement Crystal Lattice visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Crystal Lattice', 406);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14214,7 +14214,7 @@ class Visualizer {
 
         // TODO: Implement Electromagnetic Wave visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Electromagnetic Wave', 407);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14235,7 +14235,7 @@ class Visualizer {
 
         // TODO: Implement Quantum Tunneling visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Quantum Tunneling', 408);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14256,7 +14256,7 @@ class Visualizer {
 
         // TODO: Implement Fission Reaction visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Fission Reaction', 409);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14277,7 +14277,7 @@ class Visualizer {
 
         // TODO: Implement Doppler Effect visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Doppler Effect', 410);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14298,7 +14298,7 @@ class Visualizer {
 
         // TODO: Implement Gravity Well visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Gravity Well', 411);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14319,7 +14319,7 @@ class Visualizer {
 
         // TODO: Implement Prism Spectrum visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Prism Spectrum', 412);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14340,7 +14340,7 @@ class Visualizer {
 
         // TODO: Implement Molecular Bonds visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Molecular Bonds', 413);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14361,7 +14361,7 @@ class Visualizer {
 
         // TODO: Implement Standing Wave visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Standing Wave', 414);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14382,7 +14382,7 @@ class Visualizer {
 
         // TODO: Implement Brownian Motion visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Brownian Motion', 415);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14403,7 +14403,7 @@ class Visualizer {
 
         // TODO: Implement Tesla Coil visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Tesla Coil', 416);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14424,7 +14424,7 @@ class Visualizer {
 
         // TODO: Implement Phase Transition visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Phase Transition', 417);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14445,7 +14445,7 @@ class Visualizer {
 
         // TODO: Implement Superconductor visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Superconductor', 418);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14466,7 +14466,7 @@ class Visualizer {
 
         // TODO: Implement Neuron Firing visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Neuron Firing', 419);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14487,7 +14487,7 @@ class Visualizer {
 
         // TODO: Implement Resonance Modes visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Resonance Modes', 420);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14508,7 +14508,7 @@ class Visualizer {
 
         // TODO: Implement Fractal Diffusion visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Fractal Diffusion', 421);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14529,7 +14529,7 @@ class Visualizer {
 
         // TODO: Implement Plasma Ball visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Plasma Ball', 422);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14550,7 +14550,7 @@ class Visualizer {
 
         // TODO: Implement Coriolis Effect visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Coriolis Effect', 423);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14571,7 +14571,7 @@ class Visualizer {
 
         // TODO: Implement Photoelectric Effect visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Photoelectric Effect', 424);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14592,7 +14592,7 @@ class Visualizer {
 
         // TODO: Implement Lorenz Attractor visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Lorenz Attractor', 425);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14613,7 +14613,7 @@ class Visualizer {
 
         // TODO: Implement Spin Precession visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Spin Precession', 426);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14634,7 +14634,7 @@ class Visualizer {
 
         // TODO: Implement Compton Scattering visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Compton Scattering', 427);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14655,7 +14655,7 @@ class Visualizer {
 
         // TODO: Implement Ferrofluid visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Ferrofluid', 428);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14676,7 +14676,7 @@ class Visualizer {
 
         // TODO: Implement Sonoluminescence visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Sonoluminescence', 429);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14697,7 +14697,7 @@ class Visualizer {
 
         // TODO: Implement Cherenkov Radiation visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Cherenkov Radiation', 430);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14718,7 +14718,7 @@ class Visualizer {
 
         // TODO: Implement Hall Effect visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Hall Effect', 431);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14739,7 +14739,7 @@ class Visualizer {
 
         // TODO: Implement Cymatics visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Cymatics', 432);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14760,7 +14760,7 @@ class Visualizer {
 
         // TODO: Implement Klein Bottle visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Klein Bottle', 433);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14781,7 +14781,7 @@ class Visualizer {
 
         // TODO: Implement Raman Scattering visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Raman Scattering', 434);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14802,7 +14802,7 @@ class Visualizer {
 
         // TODO: Implement Vortex Shedding visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Vortex Shedding', 435);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14823,7 +14823,7 @@ class Visualizer {
 
         // TODO: Implement Polarization visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Polarization', 436);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14844,7 +14844,7 @@ class Visualizer {
 
         // TODO: Implement Higgs Field visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Higgs Field', 437);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14865,7 +14865,7 @@ class Visualizer {
 
         // TODO: Implement Bose Einstein visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Bose Einstein', 438);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14886,7 +14886,7 @@ class Visualizer {
 
         // TODO: Implement Schrodinger Cat visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Schrodinger Cat', 439);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14907,7 +14907,7 @@ class Visualizer {
 
         // TODO: Implement String Vibration visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'String Vibration', 440);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14928,7 +14928,7 @@ class Visualizer {
 
         // TODO: Implement Electron Cloud visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Electron Cloud', 441);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14949,7 +14949,7 @@ class Visualizer {
 
         // TODO: Implement Thermoelectric visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Thermoelectric', 442);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14970,7 +14970,7 @@ class Visualizer {
 
         // TODO: Implement Photon Entanglement visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Photon Entanglement', 443);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -14991,7 +14991,7 @@ class Visualizer {
 
         // TODO: Implement Superfluidity visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Superfluidity', 444);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15012,7 +15012,7 @@ class Visualizer {
 
         // TODO: Implement Piezoelectric visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Piezoelectric', 445);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15033,7 +15033,7 @@ class Visualizer {
 
         // TODO: Implement Zeeman Effect visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Zeeman Effect', 446);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15054,7 +15054,7 @@ class Visualizer {
 
         // TODO: Implement Cyclotron Motion visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Cyclotron Motion', 447);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15075,7 +15075,7 @@ class Visualizer {
 
         // TODO: Implement Fusion Reactor visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Fusion Reactor', 448);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15096,7 +15096,7 @@ class Visualizer {
 
         // TODO: Implement Antimatter visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Antimatter', 449);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15117,7 +15117,7 @@ class Visualizer {
 
         // TODO: Implement Hawking Radiation visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Hawking Radiation', 450);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15138,7 +15138,7 @@ class Visualizer {
 
         // TODO: Implement Heisenberg Uncertainty visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Heisenberg Uncertainty', 451);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15159,7 +15159,7 @@ class Visualizer {
 
         // TODO: Implement Particle Decay visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Particle Decay', 452);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15180,7 +15180,7 @@ class Visualizer {
 
         // TODO: Implement Laser Cavity visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Laser Cavity', 453);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15201,7 +15201,7 @@ class Visualizer {
 
         // TODO: Implement Dielectric Breakdown visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Dielectric Breakdown', 454);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15222,7 +15222,7 @@ class Visualizer {
 
         // TODO: Implement Casimir Effect visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Casimir Effect', 455);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15243,7 +15243,7 @@ class Visualizer {
 
         // TODO: Implement Sonochemistry visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Sonochemistry', 456);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15264,7 +15264,7 @@ class Visualizer {
 
         // TODO: Implement Phonon Propagation visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Phonon Propagation', 457);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15285,7 +15285,7 @@ class Visualizer {
 
         // TODO: Implement Pair Production visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Pair Production', 458);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15306,7 +15306,7 @@ class Visualizer {
 
         // TODO: Implement Stefan Boltzmann visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Stefan Boltzmann', 459);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15327,7 +15327,7 @@ class Visualizer {
 
         // TODO: Implement Eddy Currents visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Eddy Currents', 460);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15348,7 +15348,7 @@ class Visualizer {
 
         // TODO: Implement Wavefunction Collapse visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Wavefunction Collapse', 461);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15369,7 +15369,7 @@ class Visualizer {
 
         // TODO: Implement Qed Feynman visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Qed Feynman', 462);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15390,7 +15390,7 @@ class Visualizer {
 
         // TODO: Implement Holography visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Holography', 463);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15411,7 +15411,7 @@ class Visualizer {
 
         // TODO: Implement Metamaterial visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Metamaterial', 464);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15432,7 +15432,7 @@ class Visualizer {
 
         // TODO: Implement Photodiode visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Photodiode', 465);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15453,7 +15453,7 @@ class Visualizer {
 
         // TODO: Implement Bremsstrahlung visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Bremsstrahlung', 466);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15474,7 +15474,7 @@ class Visualizer {
 
         // TODO: Implement Optogenetics visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Optogenetics', 467);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15495,7 +15495,7 @@ class Visualizer {
 
         // TODO: Implement Topological Insulator visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Topological Insulator', 468);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15516,7 +15516,7 @@ class Visualizer {
 
         // TODO: Implement Nernst Equation visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Nernst Equation', 469);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15537,7 +15537,7 @@ class Visualizer {
 
         // TODO: Implement Mri Precession visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Mri Precession', 470);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15558,7 +15558,7 @@ class Visualizer {
 
         // TODO: Implement Josephson Junction visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Josephson Junction', 471);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15579,7 +15579,7 @@ class Visualizer {
 
         // TODO: Implement Liquid Crystal visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Liquid Crystal', 472);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15600,7 +15600,7 @@ class Visualizer {
 
         // TODO: Implement Rydberg Atoms visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Rydberg Atoms', 473);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15621,7 +15621,7 @@ class Visualizer {
 
         // TODO: Implement Cavity Qed visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Cavity Qed', 474);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15642,7 +15642,7 @@ class Visualizer {
 
         // TODO: Implement Quantum Dots visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Quantum Dots', 475);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15663,7 +15663,7 @@ class Visualizer {
 
         // TODO: Implement Soliton Wave visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Soliton Wave', 476);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15684,7 +15684,7 @@ class Visualizer {
 
         // TODO: Implement Acoustic Levitation visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Acoustic Levitation', 477);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15705,7 +15705,7 @@ class Visualizer {
 
         // TODO: Implement Mosfet Channel visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Mosfet Channel', 478);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15726,7 +15726,7 @@ class Visualizer {
 
         // TODO: Implement Spintronics visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Spintronics', 479);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15747,7 +15747,7 @@ class Visualizer {
 
         // TODO: Implement Electrochemistry visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Electrochemistry', 480);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15768,7 +15768,7 @@ class Visualizer {
 
         // TODO: Implement Langmuir Wave visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Langmuir Wave', 481);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15789,7 +15789,7 @@ class Visualizer {
 
         // TODO: Implement Bloch Sphere visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Bloch Sphere', 482);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15810,7 +15810,7 @@ class Visualizer {
 
         // TODO: Implement Curie Temperature visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Curie Temperature', 483);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15831,7 +15831,7 @@ class Visualizer {
 
         // TODO: Implement Dyson Sphere visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Dyson Sphere', 484);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15852,7 +15852,7 @@ class Visualizer {
 
         // TODO: Implement Graphene Lattice visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Graphene Lattice', 485);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15873,7 +15873,7 @@ class Visualizer {
 
         // TODO: Implement Memristor visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Memristor', 486);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15894,7 +15894,7 @@ class Visualizer {
 
         // TODO: Implement Quantum Hall visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Quantum Hall', 487);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15915,7 +15915,7 @@ class Visualizer {
 
         // TODO: Implement Optomechanics visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Optomechanics', 488);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15936,7 +15936,7 @@ class Visualizer {
 
         // TODO: Implement Exciton visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Exciton', 489);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15957,7 +15957,7 @@ class Visualizer {
 
         // TODO: Implement Photonic Crystal visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Photonic Crystal', 490);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15978,7 +15978,7 @@ class Visualizer {
 
         // TODO: Implement Skyrmion visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Skyrmion', 491);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -15999,7 +15999,7 @@ class Visualizer {
 
         // TODO: Implement Mott Insulator visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Mott Insulator', 492);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -16020,7 +16020,7 @@ class Visualizer {
 
         // TODO: Implement Squeezing visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Squeezing', 493);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -16041,7 +16041,7 @@ class Visualizer {
 
         // TODO: Implement Andreev Reflection visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Andreev Reflection', 494);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -16062,7 +16062,7 @@ class Visualizer {
 
         // TODO: Implement Casimir Polder visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Casimir Polder', 495);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -16083,7 +16083,7 @@ class Visualizer {
 
         // TODO: Implement Fano Resonance visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Fano Resonance', 496);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -16104,7 +16104,7 @@ class Visualizer {
 
         // TODO: Implement Quantum Zeno visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Quantum Zeno', 497);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -16125,7 +16125,7 @@ class Visualizer {
 
         // TODO: Implement Rabi Oscillation visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Rabi Oscillation', 498);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -16146,7 +16146,7 @@ class Visualizer {
 
         // TODO: Implement Aharonov Bohm visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Aharonov Bohm', 499);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -16167,7 +16167,7 @@ class Visualizer {
 
         // TODO: Implement Berry Phase visualization
         // For now, create a placeholder that shows the mode is working
-        this.renderPlaceholder(magnitudes, 'Berry Phase', 500);
+        this.renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity);
     }
 
     /**
@@ -28779,6 +28779,2412 @@ class Visualizer {
             }
         }
 
+    // ========================================
+    // AUTO-GENERATED MODE IMPLEMENTATIONS (401-500)
+    // ========================================
+
+    renderMode401_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 401 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode402_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 402 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode403_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 403 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode404_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 404 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode405_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 405 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode406_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 406 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode407_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 407 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode408_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 408 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode409_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 409 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode410_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 410 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode411_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 411 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode412_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 412 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode413_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 413 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode414_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 414 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode415_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 415 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode416_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 416 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode417_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 417 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode418_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 418 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode419_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 419 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode420_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 420 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode421_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 421 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode422_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 422 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode423_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 423 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode424_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 424 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode425_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 425 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode426_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 426 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode427_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 427 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode428_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 428 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode429_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 429 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode430_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 430 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode431_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 431 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode432_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 432 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode433_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 433 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode434_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 434 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode435_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 435 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode436_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 436 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode437_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 437 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode438_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 438 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode439_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 439 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode440_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 440 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode441_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 441 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode442_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 442 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode443_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 443 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode444_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 444 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode445_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 445 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode446_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 446 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode447_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 447 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode448_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 448 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode449_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 449 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode450_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 450 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode451_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 451 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode452_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 452 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode453_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 453 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode454_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 454 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode455_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 455 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode456_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 456 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode457_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 457 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode458_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 458 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode459_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 459 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode460_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 460 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode461_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 461 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode462_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 462 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode463_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 463 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode464_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 464 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode465_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 465 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode466_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 466 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode467_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 467 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode468_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 468 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode469_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 469 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode470_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 470 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode471_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 471 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode472_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 472 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode473_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 473 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode474_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 474 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode475_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 475 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode476_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 476 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode477_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 477 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode478_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 478 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode479_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 479 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode480_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 480 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode481_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 481 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode482_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 482 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode483_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 483 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode484_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 484 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode485_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 485 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode486_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 486 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode487_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 487 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode488_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 488 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode489_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 489 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode490_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 490 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode491_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 491 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode492_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 492 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode493_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 493 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode494_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 494 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode495_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 495 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode496_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 496 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode497_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 497 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode498_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 498 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode499_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 499 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderMode500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        // Mode 500 - Audio-reactive visualization
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Circular particle visualization
+        for (let i = 0; i < Math.min(magnitudes.length, this.settings.numBars || 64); i++) {
+            const mag = magnitudes[i];
+            const angle = (i / magnitudes.length) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const radius = this.maxRadius * 0.3 + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, magnitudes.length);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+
+
         this.render(magnitudes);
     }
 
@@ -28815,6 +31221,36 @@ class Visualizer {
 
         return [
             Math.round(r * 255),
+
+    /**
+     * Shared implementation for modes 401-500
+     * Provides audio-reactive circular visualization
+     */
+    renderMode401_500_IMPL(magnitudes, bass, mids, treble, intensity, speed, complexity) {
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const numBars = Math.min(magnitudes.length, this.settings.numBars || 64);
+
+        // Circular particle visualization
+        for (let i = 0; i < numBars; i++) {
+            const mag = magnitudes[i];
+            const angle = (i / numBars) * Math.PI * 2 + this.frameCounter * 0.05 * speed;
+            const baseRadius = this.maxRadius * 0.3;
+            const radius = baseRadius + mag * this.maxRadius * 0.5 * intensity;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            const size = 2 + mag * 8 * intensity;
+            this.ctx.fillStyle = this.getColor(i, numBars);
+            this.ctx.globalAlpha = 0.5 + mag * 0.5;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
             Math.round(g * 255),
             Math.round(b * 255)
         ];

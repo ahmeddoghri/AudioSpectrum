@@ -176,12 +176,21 @@ class Visualizer {
         }
 
         if (this.frameCounter === 0) {
-            console.log('[Visualizer] First render - mode:', this.settings.mode,
-                       'canvas:', this.canvas.width + 'x' + this.canvas.height,
-                       'isPreviewMode:', this.isPreviewMode);
+            console.log('[Visualizer] === First render ===');
+            console.log('[Visualizer] Mode:', this.settings.mode);
+            console.log('[Visualizer] Canvas:', this.canvas.width + 'x' + this.canvas.height);
+            console.log('[Visualizer] isPreviewMode:', this.isPreviewMode);
+            console.log('[Visualizer] Canvas element:', this.canvas);
+            console.log('[Visualizer] Canvas context:', this.ctx);
+            console.log('[Visualizer] Magnitudes length:', magnitudes.length);
+            console.log('[Visualizer] Settings:', JSON.stringify(this.settings, null, 2));
         }
 
         this.drawBackground();
+
+        if (this.frameCounter === 0) {
+            console.log('[Visualizer] Background drawn');
+        }
 
         const modeId = this.settings.mode;
         const mode = Object.values(VISUALIZATION_MODES).find(m => m.id === modeId);
@@ -192,11 +201,12 @@ class Visualizer {
             return;
         }
 
-        switch (modeId) {
-            // Classic Styles
-            case 'circular_bars':
-                this.renderCircularBars(magnitudes);
-                break;
+        try {
+            switch (modeId) {
+                // Classic Styles
+                case 'circular_bars':
+                    this.renderCircularBars(magnitudes);
+                    break;
             case 'waves':
                 this.renderWaves(magnitudes);
                 break;
@@ -522,7 +532,7 @@ class Visualizer {
                 break;
 
             case 'mode_106_aurora_waves':
-                this.render106AuroraWaves(magnitudes);
+                this.renderAuroraWaves(magnitudes);
                 break;
             case 'mode_107_dna_helix':
                 this.render107DnaHelix(magnitudes);
@@ -3355,6 +3365,15 @@ class Visualizer {
                 break;
             default:
                 this.renderCircularBars(magnitudes);
+            }
+        } catch (error) {
+            console.error(`[Visualizer] Error rendering mode '${modeId}':`, error.message);
+            // Fallback to circular bars on error
+            this.renderCircularBars(magnitudes);
+        }
+
+        if (this.frameCounter === 0) {
+            console.log('[Visualizer] First render completed successfully');
         }
 
         this.frameCounter++;

@@ -13511,7 +13511,9 @@ const DEFAULT_SETTINGS = {
     colorScheme: 'apple_blue',
     background: 'soft_gray',
     fps: 30,
-    format: 'instagram_square',
+    format: 'square_1_1',
+    width: 1080,
+    height: 1080,
     mode: 'circular_bars'
 };
 

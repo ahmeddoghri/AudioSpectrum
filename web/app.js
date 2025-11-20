@@ -427,8 +427,11 @@ class AudioSpectrumApp {
         // Populate format chips
         this.populateFormatChips();
 
-        // Initialize preview canvas
+        // Initialize preview canvas first (needed before selectFormat)
         this.visualizer = new Visualizer(this.elements.previewCanvas, this.state.settings);
+
+        // Initialize format dimensions from default settings
+        this.selectFormat(this.state.selectedFormat);
 
         // Create debounced update preview function
         this.debouncedUpdatePreview = Utils.debounce(() => this.updatePreview(), 300);
@@ -1048,8 +1051,17 @@ class AudioSpectrumApp {
      * Select format
      */
     selectFormat(formatKey) {
-        this.state.selectedFormat = formatKey;
         const preset = FORMAT_PRESETS[formatKey];
+
+        // Safety check for invalid format keys
+        if (!preset) {
+            console.error(`Invalid format key: ${formatKey}. Falling back to square_1_1.`);
+            // Recursively call with fallback
+            this.selectFormat('square_1_1');
+            return;
+        }
+
+        this.state.selectedFormat = formatKey;
 
         // Update settings
         this.state.settings.width = preset.width;

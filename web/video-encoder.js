@@ -31,6 +31,9 @@ class VideoEncoder {
         this.progress = 0;
         this.startTime = Date.now();
 
+        console.log('[VideoEncoder] === Starting video generation ===');
+        console.log('[VideoEncoder] Settings:', JSON.stringify(settings, null, 2));
+
         try {
             // Update progress
             this.updateProgress('Processing audio...', 0);
@@ -41,6 +44,11 @@ class VideoEncoder {
             const fps = settings.fps || 30;
             const totalFrames = Math.floor(duration * fps);
 
+            console.log('[VideoEncoder] Audio info:', audioInfo);
+            console.log('[VideoEncoder] Duration:', duration, 'seconds');
+            console.log('[VideoEncoder] FPS:', fps);
+            console.log('[VideoEncoder] Total frames:', totalFrames);
+
             // Update progress
             this.updateProgress('Rendering frames...', 5);
 
@@ -49,13 +57,25 @@ class VideoEncoder {
             canvas.width = settings.width;
             canvas.height = settings.height;
 
+            console.log('[VideoEncoder] Created offscreen canvas');
+            console.log('[VideoEncoder] Canvas dimensions:', canvas.width, 'x', canvas.height);
+            console.log('[VideoEncoder] Canvas element:', canvas);
+
+            // Verify canvas context
+            const testCtx = canvas.getContext('2d');
+            console.log('[VideoEncoder] Canvas context:', testCtx);
+            console.log('[VideoEncoder] Canvas context type:', typeof testCtx);
+
             // Create visualizer instance for rendering
             const offscreenVisualizer = new Visualizer(canvas, settings);
+            console.log('[VideoEncoder] Created offscreen visualizer');
 
             // Reset audio processor smoothing
             audioProcessor.resetSmoothing();
 
             // Render all frames
+            console.log('[VideoEncoder] Starting frame rendering loop');
+
             for (let frame = 0; frame < totalFrames; frame++) {
                 if (this.isCancelled) {
                     throw new Error('Encoding cancelled');
@@ -64,6 +84,11 @@ class VideoEncoder {
                 const time = frame / fps;
                 const progress = 5 + ((frame / totalFrames) * 85);
 
+                if (frame === 0) {
+                    console.log('[VideoEncoder] === Rendering first frame ===');
+                    console.log('[VideoEncoder] Time:', time);
+                }
+
                 // Get magnitude spectrum for this time
                 const magnitudes = await audioProcessor.getMagnitudeSpectrum(
                     time,
@@ -71,16 +96,52 @@ class VideoEncoder {
                     settings.smoothing
                 );
 
+                if (frame === 0) {
+                    console.log('[VideoEncoder] Got magnitudes:', magnitudes);
+                    console.log('[VideoEncoder] Magnitudes length:', magnitudes?.length);
+                    console.log('[VideoEncoder] Sample values:', magnitudes?.slice(0, 5));
+                }
+
                 // Render frame
+                if (frame === 0) {
+                    console.log('[VideoEncoder] About to render first frame');
+                    console.log('[VideoEncoder] Canvas before render - width:', canvas.width, 'height:', canvas.height);
+                }
+
                 offscreenVisualizer.render(magnitudes);
 
+                if (frame === 0) {
+                    console.log('[VideoEncoder] Frame rendered');
+                    console.log('[VideoEncoder] Canvas after render - width:', canvas.width, 'height:', canvas.height);
+
+                    // Check if anything was drawn
+                    const imageData = testCtx.getImageData(0, 0, Math.min(10, canvas.width), Math.min(10, canvas.height));
+                    const hasContent = imageData.data.some(v => v !== 0);
+                    console.log('[VideoEncoder] Canvas has content:', hasContent);
+                    console.log('[VideoEncoder] Sample pixel data:', imageData.data.slice(0, 20));
+                }
+
                 // Capture frame as blob
+                if (frame === 0) {
+                    console.log('[VideoEncoder] About to call toBlob');
+                }
+
                 const blob = await new Promise(resolve => {
                     canvas.toBlob(resolve, 'image/png');
                 });
 
+                if (frame === 0) {
+                    console.log('[VideoEncoder] toBlob completed, blob:', blob);
+                }
+
                 // Validate blob before adding to frames
                 if (!blob) {
+                    console.error('[VideoEncoder] === toBlob returned null ===');
+                    console.error('[VideoEncoder] Canvas state:');
+                    console.error('[VideoEncoder]   - width:', canvas.width);
+                    console.error('[VideoEncoder]   - height:', canvas.height);
+                    console.error('[VideoEncoder]   - context:', testCtx);
+                    console.error('[VideoEncoder]   - frame number:', frame);
                     throw new Error(`Failed to capture frame ${frame}: canvas.toBlob returned null`);
                 }
 

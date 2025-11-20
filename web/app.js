@@ -255,7 +255,7 @@ class AudioSpectrumApp {
 
         this.elements.resetFilters.addEventListener('click', () => {
             this.elements.modeSearch.value = '';
-            this.elements.categoryFilter.value = 'all';
+            this.elements.categoryFilter.value = 'classic';
             this.elements.clearSearch.style.display = 'none';
             this.filterModes();
         });
@@ -774,6 +774,9 @@ class AudioSpectrumApp {
             this.elements.settingsSection.style.display = 'block';
             this.elements.previewSection.style.display = 'block';
             this.elements.generateSection.style.display = 'block';
+
+            // Apply the Classic filter by default
+            this.filterModes();
 
             // Update preview
             this.updatePreview();

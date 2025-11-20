@@ -79,6 +79,11 @@ class VideoEncoder {
                     canvas.toBlob(resolve, 'image/png');
                 });
 
+                // Validate blob before adding to frames
+                if (!blob) {
+                    throw new Error(`Failed to capture frame ${frame}: canvas.toBlob returned null`);
+                }
+
                 this.frames.push(blob);
 
                 // Update progress every 10 frames
@@ -175,7 +180,13 @@ class VideoEncoder {
                 };
 
                 mediaRecorder.onstop = () => {
+                    console.log('[VideoEncoder] MediaRecorder stopped');
+                    console.log('[VideoEncoder] Chunks collected:', chunks.length);
+                    console.log('[VideoEncoder] Total size:', chunks.reduce((acc, chunk) => acc + chunk.size, 0));
                     const blob = new Blob(chunks, { type: 'video/webm' });
+                    console.log('[VideoEncoder] Created blob:', blob);
+                    console.log('[VideoEncoder] Blob size:', blob.size);
+                    console.log('[VideoEncoder] Blob type:', blob.type);
                     resolve(blob);
                 };
 
@@ -192,6 +203,12 @@ class VideoEncoder {
                     if (this.isCancelled) {
                         mediaRecorder.stop();
                         reject(new Error('Encoding cancelled'));
+                        return;
+                    }
+
+                    // Validate frame before creating object URL
+                    if (!frames[i] || !(frames[i] instanceof Blob)) {
+                        reject(new Error(`Invalid frame at index ${i}`));
                         return;
                     }
 
@@ -225,6 +242,10 @@ class VideoEncoder {
 
         // Load first frame to get dimensions
         if (frames.length > 0) {
+            // Validate first frame before creating object URL
+            if (!frames[0] || !(frames[0] instanceof Blob)) {
+                throw new Error('Invalid first frame: not a valid Blob');
+            }
             const firstImg = await this.loadImage(URL.createObjectURL(frames[0]));
             canvas.width = firstImg.width;
             canvas.height = firstImg.height;
@@ -267,6 +288,14 @@ class VideoEncoder {
                 if (frameIndex >= frames.length || this.isCancelled) {
                     clearInterval(interval);
                     setTimeout(() => mediaRecorder.stop(), 100);
+                    return;
+                }
+
+                // Validate frame before creating object URL
+                if (!frames[frameIndex] || !(frames[frameIndex] instanceof Blob)) {
+                    clearInterval(interval);
+                    mediaRecorder.stop();
+                    reject(new Error(`Invalid frame at index ${frameIndex}`));
                     return;
                 }
 

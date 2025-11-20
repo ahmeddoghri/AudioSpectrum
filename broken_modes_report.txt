@@ -1,0 +1,20 @@
+BROKEN MODES REPORT
+Generated: 2025-11-20T06:48:38.283Z
+
+Total broken modes: 0
+
+DETAILED LIST:
+
+
+EXPLANATION:
+These modes all call renderPlaceholder() which renders a generic circular bars
+visualization instead of their unique implementation. This occurred during the
+migration from Python to JavaScript where the implementations were not completed.
+
+IMPACT:
+Multiple modes with different names and descriptions will look identical,
+causing confusion for users.
+
+RECOMMENDATION:
+Each mode needs its unique render implementation based on its description
+in the constants.js file.

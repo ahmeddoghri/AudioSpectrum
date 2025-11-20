@@ -24,6 +24,10 @@ class AudioSpectrumApp {
         // DOM elements
         this.elements = {};
 
+        // Preview animation state
+        this.previewAnimationId = null;
+        this.previewTime = 0;
+
         // Initialize
         this.init();
     }
@@ -808,6 +812,9 @@ class AudioSpectrumApp {
             this.elements.audioElement.src = '';
         }
 
+        // Stop preview animation
+        this.stopPreviewAnimation();
+
         this.audioProcessor.dispose();
         this.audioProcessor = new AudioProcessor();
 
@@ -1098,20 +1105,80 @@ class AudioSpectrumApp {
     }
 
     /**
-     * Update preview
+     * Update preview (called when settings change)
      */
     updatePreview() {
         if (!this.visualizer) return;
 
         this.visualizer.updateSettings(this.state.settings);
 
-        // Generate demo magnitudes or use real-time data
-        const magnitudes = new Float32Array(this.state.settings.numBars);
-        for (let i = 0; i < magnitudes.length; i++) {
-            magnitudes[i] = 0.3 + Math.random() * 0.4 + Math.sin(i * 0.2 + Date.now() * 0.001) * 0.2;
+        // If preview animation is already running, it will pick up the new settings
+        // Otherwise, start the animation
+        if (!this.previewAnimationId) {
+            this.startPreviewAnimation();
+        }
+    }
+
+    /**
+     * Start continuous preview animation
+     */
+    startPreviewAnimation() {
+        // Stop any existing animation
+        this.stopPreviewAnimation();
+
+        // Ensure visualizer is initialized
+        if (!this.visualizer) {
+            console.error('[Preview] Visualizer not initialized');
+            return;
         }
 
-        this.visualizer.render(magnitudes);
+        console.log('[Preview] Starting animation loop');
+        console.log('[Preview] Canvas dimensions:', this.elements.previewCanvas.width, 'x', this.elements.previewCanvas.height);
+        console.log('[Preview] Settings:', JSON.stringify(this.state.settings, null, 2));
+
+        const animate = () => {
+            try {
+                // Generate animated demo magnitudes
+                const magnitudes = new Float32Array(this.state.settings.numBars);
+
+                for (let i = 0; i < magnitudes.length; i++) {
+                    // Create smooth, animated waves
+                    const wave1 = Math.sin(this.previewTime * 0.02 + i * 0.1) * 0.2;
+                    const wave2 = Math.sin(this.previewTime * 0.03 - i * 0.08) * 0.15;
+                    const wave3 = Math.cos(this.previewTime * 0.015 + i * 0.12) * 0.1;
+                    const base = 0.3;
+                    const randomness = Math.sin(i * 0.15 + this.previewTime * 0.05) * 0.05;
+
+                    const value = base + wave1 + wave2 + wave3 + randomness;
+                    magnitudes[i] = Math.min(Math.max(value, 0.1), 0.9);
+                }
+
+                if (this.previewTime === 0) {
+                    console.log('[Preview] First frame - magnitudes sample:', magnitudes.slice(0, 5));
+                }
+
+                this.visualizer.render(magnitudes);
+                this.previewTime++;
+
+                this.previewAnimationId = requestAnimationFrame(animate);
+            } catch (error) {
+                console.error('[Preview] Error in preview animation:', error);
+                console.error('[Preview] Stack trace:', error.stack);
+                this.stopPreviewAnimation();
+            }
+        };
+
+        animate();
+    }
+
+    /**
+     * Stop preview animation
+     */
+    stopPreviewAnimation() {
+        if (this.previewAnimationId) {
+            cancelAnimationFrame(this.previewAnimationId);
+            this.previewAnimationId = null;
+        }
     }
 
     /**
@@ -1151,8 +1218,13 @@ class AudioSpectrumApp {
                 </svg>
                 Play Preview
             `;
+            // Restart the demo animation
+            this.startPreviewAnimation();
             return;
         }
+
+        // Stop the demo animation when playing real audio
+        this.stopPreviewAnimation();
 
         // Play audio
         this.audioProcessor.play();
@@ -1164,7 +1236,7 @@ class AudioSpectrumApp {
             Pause
         `;
 
-        // Animate preview
+        // Animate preview with real audio
         const animate = () => {
             if (this.audioProcessor.isPlaying) {
                 const magnitudes = this.audioProcessor.getRealTimeMagnitudes(this.state.settings.numBars);
@@ -1179,6 +1251,8 @@ class AudioSpectrumApp {
                     </svg>
                     Play Preview
                 `;
+                // Restart the demo animation after audio stops
+                this.startPreviewAnimation();
             }
         };
 
@@ -1273,24 +1347,55 @@ class AudioSpectrumApp {
     showDownloadSection() {
         this.resetGenerateSection();
 
+        console.log('[Download] Showing download section');
+        console.log('[Download] Generated video:', this.state.generatedVideo);
+        console.log('[Download] Video type:', typeof this.state.generatedVideo);
+        console.log('[Download] Video size:', this.state.generatedVideo?.size);
+        console.log('[Download] Is Blob:', this.state.generatedVideo instanceof Blob);
+
+        // Validate generated video
+        if (!this.state.generatedVideo) {
+            console.error('[Download] No generated video available');
+            Utils.showToast('No video available to download', 'error');
+            return;
+        }
+
+        if (!(this.state.generatedVideo instanceof Blob)) {
+            console.error('[Download] Generated video is not a Blob');
+            Utils.showToast('Invalid video format', 'error');
+            return;
+        }
+
+        if (this.state.generatedVideo.size === 0) {
+            console.error('[Download] Generated video is empty');
+            Utils.showToast('Generated video is empty', 'error');
+            return;
+        }
+
         // Show download section
         this.elements.downloadSection.style.display = 'block';
 
-        // Set video preview
-        const videoUrl = URL.createObjectURL(this.state.generatedVideo);
-        this.elements.videoPreview.src = videoUrl;
+        try {
+            // Set video preview
+            const videoUrl = URL.createObjectURL(this.state.generatedVideo);
+            console.log('[Download] Created video URL:', videoUrl);
+            this.elements.videoPreview.src = videoUrl;
 
-        // Update file info
-        this.elements.downloadSize.textContent = Utils.formatBytes(this.state.generatedVideo.size);
-        this.elements.downloadDuration.textContent = Utils.formatTime(this.audioProcessor.duration);
-        this.elements.downloadFormatDisplay.textContent = 'WebM';
+            // Update file info
+            this.elements.downloadSize.textContent = Utils.formatBytes(this.state.generatedVideo.size);
+            this.elements.downloadDuration.textContent = Utils.formatTime(this.audioProcessor.duration);
+            this.elements.downloadFormatDisplay.textContent = 'WebM';
 
-        // Scroll to download section
-        setTimeout(() => {
-            Utils.scrollToElement('download-section');
-        }, 300);
+            // Scroll to download section
+            setTimeout(() => {
+                Utils.scrollToElement('download-section');
+            }, 300);
 
-        Utils.showToast('Video generated successfully!', 'success');
+            Utils.showToast('Video generated successfully!', 'success');
+        } catch (error) {
+            console.error('[Download] Error creating video URL:', error);
+            Utils.showToast('Failed to create download preview: ' + error.message, 'error');
+        }
     }
 
     /**
@@ -1317,6 +1422,9 @@ class AudioSpectrumApp {
         // Clean up
         this.audioProcessor.dispose();
         this.audioProcessor = new AudioProcessor();
+
+        // Stop preview animation
+        this.stopPreviewAnimation();
 
         if (this.state.generatedVideo) {
             URL.revokeObjectURL(this.elements.videoPreview.src);

@@ -782,7 +782,13 @@ class AudioSpectrumApp {
             this.updatePreview();
 
             // Automatically select the classic audiospectrum mode (circular_bars)
-            this.selectMode('circular_bars');
+            // Pass false to prevent auto-scrolling to format section
+            this.selectMode('circular_bars', false);
+
+            // Scroll to mode section so user sees step 2
+            setTimeout(() => {
+                Utils.scrollToElement('mode-section');
+            }, 300);
 
             Utils.showToast('Audio loaded successfully!', 'success');
 
@@ -988,7 +994,7 @@ class AudioSpectrumApp {
     /**
      * Select visualization mode
      */
-    selectMode(modeId) {
+    selectMode(modeId, autoScroll = true) {
         this.state.selectedMode = modeId;
         this.state.settings.mode = modeId;
 
@@ -1008,10 +1014,12 @@ class AudioSpectrumApp {
         // Update preview
         this.updatePreview();
 
-        // Scroll to format section
-        setTimeout(() => {
-            Utils.scrollToElement('format-section');
-        }, 300);
+        // Scroll to format section only if autoScroll is enabled
+        if (autoScroll) {
+            setTimeout(() => {
+                Utils.scrollToElement('format-section');
+            }, 300);
+        }
     }
 
     /**

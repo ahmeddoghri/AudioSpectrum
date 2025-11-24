@@ -20,7 +20,7 @@ class VideoEncoder {
     /**
      * Generate video from audio and visualizer settings
      */
-    async generateVideo(audioProcessor, visualizer, settings) {
+    async generateVideo(audioProcessor, visualizer, settings, previewStartTime = 0) {
         if (this.isEncoding) {
             throw new Error('Encoding already in progress');
         }
@@ -33,6 +33,7 @@ class VideoEncoder {
 
         console.log('[VideoEncoder] === Starting video generation ===');
         console.log('[VideoEncoder] Settings:', JSON.stringify(settings, null, 2));
+        console.log('[VideoEncoder] Preview start time:', previewStartTime);
 
         try {
             // Update progress
@@ -40,12 +41,20 @@ class VideoEncoder {
 
             // Get audio info
             const audioInfo = audioProcessor.getInfo();
-            const duration = audioInfo.duration;
+            const fullDuration = audioInfo.duration;
+
+            // Proof of concept: limit to 15 seconds if song is longer
+            // Full song will be available behind paywall
+            const PREVIEW_DURATION = 15;
+            const duration = fullDuration > PREVIEW_DURATION ? PREVIEW_DURATION : fullDuration;
+            const isPreview = fullDuration > PREVIEW_DURATION;
+
             const fps = settings.fps || 30;
             const totalFrames = Math.floor(duration * fps);
 
             console.log('[VideoEncoder] Audio info:', audioInfo);
-            console.log('[VideoEncoder] Duration:', duration, 'seconds');
+            console.log('[VideoEncoder] Full duration:', fullDuration, 'seconds');
+            console.log('[VideoEncoder] Processing duration:', duration, 'seconds', isPreview ? '(preview mode)' : '(full)');
             console.log('[VideoEncoder] FPS:', fps);
             console.log('[VideoEncoder] Total frames:', totalFrames);
 
@@ -81,12 +90,14 @@ class VideoEncoder {
                     throw new Error('Encoding cancelled');
                 }
 
-                const time = frame / fps;
+                // Calculate time with preview start offset
+                const time = previewStartTime + (frame / fps);
                 const progress = 5 + ((frame / totalFrames) * 85);
 
                 if (frame === 0) {
                     console.log('[VideoEncoder] === Rendering first frame ===');
-                    console.log('[VideoEncoder] Time:', time);
+                    console.log('[VideoEncoder] Time (with offset):', time);
+                    console.log('[VideoEncoder] Preview start time:', previewStartTime);
                 }
 
                 // Get magnitude spectrum for this time
@@ -163,7 +174,7 @@ class VideoEncoder {
             this.updateProgress('Encoding video...', 90);
 
             // Create video using MediaRecorder API (simpler than FFmpeg.wasm)
-            const videoBlob = await this.encodeFramesToVideo(this.frames, fps, audioProcessor.audioBuffer, settings);
+            const videoBlob = await this.encodeFramesToVideo(this.frames, fps, audioProcessor.audioBuffer, settings, duration, previewStartTime);
 
             // Update progress
             this.updateProgress('Complete!', 100);
@@ -196,7 +207,7 @@ class VideoEncoder {
      * Encode frames to video using Canvas + MediaRecorder
      * This is a simpler approach than FFmpeg.wasm for browser compatibility
      */
-    async encodeFramesToVideo(frames, fps, audioBuffer, settings) {
+    async encodeFramesToVideo(frames, fps, audioBuffer, settings, duration, previewStartTime = 0) {
         return new Promise(async (resolve, reject) => {
             try {
                 // Create canvas for playback
@@ -208,11 +219,46 @@ class VideoEncoder {
                 // Create media stream from canvas
                 const stream = canvas.captureStream(fps);
 
-                // Add audio track if available
+                // Add audio track if available (trimmed to selected time range)
                 if (audioBuffer) {
                     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+
+                    // Calculate trimmed buffer parameters
+                    const sampleRate = audioBuffer.sampleRate;
+                    const fullDuration = audioBuffer.duration;
+                    const limitedDuration = Math.min(duration, fullDuration);
+
+                    let bufferToUse = audioBuffer;
+
+                    // Create trimmed buffer from selected start time
+                    if (limitedDuration < fullDuration || previewStartTime > 0) {
+                        const numberOfChannels = audioBuffer.numberOfChannels;
+                        const startSample = Math.floor(previewStartTime * sampleRate);
+                        const trimmedLength = Math.floor(limitedDuration * sampleRate);
+
+                        console.log('[VideoEncoder] Trimming audio:');
+                        console.log('[VideoEncoder]   Start time:', previewStartTime, 's');
+                        console.log('[VideoEncoder]   Duration:', limitedDuration, 's');
+                        console.log('[VideoEncoder]   Start sample:', startSample);
+                        console.log('[VideoEncoder]   Trimmed length:', trimmedLength);
+
+                        bufferToUse = audioContext.createBuffer(
+                            numberOfChannels,
+                            trimmedLength,
+                            sampleRate
+                        );
+
+                        // Copy audio data from selected position for each channel
+                        for (let channel = 0; channel < numberOfChannels; channel++) {
+                            const originalData = audioBuffer.getChannelData(channel);
+                            const trimmedData = bufferToUse.getChannelData(channel);
+                            // Copy from startSample to startSample + trimmedLength
+                            trimmedData.set(originalData.slice(startSample, startSample + trimmedLength));
+                        }
+                    }
+
                     const source = audioContext.createBufferSource();
-                    source.buffer = audioBuffer;
+                    source.buffer = bufferToUse;
 
                     const dest = audioContext.createMediaStreamDestination();
                     source.connect(dest);
@@ -275,6 +321,10 @@ class VideoEncoder {
 
                     const img = await this.loadImage(URL.createObjectURL(frames[i]));
                     ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                    // Update progress during encoding (90% to 99%)
+                    const encodingProgress = 90 + ((i / frames.length) * 9);
+                    this.updateProgress(`Encoding video... (${i + 1}/${frames.length})`, encodingProgress);
 
                     await this.sleep(frameDuration);
                 }

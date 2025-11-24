@@ -18,7 +18,8 @@ class AudioSpectrumApp {
             selectedFormat: DEFAULT_SETTINGS.format,
             settings: { ...DEFAULT_SETTINGS },
             isGenerating: false,
-            generatedVideo: null
+            generatedVideo: null,
+            downloadFormat: 'webm' // Default download format
         };
 
         // DOM elements
@@ -27,6 +28,15 @@ class AudioSpectrumApp {
         // Preview animation state
         this.previewAnimationId = null;
         this.previewTime = 0;
+
+        // Preview selection window state
+        this.previewSelectionState = {
+            startTime: 0,
+            duration: 15,
+            isDragging: false,
+            dragStartX: 0,
+            windowStartX: 0
+        };
 
         // Initialize
         this.init();
@@ -84,6 +94,7 @@ class AudioSpectrumApp {
         this.elements.waveformProgress = document.getElementById('waveformProgress');
         this.elements.waveformContainer = document.getElementById('waveformContainer');
         this.elements.waveformCursor = document.getElementById('waveformCursor');
+        this.elements.waveformSelectionWindow = document.getElementById('waveformSelectionWindow');
         this.elements.audioElement = document.getElementById('audioElement');
         this.elements.playButton = document.getElementById('playButton');
         this.elements.currentTime = document.getElementById('currentTime');
@@ -151,6 +162,7 @@ class AudioSpectrumApp {
         this.elements.downloadSize = document.getElementById('downloadSize');
         this.elements.downloadDuration = document.getElementById('downloadDuration');
         this.elements.downloadFormatDisplay = document.getElementById('downloadFormatDisplay');
+        this.elements.downloadFormatChips = document.getElementById('downloadFormatChips');
         this.elements.downloadBtn = document.getElementById('downloadBtn');
         this.elements.createAnotherBtn = document.getElementById('createAnotherBtn');
     }
@@ -238,6 +250,19 @@ class AudioSpectrumApp {
 
         this.elements.waveformContainer.addEventListener('mouseleave', () => {
             this.elements.waveformCursor.style.opacity = '0';
+        });
+
+        // Selection window dragging
+        this.elements.waveformSelectionWindow.addEventListener('mousedown', (e) => {
+            this.handleSelectionWindowDragStart(e);
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            this.handleSelectionWindowDrag(e);
+        });
+
+        document.addEventListener('mouseup', () => {
+            this.handleSelectionWindowDragEnd();
         });
 
         // Mode search and filter
@@ -404,6 +429,17 @@ class AudioSpectrumApp {
         // Cancel generation
         this.elements.cancelBtn.addEventListener('click', () => {
             this.cancelGeneration();
+        });
+
+        // Download format selector
+        const downloadFormatButtons = this.elements.downloadFormatChips.querySelectorAll('.chip');
+        downloadFormatButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                downloadFormatButtons.forEach(b => b.classList.remove('chip-selected'));
+                btn.classList.add('chip-selected');
+                this.state.downloadFormat = btn.dataset.format;
+                this.updateDownloadFormatDisplay();
+            });
         });
 
         // Download video
@@ -775,6 +811,9 @@ class AudioSpectrumApp {
             this.elements.audioElement.volume = 0.8;
             this.elements.totalTime.textContent = Utils.formatTime(audioInfo.duration);
 
+            // Show/hide selection window based on audio duration
+            this.updateSelectionWindowVisibility();
+
             // Show next sections
             this.elements.modeSection.style.display = 'block';
             this.elements.formatSection.style.display = 'block';
@@ -999,6 +1038,106 @@ class AudioSpectrumApp {
 
         this.elements.waveformCursor.style.left = `${x}px`;
         this.elements.waveformCursor.style.opacity = '1';
+    }
+
+    /**
+     * Show or hide the selection window based on audio duration
+     */
+    updateSelectionWindowVisibility() {
+        const audioInfo = this.audioProcessor.getInfo();
+        if (!audioInfo) return;
+
+        const PREVIEW_DURATION = 15;
+        const shouldShow = audioInfo.duration > PREVIEW_DURATION;
+
+        if (shouldShow) {
+            this.elements.waveformSelectionWindow.style.display = 'block';
+            this.updateSelectionWindowPosition();
+        } else {
+            this.elements.waveformSelectionWindow.style.display = 'none';
+        }
+    }
+
+    /**
+     * Update selection window position based on current state
+     */
+    updateSelectionWindowPosition() {
+        const audioInfo = this.audioProcessor.getInfo();
+        if (!audioInfo) return;
+
+        const rect = this.elements.waveformContainer.getBoundingClientRect();
+        const totalDuration = audioInfo.duration;
+        const PREVIEW_DURATION = 15;
+
+        // Calculate width as percentage of total waveform
+        const widthPercentage = (PREVIEW_DURATION / totalDuration) * 100;
+        this.elements.waveformSelectionWindow.style.width = `${widthPercentage}%`;
+
+        // Calculate left position based on start time
+        const leftPercentage = (this.previewSelectionState.startTime / totalDuration) * 100;
+        this.elements.waveformSelectionWindow.style.left = `${leftPercentage}%`;
+    }
+
+    /**
+     * Handle selection window drag start
+     */
+    handleSelectionWindowDragStart(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.previewSelectionState.isDragging = true;
+        this.previewSelectionState.dragStartX = e.clientX;
+
+        const rect = this.elements.waveformSelectionWindow.getBoundingClientRect();
+        const containerRect = this.elements.waveformContainer.getBoundingClientRect();
+        this.previewSelectionState.windowStartX = rect.left - containerRect.left;
+    }
+
+    /**
+     * Handle selection window drag
+     */
+    handleSelectionWindowDrag(e) {
+        if (!this.previewSelectionState.isDragging) return;
+
+        e.preventDefault();
+
+        const audioInfo = this.audioProcessor.getInfo();
+        if (!audioInfo) return;
+
+        const containerRect = this.elements.waveformContainer.getBoundingClientRect();
+        const deltaX = e.clientX - this.previewSelectionState.dragStartX;
+        const newX = this.previewSelectionState.windowStartX + deltaX;
+
+        // Calculate boundaries
+        const windowWidth = this.elements.waveformSelectionWindow.offsetWidth;
+        const maxX = containerRect.width - windowWidth;
+
+        // Constrain within bounds
+        const constrainedX = Math.max(0, Math.min(newX, maxX));
+
+        // Update start time based on position
+        const totalDuration = audioInfo.duration;
+        const PREVIEW_DURATION = 15;
+        const maxStartTime = totalDuration - PREVIEW_DURATION;
+
+        this.previewSelectionState.startTime = (constrainedX / containerRect.width) * totalDuration;
+        this.previewSelectionState.startTime = Math.max(0, Math.min(this.previewSelectionState.startTime, maxStartTime));
+
+        // Update visual position
+        this.updateSelectionWindowPosition();
+    }
+
+    /**
+     * Handle selection window drag end
+     */
+    handleSelectionWindowDragEnd() {
+        if (this.previewSelectionState.isDragging) {
+            this.previewSelectionState.isDragging = false;
+
+            // Log the selected time range for debugging
+            const endTime = this.previewSelectionState.startTime + this.previewSelectionState.duration;
+            console.log(`[Preview Selection] Selected time range: ${this.previewSelectionState.startTime.toFixed(2)}s - ${endTime.toFixed(2)}s`);
+        }
     }
 
     /**
@@ -1320,11 +1459,21 @@ class AudioSpectrumApp {
                 this.state.settings.height = parseInt(this.elements.customHeight.value);
             }
 
-            // Generate video
+            // Check if this will be a preview (15-second limit for songs longer than 15s)
+            const audioInfo = this.audioProcessor.getInfo();
+            const PREVIEW_DURATION = 15;
+            if (audioInfo && audioInfo.duration > PREVIEW_DURATION) {
+                const startTime = this.previewSelectionState.startTime;
+                const endTime = startTime + PREVIEW_DURATION;
+                Utils.showToast(`Generating ${PREVIEW_DURATION}-second preview (${startTime.toFixed(1)}s - ${endTime.toFixed(1)}s)`, 'info', 4000);
+            }
+
+            // Generate video with selected time range
             await this.videoEncoder.generateVideo(
                 this.audioProcessor,
                 this.visualizer,
-                this.state.settings
+                this.state.settings,
+                this.previewSelectionState.startTime
             );
 
         } catch (error) {
@@ -1393,10 +1542,21 @@ class AudioSpectrumApp {
             console.log('[Download] Created video URL:', videoUrl);
             this.elements.videoPreview.src = videoUrl;
 
+            // Reset download format to WebM
+            this.state.downloadFormat = 'webm';
+            const downloadFormatButtons = this.elements.downloadFormatChips.querySelectorAll('.chip');
+            downloadFormatButtons.forEach(btn => {
+                if (btn.dataset.format === 'webm') {
+                    btn.classList.add('chip-selected');
+                } else {
+                    btn.classList.remove('chip-selected');
+                }
+            });
+
             // Update file info
             this.elements.downloadSize.textContent = Utils.formatBytes(this.state.generatedVideo.size);
             this.elements.downloadDuration.textContent = Utils.formatTime(this.audioProcessor.duration);
-            this.elements.downloadFormatDisplay.textContent = 'WebM';
+            this.updateDownloadFormatDisplay();
 
             // Scroll to download section
             setTimeout(() => {
@@ -1411,20 +1571,39 @@ class AudioSpectrumApp {
     }
 
     /**
+     * Update download format display
+     */
+    updateDownloadFormatDisplay() {
+        const formatNames = {
+            'webm': 'WebM (VP9)',
+            'mp4': 'H.264 MP4',
+            'mov': 'MOV'
+        };
+
+        this.elements.downloadFormatDisplay.textContent = formatNames[this.state.downloadFormat] || 'WebM';
+    }
+
+    /**
      * Download video
      */
     downloadVideo() {
         if (!this.state.generatedVideo) return;
 
-        // All videos are generated as WebM using the browser's MediaRecorder API
-        const extension = 'webm';
+        // Use selected download format
+        const extension = this.state.downloadFormat;
 
         // Get original audio filename if available
         const originalFilename = this.state.audioFile ? this.state.audioFile.name : null;
         const filename = Utils.createFilename(this.state.selectedMode, extension, originalFilename);
 
         Utils.downloadBlob(this.state.generatedVideo, filename);
-        Utils.showToast('Download started!', 'success');
+
+        // Show appropriate message based on format
+        if (extension === 'webm') {
+            Utils.showToast('Download started!', 'success');
+        } else {
+            Utils.showToast(`Downloaded as .${extension}. Note: Video is encoded as WebM. You may need to convert it for full compatibility.`, 'info', 5000);
+        }
     }
 
     /**
@@ -1450,7 +1629,8 @@ class AudioSpectrumApp {
             selectedFormat: DEFAULT_SETTINGS.format,
             settings: { ...DEFAULT_SETTINGS },
             isGenerating: false,
-            generatedVideo: null
+            generatedVideo: null,
+            downloadFormat: 'webm'
         };
 
         // Reset UI

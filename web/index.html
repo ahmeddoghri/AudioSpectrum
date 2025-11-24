@@ -102,6 +102,11 @@
                                     <canvas id="waveformCanvas" width="800" height="100"></canvas>
                                     <canvas id="waveformProgress" width="800" height="100"></canvas>
                                     <div class="waveform-cursor" id="waveformCursor"></div>
+                                    <!-- 15-second selection window (shown only for songs > 15s) -->
+                                    <div class="waveform-selection-window" id="waveformSelectionWindow" style="display: none;">
+                                        <div class="selection-window-handle"></div>
+                                        <div class="selection-window-label">15s Preview</div>
+                                    </div>
                                 </div>
                             </div>
 
@@ -418,17 +423,28 @@
                     <!-- Format Selection -->
                     <div class="download-format-selector">
                         <label>Download Format:</label>
-                        <div class="format-options">
-                            <label class="format-option">
-                                <input type="radio" name="downloadFormat" value="webm" checked>
-                                <div class="format-option-content">
-                                    <span class="format-option-name">WebM (VP9)</span>
-                                    <span class="format-option-desc">High quality video with audio. Use a converter for MP4.</span>
-                                </div>
-                            </label>
+                        <div class="chip-group" id="downloadFormatChips">
+                            <button class="chip chip-selected" data-format="webm">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-right: 4px;">
+                                    <path d="M2 4L8 10L14 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                                WebM (VP9)
+                            </button>
+                            <button class="chip" data-format="mp4">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-right: 4px;">
+                                    <rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                                </svg>
+                                H.264 MP4
+                            </button>
+                            <button class="chip" data-format="mov">
+                                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="margin-right: 4px;">
+                                    <circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="2" fill="none"/>
+                                </svg>
+                                MOV
+                            </button>
                         </div>
-                        <p style="margin-top: 12px; font-size: 14px; color: var(--color-text-secondary);">
-                            💡 <strong>Tip:</strong> To convert to MP4 for QuickTime Player, use a free online converter like <a href="https://cloudconvert.com/webm-to-mp4" target="_blank" style="color: var(--color-primary);">CloudConvert</a> or install <a href="https://handbrake.fr/" target="_blank" style="color: var(--color-primary);">HandBrake</a>.
+                        <p style="margin-top: 12px; font-size: 14px; color: var(--color-text-secondary);" id="formatTip">
+                            💡 <strong>Tip:</strong> WebM provides the best quality. For MP4/MOV compatibility, the video will be encoded as WebM and can be converted using free tools like <a href="https://cloudconvert.com/webm-to-mp4" target="_blank" style="color: var(--color-primary);">CloudConvert</a> or <a href="https://handbrake.fr/" target="_blank" style="color: var(--color-primary);">HandBrake</a>.
                         </p>
                     </div>
 

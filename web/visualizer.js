@@ -11,10 +11,14 @@ class Visualizer {
 
         this.centerX = canvas.width / 2;
         this.centerY = canvas.height / 2;
-        this.maxRadius = Math.min(canvas.width, canvas.height) / 2 - 80;
 
-        // Scale innerRadius for preview mode (smaller canvases)
-        this.isPreviewMode = canvas.width < 600; // Preview canvas is typically 400x400 or smaller
+        // Calculate scale factor: ratio of current canvas size to target video dimensions
+        // This ensures preview renders proportionally to final video
+        const targetSize = Math.min(this.settings.width || 1080, this.settings.height || 1080);
+        const currentSize = Math.min(canvas.width, canvas.height);
+        this.scaleFactor = currentSize / targetSize;
+
+        this.maxRadius = Math.min(canvas.width, canvas.height) / 2 - (80 * this.scaleFactor);
 
         this.frameCounter = 0;
         this.animationId = null;
@@ -35,26 +39,28 @@ class Visualizer {
         this.canvas.height = height;
         this.centerX = width / 2;
         this.centerY = height / 2;
-        this.maxRadius = Math.min(width, height) / 2 - 80;
-        this.isPreviewMode = width < 600;
+
+        // Recalculate scale factor for new dimensions
+        const targetSize = Math.min(this.settings.width || 1080, this.settings.height || 1080);
+        const currentSize = Math.min(width, height);
+        this.scaleFactor = currentSize / targetSize;
+
+        this.maxRadius = Math.min(width, height) / 2 - (80 * this.scaleFactor);
     }
 
     /**
-     * Get effective inner radius (scaled for preview mode)
+     * Get effective inner radius (scaled proportionally for all canvas sizes)
      */
     getEffectiveInnerRadius() {
         const baseInnerRadius = this.settings.innerRadius || 180;
-        let effectiveRadius;
-        if (this.isPreviewMode) {
-            // Scale down to fit within canvas: use 30-40% of maxRadius
-            effectiveRadius = Math.min(baseInnerRadius, this.maxRadius * 0.35);
-            if (this.frameCounter === 0) {
-                console.log('[Visualizer] Preview mode - baseInnerRadius:', baseInnerRadius,
-                           'maxRadius:', this.maxRadius, 'effectiveRadius:', effectiveRadius);
-            }
-        } else {
-            effectiveRadius = baseInnerRadius;
+        // Scale inner radius proportionally based on canvas size
+        const effectiveRadius = baseInnerRadius * this.scaleFactor;
+
+        if (this.frameCounter === 0) {
+            console.log('[Visualizer] Scaling - baseInnerRadius:', baseInnerRadius,
+                       'scaleFactor:', this.scaleFactor, 'effectiveRadius:', effectiveRadius);
         }
+
         return effectiveRadius;
     }
 
@@ -63,6 +69,14 @@ class Visualizer {
      */
     updateSettings(newSettings) {
         this.settings = { ...this.settings, ...newSettings };
+
+        // Recalculate scale factor if width/height changed
+        if (newSettings.width !== undefined || newSettings.height !== undefined) {
+            const targetSize = Math.min(this.settings.width || 1080, this.settings.height || 1080);
+            const currentSize = Math.min(this.canvas.width, this.canvas.height);
+            this.scaleFactor = currentSize / targetSize;
+            this.maxRadius = Math.min(this.canvas.width, this.canvas.height) / 2 - (80 * this.scaleFactor);
+        }
     }
 
     /**
@@ -107,6 +121,17 @@ class Visualizer {
 
         this.ctx.fillStyle = gradient;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    /**
+     * Parse RGB color string to array
+     */
+    parseRgbColor(rgbString) {
+        const match = rgbString.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+        if (match) {
+            return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])];
+        }
+        return [255, 255, 255]; // Default to white if parsing fails
     }
 
     /**
@@ -179,7 +204,7 @@ class Visualizer {
             console.log('[Visualizer] === First render ===');
             console.log('[Visualizer] Mode:', this.settings.mode);
             console.log('[Visualizer] Canvas:', this.canvas.width + 'x' + this.canvas.height);
-            console.log('[Visualizer] isPreviewMode:', this.isPreviewMode);
+            console.log('[Visualizer] Scale factor:', this.scaleFactor);
             console.log('[Visualizer] Canvas element:', this.canvas);
             console.log('[Visualizer] Canvas context:', this.ctx);
             console.log('[Visualizer] Magnitudes length:', magnitudes.length);
@@ -3558,9 +3583,10 @@ class Visualizer {
                 const angle = Math.random() * Math.PI * 2;
                 const particleSpeed = 5 + Math.random() * speed * (avgMagnitude + 0.5);
 
-                // Rainbow colors for jazz energy
-                const hue = Math.floor(Math.random() * 360);
-                const color = this.hsvToRgb(hue, 100, 100);
+                // Use color scheme instead of hardcoded rainbow
+                const colorIndex = Math.floor(Math.random() * magnitudes.length);
+                const colorStr = this.getColor(colorIndex, magnitudes.length);
+                const color = this.parseRgbColor(colorStr);
 
                 this.fireworkParticles.push({
                     x: this.centerX,
@@ -3586,8 +3612,10 @@ class Visualizer {
                     const angle = Math.random() * Math.PI * 2;
                     const particleSpeed = 3 + Math.random() * 10;
 
-                    const hue = Math.floor(Math.random() * 360);
-                    const color = this.hsvToRgb(hue, 100, 100);
+                    // Use color scheme
+                    const colorIndex = Math.floor(Math.random() * magnitudes.length);
+                    const colorStr = this.getColor(colorIndex, magnitudes.length);
+                    const color = this.parseRgbColor(colorStr);
 
                     this.fireworkParticles.push({
                         x: burstX,
@@ -3664,16 +3692,9 @@ class Visualizer {
                 const particleSpeed = 3 + magnitude * speed;
                 const size = 2 + Math.floor(magnitude * particleSize);
 
-                // Neon colors (cyan, magenta, pink)
-                const colorChoice = i % 3;
-                let color;
-                if (colorChoice === 0) {
-                    color = [0, 255, 255]; // Cyan
-                } else if (colorChoice === 1) {
-                    color = [255, 0, 255]; // Magenta
-                } else {
-                    color = [200, 100, 255]; // Pink
-                }
+                // Use color scheme instead of hardcoded neon colors
+                const colorStr = this.getColor(i, numBars);
+                const color = this.parseRgbColor(colorStr);
 
                 this.rainParticles.push({
                     x: x,
@@ -3821,23 +3842,25 @@ class Visualizer {
         }
 
         // === TAPE BETWEEN REELS (visible magnetic tape) ===
-        const tapeTopY = reelY - reelOuterRadius + 5;
-        const tapeBottomY = reelY + reelOuterRadius - 5;
-        const tapeThickness = 8;
+        // Draw horizontal tape bands connecting the two reels
+        const tapeThickness = 6;
+        const tapeOffsetFromCenter = 15;
 
         this.ctx.fillStyle = 'rgb(15, 10, 8)';
-        // Top tape section
+
+        // Top tape band (above center)
         this.ctx.fillRect(
-            leftReelX + reelOuterRadius - 5,
-            tapeTopY - tapeThickness,
-            rightReelX - leftReelX - 2 * (reelOuterRadius - 5),
+            leftReelX + reelOuterRadius,
+            reelY - tapeOffsetFromCenter - tapeThickness / 2,
+            rightReelX - leftReelX - 2 * reelOuterRadius,
             tapeThickness
         );
-        // Bottom tape section
+
+        // Bottom tape band (below center)
         this.ctx.fillRect(
-            leftReelX + reelOuterRadius - 5,
-            tapeBottomY,
-            rightReelX - leftReelX - 2 * (reelOuterRadius - 5),
+            leftReelX + reelOuterRadius,
+            reelY + tapeOffsetFromCenter - tapeThickness / 2,
+            rightReelX - leftReelX - 2 * reelOuterRadius,
             tapeThickness
         );
 
@@ -4017,11 +4040,10 @@ class Visualizer {
                 layerPoints.push({ x, y });
             }
 
-            // Color: deep purple to pink
-            const hue = 140 + layer * 5 + Math.floor(avgMagnitude * 20); // Purple-pink range
-            const saturation = 200 + Math.floor(avgMagnitude * 55);
-            const value = 100 + Math.floor(avgMagnitude * 100) - layer * 15;
-            const rgb = this.hsvToRgb(hue, saturation / 255 * 100, value / 255 * 100);
+            // Use color scheme for glow layers
+            const colorIndex = Math.floor((layer / glowLayers) * magnitudes.length);
+            const colorStr = this.getColor(colorIndex, magnitudes.length);
+            const rgb = this.parseRgbColor(colorStr);
 
             const alpha = 0.3 / layer;
             this.ctx.fillStyle = `rgba(${Math.floor(rgb[0] * alpha)}, ${Math.floor(rgb[1] * alpha)}, ${Math.floor(rgb[2] * alpha)}, ${alpha})`;
@@ -4036,11 +4058,10 @@ class Visualizer {
             this.ctx.fill();
         }
 
-        // Main aura body
-        const mainHue = 150 + Math.floor(avgMagnitude * 30);
-        const mainSaturation = 220 + Math.floor(avgMagnitude * 35);
-        const mainValue = 180 + Math.floor(avgMagnitude * 75);
-        const mainRgb = this.hsvToRgb(mainHue, mainSaturation / 255 * 100, mainValue / 255 * 100);
+        // Main aura body - use color scheme
+        const mainColorIndex = Math.floor(magnitudes.length / 2);
+        const mainColorStr = this.getColor(mainColorIndex, magnitudes.length);
+        const mainRgb = this.parseRgbColor(mainColorStr);
 
         this.ctx.fillStyle = `rgb(${mainRgb[0]}, ${mainRgb[1]}, ${mainRgb[2]})`;
         this.ctx.beginPath();
@@ -4051,8 +4072,10 @@ class Visualizer {
         this.ctx.closePath();
         this.ctx.fill();
 
-        // Bright outline
-        this.ctx.strokeStyle = 'rgb(255, 200, 255)';
+        // Bright outline - use color scheme
+        const outlineColorIndex = magnitudes.length - 1;
+        const outlineColorStr = this.getColor(outlineColorIndex, magnitudes.length);
+        this.ctx.strokeStyle = outlineColorStr;
         this.ctx.lineWidth = 2;
         this.ctx.beginPath();
         this.ctx.moveTo(points[0].x, points[0].y);
@@ -4512,13 +4535,54 @@ class Visualizer {
      * Mode 17: Retro Cassette
      */
     renderRetroCassette(magnitudes) {
-        const centerY = this.canvas.height / 2;
-        const barHeight = 100;
+        const centerY = this.canvas.height * 0.65;
+        const barHeight = 120;
         const numBars = Math.min(magnitudes.length, 64);
         const barWidth = this.canvas.width * 0.6 / numBars;
         const startX = this.canvas.width * 0.2;
 
+        // Draw spinning reels first (so they appear behind bars)
+        const time = this.frameCounter * 0.1;
+        const reel1X = this.canvas.width * 0.3;
+        const reel2X = this.canvas.width * 0.7;
+        const reelY = this.canvas.height * 0.25;
+        const reelRadius = 50;
+
+        for (const reelX of [reel1X, reel2X]) {
+            // Outer circle
+            this.ctx.fillStyle = 'rgba(50, 50, 50, 0.3)';
+            this.ctx.beginPath();
+            this.ctx.arc(reelX, reelY, reelRadius, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            this.ctx.strokeStyle = this.getColor(30, numBars);
+            this.ctx.lineWidth = 3;
+            this.ctx.beginPath();
+            this.ctx.arc(reelX, reelY, reelRadius, 0, Math.PI * 2);
+            this.ctx.stroke();
+
+            // Inner hub
+            this.ctx.fillStyle = this.getColor(20, numBars);
+            this.ctx.beginPath();
+            this.ctx.arc(reelX, reelY, 15, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Spokes
+            this.ctx.strokeStyle = this.getColor(30, numBars);
+            this.ctx.lineWidth = 2;
+            for (let s = 0; s < 6; s++) {
+                const angle = (s / 6) * Math.PI * 2 + time;
+                this.ctx.beginPath();
+                this.ctx.moveTo(reelX + 15 * Math.cos(angle), reelY + 15 * Math.sin(angle));
+                this.ctx.lineTo(reelX + reelRadius * 0.85 * Math.cos(angle), reelY + reelRadius * 0.85 * Math.sin(angle));
+                this.ctx.stroke();
+            }
+        }
+
         // Draw VU meter background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+        this.ctx.fillRect(startX - 10, centerY - barHeight / 2 - 10, this.canvas.width * 0.6 + 20, barHeight + 20);
+
         this.ctx.strokeStyle = this.getColor(0, numBars);
         this.ctx.lineWidth = 3;
         this.ctx.strokeRect(startX - 10, centerY - barHeight / 2 - 10, this.canvas.width * 0.6 + 20, barHeight + 20);
@@ -4533,30 +4597,6 @@ class Visualizer {
             const color = this.getColor(i, numBars);
             this.ctx.fillStyle = color;
             this.ctx.fillRect(x, y, barWidth * 0.8, height);
-        }
-
-        // Draw spinning reels
-        const time = this.frameCounter * 0.1;
-        const reel1X = this.canvas.width * 0.3;
-        const reel2X = this.canvas.width * 0.7;
-        const reelY = this.canvas.height * 0.3;
-        const reelRadius = 40;
-
-        for (const reelX of [reel1X, reel2X]) {
-            this.ctx.strokeStyle = this.getColor(30, numBars);
-            this.ctx.lineWidth = 3;
-            this.ctx.beginPath();
-            this.ctx.arc(reelX, reelY, reelRadius, 0, Math.PI * 2);
-            this.ctx.stroke();
-
-            // Spokes
-            for (let s = 0; s < 6; s++) {
-                const angle = (s / 6) * Math.PI * 2 + time;
-                this.ctx.beginPath();
-                this.ctx.moveTo(reelX, reelY);
-                this.ctx.lineTo(reelX + Math.cos(angle) * reelRadius, reelY + Math.sin(angle) * reelRadius);
-                this.ctx.stroke();
-            }
         }
     }
 
@@ -5813,10 +5853,8 @@ class Visualizer {
             const centerX = (baseX + tipX) / 2;
             const centerY = (baseY + tipY) / 2;
 
-            // Pastel colors
-            const hue = (i * 15 + this.frameCounter) % 360;
-            const rgb = this.hsvToRgb(hue, 60 + magnitude * 40, 85 + magnitude * 15);
-            const color = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+            // Use color scheme for petals
+            const color = this.getColor(i, numPetals);
 
             this.ctx.fillStyle = color;
             this.ctx.shadowColor = color;
@@ -5830,11 +5868,12 @@ class Visualizer {
             this.ctx.restore();
         }
 
-        // Flower center
+        // Flower center - use color scheme
         const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
         const centerRadius = 30 + avgMagnitude * 50;
         this.ctx.shadowBlur = 20;
-        this.ctx.fillStyle = '#FFD93D';
+        const centerColorIndex = Math.floor(magnitudes.length / 2);
+        this.ctx.fillStyle = this.getColor(centerColorIndex, magnitudes.length);
         this.ctx.beginPath();
         this.ctx.arc(this.centerX, this.centerY, centerRadius, 0, Math.PI * 2);
         this.ctx.fill();
@@ -5857,9 +5896,10 @@ class Visualizer {
         const trunkBase = { x: this.centerX + trunkSway, y: this.canvas.height - 50 };
         const trunkTop = { x: this.centerX + trunkSway, y: this.centerY };
 
-        // Draw trunk
+        // Draw trunk - use color scheme
         const trunkThickness = 10 + avgMagnitude * 15;
-        this.ctx.strokeStyle = '#2D5016';
+        const trunkColorIndex = 0;
+        this.ctx.strokeStyle = this.getColor(trunkColorIndex, magnitudes.length);
         this.ctx.lineWidth = trunkThickness;
         this.ctx.lineCap = 'round';
         this.ctx.beginPath();
@@ -5890,18 +5930,22 @@ class Visualizer {
             const endY = branch.y + Math.sin(branch.angle) * branch.length;
 
             this.ctx.globalAlpha = branch.life;
-            this.ctx.strokeStyle = `rgba(50, 100, 50, ${branch.life})`;
+            const branchColorIndex = Math.floor(branch.generation * 2) % magnitudes.length;
+            const branchColorStr = this.getColor(branchColorIndex, magnitudes.length);
+            const branchRgb = this.parseRgbColor(branchColorStr);
+            this.ctx.strokeStyle = `rgba(${branchRgb[0]}, ${branchRgb[1]}, ${branchRgb[2]}, ${branch.life})`;
             this.ctx.lineWidth = branch.thickness;
             this.ctx.beginPath();
             this.ctx.moveTo(branch.x, branch.y);
             this.ctx.lineTo(endX, endY);
             this.ctx.stroke();
 
-            // Bloom flowers on treble
+            // Bloom flowers on treble - use color scheme
             if (treble > 0.4 && branch.generation > 0) {
                 const bloomSize = 3 + treble * 10;
-                const hue = treble * 180;
-                const rgb = this.hsvToRgb(hue, 100, 100);
+                const bloomColorIndex = magnitudes.length - 1;
+                const bloomColorStr = this.getColor(bloomColorIndex, magnitudes.length);
+                const rgb = this.parseRgbColor(bloomColorStr);
                 this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${branch.life})`;
                 this.ctx.beginPath();
                 this.ctx.arc(endX, endY, bloomSize, 0, Math.PI * 2);
@@ -5931,10 +5975,8 @@ class Visualizer {
             const xLeft = i * blockWidth + 5;
             const xRight = (i + 1) * blockWidth - 5;
 
-            // Building color
-            const hue = (i / numBlocks) * 180;
-            const rgb = this.hsvToRgb(hue, 70 + magnitude * 30, 40 + magnitude * 60);
-            this.ctx.fillStyle = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+            // Building color - use color scheme
+            this.ctx.fillStyle = this.getColor(i, numBlocks);
             this.ctx.fillRect(xLeft, topY, xRight - xLeft, baseY - topY);
 
             // Windows
@@ -5975,14 +6017,15 @@ class Visualizer {
                     y: this.centerY + Math.sin(angle) * edgeDist,
                     vx: 0,
                     vy: 0,
-                    hue: treble * 180
+                    colorIndex: Math.floor(Math.random() * magnitudes.length)
                 });
             }
         }
 
-        // Black hole
+        // Black hole - use color scheme
         const wellRadius = 30 + bass * 50;
-        this.ctx.fillStyle = '#FFFFFF';
+        const wellColorIndex = Math.floor(magnitudes.length / 2);
+        this.ctx.fillStyle = this.getColor(wellColorIndex, magnitudes.length);
         this.ctx.beginPath();
         this.ctx.arc(this.centerX, this.centerY, wellRadius, 0, Math.PI * 2);
         this.ctx.fill();
@@ -6011,8 +6054,7 @@ class Visualizer {
 
             if (dist > wellRadius && p.x >= 0 && p.x < this.canvas.width &&
                 p.y >= 0 && p.y < this.canvas.height) {
-                const rgb = this.hsvToRgb(p.hue, 100, 100);
-                this.ctx.fillStyle = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+                this.ctx.fillStyle = this.getColor(p.colorIndex, magnitudes.length);
                 this.ctx.beginPath();
                 this.ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
                 this.ctx.fill();
@@ -6056,9 +6098,9 @@ class Visualizer {
             if (ball.x < radius || ball.x > this.canvas.width - radius) ball.vx *= -1;
             if (ball.y < radius || ball.y > this.canvas.height - radius) ball.vy *= -1;
 
-            // Color
-            const hue = (i / numBalls) * 180;
-            const rgb = this.hsvToRgb(hue, 80 + magnitude * 20, 60 + magnitude * 40);
+            // Color - use color scheme
+            const colorStr = this.getColor(i, numBalls);
+            const rgb = this.parseRgbColor(colorStr);
 
             // Draw with gradient
             for (let r = radius; r > 0; r -= 5) {
@@ -6097,9 +6139,9 @@ class Visualizer {
                 points.push({ x, y });
             }
 
-            const hue = 60 + curtainIdx * 15;
-            const rgb = this.hsvToRgb(hue, 70 + treble * 30, 50 + bass * 50);
-            this.ctx.strokeStyle = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+            // Use color scheme for curtain
+            const colorStr = this.getColor(curtainIdx, numCurtains);
+            this.ctx.strokeStyle = colorStr;
             this.ctx.lineWidth = 3;
             this.ctx.shadowBlur = 15;
             this.ctx.shadowColor = this.ctx.strokeStyle;
@@ -6134,14 +6176,14 @@ class Visualizer {
                 const x2 = (col + 1) * paneWidth - 2;
                 const y2 = (row + 1) * paneHeight - 2;
 
-                const hue = (paneIdx / magnitudes.length) * 180;
-                const rgb = this.hsvToRgb(hue, 100, 30 + magnitude * 70);
-                this.ctx.fillStyle = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+                // Use color scheme for glass pane
+                const colorStr = this.getColor(paneIdx, magnitudes.length);
+                this.ctx.fillStyle = colorStr;
                 this.ctx.fillRect(x1, y1, x2 - x1, y2 - y1);
 
                 if (magnitude > 0.5) {
                     this.ctx.shadowBlur = magnitude * 20;
-                    this.ctx.shadowColor = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+                    this.ctx.shadowColor = colorStr;
                     this.ctx.fillRect(x1, y1, x2 - x1, y2 - y1);
                     this.ctx.shadowBlur = 0;
                 }
@@ -6257,9 +6299,9 @@ class Visualizer {
             const magnitude = magnitudes[Math.min(freqIdx, magnitudes.length - 1)];
             const radius = this.maxRadius * scale * (0.5 + magnitude * 0.8);
 
-            const hue = ((depth + this.frameCounter * 0.01) * 180) % 180;
-            const rgb = this.hsvToRgb(hue, 80 + magnitude * 20, Math.floor(60 * (1 - depth) + magnitude * 40));
-            this.ctx.strokeStyle = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+            // Use color scheme for tunnel ring
+            const colorIndex = Math.floor(depth * magnitudes.length);
+            this.ctx.strokeStyle = this.getColor(colorIndex, magnitudes.length);
             this.ctx.lineWidth = 2 + magnitude * 8;
 
             this.ctx.beginPath();
@@ -6446,10 +6488,11 @@ class Visualizer {
             points.push({ x, y });
         }
 
-        // Draw lines
+        // Draw lines - use color scheme
         const numLines = mids * 50 + treble * 100;
-        const hue = treble * 180;
-        const rgb = this.hsvToRgb(hue, 80, 60);
+        const lineColorIndex = Math.floor(magnitudes.length / 2);
+        const lineColorStr = this.getColor(lineColorIndex, magnitudes.length);
+        const rgb = this.parseRgbColor(lineColorStr);
 
         this.ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.3)`;
         this.ctx.lineWidth = 1;
@@ -6465,8 +6508,9 @@ class Visualizer {
             }
         }
 
-        // Draw points
-        this.ctx.fillStyle = '#FFFFFF';
+        // Draw points - use color scheme
+        const pointColorIndex = magnitudes.length - 1;
+        this.ctx.fillStyle = this.getColor(pointColorIndex, magnitudes.length);
         points.forEach(point => {
             this.ctx.beginPath();
             this.ctx.arc(point.x, point.y, 4, 0, Math.PI * 2);
@@ -6494,9 +6538,9 @@ class Visualizer {
             const flameY = this.canvas.height - 100 - Math.random() * fireHeight;
             const flameSize = 20 + bass * 30;
 
-            const hue = 10 + Math.random() * 20;
-            const rgb = this.hsvToRgb(hue, 100, 78 + Math.random() * 22);
-            this.ctx.fillStyle = `rgb(${rgb[0]}, ${rgb[1]}, ${rgb[2]})`;
+            // Use color scheme for flames
+            const flameColorIndex = Math.floor(Math.random() * magnitudes.length);
+            this.ctx.fillStyle = this.getColor(flameColorIndex, magnitudes.length);
             this.ctx.beginPath();
             this.ctx.arc(flameX, flameY, flameSize, 0, Math.PI * 2);
             this.ctx.fill();
@@ -6524,7 +6568,10 @@ class Visualizer {
 
             if (ember.life > 0 && ember.y < this.canvas.height) {
                 const alpha = ember.life;
-                this.ctx.fillStyle = `rgba(100, 150, 255, ${alpha})`;
+                const emberColorIndex = Math.floor(magnitudes.length * 0.75);
+                const emberColorStr = this.getColor(emberColorIndex, magnitudes.length);
+                const emberRgb = this.parseRgbColor(emberColorStr);
+                this.ctx.fillStyle = `rgba(${emberRgb[0]}, ${emberRgb[1]}, ${emberRgb[2]}, ${alpha})`;
                 this.ctx.beginPath();
                 this.ctx.arc(ember.x, ember.y, 3, 0, Math.PI * 2);
                 this.ctx.fill();
@@ -6549,8 +6596,9 @@ class Visualizer {
                 const angle = (i / 30) * segmentAngle;
                 const distance = 100 + magnitude * 300;
 
-                const hue = (i / 30) * 360;
-                const [r, g, b] = this.hsvToRgb(hue, 1.0, magnitude);
+                // Use color scheme for kaleidoscope particles
+                const colorStr = this.getColor(i, magnitudes.length);
+                const [r, g, b] = this.parseRgbColor(colorStr);
 
                 // Draw in all mirrored segments
                 for (let seg = 0; seg < numSegments; seg++) {
@@ -6623,14 +6671,15 @@ class Visualizer {
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4))
             .reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
 
-        // Central sun pulses
+        // Central sun pulses - use color scheme
         const sunRadius = 40 + avgMagnitude * 40;
-        this.ctx.fillStyle = 'rgb(100, 200, 255)';
+        const sunColorIndex = Math.floor(magnitudes.length / 2);
+        this.ctx.fillStyle = this.getColor(sunColorIndex, magnitudes.length);
         this.ctx.beginPath();
         this.ctx.arc(this.centerX, this.centerY, sunRadius, 0, Math.PI * 2);
         this.ctx.fill();
 
-        this.ctx.strokeStyle = 'rgb(150, 220, 255)';
+        this.ctx.strokeStyle = this.getColor(sunColorIndex + 1, magnitudes.length);
         this.ctx.lineWidth = 2;
         this.ctx.beginPath();
         this.ctx.arc(this.centerX, this.centerY, sunRadius + 10, 0, Math.PI * 2);
@@ -6647,11 +6696,8 @@ class Visualizer {
             const planetY = this.centerY + Math.sin(angle) * orbitRadius;
             const planetSize = 10 + magnitude * 25;
 
-            // Planet color
-            const hue = (i / numPlanets) * 360;
-            const [r, g, b] = this.hsvToRgb(hue, 0.8, 1.0);
-
-            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            // Planet color - use color scheme
+            this.ctx.fillStyle = this.getColor(i, numPlanets);
             this.ctx.beginPath();
             this.ctx.arc(planetX, planetY, planetSize, 0, Math.PI * 2);
             this.ctx.fill();
@@ -6664,7 +6710,8 @@ class Visualizer {
                 const moonY = planetY + Math.sin(moonAngle) * moonDistance;
                 const moonSize = 3 + treble * 8;
 
-                this.ctx.fillStyle = 'rgb(200, 200, 200)';
+                const moonColorIndex = magnitudes.length - 1;
+                this.ctx.fillStyle = this.getColor(moonColorIndex, magnitudes.length);
                 this.ctx.beginPath();
                 this.ctx.arc(moonX, moonY, moonSize, 0, Math.PI * 2);
                 this.ctx.fill();
@@ -6981,7 +7028,7 @@ class Visualizer {
                     x: (i / 30) * this.canvas.width,
                     y: this.canvas.height - 50,
                     vy: 0,
-                    colorHue: (i / 30) * 360
+                    colorIndex: i
                 });
             }
         }
@@ -7009,11 +7056,9 @@ class Visualizer {
                 ball.vy *= -0.7;
             }
 
-            // Draw ball
+            // Draw ball - use color scheme
             const ballSize = 10 + magnitude * 20;
-            const [r, g, b] = this.hsvToRgb(ball.colorHue, 1.0, 1.0);
-
-            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.fillStyle = this.getColor(ball.colorIndex, magnitudes.length);
             this.ctx.beginPath();
             this.ctx.arc(ball.x, ball.y, ballSize, 0, Math.PI * 2);
             this.ctx.fill();
@@ -7040,7 +7085,7 @@ class Visualizer {
                 radius: 10,
                 maxRadius: 150 + bass * 200,
                 life: 1.0,
-                hue: bass * 60
+                colorIndex: Math.floor(Math.random() * magnitudes.length)
             });
         }
 
@@ -7053,7 +7098,7 @@ class Visualizer {
                     radius: 5,
                     maxRadius: 20 + treble * 40,
                     life: 1.0,
-                    hue: 120 + treble * 60
+                    colorIndex: Math.floor(Math.random() * magnitudes.length)
                 });
             }
         }
@@ -7064,7 +7109,9 @@ class Visualizer {
             bloom.life -= 0.01;
 
             if (bloom.life > 0 && bloom.radius < bloom.maxRadius) {
-                const [r, g, b] = this.hsvToRgb(bloom.hue, 0.8, bloom.life);
+                // Use color scheme for bloom
+                const bloomColorStr = this.getColor(bloom.colorIndex, magnitudes.length);
+                const [r, g, b] = this.parseRgbColor(bloomColorStr);
 
                 this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${bloom.life})`;
                 this.ctx.lineWidth = 2;
@@ -7168,12 +7215,9 @@ class Visualizer {
             // Morphing size
             const size = 20 + bass * 40 + Math.sin(this.latentMorphState * 2 + i) * 20;
 
-            // Dream-like colors
-            const hue = (this.latentMorphState * 50 + i * 12) % 360;
-            const saturation = 70 + treble * 30;
-            const value = 60 + avgMagnitude * 40;
-
-            const [r, g, b] = this.hsvToRgb(hue, saturation / 100, value / 100);
+            // Dream-like colors - use color scheme
+            const colorStr = this.getColor(i, numShapes);
+            const [r, g, b] = this.parseRgbColor(colorStr);
 
             // Draw with glow effect
             this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.7)`;
@@ -7202,14 +7246,13 @@ class Visualizer {
             for (let i = 0; i < numPixels; i++) {
                 // Dominant frequency determines color
                 const dominantFreqIdx = magnitudes.indexOf(Math.max(...magnitudes));
-                const hue = (dominantFreqIdx / magnitudes.length) * 360;
 
                 this.pixelStorm.push({
                     x: Math.random() * this.canvas.width,
                     y: 0,
                     vx: windDirection + (Math.random() - 0.5) * 3,
                     vy: 3 + avgMagnitude * 5,
-                    hue: hue,
+                    colorIndex: dominantFreqIdx,
                     life: 1.0
                 });
             }
@@ -7222,7 +7265,8 @@ class Visualizer {
             pixel.life -= 0.01;
 
             if (pixel.life > 0 && pixel.y < this.canvas.height) {
-                const [r, g, b] = this.hsvToRgb(pixel.hue / 360, 1, 1);
+                const colorStr = this.getColor(pixel.colorIndex, magnitudes.length);
+                const [r, g, b] = this.parseRgbColor(colorStr);
 
                 // 8-bit pixel (small rectangle)
                 this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
@@ -7496,12 +7540,9 @@ class Visualizer {
                 const screenX = centerX + worldX - worldZ * 0.5;
                 const screenY = centerY + worldZ * 0.5 - height;
 
-                // Color based on height
-                const hue = (height / 100) * 120;
-                const color = this.hsvToRgb(hue / 360, 0.8, 0.9);
-
-                // Draw voxel as diamond shape
-                this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+                // Color based on height - use color scheme
+                const colorIndex = Math.floor(((x + z * gridSize) / (gridSize * gridSize)) * magnitudes.length);
+                this.ctx.fillStyle = this.getColor(colorIndex, magnitudes.length);
                 this.ctx.beginPath();
                 this.ctx.moveTo(screenX, screenY);
                 this.ctx.lineTo(screenX + voxelSize / 2, screenY + voxelSize / 4);
@@ -7643,10 +7684,9 @@ class Visualizer {
             }
         }
 
-        // Color based on treble
-        const hue = treble * 360;
-        const color = this.hsvToRgb(hue, 100, 100);
-        this.ctx.strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+        // Color based on treble - use color scheme
+        const colorIndex = Math.floor(treble * magnitudes.length);
+        this.ctx.strokeStyle = this.getColor(colorIndex, magnitudes.length);
         this.ctx.lineWidth = 2;
         this.ctx.stroke();
     }
@@ -7665,16 +7705,11 @@ class Visualizer {
             const y = this.canvas.height - (i + 1) * ringHeight;
             const radius = magnitude * (this.canvas.width / 3);
 
-            // Color gradient
-            const hue = (i / numRings) * 120;
-            const saturation = 80 + magnitude * 20;
-            const value = 60 + magnitude * 40;
-            const color = this.hsvToRgb(hue, saturation, value);
+            // Color gradient - use color scheme
+            this.ctx.strokeStyle = this.getColor(i, numRings);
 
             // Ring thickness
             const thickness = 2 + magnitude * 10;
-
-            this.ctx.strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
             this.ctx.lineWidth = thickness;
             this.ctx.beginPath();
             this.ctx.arc(centerX, y, radius, 0, Math.PI * 2);
@@ -7734,12 +7769,13 @@ class Visualizer {
             const p1 = this.doodlePath[i];
             const p2 = this.doodlePath[i + 1];
 
-            // Color based on mids
-            const hue = mids * 360;
+            // Color based on mids - use color scheme
             const alpha = i / this.doodlePath.length;
-            const color = this.hsvToRgb(hue, 80, alpha * 100);
+            const colorIndex = Math.floor(i / this.doodlePath.length * magnitudes.length);
+            const colorStr = this.getColor(colorIndex, magnitudes.length);
+            const color = this.parseRgbColor(colorStr);
 
-            this.ctx.strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            this.ctx.strokeStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
             this.ctx.lineWidth = 3;
             this.ctx.beginPath();
             this.ctx.moveTo(p1.x, p1.y);
@@ -7816,12 +7852,13 @@ class Visualizer {
                     particle.life -= 0.015;
 
                     if (particle.life > 0) {
-                        // Color from mids
-                        const hue = mids * 360;
-                        const color = this.hsvToRgb(hue, 100, particle.life * 100);
+                        // Color from mids - use color scheme
+                        const colorIndex = Math.floor(mids * magnitudes.length);
+                        const colorStr = this.getColor(colorIndex, magnitudes.length);
+                        const color = this.parseRgbColor(colorStr);
 
                         const size = 2 + treble * 6;
-                        this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+                        this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
                         this.ctx.beginPath();
                         this.ctx.arc(particle.x, particle.y, size, 0, Math.PI * 2);
                         this.ctx.fill();
@@ -7901,18 +7938,14 @@ class Visualizer {
                 cell.radius *= 0.7;
             }
 
-            // Draw cell
-            const hue = (freqIdx / magnitudes.length) * 120;
-            const saturation = 80 + magnitude * 20;
-            const value = 60 + magnitude * 40;
-            const color = this.hsvToRgb(hue, saturation, value);
-
-            this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            // Draw cell - use color scheme
+            this.ctx.fillStyle = this.getColor(freqIdx, magnitudes.length);
             this.ctx.beginPath();
             this.ctx.arc(cell.x, cell.y, cell.radius, 0, Math.PI * 2);
             this.ctx.fill();
 
-            this.ctx.strokeStyle = 'rgb(200, 200, 200)';
+            const strokeColorIndex = (freqIdx + 1) % magnitudes.length;
+            this.ctx.strokeStyle = this.getColor(strokeColorIndex, magnitudes.length);
             this.ctx.lineWidth = 2;
             this.ctx.stroke();
 
@@ -7951,16 +7984,12 @@ class Visualizer {
                 if (layerHeight > 0) {
                     const y = yBase - layerHeight;
 
-                    // Flame color gradient (yellow to red)
-                    const hue = 10 + layer * 5;
-                    const saturation = 100;
-                    const value = 78 - layer * 16;
-                    const color = this.hsvToRgb(hue, saturation, value);
+                    // Flame color gradient - use color scheme
+                    const colorIndex = (i + layer) % magnitudes.length;
+                    this.ctx.fillStyle = this.getColor(colorIndex, magnitudes.length);
 
                     // Flickering width
                     const flicker = Math.floor((Math.random() - 0.5) * 5);
-
-                    this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
                     this.ctx.fillRect(x + flicker, y, barWidth - 2, yBase - y);
                 }
             }
@@ -7971,7 +8000,8 @@ class Visualizer {
             for (let i = 0; i < treble * 20; i++) {
                 const emberX = Math.random() * this.canvas.width;
                 const emberY = this.canvas.height - 50 - Math.random() * 100;
-                this.ctx.fillStyle = 'rgb(255, 150, 100)';
+                const emberColorIndex = Math.floor(Math.random() * magnitudes.length);
+                this.ctx.fillStyle = this.getColor(emberColorIndex, magnitudes.length);
                 this.ctx.beginPath();
                 this.ctx.arc(emberX, emberY, 2, 0, Math.PI * 2);
                 this.ctx.fill();
@@ -8143,12 +8173,9 @@ class Visualizer {
             this.ctx.lineTo(xEnd, yEnd);
             this.ctx.stroke();
 
-            // Draw bob
+            // Draw bob - use color scheme
             const bobSize = 5 + magnitude * 15;
-            const hue = (i / numPendulums) * 180;
-            const color = this.hsvToRgb(hue, 78, 100);
-
-            this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            this.ctx.fillStyle = this.getColor(i, numPendulums);
             this.ctx.beginPath();
             this.ctx.arc(xEnd, yEnd, bobSize, 0, Math.PI * 2);
             this.ctx.fill();
@@ -8172,8 +8199,9 @@ class Visualizer {
         this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Draw waveform
-        this.ctx.strokeStyle = 'rgb(100, 255, 100)';
+        // Draw waveform - use color scheme
+        const waveformColorIndex = Math.floor(magnitudes.length / 2);
+        this.ctx.strokeStyle = this.getColor(waveformColorIndex, magnitudes.length);
         this.ctx.lineWidth = 3;
         this.ctx.beginPath();
 
@@ -8249,12 +8277,9 @@ class Visualizer {
         if (vertices.length > 2) {
             const avgMagnitude = magnitudes.slice(0, numVertices).reduce((a, b) => a + b, 0) / numVertices;
 
-            const hue = (this.frameCounter * 2) % 180;
-            const saturation = 78 + avgMagnitude * 22;
-            const value = 59 + avgMagnitude * 41;
-            const color = this.hsvToRgb(hue, saturation, value);
-
-            this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            // Use color scheme for polygon
+            const colorIndex = Math.floor(avgMagnitude * magnitudes.length);
+            this.ctx.fillStyle = this.getColor(colorIndex, magnitudes.length);
             this.ctx.beginPath();
             this.ctx.moveTo(vertices[0].x, vertices[0].y);
             for (let i = 1; i < vertices.length; i++) {
@@ -8263,8 +8288,9 @@ class Visualizer {
             this.ctx.closePath();
             this.ctx.fill();
 
-            // Draw outline
-            this.ctx.strokeStyle = 'rgb(255, 255, 255)';
+            // Draw outline - use color scheme
+            const outlineColorIndex = (colorIndex + 1) % magnitudes.length;
+            this.ctx.strokeStyle = this.getColor(outlineColorIndex, magnitudes.length);
             this.ctx.lineWidth = 3;
             this.ctx.stroke();
         }
@@ -8313,13 +8339,9 @@ class Visualizer {
                 const dot = Math.cos(angle) * lightX + Math.sin(angle) * lightY;
                 const brightness = Math.max(0, dot) * 200 + 55;
 
-                // Chromatic color
-                const hue = ((angle / (2 * Math.PI) + radiusFactor + this.frameCounter * 0.01) * 180) % 180;
-                const saturation = 78 + avgMagnitude * 22;
-                const value = brightness / 255 * 100;
-                const color = this.hsvToRgb(hue, saturation, value);
-
-                this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+                // Chromatic color - use color scheme
+                const colorIndex = Math.floor(((angleIdx + radiusIdx) / 80) * magnitudes.length);
+                this.ctx.fillStyle = this.getColor(colorIndex, magnitudes.length);
                 this.ctx.beginPath();
                 this.ctx.arc(x, y, 3, 0, Math.PI * 2);
                 this.ctx.fill();
@@ -8349,12 +8371,9 @@ class Visualizer {
                 const scrollOffset = Math.floor((this.frameCounter * magnitude * 2) % 10);
                 const patternY = (ty + scrollOffset) % 10;
 
-                if (patternY < 5) {
-                    const brightness = 100 + magnitude * 155;
-                    this.ctx.strokeStyle = `rgb(${brightness}, 150, 200)`;
-                } else {
-                    this.ctx.strokeStyle = 'rgb(50, 100, 150)';
-                }
+                // Use color scheme for texture pattern
+                const colorIndex = patternY < 5 ? i : (i + 1) % magnitudes.length;
+                this.ctx.strokeStyle = this.getColor(colorIndex, magnitudes.length);
 
                 this.ctx.lineWidth = 2;
                 this.ctx.beginPath();
@@ -32624,6 +32643,283 @@ class Visualizer {
             this.ctx.closePath();
             this.ctx.fill();
         }
+    }
+
+    /**
+     * Mode 405: Particle Accelerator
+     * Particles accelerating in a ring with speed trails
+     */
+    render405ParticleAccelerator(magnitudes) {
+        const numParticles = magnitudes.length;
+        const innerRadius = this.getEffectiveInnerRadius();
+        const maxRadius = this.maxRadius;
+
+        // Initialize particle positions if not exists
+        if (!this.acceleratorParticles) {
+            this.acceleratorParticles = [];
+            for (let i = 0; i < numParticles; i++) {
+                this.acceleratorParticles.push({
+                    angle: (i / numParticles) * Math.PI * 2,
+                    speed: 0.01 + Math.random() * 0.02,
+                    radius: innerRadius + Math.random() * (maxRadius - innerRadius) * 0.5,
+                    trail: []
+                });
+            }
+        }
+
+        // Draw acceleration ring
+        this.ctx.strokeStyle = this.getColor(0, numParticles);
+        this.ctx.lineWidth = 2 * this.scaleFactor;
+        this.ctx.beginPath();
+        this.ctx.arc(this.centerX, this.centerY, innerRadius + (maxRadius - innerRadius) * 0.3, 0, Math.PI * 2);
+        this.ctx.stroke();
+
+        // Update and draw particles with trails
+        this.acceleratorParticles.forEach((particle, i) => {
+            const magnitude = magnitudes[i];
+
+            // Accelerate particle based on audio
+            particle.speed += magnitude * 0.001;
+            particle.speed = Math.min(particle.speed, 0.1); // Cap speed
+            particle.angle += particle.speed;
+
+            // Calculate position
+            const x = this.centerX + Math.cos(particle.angle) * particle.radius;
+            const y = this.centerY + Math.sin(particle.angle) * particle.radius;
+
+            // Add to trail
+            particle.trail.push({ x, y, alpha: 1.0 });
+            if (particle.trail.length > 20) particle.trail.shift();
+
+            // Draw trail
+            particle.trail.forEach((point, j) => {
+                const alpha = (j / particle.trail.length) * 0.5;
+                const size = (magnitude * 4 + 2) * this.scaleFactor * (j / particle.trail.length);
+                this.ctx.fillStyle = this.getColor(i, numParticles).replace('rgb', 'rgba').replace(')', `, ${alpha})`);
+                this.ctx.beginPath();
+                this.ctx.arc(point.x, point.y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            });
+
+            // Draw particle
+            const particleSize = (magnitude * 6 + 3) * this.scaleFactor;
+            this.ctx.fillStyle = this.getColor(i, numParticles);
+            this.ctx.shadowBlur = 10 * this.scaleFactor;
+            this.ctx.shadowColor = this.getColor(i, numParticles);
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, particleSize, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.shadowBlur = 0;
+        });
+    }
+
+    /**
+     * Mode 452: Particle Decay
+     * Radioactive particle decay chain with fading particles
+     */
+    render452ParticleDecay(magnitudes) {
+        const numParticles = magnitudes.length * 2;
+        const centerRadius = this.maxRadius * 0.3;
+
+        // Initialize decay particles if not exists
+        if (!this.decayParticles) {
+            this.decayParticles = [];
+        }
+
+        // Spawn new particles based on audio magnitude
+        magnitudes.forEach((magnitude, i) => {
+            if (magnitude > 0.3 && Math.random() < magnitude * 0.5) {
+                const angle = (i / magnitudes.length) * Math.PI * 2;
+                const speed = (magnitude * 3 + 1) * this.scaleFactor;
+                this.decayParticles.push({
+                    x: this.centerX,
+                    y: this.centerY,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    life: 1.0,
+                    decay: 0.015 + Math.random() * 0.01,
+                    size: (magnitude * 8 + 4) * this.scaleFactor,
+                    colorIndex: i
+                });
+            }
+        });
+
+        // Draw nucleus glow
+        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const glowSize = (avgMagnitude * 30 + 20) * this.scaleFactor;
+        const gradient = this.ctx.createRadialGradient(
+            this.centerX, this.centerY, 0,
+            this.centerX, this.centerY, glowSize
+        );
+        gradient.addColorStop(0, this.getColor(0, magnitudes.length).replace('rgb', 'rgba').replace(')', ', 0.8)'));
+        gradient.addColorStop(0.5, this.getColor(Math.floor(magnitudes.length / 2), magnitudes.length).replace('rgb', 'rgba').replace(')', ', 0.3)'));
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        this.ctx.fillStyle = gradient;
+        this.ctx.beginPath();
+        this.ctx.arc(this.centerX, this.centerY, glowSize, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Update and draw decay particles
+        this.decayParticles = this.decayParticles.filter(particle => {
+            // Update position
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+
+            // Apply decay
+            particle.life -= particle.decay;
+            particle.vx *= 0.98; // Slow down
+            particle.vy *= 0.98;
+
+            // Draw particle
+            if (particle.life > 0) {
+                const alpha = particle.life;
+                const size = particle.size * particle.life;
+                this.ctx.fillStyle = this.getColor(particle.colorIndex, magnitudes.length)
+                    .replace('rgb', 'rgba').replace(')', `, ${alpha})`);
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x, particle.y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                // Draw decay trail
+                this.ctx.strokeStyle = this.getColor(particle.colorIndex, magnitudes.length)
+                    .replace('rgb', 'rgba').replace(')', `, ${alpha * 0.3})`);
+                this.ctx.lineWidth = size * 0.5;
+                this.ctx.beginPath();
+                this.ctx.moveTo(particle.x, particle.y);
+                this.ctx.lineTo(particle.x - particle.vx * 2, particle.y - particle.vy * 2);
+                this.ctx.stroke();
+            }
+
+            return particle.life > 0;
+        });
+    }
+
+    /**
+     * Mode 599: Swarm Art
+     * Particle swarm with flocking behavior
+     */
+    render599SwarmArt(magnitudes) {
+        const numSwarmers = magnitudes.length * 3;
+
+        // Initialize swarm if not exists
+        if (!this.swarmParticles || this.swarmParticles.length !== numSwarmers) {
+            this.swarmParticles = [];
+            for (let i = 0; i < numSwarmers; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const distance = Math.random() * this.maxRadius * 0.5;
+                this.swarmParticles.push({
+                    x: this.centerX + Math.cos(angle) * distance,
+                    y: this.centerY + Math.sin(angle) * distance,
+                    vx: (Math.random() - 0.5) * 2 * this.scaleFactor,
+                    vy: (Math.random() - 0.5) * 2 * this.scaleFactor,
+                    colorIndex: Math.floor(i / 3)
+                });
+            }
+        }
+
+        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Update swarm particles with flocking behavior
+        this.swarmParticles.forEach((particle, i) => {
+            // Get magnitude for this particle
+            const magnitude = magnitudes[particle.colorIndex % magnitudes.length];
+
+            // Calculate center pull (cohesion)
+            const dx = this.centerX - particle.x;
+            const dy = this.centerY - particle.y;
+            const distToCenter = Math.sqrt(dx * dx + dy * dy);
+            const centerPull = 0.02 * magnitude * this.scaleFactor;
+            particle.vx += (dx / distToCenter) * centerPull;
+            particle.vy += (dy / distToCenter) * centerPull;
+
+            // Swirl around center based on audio
+            const angle = Math.atan2(dy, dx);
+            const swirlStrength = magnitude * 0.05 * this.scaleFactor;
+            particle.vx += Math.cos(angle + Math.PI / 2) * swirlStrength;
+            particle.vy += Math.sin(angle + Math.PI / 2) * swirlStrength;
+
+            // Neighbor interaction (alignment + separation)
+            let neighborVx = 0, neighborVy = 0, neighborCount = 0;
+            const neighborDist = 50 * this.scaleFactor;
+
+            this.swarmParticles.forEach((other, j) => {
+                if (i !== j) {
+                    const odx = other.x - particle.x;
+                    const ody = other.y - particle.y;
+                    const dist = Math.sqrt(odx * odx + ody * ody);
+
+                    if (dist < neighborDist && dist > 0) {
+                        // Separation
+                        particle.vx -= (odx / dist) * 0.1 * this.scaleFactor;
+                        particle.vy -= (ody / dist) * 0.1 * this.scaleFactor;
+
+                        // Alignment
+                        neighborVx += other.vx;
+                        neighborVy += other.vy;
+                        neighborCount++;
+                    }
+                }
+            });
+
+            if (neighborCount > 0) {
+                particle.vx += (neighborVx / neighborCount - particle.vx) * 0.05;
+                particle.vy += (neighborVy / neighborCount - particle.vy) * 0.05;
+            }
+
+            // Apply velocity limits
+            const speed = Math.sqrt(particle.vx * particle.vx + particle.vy * particle.vy);
+            const maxSpeed = (3 + magnitude * 2) * this.scaleFactor;
+            if (speed > maxSpeed) {
+                particle.vx = (particle.vx / speed) * maxSpeed;
+                particle.vy = (particle.vy / speed) * maxSpeed;
+            }
+
+            // Update position
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+
+            // Bounce off edges
+            const margin = 20 * this.scaleFactor;
+            if (particle.x < margin || particle.x > this.canvas.width - margin) particle.vx *= -0.8;
+            if (particle.y < margin || particle.y > this.canvas.height - margin) particle.vy *= -0.8;
+        });
+
+        // Draw swarm connections
+        this.ctx.lineWidth = 1 * this.scaleFactor;
+        const connectionDist = 80 * this.scaleFactor;
+        this.swarmParticles.forEach((particle, i) => {
+            this.swarmParticles.forEach((other, j) => {
+                if (i < j) {
+                    const dx = other.x - particle.x;
+                    const dy = other.y - particle.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+
+                    if (dist < connectionDist) {
+                        const alpha = (1 - dist / connectionDist) * 0.3;
+                        this.ctx.strokeStyle = this.getColor(particle.colorIndex, magnitudes.length)
+                            .replace('rgb', 'rgba').replace(')', `, ${alpha})`);
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(particle.x, particle.y);
+                        this.ctx.lineTo(other.x, other.y);
+                        this.ctx.stroke();
+                    }
+                }
+            });
+        });
+
+        // Draw swarm particles
+        this.swarmParticles.forEach(particle => {
+            const magnitude = magnitudes[particle.colorIndex % magnitudes.length];
+            const size = (magnitude * 5 + 3) * this.scaleFactor;
+
+            this.ctx.fillStyle = this.getColor(particle.colorIndex, magnitudes.length);
+            this.ctx.shadowBlur = 8 * this.scaleFactor;
+            this.ctx.shadowColor = this.getColor(particle.colorIndex, magnitudes.length);
+            this.ctx.beginPath();
+            this.ctx.arc(particle.x, particle.y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.shadowBlur = 0;
+        });
     }
 
     dispose() {

@@ -13484,7 +13484,8 @@ const VISUALIZATION_MODES = {
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
         }
-    }
+    },
+
 };
 
 // Mode Categories for filtering

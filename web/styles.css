@@ -478,6 +478,55 @@ h1, h2, h3, h4, h5, h6 {
     opacity: 1;
 }
 
+/* 15-second Selection Window */
+.waveform-selection-window {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background: rgba(0, 122, 255, 0.2);
+    border: 2px solid var(--color-primary);
+    border-radius: var(--radius-xs);
+    cursor: grab;
+    user-select: none;
+    transition: background 0.2s ease;
+    z-index: 10;
+}
+
+.waveform-selection-window:hover {
+    background: rgba(0, 122, 255, 0.3);
+}
+
+.waveform-selection-window:active {
+    cursor: grabbing;
+    background: rgba(0, 122, 255, 0.35);
+}
+
+.selection-window-handle {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 6px;
+    background: var(--color-primary);
+    border-radius: 0 0 var(--radius-xs) var(--radius-xs);
+    opacity: 0.8;
+}
+
+.selection-window-label {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--color-primary);
+    font-weight: 600;
+    font-size: 12px;
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.8);
+    pointer-events: none;
+    white-space: nowrap;
+}
+
 /* Playback Controls */
 .playback-controls {
     display: flex;

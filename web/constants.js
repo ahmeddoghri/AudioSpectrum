@@ -280,18 +280,6 @@ const VISUALIZATION_MODES = {
     },
 
     // Retro & Vintage
-    retro_cassette_new: {
-        id: 'retro_cassette_new',
-        name: 'Retro Cassette (Detailed)',
-        description: 'Authentic cassette tape with rotating reels and VU meters',
-        category: 'Retro',
-        mode: 48,
-        tags: ['vintage', 'cassette', 'analog', 'vu-meter'],
-        parameters: {
-            reelSpeed: { min: 1, max: 15, default: 5, label: 'Reel Speed' },
-            vuSensitivity: { min: 0.5, max: 2, default: 1, label: 'VU Sensitivity' }
-        }
-    },
     soul_aura: {
         id: 'soul_aura',
         name: 'Soul Aura',
@@ -333,14 +321,6 @@ const VISUALIZATION_MODES = {
         category: 'Retro',
         mode: 5,
         tags: ['neon', 'minimal', 'glow']
-    },
-    retro_cassette: {
-        id: 'retro_cassette',
-        name: 'Retro Cassette',
-        description: 'VU meters and tape reel animation',
-        category: 'Retro',
-        mode: 17,
-        tags: ['vintage', 'cassette', 'analog']
     },
     pixel_clouds: {
         id: 'pixel_clouds',
@@ -739,14 +719,6 @@ const VISUALIZATION_MODES = {
         category: 'Geometric',
         mode: 66,
         tags: ['kaleidoscope', 'mirror', 'radial']
-    },
-    pulsing_jellyfish: {
-        id: 'pulsing_jellyfish',
-        name: 'Pulsing Jellyfish',
-        description: 'Translucent jellyfish with pulsing bell and waveform tentacles',
-        category: 'Nature',
-        mode: 67,
-        tags: ['organic', 'underwater', 'creature']
     },
     orbital_system: {
         id: 'orbital_system',

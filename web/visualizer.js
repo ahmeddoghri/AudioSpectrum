@@ -275,12 +275,6 @@ class Visualizer {
             case 'vinyl_grooves':
                 this.renderVinylGrooves(magnitudes);
                 break;
-            case 'retro_cassette':
-                this.renderRetroCassette(magnitudes);
-                break;
-            case 'retro_cassette_new':
-                this.renderRetroCassetteNew(magnitudes);
-                break;
             case 'pixel_clouds':
                 this.renderPixelClouds(magnitudes);
                 break;
@@ -437,9 +431,6 @@ class Visualizer {
                 break;
             case 'radial_kaleidoscope':
                 this.renderRadialKaleidoscope(magnitudes);
-                break;
-            case 'pulsing_jellyfish':
-                this.renderPulsingJellyfish(magnitudes);
                 break;
             case 'orbital_system':
                 this.renderOrbitalSystem(magnitudes);
@@ -3743,256 +3734,6 @@ class Visualizer {
         this.rainParticles = newParticles;
     }
 
-    renderRetroCassetteNew(magnitudes) {
-        // Get settings
-        const reelSpeed = this.settings.retroCassetteReelSpeed || 5;
-        const vuSensitivity = this.settings.retroCassetteVuSensitivity || 1;
-
-        // Update cassette reel rotation
-        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
-        this.cassetteReelAngle += (3 + avgMagnitude * 10) * (reelSpeed / 5);
-
-        // REALISTIC CASSETTE DIMENSIONS (wider, more authentic)
-        const cassetteWidth = Math.floor(this.canvas.width * 0.65);
-        const cassetteHeight = Math.floor(this.canvas.height * 0.35);
-        const cassetteX = this.centerX - Math.floor(cassetteWidth / 2);
-        const cassetteY = this.centerY - Math.floor(cassetteHeight / 2);
-
-        // === CASSETTE BODY ===
-        // Main outer shell (beige/tan plastic)
-        this.ctx.fillStyle = 'rgb(140, 130, 110)';
-        this.ctx.fillRect(cassetteX, cassetteY, cassetteWidth, cassetteHeight);
-
-        // Border/edge
-        this.ctx.strokeStyle = 'rgb(100, 90, 70)';
-        this.ctx.lineWidth = 3;
-        this.ctx.strokeRect(cassetteX, cassetteY, cassetteWidth, cassetteHeight);
-
-        // === LABEL AREA (top section) ===
-        const labelHeight = Math.floor(cassetteHeight * 0.25);
-        this.ctx.fillStyle = 'rgb(220, 210, 200)';
-        this.ctx.fillRect(cassetteX + 20, cassetteY + 15, cassetteWidth - 40, labelHeight - 15);
-        this.ctx.strokeStyle = 'rgb(180, 170, 160)';
-        this.ctx.lineWidth = 1;
-        this.ctx.strokeRect(cassetteX + 20, cassetteY + 15, cassetteWidth - 40, labelHeight - 15);
-
-        // === WINDOW AREA (where you see the tape) ===
-        const windowY = cassetteY + labelHeight + 25;
-        const windowHeight = Math.floor(cassetteHeight * 0.45);
-        const windowMargin = 40;
-
-        // Dark transparent window
-        this.ctx.fillStyle = 'rgb(30, 25, 20)';
-        this.ctx.fillRect(cassetteX + windowMargin, windowY, cassetteWidth - 2 * windowMargin, windowHeight);
-        this.ctx.strokeStyle = 'rgb(80, 70, 60)';
-        this.ctx.lineWidth = 2;
-        this.ctx.strokeRect(cassetteX + windowMargin, windowY, cassetteWidth - 2 * windowMargin, windowHeight);
-
-        // === TAPE REELS (much more detailed) ===
-        const reelY = windowY + Math.floor(windowHeight / 2);
-        const reelOuterRadius = 55;
-        const reelInnerRadius = 15;
-        const leftReelX = cassetteX + Math.floor(cassetteWidth / 3);
-        const rightReelX = cassetteX + Math.floor(2 * cassetteWidth / 3);
-
-        for (const reelX of [leftReelX, rightReelX]) {
-            // Outer reel edge (dark)
-            this.ctx.strokeStyle = 'rgb(50, 45, 40)';
-            this.ctx.lineWidth = 2;
-            this.ctx.beginPath();
-            this.ctx.arc(reelX, reelY, reelOuterRadius, 0, Math.PI * 2);
-            this.ctx.stroke();
-
-            // Tape on reel (brown/black magnetic tape)
-            const tapeRadius = Math.floor(reelOuterRadius * 0.85);
-            this.ctx.fillStyle = 'rgb(20, 15, 10)';
-            this.ctx.beginPath();
-            this.ctx.arc(reelX, reelY, tapeRadius, 0, Math.PI * 2);
-            this.ctx.fill();
-
-            // Center hub (beige plastic)
-            this.ctx.fillStyle = 'rgb(140, 130, 110)';
-            this.ctx.beginPath();
-            this.ctx.arc(reelX, reelY, reelInnerRadius, 0, Math.PI * 2);
-            this.ctx.fill();
-            this.ctx.strokeStyle = 'rgb(100, 90, 70)';
-            this.ctx.lineWidth = 1;
-            this.ctx.stroke();
-
-            // Rotating spokes (6 spokes for realism)
-            this.ctx.strokeStyle = 'rgb(80, 70, 60)';
-            this.ctx.lineWidth = 2;
-            for (let spoke = 0; spoke < 6; spoke++) {
-                const angle = (this.cassetteReelAngle + spoke * 60) * Math.PI / 180;
-                const x1 = reelX + reelInnerRadius * Math.cos(angle);
-                const y1 = reelY + reelInnerRadius * Math.sin(angle);
-                const x2 = reelX + tapeRadius * 0.9 * Math.cos(angle);
-                const y2 = reelY + tapeRadius * 0.9 * Math.sin(angle);
-                this.ctx.beginPath();
-                this.ctx.moveTo(x1, y1);
-                this.ctx.lineTo(x2, y2);
-                this.ctx.stroke();
-            }
-
-            // Center dot
-            this.ctx.fillStyle = 'rgb(60, 50, 40)';
-            this.ctx.beginPath();
-            this.ctx.arc(reelX, reelY, 4, 0, Math.PI * 2);
-            this.ctx.fill();
-        }
-
-        // === TAPE BETWEEN REELS (visible magnetic tape) ===
-        // Draw horizontal tape bands connecting the two reels
-        const tapeThickness = 6;
-        const tapeOffsetFromCenter = 15;
-
-        this.ctx.fillStyle = 'rgb(15, 10, 8)';
-
-        // Top tape band (above center)
-        this.ctx.fillRect(
-            leftReelX + reelOuterRadius,
-            reelY - tapeOffsetFromCenter - tapeThickness / 2,
-            rightReelX - leftReelX - 2 * reelOuterRadius,
-            tapeThickness
-        );
-
-        // Bottom tape band (below center)
-        this.ctx.fillRect(
-            leftReelX + reelOuterRadius,
-            reelY + tapeOffsetFromCenter - tapeThickness / 2,
-            rightReelX - leftReelX - 2 * reelOuterRadius,
-            tapeThickness
-        );
-
-        // === CASSETTE SCREWS (4 corners) ===
-        const screwPositions = [
-            [cassetteX + 25, cassetteY + 25],
-            [cassetteX + cassetteWidth - 25, cassetteY + 25],
-            [cassetteX + 25, cassetteY + cassetteHeight - 25],
-            [cassetteX + cassetteWidth - 25, cassetteY + cassetteHeight - 25]
-        ];
-
-        for (const [screwX, screwY] of screwPositions) {
-            this.ctx.fillStyle = 'rgb(80, 70, 60)';
-            this.ctx.beginPath();
-            this.ctx.arc(screwX, screwY, 6, 0, Math.PI * 2);
-            this.ctx.fill();
-            this.ctx.strokeStyle = 'rgb(60, 50, 40)';
-            this.ctx.lineWidth = 1;
-            this.ctx.stroke();
-
-            // Screw cross
-            this.ctx.strokeStyle = 'rgb(40, 30, 25)';
-            this.ctx.lineWidth = 1;
-            this.ctx.beginPath();
-            this.ctx.moveTo(screwX - 3, screwY);
-            this.ctx.lineTo(screwX + 3, screwY);
-            this.ctx.stroke();
-            this.ctx.beginPath();
-            this.ctx.moveTo(screwX, screwY - 3);
-            this.ctx.lineTo(screwX, screwY + 3);
-            this.ctx.stroke();
-        }
-
-        // === BOTTOM GRIP NOTCHES (authentic detail) ===
-        const notchWidth = 30;
-        const notchHeight = 8;
-        const notchSpacing = 15;
-        const notchY = cassetteY + cassetteHeight - notchHeight - 5;
-
-        this.ctx.fillStyle = 'rgb(90, 80, 60)';
-        for (let i = 0; i < 5; i++) {
-            const notchX = cassetteX + Math.floor(cassetteWidth / 2) - 2 * notchWidth - 2 * notchSpacing + i * (notchWidth + notchSpacing);
-            this.ctx.fillRect(notchX, notchY, notchWidth, notchHeight);
-        }
-
-        // === VINTAGE VU METERS (below cassette) ===
-        const vuY = cassetteY + cassetteHeight + 100;
-        const vuWidth = cassetteWidth - 200;
-        const vuHeight = 35;
-        const vuX = this.centerX - Math.floor(vuWidth / 2);
-
-        // Left and right channel VU meters
-        const numSegments = 40;
-        const segmentWidth = Math.floor(vuWidth / numSegments);
-
-        for (let channel = 0; channel < 2; channel++) {
-            const channelY = vuY + channel * 60;
-
-            // VU meter background/frame
-            const framePadding = 5;
-            this.ctx.fillStyle = 'rgb(100, 90, 70)';
-            this.ctx.fillRect(
-                vuX - framePadding,
-                channelY - framePadding,
-                vuWidth + 2 * framePadding,
-                vuHeight + 2 * framePadding
-            );
-            this.ctx.strokeStyle = 'rgb(70, 60, 50)';
-            this.ctx.lineWidth = 2;
-            this.ctx.strokeRect(
-                vuX - framePadding,
-                channelY - framePadding,
-                vuWidth + 2 * framePadding,
-                vuHeight + 2 * framePadding
-            );
-
-            // Get magnitude for this channel (split frequencies)
-            let channelMag;
-            if (channel === 0) {
-                const leftHalf = magnitudes.slice(0, Math.floor(magnitudes.length / 2));
-                channelMag = leftHalf.reduce((a, b) => a + b, 0) / leftHalf.length;
-            } else {
-                const rightHalf = magnitudes.slice(Math.floor(magnitudes.length / 2));
-                channelMag = rightHalf.reduce((a, b) => a + b, 0) / rightHalf.length;
-            }
-
-            channelMag *= vuSensitivity;
-            const activeSegments = Math.floor(channelMag * numSegments);
-
-            for (let seg = 0; seg < numSegments; seg++) {
-                const segX = vuX + seg * segmentWidth;
-
-                // VINTAGE COLOR GRADIENT: green -> amber -> orange -> red
-                const segmentProgress = seg / numSegments;
-                let color;
-                if (segmentProgress < 0.5) {
-                    color = 'rgb(50, 200, 0)'; // Green
-                } else if (segmentProgress < 0.7) {
-                    color = 'rgb(200, 180, 0)'; // Amber/yellow
-                } else if (segmentProgress < 0.85) {
-                    color = 'rgb(255, 120, 0)'; // Orange
-                } else {
-                    color = 'rgb(255, 60, 0)'; // Red
-                }
-
-                if (seg < activeSegments) {
-                    // Active segment - full brightness with glow
-                    this.ctx.fillStyle = color;
-                    this.ctx.fillRect(segX + 1, channelY, segmentWidth - 2, vuHeight);
-                } else {
-                    // Inactive segment - very dim
-                    if (segmentProgress < 0.5) {
-                        this.ctx.fillStyle = 'rgb(7, 30, 0)';
-                    } else if (segmentProgress < 0.7) {
-                        this.ctx.fillStyle = 'rgb(30, 27, 0)';
-                    } else if (segmentProgress < 0.85) {
-                        this.ctx.fillStyle = 'rgb(38, 18, 0)';
-                    } else {
-                        this.ctx.fillStyle = 'rgb(38, 9, 0)';
-                    }
-                    this.ctx.fillRect(segX + 2, channelY + 2, segmentWidth - 2, vuHeight - 4);
-                }
-            }
-
-            // Channel label (L/R)
-            const label = channel === 0 ? 'L' : 'R';
-            this.ctx.fillStyle = 'rgb(150, 140, 120)';
-            this.ctx.font = 'bold 20px Arial';
-            this.ctx.fillText(label, vuX - 35, channelY + vuHeight - 10);
-        }
-    }
-
     renderSoulAura(magnitudes) {
         // Get settings
         const numPoints = this.settings.soulAuraNumPoints || 60;
@@ -4529,75 +4270,6 @@ class Visualizer {
 
         this.ctx.globalAlpha = 1;
         this.ctx.shadowBlur = 0;
-    }
-
-    /**
-     * Mode 17: Retro Cassette
-     */
-    renderRetroCassette(magnitudes) {
-        const centerY = this.canvas.height * 0.65;
-        const barHeight = 120;
-        const numBars = Math.min(magnitudes.length, 64);
-        const barWidth = this.canvas.width * 0.6 / numBars;
-        const startX = this.canvas.width * 0.2;
-
-        // Draw spinning reels first (so they appear behind bars)
-        const time = this.frameCounter * 0.1;
-        const reel1X = this.canvas.width * 0.3;
-        const reel2X = this.canvas.width * 0.7;
-        const reelY = this.canvas.height * 0.25;
-        const reelRadius = 50;
-
-        for (const reelX of [reel1X, reel2X]) {
-            // Outer circle
-            this.ctx.fillStyle = 'rgba(50, 50, 50, 0.3)';
-            this.ctx.beginPath();
-            this.ctx.arc(reelX, reelY, reelRadius, 0, Math.PI * 2);
-            this.ctx.fill();
-
-            this.ctx.strokeStyle = this.getColor(30, numBars);
-            this.ctx.lineWidth = 3;
-            this.ctx.beginPath();
-            this.ctx.arc(reelX, reelY, reelRadius, 0, Math.PI * 2);
-            this.ctx.stroke();
-
-            // Inner hub
-            this.ctx.fillStyle = this.getColor(20, numBars);
-            this.ctx.beginPath();
-            this.ctx.arc(reelX, reelY, 15, 0, Math.PI * 2);
-            this.ctx.fill();
-
-            // Spokes
-            this.ctx.strokeStyle = this.getColor(30, numBars);
-            this.ctx.lineWidth = 2;
-            for (let s = 0; s < 6; s++) {
-                const angle = (s / 6) * Math.PI * 2 + time;
-                this.ctx.beginPath();
-                this.ctx.moveTo(reelX + 15 * Math.cos(angle), reelY + 15 * Math.sin(angle));
-                this.ctx.lineTo(reelX + reelRadius * 0.85 * Math.cos(angle), reelY + reelRadius * 0.85 * Math.sin(angle));
-                this.ctx.stroke();
-            }
-        }
-
-        // Draw VU meter background
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-        this.ctx.fillRect(startX - 10, centerY - barHeight / 2 - 10, this.canvas.width * 0.6 + 20, barHeight + 20);
-
-        this.ctx.strokeStyle = this.getColor(0, numBars);
-        this.ctx.lineWidth = 3;
-        this.ctx.strokeRect(startX - 10, centerY - barHeight / 2 - 10, this.canvas.width * 0.6 + 20, barHeight + 20);
-
-        // Draw bars
-        for (let i = 0; i < numBars; i++) {
-            const magnitude = magnitudes[i];
-            const height = magnitude * barHeight;
-            const x = startX + i * barWidth;
-            const y = centerY - height / 2;
-
-            const color = this.getColor(i, numBars);
-            this.ctx.fillStyle = color;
-            this.ctx.fillRect(x, y, barWidth * 0.8, height);
-        }
     }
 
     /**
@@ -6228,8 +5900,13 @@ class Visualizer {
             if (i < magnitudes.length) node.pulse = magnitudes[i];
         });
 
+        // Get color scheme
+        const scheme = COLOR_SCHEMES[this.settings.colorScheme];
+        const color1 = scheme.primary;
+        const color2 = scheme.secondary;
+
         // Draw connections
-        this.ctx.strokeStyle = `rgba(100, 200, 255, ${treble * 0.8})`;
+        this.ctx.strokeStyle = `rgba(${color1[0]}, ${color1[1]}, ${color1[2]}, ${treble * 0.8})`;
         this.ctx.lineWidth = 2;
         this.nerveNodes.forEach(node => {
             node.connections.forEach(targetIdx => {
@@ -6246,7 +5923,7 @@ class Visualizer {
         // Draw nodes
         this.nerveNodes.forEach(node => {
             const radius = 10 + node.pulse * 25;
-            this.ctx.fillStyle = `rgba(100, 255, 255, ${0.6 + node.pulse * 0.4})`;
+            this.ctx.fillStyle = `rgba(${color2[0]}, ${color2[1]}, ${color2[2]}, ${0.6 + node.pulse * 0.4})`;
             this.ctx.beginPath();
             this.ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
             this.ctx.fill();
@@ -6261,6 +5938,10 @@ class Visualizer {
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4))
             .reduce((a, b) => a + b, 0) / (magnitudes.length / 4);
 
+        // Get color scheme
+        const scheme = COLOR_SCHEMES[this.settings.colorScheme];
+        const color1 = scheme.primary;
+
         // Draw clean bars
         const barWidth = this.canvas.width / magnitudes.length;
         magnitudes.forEach((magnitude, i) => {
@@ -6268,7 +5949,7 @@ class Visualizer {
             const x = i * barWidth;
             const y = this.canvas.height - barHeight;
 
-            this.ctx.fillStyle = '#64C8FF';
+            this.ctx.fillStyle = `rgb(${color1[0]}, ${color1[1]}, ${color1[2]})`;
             this.ctx.fillRect(x, y, barWidth - 2, barHeight);
         });
 
@@ -6361,8 +6042,12 @@ class Visualizer {
             this.cellularAutomaton = newGrid;
         }
 
+        // Get color scheme
+        const scheme = COLOR_SCHEMES[this.settings.colorScheme];
+        const color1 = scheme.primary;
+
         // Draw grid
-        this.ctx.fillStyle = '#64FF64';
+        this.ctx.fillStyle = `rgb(${color1[0]}, ${color1[1]}, ${color1[2]})`;
         for (let y = 0; y < gridSize; y++) {
             for (let x = 0; x < gridSize; x++) {
                 if (this.cellularAutomaton[y][x] === 1) {
@@ -6379,6 +6064,10 @@ class Visualizer {
         const chars = ['.', '-', '=', '+', '*', '#', '@'];
         const barWidth = this.canvas.width / magnitudes.length;
 
+        // Get color scheme
+        const scheme = COLOR_SCHEMES[this.settings.colorScheme];
+        const color1 = scheme.primary;
+
         this.ctx.font = '20px monospace';
         this.ctx.textAlign = 'center';
 
@@ -6392,8 +6081,9 @@ class Visualizer {
             for (let row = 0; row < barHeight; row++) {
                 const y = this.canvas.height - row * 30 - 30;
                 if (y > 0) {
-                    const brightness = 200 + magnitude * 55;
-                    this.ctx.fillStyle = `rgb(${brightness}, ${brightness}, ${brightness})`;
+                    // Use color scheme with varying opacity based on magnitude
+                    const alpha = 0.7 + magnitude * 0.3;
+                    this.ctx.fillStyle = `rgba(${color1[0]}, ${color1[1]}, ${color1[2]}, ${alpha})`;
                     this.ctx.fillText(char, x, y);
                 }
             }
@@ -6613,52 +6303,6 @@ class Visualizer {
                     this.ctx.fill();
                 }
             }
-        }
-    }
-
-    /**
-     * Mode 67: Pulsing Jellyfish
-     */
-    renderPulsingJellyfish(magnitudes) {
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4))
-            .reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-
-        // Jellyfish bell (pulses with bass)
-        const bellRadius = 80 + bass * 70;
-        const bellY = this.centerY - 100;
-
-        // Draw semi-transparent bell
-        this.ctx.globalAlpha = 0.6;
-        this.ctx.fillStyle = 'rgba(150, 100, 255, 0.6)';
-        this.ctx.beginPath();
-        this.ctx.ellipse(this.centerX, bellY, bellRadius, bellRadius * 0.7, 0, 0, Math.PI);
-        this.ctx.fill();
-        this.ctx.globalAlpha = 1.0;
-
-        // Tentacles (waveforms for frequencies)
-        const numTentacles = 8;
-        for (let t = 0; t < numTentacles; t++) {
-            const tentacleXOffset = (t - numTentacles / 2) * 30;
-            const freqStart = Math.floor(t * magnitudes.length / numTentacles);
-            const freqEnd = Math.floor((t + 1) * magnitudes.length / numTentacles);
-            const tentacleFreqs = magnitudes.slice(freqStart, freqEnd);
-
-            this.ctx.beginPath();
-            this.ctx.strokeStyle = 'rgba(200, 150, 255, 0.8)';
-            this.ctx.lineWidth = 3;
-
-            tentacleFreqs.forEach((magnitude, i) => {
-                const x = this.centerX + tentacleXOffset + Math.sin(i * 0.5 + this.frameCounter * 0.1) * 15;
-                const y = bellY + bellRadius / 2 + i * 8 + magnitude * 50;
-
-                if (i === 0) {
-                    this.ctx.moveTo(x, y);
-                } else {
-                    this.ctx.lineTo(x, y);
-                }
-            });
-
-            this.ctx.stroke();
         }
     }
 
@@ -8670,6 +8314,11 @@ class Visualizer {
         this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
+        // Get color scheme
+        const scheme = COLOR_SCHEMES[this.settings.colorScheme];
+        const color1 = scheme.primary;
+        const color2 = scheme.secondary;
+
         // Spawn mercury droplets on high treble
         if (treble > 0.5 && this.frameCounter % 3 === 0) {
             this.liquidMercuryParticles.push({
@@ -8699,14 +8348,14 @@ class Visualizer {
             }
 
             if (particle.y < this.canvas.height) {
-                // Draw with metallic shading
-                this.ctx.fillStyle = 'rgb(200, 200, 200)';
+                // Draw with color scheme
+                this.ctx.fillStyle = `rgb(${color1[0]}, ${color1[1]}, ${color1[2]})`;
                 this.ctx.beginPath();
                 this.ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
                 this.ctx.fill();
 
-                // Highlight
-                this.ctx.fillStyle = 'rgb(255, 255, 255)';
+                // Highlight with lighter version of secondary color
+                this.ctx.fillStyle = `rgb(${Math.min(255, color2[0] + 55)}, ${Math.min(255, color2[1] + 55)}, ${Math.min(255, color2[2] + 55)})`;
                 this.ctx.beginPath();
                 this.ctx.arc(particle.x - 5, particle.y - 5, particle.radius / 3, 0, Math.PI * 2);
                 this.ctx.fill();
@@ -8721,7 +8370,8 @@ class Visualizer {
             const rippleX = this.canvas.width / 2 + Math.sin(this.frameCounter * 0.1 + i) * 200;
             const rippleY = this.canvas.height - 100;
             const rippleRadius = 30 + i * 20 + mids * 30;
-            this.ctx.strokeStyle = 'rgb(150, 150, 150)';
+            const midColor = `rgb(${Math.round((color1[0] + color2[0]) / 2)}, ${Math.round((color1[1] + color2[1]) / 2)}, ${Math.round((color1[2] + color2[2]) / 2)})`;
+            this.ctx.strokeStyle = midColor;
             this.ctx.lineWidth = 2;
             this.ctx.beginPath();
             this.ctx.arc(rippleX, rippleY, rippleRadius, 0, Math.PI * 2);
@@ -29874,6 +29524,11140 @@ class Visualizer {
      * Collapse visualization with configurable columns
      */
     render1100Collapse(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+
+    // ========================================
+    // GENERATED MISSING RENDER METHODS
+    // ========================================
+
+    /**
+     * Mode 107: DnaHelix
+     * Dna Helix visualization with configurable parameters
+     */
+    render107DnaHelix(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 108: FractalBloom
+     * Fractal Bloom visualization with configurable parameters
+     */
+    render108FractalBloom(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 109: CircuitBoard
+     * Circuit Board visualization with configurable parameters
+     */
+    render109CircuitBoard(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 110: QuantumField
+     * Quantum Field visualization with configurable parameters
+     */
+    render110QuantumField(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 111: OrigamiUnfold
+     * Origami Unfold visualization with configurable parameters
+     */
+    render111OrigamiUnfold(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 112: GalaxySpiral
+     * Galaxy Spiral visualization with configurable parameters
+     */
+    render112GalaxySpiral(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 113: RubberBands
+     * Rubber Bands visualization with configurable parameters
+     */
+    render113RubberBands(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 114: InkDiffusion
+     * Ink Diffusion visualization with configurable parameters
+     */
+    render114InkDiffusion(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 115: GeometricKaleidoscope
+     * Geometric Kaleidoscope visualization with configurable parameters
+     */
+    render115GeometricKaleidoscope(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 157: WaterlineOscilloscope
+     * Waterline Oscilloscope visualization with configurable parameters
+     */
+    render157WaterlineOscilloscope(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 174: InkSplatterScope
+     * Ink Splatter Scope visualization with configurable parameters
+     */
+    render174InkSplatterScope(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 201: MeteorNet
+     * Meteor Net visualization with configurable parameters
+     */
+    render201Meteornet(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 202: DeepSpaceGardenHose
+     * Deep Space Garden Hose visualization with configurable parameters
+     */
+    render202DeepSpaceGardenHose(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 203: HorizonMonoliths
+     * Horizon Monoliths visualization with configurable parameters
+     */
+    render203HorizonMonoliths(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 204: GravitySlingshotTrails
+     * Gravity Slingshot Trails visualization with configurable parameters
+     */
+    render204GravitySlingshotTrails(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 205: SolarFlareNotches
+     * Solar Flare Notches visualization with configurable parameters
+     */
+    render205SolarFlareNotches(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 206: TesseractWindow
+     * Tesseract Window visualization with configurable parameters
+     */
+    render206TesseractWindow(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 207: InterstellarPostcards
+     * Interstellar Postcards visualization with configurable parameters
+     */
+    render207InterstellarPostcards(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 208: CosmicBraille
+     * Cosmic Braille visualization with configurable parameters
+     */
+    render208CosmicBraille(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 209: StellarHarpoon
+     * Stellar Harpoon visualization with configurable parameters
+     */
+    render209StellarHarpoon(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 210: GalaxyTickerTape
+     * Galaxy Ticker Tape visualization with configurable parameters
+     */
+    render210GalaxyTickerTape(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 211: AntimatterChess
+     * Antimatter Chess visualization with configurable parameters
+     */
+    render211AntimatterChess(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 212: StarNurseryConveyor
+     * Star Nursery Conveyor visualization with configurable parameters
+     */
+    render212StarNurseryConveyor(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 213: MagnetarLines
+     * Magnetar Lines visualization with configurable parameters
+     */
+    render213MagnetarLines(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 214: ZeroKelvinDiamonds
+     * Zero Kelvin Diamonds visualization with configurable parameters
+     */
+    render214ZeroKelvinDiamonds(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 215: OrbitalTimeGarden
+     * Orbital Time Garden visualization with configurable parameters
+     */
+    render215OrbitalTimeGarden(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 216: SubspaceRibbonPrinter
+     * Subspace Ribbon Printer visualization with configurable parameters
+     */
+    render216SubspaceRibbonPrinter(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 217: DarkMatterDrizzle
+     * Dark Matter Drizzle visualization with configurable parameters
+     */
+    render217DarkMatterDrizzle(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 218: MeteorChoirCones
+     * Meteor Choir Cones visualization with configurable parameters
+     */
+    render218MeteorChoirCones(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 219: FoldedGalaxyMap
+     * Folded Galaxy Map visualization with configurable parameters
+     */
+    render219FoldedGalaxyMap(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 220: IonThrusterPlume
+     * Ion Thruster Plume visualization with configurable parameters
+     */
+    render220IonThrusterPlume(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 221: CosmicDominoes
+     * Cosmic Dominoes visualization with configurable parameters
+     */
+    render221CosmicDominoes(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 222: SpacesuitHud
+     * Spacesuit Hud visualization with configurable parameters
+     */
+    render222SpacesuitHud(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 223: PulsarBarcodeBeam
+     * Pulsar Barcode Beam visualization with configurable parameters
+     */
+    render223PulsarBarcodeBeam(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 224: AstroTerrarium
+     * Astro Terrarium visualization with configurable parameters
+     */
+    render224AstroTerrarium(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 225: MicrometeorSparkCurtain
+     * Micrometeor Spark Curtain visualization with configurable parameters
+     */
+    render225MicrometeorSparkCurtain(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 276: QuantumLattice
+     * Quantum Lattice visualization with configurable parameters
+     */
+    render276QuantumLattice(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 277: PrismRays
+     * Prism Rays visualization with configurable parameters
+     */
+    render277PrismRays(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 278: LiquidNitrogen
+     * Liquid Nitrogen visualization with configurable parameters
+     */
+    render278LiquidNitrogen(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 279: SilkRoadCaravan
+     * Silk Road Caravan visualization with configurable parameters
+     */
+    render279SilkRoadCaravan(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 280: SteampunkGears
+     * Steampunk Gears visualization with configurable parameters
+     */
+    render280SteampunkGears(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 281: DragonScales
+     * Dragon Scales visualization with configurable parameters
+     */
+    render281DragonScales(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 282: TimeDilationGrid
+     * Time Dilation Grid visualization with configurable parameters
+     */
+    render282TimeDilationGrid(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 283: FiberBundle
+     * Fiber Bundle visualization with configurable parameters
+     */
+    render283FiberBundle(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 284: MothWingShimmer
+     * Moth Wing Shimmer visualization with configurable parameters
+     */
+    render284MothWingShimmer(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 285: CathedralRose
+     * Cathedral Rose visualization with configurable parameters
+     */
+    render285CathedralRose(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 286: NeonVeinsPulse
+     * Neon Veins Pulse visualization with configurable parameters
+     */
+    render286NeonVeinsPulse(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 287: GlacialCrack
+     * Glacial Crack visualization with configurable parameters
+     */
+    render287GlacialCrack(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 288: QuantumDots
+     * Quantum Dots visualization with configurable parameters
+     */
+    render288QuantumDots(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 289: OrigamiCraneFlight
+     * Origami Crane Flight visualization with configurable parameters
+     */
+    render289OrigamiCraneFlight(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 290: MagmaChamber
+     * Magma Chamber visualization with configurable parameters
+     */
+    render290MagmaChamber(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 291: SpiderWebDew
+     * Spider Web Dew visualization with configurable parameters
+     */
+    render291SpiderWebDew(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 292: NebulaBirth
+     * Nebula Birth visualization with configurable parameters
+     */
+    render292NebulaBirth(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 293: CircuitBoardLive
+     * Circuit Board Live visualization with configurable parameters
+     */
+    render293CircuitBoardLive(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 294: BioluminescentTide
+     * Bioluminescent Tide visualization with configurable parameters
+     */
+    render294BioluminescentTide(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 295: TesseractProjection
+     * Tesseract Projection visualization with configurable parameters
+     */
+    render295TesseractProjection(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 296: FrostCrystalGrowth
+     * Frost Crystal Growth visualization with configurable parameters
+     */
+    render296FrostCrystalGrowth(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 297: SoundWaveInterference
+     * Sound Wave Interference visualization with configurable parameters
+     */
+    render297SoundWaveInterference(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 298: HolographicFracture
+     * Holographic Fracture visualization with configurable parameters
+     */
+    render298HolographicFracture(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 299: PlasmaBallArc
+     * Plasma Ball Arc visualization with configurable parameters
+     */
+    render299PlasmaBallArc(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 300: EternalFlameDance
+     * Eternal Flame Dance visualization with configurable parameters
+     */
+    render300EternalFlameDance(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 400: WaterLilyReflection
+     * Water Lily Reflection visualization with configurable parameters
+     */
+    render400WaterLilyReflection(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 401: AtomModel
+     * Atom Model visualization with configurable parameters
+     */
+    render401AtomModel(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 402: DoubleHelix
+     * Double Helix visualization with configurable parameters
+     */
+    render402DoubleHelix(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 403: MagneticField
+     * Magnetic Field visualization with configurable parameters
+     */
+    render403MagneticField(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 404: WaveInterference
+     * Wave Interference visualization with configurable parameters
+     */
+    render404WaveInterference(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 406: CrystalLattice
+     * Crystal Lattice visualization with configurable parameters
+     */
+    render406CrystalLattice(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 407: ElectromagneticWave
+     * Electromagnetic Wave visualization with configurable parameters
+     */
+    render407ElectromagneticWave(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 408: QuantumTunneling
+     * Quantum Tunneling visualization with configurable parameters
+     */
+    render408QuantumTunneling(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 409: FissionReaction
+     * Fission Reaction visualization with configurable parameters
+     */
+    render409FissionReaction(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 410: DopplerEffect
+     * Doppler Effect visualization with configurable parameters
+     */
+    render410DopplerEffect(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 411: GravityWell
+     * Gravity Well visualization with configurable parameters
+     */
+    render411GravityWell(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 412: PrismSpectrum
+     * Prism Spectrum visualization with configurable parameters
+     */
+    render412PrismSpectrum(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 413: MolecularBonds
+     * Molecular Bonds visualization with configurable parameters
+     */
+    render413MolecularBonds(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 414: StandingWave
+     * Standing Wave visualization with configurable parameters
+     */
+    render414StandingWave(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 415: BrownianMotion
+     * Brownian Motion visualization with configurable parameters
+     */
+    render415BrownianMotion(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 416: TeslaCoil
+     * Tesla Coil visualization with configurable parameters
+     */
+    render416TeslaCoil(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 417: PhaseTransition
+     * Phase Transition visualization with configurable parameters
+     */
+    render417PhaseTransition(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 418: Superconductor
+     * Superconductor visualization with configurable parameters
+     */
+    render418Superconductor(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 419: NeuronFiring
+     * Neuron Firing visualization with configurable parameters
+     */
+    render419NeuronFiring(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 420: ResonanceModes
+     * Resonance Modes visualization with configurable parameters
+     */
+    render420ResonanceModes(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 421: FractalDiffusion
+     * Fractal Diffusion visualization with configurable parameters
+     */
+    render421FractalDiffusion(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 422: PlasmaBall
+     * Plasma Ball visualization with configurable parameters
+     */
+    render422PlasmaBall(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 423: CoriolisEffect
+     * Coriolis Effect visualization with configurable parameters
+     */
+    render423CoriolisEffect(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 424: PhotoelectricEffect
+     * Photoelectric Effect visualization with configurable parameters
+     */
+    render424PhotoelectricEffect(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 425: LorenzAttractor
+     * Lorenz Attractor visualization with configurable parameters
+     */
+    render425LorenzAttractor(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 426: SpinPrecession
+     * Spin Precession visualization with configurable parameters
+     */
+    render426SpinPrecession(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 427: ComptonScattering
+     * Compton Scattering visualization with configurable parameters
+     */
+    render427ComptonScattering(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 428: Ferrofluid
+     * Ferrofluid visualization with configurable parameters
+     */
+    render428Ferrofluid(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 429: Sonoluminescence
+     * Sonoluminescence visualization with configurable parameters
+     */
+    render429Sonoluminescence(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 430: CherenkovRadiation
+     * Cherenkov Radiation visualization with configurable parameters
+     */
+    render430CherenkovRadiation(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 431: HallEffect
+     * Hall Effect visualization with configurable parameters
+     */
+    render431HallEffect(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 432: Cymatics
+     * Cymatics visualization with configurable parameters
+     */
+    render432Cymatics(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 433: KleinBottle
+     * Klein Bottle visualization with configurable parameters
+     */
+    render433KleinBottle(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 434: RamanScattering
+     * Raman Scattering visualization with configurable parameters
+     */
+    render434RamanScattering(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 435: VortexShedding
+     * Vortex Shedding visualization with configurable parameters
+     */
+    render435VortexShedding(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 436: Polarization
+     * Polarization visualization with configurable parameters
+     */
+    render436Polarization(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 437: HiggsField
+     * Higgs Field visualization with configurable parameters
+     */
+    render437HiggsField(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 438: BoseEinstein
+     * Bose Einstein visualization with configurable parameters
+     */
+    render438BoseEinstein(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 439: SchrodingerCat
+     * Schrodinger Cat visualization with configurable parameters
+     */
+    render439SchrodingerCat(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 440: StringVibration
+     * String Vibration visualization with configurable parameters
+     */
+    render440StringVibration(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 441: ElectronCloud
+     * Electron Cloud visualization with configurable parameters
+     */
+    render441ElectronCloud(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 442: Thermoelectric
+     * Thermoelectric visualization with configurable parameters
+     */
+    render442Thermoelectric(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 443: PhotonEntanglement
+     * Photon Entanglement visualization with configurable parameters
+     */
+    render443PhotonEntanglement(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 444: Superfluidity
+     * Superfluidity visualization with configurable parameters
+     */
+    render444Superfluidity(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 445: Piezoelectric
+     * Piezoelectric visualization with configurable parameters
+     */
+    render445Piezoelectric(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 446: ZeemanEffect
+     * Zeeman Effect visualization with configurable parameters
+     */
+    render446ZeemanEffect(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 447: CyclotronMotion
+     * Cyclotron Motion visualization with configurable parameters
+     */
+    render447CyclotronMotion(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 448: FusionReactor
+     * Fusion Reactor visualization with configurable parameters
+     */
+    render448FusionReactor(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 449: Antimatter
+     * Antimatter visualization with configurable parameters
+     */
+    render449Antimatter(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 450: HawkingRadiation
+     * Hawking Radiation visualization with configurable parameters
+     */
+    render450HawkingRadiation(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 451: HeisenbergUncertainty
+     * Heisenberg Uncertainty visualization with configurable parameters
+     */
+    render451HeisenbergUncertainty(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 453: LaserCavity
+     * Laser Cavity visualization with configurable parameters
+     */
+    render453LaserCavity(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 454: DielectricBreakdown
+     * Dielectric Breakdown visualization with configurable parameters
+     */
+    render454DielectricBreakdown(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 455: CasimirEffect
+     * Casimir Effect visualization with configurable parameters
+     */
+    render455CasimirEffect(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 456: Sonochemistry
+     * Sonochemistry visualization with configurable parameters
+     */
+    render456Sonochemistry(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 457: PhononPropagation
+     * Phonon Propagation visualization with configurable parameters
+     */
+    render457PhononPropagation(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 458: PairProduction
+     * Pair Production visualization with configurable parameters
+     */
+    render458PairProduction(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 459: StefanBoltzmann
+     * Stefan Boltzmann visualization with configurable parameters
+     */
+    render459StefanBoltzmann(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 460: EddyCurrents
+     * Eddy Currents visualization with configurable parameters
+     */
+    render460EddyCurrents(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 461: WavefunctionCollapse
+     * Wavefunction Collapse visualization with configurable parameters
+     */
+    render461WavefunctionCollapse(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 462: QedFeynman
+     * Qed Feynman visualization with configurable parameters
+     */
+    render462QedFeynman(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 463: Holography
+     * Holography visualization with configurable parameters
+     */
+    render463Holography(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 464: Metamaterial
+     * Metamaterial visualization with configurable parameters
+     */
+    render464Metamaterial(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 465: Photodiode
+     * Photodiode visualization with configurable parameters
+     */
+    render465Photodiode(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 466: Bremsstrahlung
+     * Bremsstrahlung visualization with configurable parameters
+     */
+    render466Bremsstrahlung(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 467: Optogenetics
+     * Optogenetics visualization with configurable parameters
+     */
+    render467Optogenetics(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 468: TopologicalInsulator
+     * Topological Insulator visualization with configurable parameters
+     */
+    render468TopologicalInsulator(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 469: NernstEquation
+     * Nernst Equation visualization with configurable parameters
+     */
+    render469NernstEquation(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 470: MriPrecession
+     * Mri Precession visualization with configurable parameters
+     */
+    render470MriPrecession(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 471: JosephsonJunction
+     * Josephson Junction visualization with configurable parameters
+     */
+    render471JosephsonJunction(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 472: LiquidCrystal
+     * Liquid Crystal visualization with configurable parameters
+     */
+    render472LiquidCrystal(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 473: RydbergAtoms
+     * Rydberg Atoms visualization with configurable parameters
+     */
+    render473RydbergAtoms(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 474: CavityQed
+     * Cavity Qed visualization with configurable parameters
+     */
+    render474CavityQed(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 475: QuantumDots
+     * Quantum Dots visualization with configurable parameters
+     */
+    render475QuantumDots(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 476: SolitonWave
+     * Soliton Wave visualization with configurable parameters
+     */
+    render476SolitonWave(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 477: AcousticLevitation
+     * Acoustic Levitation visualization with configurable parameters
+     */
+    render477AcousticLevitation(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 478: MosfetChannel
+     * Mosfet Channel visualization with configurable parameters
+     */
+    render478MosfetChannel(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 479: Spintronics
+     * Spintronics visualization with configurable parameters
+     */
+    render479Spintronics(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 480: Electrochemistry
+     * Electrochemistry visualization with configurable parameters
+     */
+    render480Electrochemistry(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 481: LangmuirWave
+     * Langmuir Wave visualization with configurable parameters
+     */
+    render481LangmuirWave(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 482: BlochSphere
+     * Bloch Sphere visualization with configurable parameters
+     */
+    render482BlochSphere(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 483: CurieTemperature
+     * Curie Temperature visualization with configurable parameters
+     */
+    render483CurieTemperature(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 484: DysonSphere
+     * Dyson Sphere visualization with configurable parameters
+     */
+    render484DysonSphere(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 485: GrapheneLattice
+     * Graphene Lattice visualization with configurable parameters
+     */
+    render485GrapheneLattice(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 486: Memristor
+     * Memristor visualization with configurable parameters
+     */
+    render486Memristor(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 487: QuantumHall
+     * Quantum Hall visualization with configurable parameters
+     */
+    render487QuantumHall(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 488: Optomechanics
+     * Optomechanics visualization with configurable parameters
+     */
+    render488Optomechanics(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 489: Exciton
+     * Exciton visualization with configurable parameters
+     */
+    render489Exciton(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 490: PhotonicCrystal
+     * Photonic Crystal visualization with configurable parameters
+     */
+    render490PhotonicCrystal(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 491: Skyrmion
+     * Skyrmion visualization with configurable parameters
+     */
+    render491Skyrmion(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 492: MottInsulator
+     * Mott Insulator visualization with configurable parameters
+     */
+    render492MottInsulator(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 493: Squeezing
+     * Squeezing visualization with configurable parameters
+     */
+    render493Squeezing(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 494: AndreevReflection
+     * Andreev Reflection visualization with configurable parameters
+     */
+    render494AndreevReflection(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 495: CasimirPolder
+     * Casimir Polder visualization with configurable parameters
+     */
+    render495CasimirPolder(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 496: FanoResonance
+     * Fano Resonance visualization with configurable parameters
+     */
+    render496FanoResonance(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 497: QuantumZeno
+     * Quantum Zeno visualization with configurable parameters
+     */
+    render497QuantumZeno(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 498: RabiOscillation
+     * Rabi Oscillation visualization with configurable parameters
+     */
+    render498RabiOscillation(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 499: AharonovBohm
+     * Aharonov Bohm visualization with configurable parameters
+     */
+    render499AharonovBohm(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 500: BerryPhase
+     * Berry Phase visualization with configurable parameters
+     */
+    render500BerryPhase(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 501: Impressionist
+     * Impressionist visualization with configurable parameters
+     */
+    render501Impressionist(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 502: Cubist
+     * Cubist visualization with configurable parameters
+     */
+    render502Cubist(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 503: Surreal
+     * Surreal visualization with configurable parameters
+     */
+    render503Surreal(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 504: AbstractExpressionist
+     * Abstract Expressionist visualization with configurable parameters
+     */
+    render504AbstractExpressionist(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 505: PopArt
+     * Pop Art visualization with configurable parameters
+     */
+    render505PopArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 506: Minimalist
+     * Minimalist visualization with configurable parameters
+     */
+    render506Minimalist(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 507: Pointillist
+     * Pointillist visualization with configurable parameters
+     */
+    render507Pointillist(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 508: ArtDeco
+     * Art Deco visualization with configurable parameters
+     */
+    render508ArtDeco(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 509: ArtNouveau
+     * Art Nouveau visualization with configurable parameters
+     */
+    render509ArtNouveau(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 510: Bauhaus
+     * Bauhaus visualization with configurable parameters
+     */
+    render510Bauhaus(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 511: Futurist
+     * Futurist visualization with configurable parameters
+     */
+    render511Futurist(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 512: Dadaist
+     * Dadaist visualization with configurable parameters
+     */
+    render512Dadaist(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 513: Expressionist
+     * Expressionist visualization with configurable parameters
+     */
+    render513Expressionist(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 514: Fauvism
+     * Fauvism visualization with configurable parameters
+     */
+    render514Fauvism(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 515: Constructivist
+     * Constructivist visualization with configurable parameters
+     */
+    render515Constructivist(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 516: Suprematist
+     * Suprematist visualization with configurable parameters
+     */
+    render516Suprematist(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 517: Vorticism
+     * Vorticism visualization with configurable parameters
+     */
+    render517Vorticism(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 518: Orphism
+     * Orphism visualization with configurable parameters
+     */
+    render518Orphism(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 519: Rayonism
+     * Rayonism visualization with configurable parameters
+     */
+    render519Rayonism(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 520: Synchromism
+     * Synchromism visualization with configurable parameters
+     */
+    render520Synchromism(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 521: Precisionism
+     * Precisionism visualization with configurable parameters
+     */
+    render521Precisionism(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 522: Regionalism
+     * Regionalism visualization with configurable parameters
+     */
+    render522Regionalism(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 523: SocialRealism
+     * Social Realism visualization with configurable parameters
+     */
+    render523SocialRealism(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 524: NeoPlasticism
+     * Neo Plasticism visualization with configurable parameters
+     */
+    render524NeoPlasticism(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 525: DeStijl
+     * De Stijl visualization with configurable parameters
+     */
+    render525DeStijl(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 526: ColorField
+     * Color Field visualization with configurable parameters
+     */
+    render526ColorField(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 527: HardEdge
+     * Hard Edge visualization with configurable parameters
+     */
+    render527HardEdge(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 528: LyricalAbstraction
+     * Lyrical Abstraction visualization with configurable parameters
+     */
+    render528LyricalAbstraction(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 529: Tachisme
+     * Tachisme visualization with configurable parameters
+     */
+    render529Tachisme(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 530: ActionPainting
+     * Action Painting visualization with configurable parameters
+     */
+    render530ActionPainting(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 531: StainPainting
+     * Stain Painting visualization with configurable parameters
+     */
+    render531StainPainting(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 532: ShapedCanvas
+     * Shaped Canvas visualization with configurable parameters
+     */
+    render532ShapedCanvas(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 533: Monochrome
+     * Monochrome visualization with configurable parameters
+     */
+    render533Monochrome(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 534: KineticArt
+     * Kinetic Art visualization with configurable parameters
+     */
+    render534KineticArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 535: OpArt
+     * Op Art visualization with configurable parameters
+     */
+    render535OpArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 536: LightArt
+     * Light Art visualization with configurable parameters
+     */
+    render536LightArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 537: LandArt
+     * Land Art visualization with configurable parameters
+     */
+    render537LandArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 538: EarthArt
+     * Earth Art visualization with configurable parameters
+     */
+    render538EarthArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 539: EnvironmentalArt
+     * Environmental Art visualization with configurable parameters
+     */
+    render539EnvironmentalArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 540: InstallationArt
+     * Installation Art visualization with configurable parameters
+     */
+    render540InstallationArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 541: VideoArt
+     * Video Art visualization with configurable parameters
+     */
+    render541VideoArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 542: DigitalArt
+     * Digital Art visualization with configurable parameters
+     */
+    render542DigitalArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 543: GlitchArt
+     * Glitch Art visualization with configurable parameters
+     */
+    render543GlitchArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 544: PixelArt
+     * Pixel Art visualization with configurable parameters
+     */
+    render544PixelArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 545: AsciiArt
+     * Ascii Art visualization with configurable parameters
+     */
+    render545AsciiArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 546: VectorArt
+     * Vector Art visualization with configurable parameters
+     */
+    render546VectorArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 547: FractalArt
+     * Fractal Art visualization with configurable parameters
+     */
+    render547FractalArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 548: AlgorithmicArt
+     * Algorithmic Art visualization with configurable parameters
+     */
+    render548AlgorithmicArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 549: GenerativeArt
+     * Generative Art visualization with configurable parameters
+     */
+    render549GenerativeArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 550: DataArt
+     * Data Art visualization with configurable parameters
+     */
+    render550DataArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 551: BioArt
+     * Bio Art visualization with configurable parameters
+     */
+    render551BioArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 552: NetArt
+     * Net Art visualization with configurable parameters
+     */
+    render552NetArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 553: SoftwareArt
+     * Software Art visualization with configurable parameters
+     */
+    render553SoftwareArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 554: RoboticArt
+     * Robotic Art visualization with configurable parameters
+     */
+    render554RoboticArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 555: InteractiveArt
+     * Interactive Art visualization with configurable parameters
+     */
+    render555InteractiveArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 556: ProjectionMapping
+     * Projection Mapping visualization with configurable parameters
+     */
+    render556ProjectionMapping(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 557: HolographicArt
+     * Holographic Art visualization with configurable parameters
+     */
+    render557HolographicArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 558: AugmentedRealityArt
+     * Augmented Reality Art visualization with configurable parameters
+     */
+    render558AugmentedRealityArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 559: VrArt
+     * Vr Art visualization with configurable parameters
+     */
+    render559VrArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 560: ProceduralArt
+     * Procedural Art visualization with configurable parameters
+     */
+    render560ProceduralArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 561: ParametricArt
+     * Parametric Art visualization with configurable parameters
+     */
+    render561ParametricArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 562: MathematicalArt
+     * Mathematical Art visualization with configurable parameters
+     */
+    render562MathematicalArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 563: GeometricArt
+     * Geometric Art visualization with configurable parameters
+     */
+    render563GeometricArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 564: TessellationArt
+     * Tessellation Art visualization with configurable parameters
+     */
+    render564TessellationArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 565: SymmetryArt
+     * Symmetry Art visualization with configurable parameters
+     */
+    render565SymmetryArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 566: KaleidoscopeArt
+     * Kaleidoscope Art visualization with configurable parameters
+     */
+    render566KaleidoscopeArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 567: MandalaArt
+     * Mandala Art visualization with configurable parameters
+     */
+    render567MandalaArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 568: ZentangleArt
+     * Zentangle Art visualization with configurable parameters
+     */
+    render568ZentangleArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 569: DoodleArt
+     * Doodle Art visualization with configurable parameters
+     */
+    render569DoodleArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 570: StreetArt
+     * Street Art visualization with configurable parameters
+     */
+    render570StreetArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 571: GraffitiArt
+     * Graffiti Art visualization with configurable parameters
+     */
+    render571GraffitiArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 572: MuralArt
+     * Mural Art visualization with configurable parameters
+     */
+    render572MuralArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 573: StencilArt
+     * Stencil Art visualization with configurable parameters
+     */
+    render573StencilArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 574: WheatPasteArt
+     * Wheat Paste Art visualization with configurable parameters
+     */
+    render574WheatPasteArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 575: SprayPaintArt
+     * Spray Paint Art visualization with configurable parameters
+     */
+    render575SprayPaintArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 576: MosaicArt
+     * Mosaic Art visualization with configurable parameters
+     */
+    render576MosaicArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 577: CollageArt
+     * Collage Art visualization with configurable parameters
+     */
+    render577CollageArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 578: MixedMediaArt
+     * Mixed Media Art visualization with configurable parameters
+     */
+    render578MixedMediaArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 579: AssemblageArt
+     * Assemblage Art visualization with configurable parameters
+     */
+    render579AssemblageArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 580: FoundObjectArt
+     * Found Object Art visualization with configurable parameters
+     */
+    render580FoundObjectArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 581: ReadymadeArt
+     * Readymade Art visualization with configurable parameters
+     */
+    render581ReadymadeArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 582: AppropriationArt
+     * Appropriation Art visualization with configurable parameters
+     */
+    render582AppropriationArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 583: SamplingArt
+     * Sampling Art visualization with configurable parameters
+     */
+    render583SamplingArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 584: RemixArt
+     * Remix Art visualization with configurable parameters
+     */
+    render584RemixArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 585: MashupArt
+     * Mashup Art visualization with configurable parameters
+     */
+    render585MashupArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 586: Photomontage
+     * Photomontage visualization with configurable parameters
+     */
+    render586Photomontage(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 587: CutUpTechnique
+     * Cut Up Technique visualization with configurable parameters
+     */
+    render587CutUpTechnique(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 588: ExquisiteCorpse
+     * Exquisite Corpse visualization with configurable parameters
+     */
+    render588ExquisiteCorpse(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 589: AutomaticDrawing
+     * Automatic Drawing visualization with configurable parameters
+     */
+    render589AutomaticDrawing(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 590: ChanceArt
+     * Chance Art visualization with configurable parameters
+     */
+    render590ChanceArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 591: IndeterminacyArt
+     * Indeterminacy Art visualization with configurable parameters
+     */
+    render591IndeterminacyArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 592: AleatoryArt
+     * Aleatory Art visualization with configurable parameters
+     */
+    render592AleatoryArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 593: StochasticArt
+     * Stochastic Art visualization with configurable parameters
+     */
+    render593StochasticArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 594: EntropyArt
+     * Entropy Art visualization with configurable parameters
+     */
+    render594EntropyArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 595: ChaosArt
+     * Chaos Art visualization with configurable parameters
+     */
+    render595ChaosArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 596: ComplexityArt
+     * Complexity Art visualization with configurable parameters
+     */
+    render596ComplexityArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 597: EmergenceArt
+     * Emergence Art visualization with configurable parameters
+     */
+    render597EmergenceArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 598: SelfOrganizationArt
+     * Self Organization Art visualization with configurable parameters
+     */
+    render598SelfOrganizationArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 600: FlockingArt
+     * Flocking Art visualization with configurable parameters
+     */
+    render600FlockingArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 601: Nebula
+     * Nebula visualization with configurable parameters
+     */
+    render601Nebula(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 602: GalaxySpiral
+     * Galaxy Spiral visualization with configurable parameters
+     */
+    render602GalaxySpiral(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 603: BlackHole
+     * Black Hole visualization with configurable parameters
+     */
+    render603BlackHole(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 604: Pulsar
+     * Pulsar visualization with configurable parameters
+     */
+    render604Pulsar(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 605: Quasar
+     * Quasar visualization with configurable parameters
+     */
+    render605Quasar(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 606: Supernova
+     * Supernova visualization with configurable parameters
+     */
+    render606Supernova(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 607: StarCluster
+     * Star Cluster visualization with configurable parameters
+     */
+    render607StarCluster(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 608: AsteroidBelt
+     * Asteroid Belt visualization with configurable parameters
+     */
+    render608AsteroidBelt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 609: CometTail
+     * Comet Tail visualization with configurable parameters
+     */
+    render609CometTail(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 610: MeteorShower
+     * Meteor Shower visualization with configurable parameters
+     */
+    render610MeteorShower(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 611: PlanetaryRings
+     * Planetary Rings visualization with configurable parameters
+     */
+    render611PlanetaryRings(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 612: SolarFlare
+     * Solar Flare visualization with configurable parameters
+     */
+    render612SolarFlare(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 613: CoronalMassEjection
+     * Coronal Mass Ejection visualization with configurable parameters
+     */
+    render613CoronalMassEjection(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 614: CosmicRay
+     * Cosmic Ray visualization with configurable parameters
+     */
+    render614CosmicRay(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 615: GammaRayBurst
+     * Gamma Ray Burst visualization with configurable parameters
+     */
+    render615GammaRayBurst(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 616: GravitationalLens
+     * Gravitational Lens visualization with configurable parameters
+     */
+    render616GravitationalLens(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 617: DarkMatterHalo
+     * Dark Matter Halo visualization with configurable parameters
+     */
+    render617DarkMatterHalo(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 618: CosmicWeb
+     * Cosmic Web visualization with configurable parameters
+     */
+    render618CosmicWeb(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 619: Void
+     * Void visualization with configurable parameters
+     */
+    render619Void(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 620: FilamentStructure
+     * Filament Structure visualization with configurable parameters
+     */
+    render620FilamentStructure(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 621: HubbleDeepField
+     * Hubble Deep Field visualization with configurable parameters
+     */
+    render621HubbleDeepField(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 622: GalaxyCollision
+     * Galaxy Collision visualization with configurable parameters
+     */
+    render622GalaxyCollision(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 623: TidalTail
+     * Tidal Tail visualization with configurable parameters
+     */
+    render623TidalTail(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 624: StarburstGalaxy
+     * Starburst Galaxy visualization with configurable parameters
+     */
+    render624StarburstGalaxy(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 625: ActiveGalacticNucleus
+     * Active Galactic Nucleus visualization with configurable parameters
+     */
+    render625ActiveGalacticNucleus(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 626: Blazar
+     * Blazar visualization with configurable parameters
+     */
+    render626Blazar(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 627: SeyfertGalaxy
+     * Seyfert Galaxy visualization with configurable parameters
+     */
+    render627SeyfertGalaxy(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 628: RadioGalaxy
+     * Radio Galaxy visualization with configurable parameters
+     */
+    render628RadioGalaxy(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 629: EllipticalGalaxy
+     * Elliptical Galaxy visualization with configurable parameters
+     */
+    render629EllipticalGalaxy(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 630: IrregularGalaxy
+     * Irregular Galaxy visualization with configurable parameters
+     */
+    render630IrregularGalaxy(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 631: DwarfGalaxy
+     * Dwarf Galaxy visualization with configurable parameters
+     */
+    render631DwarfGalaxy(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 632: GlobularCluster
+     * Globular Cluster visualization with configurable parameters
+     */
+    render632GlobularCluster(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 633: OpenCluster
+     * Open Cluster visualization with configurable parameters
+     */
+    render633OpenCluster(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 634: ProtoplanetaryDisk
+     * Protoplanetary Disk visualization with configurable parameters
+     */
+    render634ProtoplanetaryDisk(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 635: AccretionDisk
+     * Accretion Disk visualization with configurable parameters
+     */
+    render635AccretionDisk(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 636: JetsFromBlackHole
+     * Jets From Black Hole visualization with configurable parameters
+     */
+    render636JetsFromBlackHole(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 637: EventHorizon
+     * Event Horizon visualization with configurable parameters
+     */
+    render637EventHorizon(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 638: PhotonSphere
+     * Photon Sphere visualization with configurable parameters
+     */
+    render638PhotonSphere(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 639: Ergosphere
+     * Ergosphere visualization with configurable parameters
+     */
+    render639Ergosphere(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 640: Singularity
+     * Singularity visualization with configurable parameters
+     */
+    render640Singularity(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 641: Wormhole
+     * Wormhole visualization with configurable parameters
+     */
+    render641Wormhole(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 642: WhiteHole
+     * White Hole visualization with configurable parameters
+     */
+    render642WhiteHole(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 643: NakedSingularity
+     * Naked Singularity visualization with configurable parameters
+     */
+    render643NakedSingularity(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 644: HawkingRadiation
+     * Hawking Radiation visualization with configurable parameters
+     */
+    render644HawkingRadiation(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 645: InformationParadox
+     * Information Paradox visualization with configurable parameters
+     */
+    render645InformationParadox(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 646: MultiverseBubble
+     * Multiverse Bubble visualization with configurable parameters
+     */
+    render646MultiverseBubble(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.canvas.width + this.canvas.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.canvas.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.canvas.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.canvas.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 647: ParallelUniverse
+     * Parallel Universe visualization with configurable parameters
+     */
+    render647ParallelUniverse(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 648: BraneCollision
+     * Brane Collision visualization with configurable parameters
+     */
+    render648BraneCollision(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 649: ExtraDimensions
+     * Extra Dimensions visualization with configurable parameters
+     */
+    render649ExtraDimensions(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 650: CalabiYauManifold
+     * Calabi Yau Manifold visualization with configurable parameters
+     */
+    render650CalabiYauManifold(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 651: StringTheoryVibration
+     * String Theory Vibration visualization with configurable parameters
+     */
+    render651StringTheoryVibration(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 652: QuantumFoam
+     * Quantum Foam visualization with configurable parameters
+     */
+    render652QuantumFoam(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 653: PlanckScale
+     * Planck Scale visualization with configurable parameters
+     */
+    render653PlanckScale(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 654: BigBang
+     * Big Bang visualization with configurable parameters
+     */
+    render654BigBang(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 655: CosmicMicrowaveBackground
+     * Cosmic Microwave Background visualization with configurable parameters
+     */
+    render655CosmicMicrowaveBackground(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 656: InflationField
+     * Inflation Field visualization with configurable parameters
+     */
+    render656InflationField(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 657: DensityFluctuations
+     * Density Fluctuations visualization with configurable parameters
+     */
+    render657DensityFluctuations(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 658: BaryonAcousticOscillations
+     * Baryon Acoustic Oscillations visualization with configurable parameters
+     */
+    render658BaryonAcousticOscillations(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 659: DarkEnergy
+     * Dark Energy visualization with configurable parameters
+     */
+    render659DarkEnergy(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 660: CosmologicalConstant
+     * Cosmological Constant visualization with configurable parameters
+     */
+    render660CosmologicalConstant(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 661: QuintessenceField
+     * Quintessence Field visualization with configurable parameters
+     */
+    render661QuintessenceField(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 662: HeatDeath
+     * Heat Death visualization with configurable parameters
+     */
+    render662HeatDeath(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 663: BigRip
+     * Big Rip visualization with configurable parameters
+     */
+    render663BigRip(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 664: BigCrunch
+     * Big Crunch visualization with configurable parameters
+     */
+    render664BigCrunch(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 665: BigBounce
+     * Big Bounce visualization with configurable parameters
+     */
+    render665BigBounce(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 666: CyclicUniverse
+     * Cyclic Universe visualization with configurable parameters
+     */
+    render666CyclicUniverse(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 667: ConformalCyclicCosmology
+     * Conformal Cyclic Cosmology visualization with configurable parameters
+     */
+    render667ConformalCyclicCosmology(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 668: EternalInflation
+     * Eternal Inflation visualization with configurable parameters
+     */
+    render668EternalInflation(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 669: LandscapeMultiverse
+     * Landscape Multiverse visualization with configurable parameters
+     */
+    render669LandscapeMultiverse(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 670: QuantumDecoherence
+     * Quantum Decoherence visualization with configurable parameters
+     */
+    render670QuantumDecoherence(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 671: ManyWorlds
+     * Many Worlds visualization with configurable parameters
+     */
+    render671ManyWorlds(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 672: PilotWave
+     * Pilot Wave visualization with configurable parameters
+     */
+    render672PilotWave(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 673: SpontaneousCollapse
+     * Spontaneous Collapse visualization with configurable parameters
+     */
+    render673SpontaneousCollapse(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 674: TransactionalInterpretation
+     * Transactional Interpretation visualization with configurable parameters
+     */
+    render674TransactionalInterpretation(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 675: RelationalQuantumMechanics
+     * Relational Quantum Mechanics visualization with configurable parameters
+     */
+    render675RelationalQuantumMechanics(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 676: QuantumBayesianism
+     * Quantum Bayesianism visualization with configurable parameters
+     */
+    render676QuantumBayesianism(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 677: ConsistentHistories
+     * Consistent Histories visualization with configurable parameters
+     */
+    render677ConsistentHistories(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 678: BohemianMechanics
+     * Bohemian Mechanics visualization with configurable parameters
+     */
+    render678BohemianMechanics(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 679: StochasticMechanics
+     * Stochastic Mechanics visualization with configurable parameters
+     */
+    render679StochasticMechanics(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 680: QuantumDarwinism
+     * Quantum Darwinism visualization with configurable parameters
+     */
+    render680QuantumDarwinism(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 681: Einselection
+     * Einselection visualization with configurable parameters
+     */
+    render681Einselection(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 682: PointerStates
+     * Pointer States visualization with configurable parameters
+     */
+    render682PointerStates(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 683: BranchingSpacetime
+     * Branching Spacetime visualization with configurable parameters
+     */
+    render683BranchingSpacetime(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 684: Worldline
+     * Worldline visualization with configurable parameters
+     */
+    render684Worldline(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 685: LightCone
+     * Light Cone visualization with configurable parameters
+     */
+    render685LightCone(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 686: CauchySurface
+     * Cauchy Surface visualization with configurable parameters
+     */
+    render686CauchySurface(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 687: SpacelikeHypersurface
+     * Spacelike Hypersurface visualization with configurable parameters
+     */
+    render687SpacelikeHypersurface(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 688: TimelikeCurve
+     * Timelike Curve visualization with configurable parameters
+     */
+    render688TimelikeCurve(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 689: ClosedTimelikeCurve
+     * Closed Timelike Curve visualization with configurable parameters
+     */
+    render689ClosedTimelikeCurve(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 690: ChronologyProtection
+     * Chronology Protection visualization with configurable parameters
+     */
+    render690ChronologyProtection(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 691: NovikovSelfConsistency
+     * Novikov Self Consistency visualization with configurable parameters
+     */
+    render691NovikovSelfConsistency(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 692: GrandfatherParadox
+     * Grandfather Paradox visualization with configurable parameters
+     */
+    render692GrandfatherParadox(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 693: BootstrapParadox
+     * Bootstrap Paradox visualization with configurable parameters
+     */
+    render693BootstrapParadox(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 694: PredestinationParadox
+     * Predestination Paradox visualization with configurable parameters
+     */
+    render694PredestinationParadox(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 695: CausalLoop
+     * Causal Loop visualization with configurable parameters
+     */
+    render695CausalLoop(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 696: Retrocausality
+     * Retrocausality visualization with configurable parameters
+     */
+    render696Retrocausality(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 697: AdvancedWave
+     * Advanced Wave visualization with configurable parameters
+     */
+    render697AdvancedWave(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 698: WheelerFeynmanAbsorber
+     * Wheeler Feynman Absorber visualization with configurable parameters
+     */
+    render698WheelerFeynmanAbsorber(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 699: TransactionalInterpretation
+     * Transactional Interpretation visualization with configurable parameters
+     */
+    render699TransactionalInterpretation(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const complexity = Math.floor(params.complexity || 5);
+
+        // Use complexity to determine number of columns (3-12 range)
+        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+
+        for (let i = 0; i < numColumns; i++) {
+            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
+            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
+            const mag = magnitudes[magIdx] * intensity;
+            const height = mag * this.height * 0.7;
+
+            const color = this.getColor(i, numColumns);
+
+            // Filled rectangle
+            this.ctx.fillStyle = color;
+            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+
+            // Border rectangle for depth
+            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
+            this.ctx.lineWidth = 2;
+            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+        }
+    }
+    /**
+     * Mode 700: TwoStateVector
+     * Two State Vector visualization with configurable parameters
+     */
+    render700TwoStateVector(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;

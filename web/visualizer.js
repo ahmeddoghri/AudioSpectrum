@@ -6301,62 +6301,148 @@ class Visualizer {
      * Mode 73: Lightning Cloud
      */
     renderLightningCloud(magnitudes) {
+        // Use Step 4 settings
+        const numBars = this.settings.numBars || 72;
+
+        // Get parameters from settings with defaults (scaled by numBars)
+        const cloudDensity = Math.floor((this.settings.lightning_cloudCloudDensity || 25) * (numBars / 72));
+        const cloudSize = this.settings.lightning_cloudCloudSize || 50;
+        const lightningFrequency = this.settings.lightning_cloudLightningFrequency || 0.5;
+        const lightningSegments = this.settings.lightning_cloudLightningSegments || 8;
+        const lightningWidth = this.settings.lightning_cloudLightningWidth || 6;
+        const trailOpacity = this.settings.lightning_cloudTrailOpacity || 0.12;
+
+        // Calculate audio features
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4))
             .reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4))
             .reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
 
-        // Cloud shape
-        const cloudHeight = 150 + bass * 100;
+        // Apply trail effect for persistence
+        this.ctx.fillStyle = `rgba(0, 0, 0, ${trailOpacity})`;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        this.ctx.globalAlpha = 0.3;
-        for (let i = 0; i < 20; i++) {
-            const cloudX = Math.random() * this.canvas.width;
-            const cloudY = Math.random() * cloudHeight;
-            const cloudSize = 30 + bass * 50;
+        // Cloud formation
+        const cloudHeight = this.canvas.height * 0.15 + bass * (this.canvas.height * 0.1);
+        const cloudBaseY = this.canvas.height * 0.15;
 
-            this.ctx.fillStyle = 'rgb(30, 30, 50)';
+        // Get base cloud color from color scheme
+        const cloudBaseColor = this.getColor(0, numBars);
+        const cloudMatch = cloudBaseColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+
+        // Draw cloud particles
+        this.ctx.globalAlpha = 0.3 + bass * 0.2;
+        for (let i = 0; i < cloudDensity; i++) {
+            const cloudX = (i / cloudDensity) * this.canvas.width +
+                          (Math.random() - 0.5) * (this.canvas.width / cloudDensity) * 2;
+            const cloudY = cloudBaseY + Math.random() * cloudHeight * 0.5;
+            const particleSize = cloudSize * (0.5 + bass * 0.5) * (0.8 + Math.random() * 0.4);
+
+            // Use color scheme for cloud with darkening
+            if (cloudMatch) {
+                const [_, r, g, b] = cloudMatch;
+                const darkR = Math.floor(parseInt(r) * 0.2 + bass * 30);
+                const darkG = Math.floor(parseInt(g) * 0.2 + bass * 30);
+                const darkB = Math.floor(parseInt(b) * 0.3 + bass * 50);
+                this.ctx.fillStyle = `rgb(${darkR}, ${darkG}, ${darkB})`;
+            } else {
+                this.ctx.fillStyle = `rgb(${30 + bass * 30}, ${30 + bass * 30}, ${50 + bass * 50})`;
+            }
+
             this.ctx.beginPath();
-            this.ctx.arc(cloudX, cloudY, cloudSize, 0, Math.PI * 2);
+            this.ctx.arc(cloudX, cloudY, particleSize, 0, Math.PI * 2);
             this.ctx.fill();
         }
         this.ctx.globalAlpha = 1.0;
 
-        // Lightning bolts on strong treble
-        if (treble > 0.65) {
-            const startX = Math.random() * (this.canvas.width / 2) + this.canvas.width / 4;
-            const startY = cloudHeight;
+        // Get lightning color from color scheme
+        const lightningColor = this.getColor(Math.floor(numBars * 0.7), numBars);
+        const lightningMatch = lightningColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
 
-            let x = startX;
-            let y = startY;
-            const points = [[x, y]];
+        // Lightning strikes on treble hits
+        const threshold = 1 - lightningFrequency;
+        if (treble > threshold) {
+            const numStrikes = Math.floor(1 + (treble - threshold) * 2);
 
-            // Jagged lightning path
-            for (let i = 0; i < 5 + treble * 10; i++) {
-                x += (Math.random() - 0.5) * 80;
-                y += 40 + Math.random() * 60;
-                points.push([x, y]);
+            for (let strike = 0; strike < numStrikes; strike++) {
+                const startX = this.canvas.width * (0.3 + Math.random() * 0.4);
+                const startY = cloudBaseY + cloudHeight * 0.5;
+
+                let x = startX;
+                let y = startY;
+                const points = [[x, y]];
+
+                // Create jagged lightning path
+                const segments = Math.floor(lightningSegments * (0.7 + treble * 0.3));
+                for (let i = 0; i < segments; i++) {
+                    x += (Math.random() - 0.5) * (this.canvas.width * 0.08);
+                    y += this.canvas.height / segments * (1 + Math.random() * 0.3);
+                    points.push([x, y]);
+                }
+
+                // Draw lightning glow - use color scheme
+                this.ctx.lineWidth = lightningWidth * 2;
+                if (lightningMatch) {
+                    const [_, r, g, b] = lightningMatch;
+                    this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${0.4 + treble * 0.3})`;
+                } else {
+                    this.ctx.strokeStyle = `rgba(100, 100, 255, ${0.4 + treble * 0.3})`;
+                }
+                this.ctx.lineCap = 'round';
+                this.ctx.lineJoin = 'round';
+                this.ctx.beginPath();
+                points.forEach((point, i) => {
+                    if (i === 0) this.ctx.moveTo(point[0], point[1]);
+                    else this.ctx.lineTo(point[0], point[1]);
+                });
+                this.ctx.stroke();
+
+                // Draw bright lightning core - use brightened color scheme
+                this.ctx.lineWidth = lightningWidth * 0.6;
+                if (lightningMatch) {
+                    const [_, r, g, b] = lightningMatch;
+                    const brightR = Math.min(255, parseInt(r) + 55);
+                    const brightG = Math.min(255, parseInt(g) + 55);
+                    const brightB = Math.min(255, parseInt(b) + 55);
+                    this.ctx.strokeStyle = `rgb(${brightR}, ${brightG}, ${brightB})`;
+                } else {
+                    const brightness = 200 + treble * 55;
+                    this.ctx.strokeStyle = `rgb(${brightness}, ${brightness}, 255)`;
+                }
+                this.ctx.beginPath();
+                points.forEach((point, i) => {
+                    if (i === 0) this.ctx.moveTo(point[0], point[1]);
+                    else this.ctx.lineTo(point[0], point[1]);
+                });
+                this.ctx.stroke();
+
+                // Add small branches
+                if (points.length > 2) {
+                    for (let i = 1; i < points.length - 1; i++) {
+                        if (Math.random() > 0.7) {
+                            const [bx, by] = points[i];
+                            const branchX = bx + (Math.random() - 0.5) * (this.canvas.width * 0.05);
+                            const branchY = by + (this.canvas.height * 0.05);
+
+                            this.ctx.lineWidth = lightningWidth * 0.3;
+                            if (lightningMatch) {
+                                const [_, r, g, b] = lightningMatch;
+                                const brightR = Math.min(255, parseInt(r) + 55);
+                                const brightG = Math.min(255, parseInt(g) + 55);
+                                const brightB = Math.min(255, parseInt(b) + 55);
+                                this.ctx.strokeStyle = `rgba(${brightR}, ${brightG}, ${brightB}, 0.6)`;
+                            } else {
+                                const brightness = 200 + treble * 55;
+                                this.ctx.strokeStyle = `rgba(${brightness}, ${brightness}, 255, 0.6)`;
+                            }
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(bx, by);
+                            this.ctx.lineTo(branchX, branchY);
+                            this.ctx.stroke();
+                        }
+                    }
+                }
             }
-
-            // Draw lightning (glow first, then bright line)
-            this.ctx.lineWidth = 12;
-            this.ctx.strokeStyle = 'rgba(100, 100, 200, 0.6)';
-            this.ctx.beginPath();
-            points.forEach((point, i) => {
-                if (i === 0) this.ctx.moveTo(point[0], point[1]);
-                else this.ctx.lineTo(point[0], point[1]);
-            });
-            this.ctx.stroke();
-
-            const brightness = 200 + treble * 55;
-            this.ctx.lineWidth = 4;
-            this.ctx.strokeStyle = `rgb(${brightness}, ${brightness}, 255)`;
-            this.ctx.beginPath();
-            points.forEach((point, i) => {
-                if (i === 0) this.ctx.moveTo(point[0], point[1]);
-                else this.ctx.lineTo(point[0], point[1]);
-            });
-            this.ctx.stroke();
         }
     }
 
@@ -6633,11 +6719,15 @@ class Visualizer {
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4))
             .reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
 
+        // Use Step 4 settings - numBars affects max vine length
+        const numBars = this.settings.numBars || 72;
+        const maxSegments = Math.floor(200 * (numBars / 72)); // ~200 segments at default 72 bars
+
         // Initialize vine
         if (!this.vineSegments) this.vineSegments = [];
 
         // Grow vine if not complete
-        if (this.vineSegments.length < 200) {
+        if (this.vineSegments.length < maxSegments) {
             if (this.vineSegments.length === 0) {
                 this.vineSegments.push({x: 100, y: this.canvas.height - 100, leaves: []});
             } else {
@@ -6657,15 +6747,30 @@ class Visualizer {
                         newSegment.leaves.push({
                             offsetX: (Math.random() - 0.5) * 20,
                             offsetY: (Math.random() - 0.5) * 20,
-                            size: leafSize
+                            size: leafSize,
+                            colorIndex: this.vineSegments.length % numBars // Store color index
                         });
                     }
                 }
             }
         }
 
+        // Get vine color from color scheme (darker for stem)
+        const vineBaseColor = this.getColor(0, numBars);
+        const vineMatch = vineBaseColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+
         // Draw vine
-        this.ctx.strokeStyle = 'rgb(50, 120, 50)';
+        if (vineMatch) {
+            const [_, r, g, b] = vineMatch;
+            // Darken the color for vine stem
+            const darkR = Math.floor(parseInt(r) * 0.3);
+            const darkG = Math.floor(parseInt(g) * 0.6);
+            const darkB = Math.floor(parseInt(b) * 0.3);
+            this.ctx.strokeStyle = `rgb(${darkR}, ${darkG}, ${darkB})`;
+        } else {
+            this.ctx.strokeStyle = 'rgb(50, 120, 50)';
+        }
+
         this.ctx.lineWidth = 3;
         this.ctx.beginPath();
         for (let i = 0; i < this.vineSegments.length - 1; i++) {
@@ -6678,12 +6783,27 @@ class Visualizer {
         }
         this.ctx.stroke();
 
-        // Draw leaves
+        // Draw leaves - use color scheme
         for (const seg of this.vineSegments) {
             for (const leaf of seg.leaves) {
                 const leafX = seg.x + leaf.offsetX;
                 const leafY = seg.y + leaf.offsetY;
-                this.ctx.fillStyle = 'rgb(100, 255, 100)';
+
+                // Use color scheme for leaves
+                const leafColor = this.getColor(leaf.colorIndex || 0, numBars);
+                const leafMatch = leafColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+
+                if (leafMatch) {
+                    const [_, r, g, b] = leafMatch;
+                    // Brighten for leaves
+                    const brightR = Math.min(255, Math.floor(parseInt(r) * 0.6 + 100));
+                    const brightG = Math.min(255, Math.floor(parseInt(g) * 1.2 + 100));
+                    const brightB = Math.min(255, Math.floor(parseInt(b) * 0.6 + 100));
+                    this.ctx.fillStyle = `rgb(${brightR}, ${brightG}, ${brightB})`;
+                } else {
+                    this.ctx.fillStyle = 'rgb(100, 255, 100)';
+                }
+
                 this.ctx.beginPath();
                 this.ctx.arc(leafX, leafY, leaf.size, 0, Math.PI * 2);
                 this.ctx.fill();
@@ -6698,12 +6818,23 @@ class Visualizer {
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4))
             .reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
 
+        // Use Step 4 settings - numBars affects number of faces
+        const numBars = this.settings.numBars || 72;
+        const numFaces = Math.max(2, Math.min(5, Math.floor(3 * (numBars / 72)))); // 2-5 faces, ~3 at default
+
         // Face opacity controlled by mid-range (vocals)
         const faceAlpha = midRange;
 
         if (faceAlpha > 0.2) {
+            // Get base face color from color scheme
+            const faceBaseColor = this.getColor(0, numBars);
+            const faceMatch = faceBaseColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+
+            // Get eye color from color scheme
+            const eyeBaseColor = this.getColor(Math.floor(numBars * 0.5), numBars);
+            const eyeMatch = eyeBaseColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+
             // Draw ghostly faces
-            const numFaces = 3;
             for (let i = 0; i < numFaces; i++) {
                 const faceX = ((i + 1) * this.canvas.width) / (numFaces + 1);
                 const faceY = this.canvas.height / 3 + Math.sin(this.frameCounter * 0.05 + i) * 50;
@@ -6711,18 +6842,38 @@ class Visualizer {
 
                 const alpha = faceAlpha * 0.5;
 
-                // Face circle
-                this.ctx.fillStyle = `rgba(200, 200, 220, ${alpha})`;
+                // Face circle - use color scheme
+                if (faceMatch) {
+                    const [_, r, g, b] = faceMatch;
+                    // Lighten the color for ghostly appearance
+                    const lightR = Math.min(255, parseInt(r) + 100);
+                    const lightG = Math.min(255, parseInt(g) + 100);
+                    const lightB = Math.min(255, parseInt(b) + 100);
+                    this.ctx.fillStyle = `rgba(${lightR}, ${lightG}, ${lightB}, ${alpha})`;
+                } else {
+                    this.ctx.fillStyle = `rgba(200, 200, 220, ${alpha})`;
+                }
+
                 this.ctx.beginPath();
                 this.ctx.arc(faceX, faceY, faceSize, 0, Math.PI * 2);
                 this.ctx.fill();
 
-                // Eyes (glow on bass)
-                const eyeGlow = bass > 0.6 ? 255 : 100;
+                // Eyes (glow on bass) - use color scheme
                 const eyeOffset = 25;
 
+                if (eyeMatch) {
+                    const [_, r, g, b] = eyeMatch;
+                    const glowMultiplier = bass > 0.6 ? 1.5 : 0.7;
+                    const eyeR = Math.min(255, Math.floor(parseInt(r) * glowMultiplier));
+                    const eyeG = Math.min(255, Math.floor(parseInt(g) * glowMultiplier));
+                    const eyeB = Math.min(255, Math.floor(parseInt(b) * glowMultiplier));
+                    this.ctx.fillStyle = `rgb(${eyeR}, ${eyeG}, ${eyeB})`;
+                } else {
+                    const eyeGlow = bass > 0.6 ? 255 : 100;
+                    this.ctx.fillStyle = `rgb(${eyeGlow}, ${eyeGlow}, 50)`;
+                }
+
                 // Left eye
-                this.ctx.fillStyle = `rgb(${eyeGlow}, ${eyeGlow}, 50)`;
                 this.ctx.beginPath();
                 this.ctx.arc(faceX - eyeOffset, faceY - 20, 12, 0, Math.PI * 2);
                 this.ctx.fill();
@@ -6739,17 +6890,20 @@ class Visualizer {
         // Mode 81: Stars that connect when their frequencies pass threshold
         const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
-        // Initialize stars
-        if (!this.constellationStars) {
+        // Use Step 4 settings - numBars affects number of stars
+        const numStars = Math.floor((this.settings.numBars || 72) * 0.7); // ~50 stars at default 72 bars
+
+        // Initialize stars - reinitialize if count changed
+        if (!this.constellationStars || this.constellationStars.length !== numStars) {
             this.constellationStars = [];
-            const numStars = 50;
             for (let i = 0; i < numStars; i++) {
                 this.constellationStars.push({
                     x: Math.random() * this.canvas.width,
                     y: Math.random() * this.canvas.height,
                     freqIdx: Math.floor(Math.random() * magnitudes.length),
                     shining: false,
-                    baseSize: 2 + Math.random() * 3
+                    baseSize: 2 + Math.random() * 3,
+                    colorIndex: i // Store index for consistent coloring
                 });
             }
         }
@@ -6763,18 +6917,38 @@ class Visualizer {
             const magnitude = magnitudes[star.freqIdx];
             star.shining = magnitude > 0.5;
 
-            const brightness = star.shining ? 255 : 100;
             const size = star.shining ? star.baseSize * (1 + magnitude) : star.baseSize;
 
-            // Draw star
-            this.ctx.fillStyle = `rgb(${brightness}, ${brightness}, 255)`;
+            // Draw star - use color scheme
+            const baseColor = this.getColor(star.colorIndex, numStars);
+            const colorMatch = baseColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+
+            if (colorMatch) {
+                const [_, r, g, b] = colorMatch;
+                const brightness = star.shining ? 1.0 : 0.4;
+                this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${brightness})`;
+            } else {
+                // Fallback
+                const brightness = star.shining ? 255 : 100;
+                this.ctx.fillStyle = `rgb(${brightness}, ${brightness}, 255)`;
+            }
+
             this.ctx.beginPath();
             this.ctx.arc(star.x, star.y, size, 0, Math.PI * 2);
             this.ctx.fill();
         }
 
-        // Connect nearby shining stars
-        this.ctx.strokeStyle = 'rgba(100, 100, 200, 0.4)';
+        // Connect nearby shining stars - use color scheme for connections
+        const connectionColor = this.getColor(0, numStars);
+        const colorMatch = connectionColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+
+        if (colorMatch) {
+            const [_, r, g, b] = colorMatch;
+            this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, 0.4)`;
+        } else {
+            this.ctx.strokeStyle = 'rgba(100, 100, 200, 0.4)';
+        }
+
         this.ctx.lineWidth = 1;
         for (let i = 0; i < this.constellationStars.length; i++) {
             const star1 = this.constellationStars[i];
@@ -7405,15 +7579,19 @@ class Visualizer {
         const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
             .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
 
-        // Initialize boids
-        if (!this.swarmBoids) {
+        // Use Step 4 settings - numBars affects number of boids
+        const numBoids = Math.floor((this.settings.numBars || 72) * 0.55); // ~40 boids at default 72 bars
+
+        // Initialize boids - reinitialize if count changed
+        if (!this.swarmBoids || this.swarmBoids.length !== numBoids) {
             this.swarmBoids = [];
-            for (let i = 0; i < 40; i++) {
+            for (let i = 0; i < numBoids; i++) {
                 this.swarmBoids.push({
                     x: Math.random() * this.canvas.width,
                     y: Math.random() * this.canvas.height,
                     vx: (Math.random() - 0.5) * 4,
-                    vy: (Math.random() - 0.5) * 4
+                    vy: (Math.random() - 0.5) * 4,
+                    colorIndex: i // Store index for consistent coloring
                 });
             }
         }
@@ -7487,16 +7665,28 @@ class Visualizer {
             boid.x = (boid.x + this.canvas.width) % this.canvas.width;
             boid.y = (boid.y + this.canvas.height) % this.canvas.height;
 
-            // Draw boid
-            this.ctx.fillStyle = 'rgb(255, 200, 100)';
+            // Draw boid - use color scheme
+            const boidColor = this.getColor(boid.colorIndex, numBoids);
+            this.ctx.fillStyle = boidColor;
             this.ctx.beginPath();
             this.ctx.arc(boid.x, boid.y, 5, 0, Math.PI * 2);
             this.ctx.fill();
 
-            // Draw velocity direction
+            // Draw velocity direction - use slightly lighter version of boid color
+            const colorMatch = boidColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+            if (colorMatch) {
+                const [_, r, g, b] = colorMatch;
+                // Lighten the color for velocity line
+                const lighterR = Math.min(255, parseInt(r) + 50);
+                const lighterG = Math.min(255, parseInt(g) + 50);
+                const lighterB = Math.min(255, parseInt(b) + 50);
+                this.ctx.strokeStyle = `rgb(${lighterR}, ${lighterG}, ${lighterB})`;
+            } else {
+                this.ctx.strokeStyle = 'rgb(255, 220, 150)';
+            }
+
             const endX = boid.x + boid.vx * 3;
             const endY = boid.y + boid.vy * 3;
-            this.ctx.strokeStyle = 'rgb(255, 220, 150)';
             this.ctx.lineWidth = 1;
             this.ctx.beginPath();
             this.ctx.moveTo(boid.x, boid.y);
@@ -7898,16 +8088,31 @@ class Visualizer {
         const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
             .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
 
-        // Sky gradient (color mapped to mid-range)
-        const skyHue = 20 + mids * 100;
+        // Use settings
+        const circleCount = this.settings.circleCount || 50;
+        const barCount = this.settings.barCount || 72;
 
+        // Sky gradient using color scheme
         for (let y = 0; y < this.canvas.height; y++) {
             const gradientFactor = y / this.canvas.height;
-            const saturation = 78 - gradientFactor * 39;
-            const value = 100 - gradientFactor * 39;
 
-            const color = this.hsvToRgb(skyHue, saturation, value);
-            this.ctx.strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            // Get color from scheme
+            const baseColor = this.getColor(y, this.canvas.height);
+            const match = baseColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+            let r = 100, g = 100, b = 150;
+            if (match) {
+                r = parseInt(match[1]);
+                g = parseInt(match[2]);
+                b = parseInt(match[3]);
+            }
+
+            // Apply gradient darkening based on vertical position and audio
+            const darkenFactor = gradientFactor * (0.6 - mids * 0.3);
+            r = Math.max(0, Math.floor(r * (1 - darkenFactor)));
+            g = Math.max(0, Math.floor(g * (1 - darkenFactor)));
+            b = Math.max(0, Math.floor(b * (1 - darkenFactor)));
+
+            this.ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
             this.ctx.lineWidth = 1;
             this.ctx.beginPath();
             this.ctx.moveTo(0, y);
@@ -7915,12 +8120,28 @@ class Visualizer {
             this.ctx.stroke();
         }
 
-        // Sun/Moon (pulses with bass)
+        // Sun/Moon (pulses with bass) - size affected by circleCount
         if (!this.sunPosition) this.sunPosition = this.canvas.height * 0.3;
         this.sunPosition = this.canvas.height * 0.3 + Math.sin(this.frameCounter * 0.02) * 50;
-        const sunRadius = 60 + bass * 50;
+        const sunRadius = (40 + bass * 40) * (circleCount / 50);
 
-        const sunColor = mids < 0.5 ? 'rgb(255, 200, 100)' : 'rgb(255, 150, 50)';
+        // Get sun color from scheme primary color
+        const sunColorBase = this.getColor(0, 1);
+        const sunMatch = sunColorBase.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+        let sunR = 255, sunG = 200, sunB = 100;
+        if (sunMatch) {
+            sunR = parseInt(sunMatch[1]);
+            sunG = parseInt(sunMatch[2]);
+            sunB = parseInt(sunMatch[3]);
+        }
+
+        // Brighten the sun color based on bass
+        const brightnessFactor = 1 + bass * 0.3;
+        sunR = Math.min(255, Math.floor(sunR * brightnessFactor));
+        sunG = Math.min(255, Math.floor(sunG * brightnessFactor));
+        sunB = Math.min(255, Math.floor(sunB * brightnessFactor));
+
+        const sunColor = `rgb(${sunR}, ${sunG}, ${sunB})`;
         this.ctx.fillStyle = sunColor;
         this.ctx.beginPath();
         this.ctx.arc(this.canvas.width / 2, this.sunPosition, sunRadius, 0, Math.PI * 2);
@@ -7934,15 +8155,32 @@ class Visualizer {
         this.ctx.stroke();
         this.ctx.globalAlpha = 1;
 
-        // Stars glitter on treble (visible when dark)
+        // Stars glitter on treble - number controlled by circleCount and barCount
         if (mids < 0.3) {
-            const numStars = Math.floor(treble * 50 + 10);
+            const baseStarCount = Math.floor((circleCount + barCount) / 2);
+            const numStars = Math.floor(treble * baseStarCount + Math.floor(baseStarCount / 5));
+
             for (let i = 0; i < numStars; i++) {
                 const starX = Math.random() * this.canvas.width;
                 const starY = Math.random() * (this.canvas.height / 2);
-                const brightness = 200 + treble * 55;
 
-                this.ctx.fillStyle = `rgb(${brightness}, ${brightness}, ${brightness})`;
+                // Get star color from scheme (use secondary color)
+                const starColorBase = this.getColor(1, 2);
+                const starMatch = starColorBase.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+                let starR = 200, starG = 200, starB = 200;
+                if (starMatch) {
+                    starR = parseInt(starMatch[1]);
+                    starG = parseInt(starMatch[2]);
+                    starB = parseInt(starMatch[3]);
+                }
+
+                // Brighten stars based on treble
+                const starBrightness = 0.7 + treble * 0.3;
+                starR = Math.min(255, Math.floor(starR * starBrightness + 100));
+                starG = Math.min(255, Math.floor(starG * starBrightness + 100));
+                starB = Math.min(255, Math.floor(starB * starBrightness + 100));
+
+                this.ctx.fillStyle = `rgb(${starR}, ${starG}, ${starB})`;
                 this.ctx.beginPath();
                 this.ctx.arc(starX, starY, 2, 0, Math.PI * 2);
                 this.ctx.fill();
@@ -8119,12 +8357,17 @@ class Visualizer {
         const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
             .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
 
-        // Initialize strings
-        if (!this.cosmicStrings) {
+        // Use settings - barCount controls number of strings
+        const barCount = this.settings.barCount || 72;
+        const circleCount = this.settings.circleCount || 50;
+        const numStrings = Math.max(6, Math.min(24, Math.floor(barCount / 6)));
+
+        // Initialize strings - reinitialize if count changed
+        if (!this.cosmicStrings || this.cosmicStrings.length !== numStrings) {
             this.cosmicStrings = [];
-            for (let i = 0; i < 12; i++) {
+            for (let i = 0; i < numStrings; i++) {
                 this.cosmicStrings.push({
-                    y: 100 + i * (this.canvas.height - 200) / 12,
+                    y: 100 + i * (this.canvas.height - 200) / numStrings,
                     frequency: i + 1,
                     magnitude: 0
                 });
@@ -8140,14 +8383,26 @@ class Visualizer {
             const string = this.cosmicStrings[i];
             string.magnitude = magnitudes[Math.min(i * 10, magnitudes.length - 1)];
 
-            const amplitude = string.magnitude * 100;
+            // Amplitude affected by circleCount
+            const amplitude = string.magnitude * 80 * (circleCount / 50);
 
-            // Gold and white glowing strings
-            const hue = 30;  // Gold
-            const intensity = 200 + string.magnitude * 55;
-            const color = this.hsvToRgb(hue, 78, intensity / 255 * 100);
+            // Use color scheme instead of hard-coded gold
+            const baseColor = this.getColor(i, numStrings);
+            const match = baseColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+            let r = 255, g = 200, b = 100;
+            if (match) {
+                r = parseInt(match[1]);
+                g = parseInt(match[2]);
+                b = parseInt(match[3]);
+            }
 
-            this.ctx.strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            // Brighten based on magnitude
+            const brightnessFactor = 0.8 + string.magnitude * 0.4;
+            r = Math.min(255, Math.floor(r * brightnessFactor));
+            g = Math.min(255, Math.floor(g * brightnessFactor));
+            b = Math.min(255, Math.floor(b * brightnessFactor));
+
+            this.ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
             this.ctx.lineWidth = 2;
             this.ctx.beginPath();
 
@@ -8160,8 +8415,11 @@ class Visualizer {
             }
             this.ctx.stroke();
 
-            // Add glow
-            this.ctx.strokeStyle = 'rgb(255, 255, 255)';
+            // Add glow using lighter version of the color
+            const glowR = Math.min(255, r + 50);
+            const glowG = Math.min(255, g + 50);
+            const glowB = Math.min(255, b + 50);
+            this.ctx.strokeStyle = `rgb(${glowR}, ${glowG}, ${glowB})`;
             this.ctx.lineWidth = 1;
             this.ctx.stroke();
         }
@@ -20075,16 +20333,31 @@ class Visualizer {
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
 
+        // Use settings for modular control
+        const circleCount = this.settings.circleCount || 50;
+        const barCount = this.settings.barCount || 72;
+
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
-        const numRings = Math.floor(5 * complexity / 5);
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Ring-based pattern - numRings affected by circleCount
+        const numRings = Math.max(3, Math.floor(5 * complexity / 5 * (circleCount / 50)));
+
+        // Calculate total number of circles for color distribution
+        let totalCircles = 0;
+        for (let ring = 0; ring < numRings; ring++) {
+            totalCircles += 6 + ring * 4 * (barCount / 72);
+        }
+
+        let circleIndex = 0;
 
         for (let ring = 0; ring < numRings; ring++) {
             const radius = (50 + ring * 60) * (this.canvas.width / 800);
-            const numPoints = 6 + ring * 4;
+            // numPoints affected by barCount
+            const numPoints = Math.floor((6 + ring * 4) * (barCount / 72));
 
             for (let i = 0; i < numPoints; i++) {
                 const angle = (i / numPoints) * 2 * Math.PI;
@@ -20092,14 +20365,29 @@ class Visualizer {
                 const mag = magnitudes[magIdx] * intensity;
                 const x = this.centerX + Math.cos(angle) * radius;
                 const y = this.centerY + Math.sin(angle) * radius;
-                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
-                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
-                const color = this.hsvToRgb(hue, 100, brightness);
 
-                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                // Use color scheme instead of hard-coded HSV
+                const baseColor = this.getColor(circleIndex, totalCircles);
+                const match = baseColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+                let r = 150, g = 150, b = 200;
+                if (match) {
+                    r = parseInt(match[1]);
+                    g = parseInt(match[2]);
+                    b = parseInt(match[3]);
+                }
+
+                // Brighten based on magnitude
+                const brightnessFactor = 0.6 + mag * 0.6;
+                r = Math.min(255, Math.floor(r * brightnessFactor));
+                g = Math.min(255, Math.floor(g * brightnessFactor));
+                b = Math.min(255, Math.floor(b * brightnessFactor));
+
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
                 this.ctx.beginPath();
                 this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
                 this.ctx.fill();
+
+                circleIndex++;
             }
         }
     }
@@ -27940,33 +28228,135 @@ class Visualizer {
     }
     /**
      * Mode 278: LiquidNitrogen
-     * Liquid Nitrogen visualization with configurable parameters
+     * Liquid Nitrogen visualization with freezing and shattering effects
      */
     render278LiquidNitrogen(magnitudes) {
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = Math.floor(params.complexity || 5);
+        const freezeIntensity = params.freezeIntensity || 1;
+        const shatterAmount = params.shatterAmount || 1.5;
+        const crystallization = params.crystallization || 5;
 
-        // Use complexity to determine number of columns (3-12 range)
-        const numColumns = Math.max(3, Math.min(12, complexity + 3));
+        // Calculate audio features
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
+        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
+        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        for (let i = 0; i < numColumns; i++) {
-            const x = (i / numColumns) * this.width + this.width / (2 * numColumns);
-            const magIdx = Math.floor((i * magnitudes.length) / numColumns);
-            const mag = magnitudes[magIdx] * intensity;
-            const height = mag * this.height * 0.7;
+        // Initialize frame counter
+        this.frameCounter = (this.frameCounter || 0) + 1;
 
-            const color = this.getColor(i, numColumns);
+        // Draw frozen base (icy vapor)
+        const vaporParticles = Math.floor(20 * crystallization);
+        for (let i = 0; i < vaporParticles; i++) {
+            const magnitude = magnitudes[i % magnitudes.length];
+            const x = (i / vaporParticles) * this.width;
+            const y = this.height - (magnitude * this.height * 0.3 * freezeIntensity);
+            const size = 2 + magnitude * 8 * freezeIntensity;
 
-            // Filled rectangle
-            this.ctx.fillStyle = color;
-            this.ctx.fillRect(x - 20, this.height - height, 40, height);
+            // Icy white-blue gradient
+            const alpha = 0.2 + magnitude * 0.5;
+            const blueShift = Math.sin(this.frameCounter * 0.05 + i) * 30;
+            this.ctx.fillStyle = `rgba(${200 + blueShift}, ${230 + blueShift}, 255, ${alpha})`;
+            this.ctx.shadowBlur = 10 * freezeIntensity;
+            this.ctx.shadowColor = 'rgba(200, 230, 255, 0.6)';
 
-            // Border rectangle for depth
-            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
-            this.ctx.lineWidth = 2;
-            this.ctx.strokeRect(x - 20, this.height - height, 40, height);
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.shadowBlur = 0;
+        }
+
+        // Draw ice crystals (frozen formations)
+        const numCrystals = Math.floor(15 * crystallization);
+        for (let i = 0; i < numCrystals; i++) {
+            const magnitude = magnitudes[i % magnitudes.length];
+            const baseX = (i / numCrystals) * this.width;
+            const baseY = this.height - (magnitude * this.height * 0.5 * freezeIntensity);
+
+            // Draw crystal as a hexagon
+            const crystalSize = 10 + magnitude * 20 * freezeIntensity;
+            const rotation = this.frameCounter * 0.02 + i;
+
+            this.ctx.save();
+            this.ctx.translate(baseX, baseY);
+            this.ctx.rotate(rotation);
+
+            // Crystal fill
+            this.ctx.beginPath();
+            for (let j = 0; j < 6; j++) {
+                const angle = (j / 6) * Math.PI * 2;
+                const x = Math.cos(angle) * crystalSize;
+                const y = Math.sin(angle) * crystalSize;
+                if (j === 0) this.ctx.moveTo(x, y);
+                else this.ctx.lineTo(x, y);
+            }
+            this.ctx.closePath();
+
+            const cyanShift = Math.sin(this.frameCounter * 0.03 + i) * 50;
+            this.ctx.fillStyle = `rgba(${150 + cyanShift}, ${220 + cyanShift}, 255, ${0.3 + magnitude * 0.4})`;
+            this.ctx.fill();
+
+            // Crystal edges
+            this.ctx.strokeStyle = `rgba(255, 255, 255, ${0.6 + magnitude * 0.4})`;
+            this.ctx.lineWidth = 1.5;
+            this.ctx.stroke();
+
+            this.ctx.restore();
+        }
+
+        // Draw shattering shards (triggered by high frequencies)
+        const numShards = Math.floor(25 * shatterAmount);
+        for (let i = 0; i < numShards; i++) {
+            const magnitude = magnitudes[i % magnitudes.length];
+            // Shards react more to treble and high energy
+            const shardEnergy = magnitude * treble * shatterAmount;
+
+            if (shardEnergy > 0.1) {
+                const angle = (i / numShards) * Math.PI * 2 + this.frameCounter * 0.03;
+                const distance = this.maxRadius * (0.3 + shardEnergy * 0.6);
+
+                const x = this.centerX + Math.cos(angle) * distance;
+                const y = this.centerY + Math.sin(angle) * distance;
+
+                // Draw triangular shard
+                const shardSize = 5 + shardEnergy * 15;
+                const shardAngle = angle + Math.sin(this.frameCounter * 0.05 + i) * 0.5;
+
+                this.ctx.save();
+                this.ctx.translate(x, y);
+                this.ctx.rotate(shardAngle);
+
+                this.ctx.beginPath();
+                this.ctx.moveTo(0, -shardSize);
+                this.ctx.lineTo(shardSize * 0.4, shardSize * 0.5);
+                this.ctx.lineTo(-shardSize * 0.4, shardSize * 0.5);
+                this.ctx.closePath();
+
+                // Icy shard color with shimmer
+                const shimmer = Math.sin(this.frameCounter * 0.1 + i) * 40;
+                this.ctx.fillStyle = `rgba(${180 + shimmer}, ${230 + shimmer}, 255, ${0.5 + shardEnergy * 0.5})`;
+                this.ctx.fill();
+
+                this.ctx.strokeStyle = `rgba(255, 255, 255, ${0.8})`;
+                this.ctx.lineWidth = 1;
+                this.ctx.stroke();
+
+                this.ctx.restore();
+            }
+        }
+
+        // Draw freezing waves (emanating from center)
+        const numWaves = Math.floor(5 * crystallization);
+        for (let i = 0; i < numWaves; i++) {
+            const wavePhase = (this.frameCounter * 0.02 + i * 0.5) % 1;
+            const radius = wavePhase * this.maxRadius * 1.5;
+            const magnitude = magnitudes[Math.floor(i * magnitudes.length / numWaves)];
+            const alpha = (1 - wavePhase) * magnitude * freezeIntensity * 0.3;
+
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.strokeStyle = `rgba(200, 240, 255, ${alpha})`;
+            this.ctx.lineWidth = 2 + magnitude * 4;
+            this.ctx.stroke();
         }
     }
     /**

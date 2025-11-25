@@ -3385,9 +3385,9 @@ const VISUALIZATION_MODES = {
         mode: 278,
         tags: ["liquid", "nitrogen"],
         parameters: {
-            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            freezeIntensity: { min: 0.1, max: 2, default: 1, label: 'Freeze Intensity' },
+            shatterAmount: { min: 0.1, max: 3, default: 1.5, label: 'Shatter Amount' },
+            crystallization: { min: 1, max: 10, default: 5, label: 'Crystallization' }
         }
     },
     mode_279_silk_road_caravan: {

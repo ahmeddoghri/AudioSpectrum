@@ -180,6 +180,22 @@ const FORMAT_PRESETS = {
 // FPS Options
 const FPS_OPTIONS = [24, 30, 60];
 
+// ========================================
+// HIDDEN MODES - Temporarily hide problematic modes from frontend
+// ========================================
+// To hide a mode: Add its mode ID to this array
+// Example: 'mode_990_abstract_concrete'
+// To find a mode's ID: Search for the mode name in this file and copy its 'id' field
+const HIDDEN_MODES = [
+    // Add mode IDs here to hide them from the frontend
+    // Example: 'mode_990_abstract_concrete',
+    'mode_125_bubble_fusion',
+    'mode_170_bubble_choir',
+    'mode_193_satellite_swarm_flocking',
+    'mode_304_butterfly_swarm',
+    'mode_341_plankton_swarm'
+];
+
 // Visualization Modes with Categories
 const VISUALIZATION_MODES = {
     // Classic Styles
@@ -12227,6 +12243,7 @@ if (typeof module !== 'undefined' && module.exports) {
         BACKGROUND_STYLES,
         FORMAT_PRESETS,
         FPS_OPTIONS,
+        HIDDEN_MODES,
         VISUALIZATION_MODES,
         DEFAULT_SETTINGS,
         AUDIO_CONFIG,

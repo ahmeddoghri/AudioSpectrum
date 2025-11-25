@@ -477,7 +477,9 @@ class AudioSpectrumApp {
      * Populate mode grid
      */
     populateModeGrid() {
-        Object.values(VISUALIZATION_MODES).forEach(mode => {
+        Object.values(VISUALIZATION_MODES)
+            .filter(mode => !HIDDEN_MODES.includes(mode.id))
+            .forEach(mode => {
             const card = document.createElement('div');
             card.className = 'mode-card';
             card.dataset.mode = mode.id;
@@ -621,7 +623,9 @@ class AudioSpectrumApp {
      */
     updateModeCount(count) {
         if (count === undefined) {
-            count = Object.keys(VISUALIZATION_MODES).length;
+            const allModes = Object.values(VISUALIZATION_MODES);
+            const visibleModes = allModes.filter(mode => !HIDDEN_MODES.includes(mode.id));
+            count = visibleModes.length;
         }
         this.elements.visibleModeCount.textContent = count;
     }

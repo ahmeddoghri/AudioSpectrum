@@ -5818,42 +5818,130 @@ class Visualizer {
      * Mode 63: Terrain Flyover
      */
     renderTerrainFlyover(magnitudes) {
-        const terrainWidth = 50;
-        const terrainDepth = 30;
+        // Use Step 4 settings
+        const numBars = this.settings.numBars || 72;
+
+        const terrainWidth = Math.floor(50 * (numBars / 72)); // Scale with numBars
+        const terrainDepth = 40;
         const scale = 15;
         const offsetX = this.canvas.width / 2;
-        const offsetY = this.canvas.height - 200;
+        const offsetY = this.canvas.height - 150;
 
-        for (let z = 0; z < terrainDepth - 1; z++) {
+        // Initialize terrain history for scrolling effect
+        if (!this.terrainHistory) {
+            this.terrainHistory = [];
+            this.terrainScroll = 0;
+        }
+
+        // Audio features
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Add current magnitude slice to history
+        this.terrainHistory.push([...magnitudes]);
+        if (this.terrainHistory.length > terrainDepth) {
+            this.terrainHistory.shift();
+        }
+
+        // Continuous scrolling
+        this.terrainScroll += 0.3 + avgMagnitude * 0.5;
+
+        // Fade background for depth
+        this.ctx.fillStyle = 'rgba(0, 0, 10, 0.3)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Draw wireframe terrain from history
+        for (let z = 0; z < this.terrainHistory.length - 1; z++) {
+            const depthFactor = 1 - z / terrainDepth;
+            const currentRow = this.terrainHistory[z];
+            const nextRow = this.terrainHistory[z + 1];
+
+            // Get color from scheme based on depth
+            const colorIndex = Math.floor(z / terrainDepth * numBars);
+            const baseColor = this.getColor(colorIndex, numBars);
+            const colorMatch = baseColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+
             for (let x = 0; x < terrainWidth - 1; x++) {
-                const freqIdx = Math.floor((x / terrainWidth) * magnitudes.length);
-                const height = magnitudes[Math.min(freqIdx, magnitudes.length - 1)] * 200;
+                const freqIdx = Math.floor((x / terrainWidth) * currentRow.length);
+                const nextFreqIdx = Math.floor(((x + 1) / terrainWidth) * currentRow.length);
+
+                const height1 = currentRow[Math.min(freqIdx, currentRow.length - 1)] * 150 * (0.5 + bass * 0.5);
+                const height2 = currentRow[Math.min(nextFreqIdx, currentRow.length - 1)] * 150 * (0.5 + bass * 0.5);
+                const height3 = nextRow[Math.min(freqIdx, nextRow.length - 1)] * 150 * (0.5 + bass * 0.5);
+
+                const zPos = z * 8 - this.terrainScroll;
 
                 const x1 = offsetX + (x - terrainWidth / 2) * scale;
-                const y1 = offsetY - height - z * 10;
+                const y1 = offsetY - height1 + zPos;
 
                 const x2 = offsetX + (x + 1 - terrainWidth / 2) * scale;
-                const y2 = offsetY - height - z * 10;
+                const y2 = offsetY - height2 + zPos;
 
                 const x3 = offsetX + (x - terrainWidth / 2) * scale;
-                const y3 = offsetY - height - (z + 1) * 10;
+                const y3 = offsetY - height3 + zPos + 8;
 
-                const depthFactor = 1 - z / terrainDepth;
-                const color = `rgb(${100 * depthFactor}, ${200 * depthFactor}, ${100 * depthFactor})`;
+                // Apply color with depth fading
+                if (colorMatch) {
+                    const [_, r, g, b] = colorMatch;
+                    const fadedR = Math.floor(parseInt(r) * depthFactor);
+                    const fadedG = Math.floor(parseInt(g) * depthFactor);
+                    const fadedB = Math.floor(parseInt(b) * depthFactor);
+                    this.ctx.strokeStyle = `rgb(${fadedR}, ${fadedG}, ${fadedB})`;
+                } else {
+                    this.ctx.strokeStyle = `rgb(${100 * depthFactor}, ${200 * depthFactor}, ${100 * depthFactor})`;
+                }
 
-                this.ctx.strokeStyle = color;
-                this.ctx.lineWidth = 1;
+                // Line width based on depth (thicker in front)
+                this.ctx.lineWidth = Math.max(0.5, depthFactor * 2);
+
+                // Draw horizontal line
                 this.ctx.beginPath();
                 this.ctx.moveTo(x1, y1);
                 this.ctx.lineTo(x2, y2);
                 this.ctx.stroke();
 
+                // Draw vertical line
                 this.ctx.beginPath();
                 this.ctx.moveTo(x1, y1);
                 this.ctx.lineTo(x3, y3);
                 this.ctx.stroke();
+
+                // Add glow effect on peaks
+                if (height1 > 100) {
+                    if (colorMatch) {
+                        const [_, r, g, b] = colorMatch;
+                        const glowAlpha = (height1 / 150) * depthFactor * 0.5;
+                        this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${glowAlpha})`;
+                    } else {
+                        this.ctx.fillStyle = `rgba(255, 255, 255, ${(height1 / 150) * depthFactor * 0.3})`;
+                    }
+                    this.ctx.beginPath();
+                    this.ctx.arc(x1, y1, 3 * depthFactor, 0, Math.PI * 2);
+                    this.ctx.fill();
+                }
             }
         }
+
+        // Reset scroll when it gets too far
+        if (this.terrainScroll > 8) {
+            this.terrainScroll -= 8;
+        }
+
+        // Draw horizon line for reference
+        const horizonColor = this.getColor(Math.floor(numBars * 0.8), numBars);
+        const horizonMatch = horizonColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+        if (horizonMatch) {
+            const [_, r, g, b] = horizonMatch;
+            this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, 0.3)`;
+        } else {
+            this.ctx.strokeStyle = 'rgba(100, 150, 200, 0.3)';
+        }
+        this.ctx.lineWidth = 1;
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, offsetY);
+        this.ctx.lineTo(this.canvas.width, offsetY);
+        this.ctx.stroke();
     }
 
     /**
@@ -6070,6 +6158,10 @@ class Visualizer {
         if (!this.cubeRotation) this.cubeRotation = 0;
         this.cubeRotation += 0.02;
 
+        // Use settings
+        const circleCount = this.settings.circleCount || 50;
+        const barCount = this.settings.barCount || 72;
+
         const cubeSize = 200;
         const angleX = this.cubeRotation;
         const angleY = this.cubeRotation * 0.7;
@@ -6098,30 +6190,63 @@ class Visualizer {
             return [x2d, y2d];
         });
 
-        // Draw cube edges
+        // Draw cube edges with color scheme
         const edges = [[0,1],[1,2],[2,3],[3,0],[4,5],[5,6],[6,7],[7,4],[0,4],[1,5],[2,6],[3,7]];
-        this.ctx.strokeStyle = 'rgb(100, 200, 255)';
-        this.ctx.lineWidth = 2;
 
-        edges.forEach(([start, end]) => {
+        edges.forEach(([start, end], idx) => {
+            // Use color scheme for edges
+            const edgeColor = this.getColor(idx, edges.length);
+            this.ctx.strokeStyle = edgeColor;
+            this.ctx.lineWidth = 2;
             this.ctx.beginPath();
             this.ctx.moveTo(vertices2D[start][0], vertices2D[start][1]);
             this.ctx.lineTo(vertices2D[end][0], vertices2D[end][1]);
             this.ctx.stroke();
         });
 
-        // Draw bars on front face
+        // Draw bars on front face - number controlled by barCount
+        const numBars = Math.max(3, Math.min(12, Math.floor(barCount / 6)));
         const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
-        const faceCenterX = (vertices2D[0][0] + vertices2D[2][0]) / 2;
-        const faceCenterY = (vertices2D[0][1] + vertices2D[2][1]) / 2;
-        const barLength = 30 + avgMagnitude * 50;
 
-        this.ctx.strokeStyle = 'rgb(255, 200, 100)';
-        this.ctx.lineWidth = 3;
-        this.ctx.beginPath();
-        this.ctx.moveTo(faceCenterX, faceCenterY);
-        this.ctx.lineTo(faceCenterX, faceCenterY - barLength);
-        this.ctx.stroke();
+        // Calculate face bounds
+        const faceLeft = vertices2D[0][0];
+        const faceRight = vertices2D[1][0];
+        const faceTop = vertices2D[0][1];
+        const faceBottom = vertices2D[3][1];
+        const faceWidth = faceRight - faceLeft;
+
+        for (let i = 0; i < numBars; i++) {
+            const magIdx = Math.floor((i / numBars) * magnitudes.length);
+            const magnitude = magnitudes[magIdx] || 0;
+            const barLength = 20 + magnitude * 60 * (circleCount / 50);
+
+            // Position bars across the face
+            const barX = faceLeft + (faceWidth * (i + 0.5) / numBars);
+            const barY = (faceTop + faceBottom) / 2;
+
+            // Use color scheme for bars
+            const barColor = this.getColor(i, numBars);
+            const match = barColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+            let r = 255, g = 200, b = 100;
+            if (match) {
+                r = parseInt(match[1]);
+                g = parseInt(match[2]);
+                b = parseInt(match[3]);
+            }
+
+            // Brighten based on magnitude
+            const brightnessFactor = 0.7 + magnitude * 0.5;
+            r = Math.min(255, Math.floor(r * brightnessFactor));
+            g = Math.min(255, Math.floor(g * brightnessFactor));
+            b = Math.min(255, Math.floor(b * brightnessFactor));
+
+            this.ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.lineWidth = 3;
+            this.ctx.beginPath();
+            this.ctx.moveTo(barX, barY);
+            this.ctx.lineTo(barX, barY - barLength);
+            this.ctx.stroke();
+        }
     }
 
     /**
@@ -6133,20 +6258,38 @@ class Visualizer {
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4))
             .reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
 
+        // Use settings
+        const circleCount = this.settings.circleCount || 50;
+        const barCount = this.settings.barCount || 72;
+
+        // Spawn rate controlled by barCount (lower barCount = slower spawning)
+        const spawnInterval = Math.max(15, Math.min(60, Math.floor(90 - barCount)));
+
         // Initialize word particles
         if (!this.wordParticles) this.wordParticles = [];
 
         // Spawn new words
-        if (this.frameCounter % 30 === 0) {
+        if (this.frameCounter % spawnInterval === 0) {
             const words = ['MUSIC', 'FLOW', 'VIBE', 'SOUND', 'WAVE', 'PULSE', 'RHYTHM'];
             const word = words[Math.floor(Math.random() * words.length)];
+
+            // Assign a color index to each word particle
+            const colorIndex = this.wordParticles.length % 10;
+
             this.wordParticles.push({
                 word: word,
                 x: Math.random() * this.canvas.width,
                 y: this.canvas.height + 50,
                 vy: -2 - Math.random() * 2,
-                life: 1.0
+                life: 1.0,
+                colorIndex: colorIndex
             });
+        }
+
+        // Max words controlled by circleCount
+        const maxWords = Math.max(5, Math.min(20, Math.floor(circleCount / 2.5)));
+        if (this.wordParticles.length > maxWords) {
+            this.wordParticles = this.wordParticles.slice(-maxWords);
         }
 
         // Update and draw words
@@ -6159,9 +6302,19 @@ class Visualizer {
                 const waviness = treble * 20;
                 const offsetX = Math.sin(particle.y * 0.02 + this.frameCounter * 0.1) * waviness;
 
+                // Get color from scheme
+                const wordColor = this.getColor(particle.colorIndex, 10);
+                const match = wordColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+                let r = 100, g = 200, b = 255;
+                if (match) {
+                    r = parseInt(match[1]);
+                    g = parseInt(match[2]);
+                    b = parseInt(match[3]);
+                }
+
                 this.ctx.save();
                 this.ctx.font = `${size}px Arial`;
-                this.ctx.fillStyle = `rgba(100, 200, 255, ${particle.life})`;
+                this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${particle.life})`;
                 this.ctx.fillText(particle.word, particle.x + offsetX, particle.y);
                 this.ctx.restore();
 
@@ -6175,47 +6328,204 @@ class Visualizer {
      * Mode 71: Sonar Ping
      */
     renderSonarPing(magnitudes) {
-        // Rotating sweep line
-        const sweepAngle = (this.frameCounter * 0.05) % (Math.PI * 2);
+        // Use Step 4 settings
+        const numBars = this.settings.numBars || 72;
+
+        // Audio features
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Initialize blip history for trail effects
+        if (!this.sonarBlips) {
+            this.sonarBlips = [];
+            this.sweepTrail = [];
+        }
+
+        // Rotating sweep line (speed modulated by audio)
+        const sweepSpeed = 0.04 + avgMagnitude * 0.03;
+        const sweepAngle = (this.frameCounter * sweepSpeed) % (Math.PI * 2);
         const sweepEndX = this.centerX + Math.cos(sweepAngle) * this.maxRadius;
         const sweepEndY = this.centerY + Math.sin(sweepAngle) * this.maxRadius;
 
-        // Draw sweep line
-        this.ctx.strokeStyle = 'rgb(100, 255, 100)';
+        // Fade background for trail effect
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Get colors from scheme
+        const sweepColor = this.getColor(0, numBars);
+        const gridColor = this.getColor(Math.floor(numBars * 0.3), numBars);
+
+        // Draw concentric circles (radar grid) - number scales with numBars
+        const numRings = Math.max(3, Math.min(8, Math.floor(5 * (numBars / 72))));
+
+        const gridMatch = gridColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+        if (gridMatch) {
+            const [_, r, g, b] = gridMatch;
+            this.ctx.strokeStyle = `rgba(${Math.floor(parseInt(r) * 0.5)}, ${Math.floor(parseInt(g) * 0.5)}, ${Math.floor(parseInt(b) * 0.5)}, 0.5)`;
+        } else {
+            this.ctx.strokeStyle = 'rgba(50, 100, 50, 0.5)';
+        }
+
+        this.ctx.lineWidth = 1;
+        for (let ring = 1; ring <= numRings; ring++) {
+            const radius = (this.maxRadius * ring) / numRings;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+
+            // Pulsing rings on bass
+            if (bass > 0.6) {
+                const pulseAlpha = bass * 0.3;
+                if (gridMatch) {
+                    const [_, r, g, b] = gridMatch;
+                    this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${pulseAlpha})`;
+                } else {
+                    this.ctx.strokeStyle = `rgba(100, 200, 100, ${pulseAlpha})`;
+                }
+                this.ctx.lineWidth = 2;
+                this.ctx.beginPath();
+                this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+                this.ctx.stroke();
+            }
+        }
+
+        // Draw sweep trail (fading gradient)
+        this.sweepTrail.push({ angle: sweepAngle, life: 1 });
+        this.sweepTrail = this.sweepTrail.filter(trail => {
+            trail.life -= 0.03;
+            return trail.life > 0;
+        });
+
+        // Draw sweep trails
+        const sweepMatch = sweepColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+        for (const trail of this.sweepTrail) {
+            const trailEndX = this.centerX + Math.cos(trail.angle) * this.maxRadius;
+            const trailEndY = this.centerY + Math.sin(trail.angle) * this.maxRadius;
+
+            if (sweepMatch) {
+                const [_, r, g, b] = sweepMatch;
+                this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${trail.life * 0.4})`;
+            } else {
+                this.ctx.strokeStyle = `rgba(100, 255, 100, ${trail.life * 0.4})`;
+            }
+
+            this.ctx.lineWidth = 1 + trail.life;
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.centerX, this.centerY);
+            this.ctx.lineTo(trailEndX, trailEndY);
+            this.ctx.stroke();
+        }
+
+        // Draw main sweep line with glow
+        if (sweepMatch) {
+            const [_, r, g, b] = sweepMatch;
+            // Glow
+            this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, 0.5)`;
+            this.ctx.lineWidth = 6;
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.centerX, this.centerY);
+            this.ctx.lineTo(sweepEndX, sweepEndY);
+            this.ctx.stroke();
+
+            // Main line
+            this.ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
+        } else {
+            this.ctx.strokeStyle = 'rgba(100, 255, 100, 0.5)';
+            this.ctx.lineWidth = 6;
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.centerX, this.centerY);
+            this.ctx.lineTo(sweepEndX, sweepEndY);
+            this.ctx.stroke();
+
+            this.ctx.strokeStyle = 'rgb(100, 255, 100)';
+        }
+
         this.ctx.lineWidth = 2;
         this.ctx.beginPath();
         this.ctx.moveTo(this.centerX, this.centerY);
         this.ctx.lineTo(sweepEndX, sweepEndY);
         this.ctx.stroke();
 
-        // Draw concentric circles (radar grid)
-        this.ctx.strokeStyle = 'rgb(50, 100, 50)';
-        this.ctx.lineWidth = 1;
-        for (let ring = 1; ring <= 5; ring++) {
-            const radius = (this.maxRadius * ring) / 5;
-            this.ctx.beginPath();
-            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
-            this.ctx.stroke();
-        }
-
-        // Frequency blips appear on radar
+        // Frequency blips appear when sweep passes
         magnitudes.forEach((magnitude, i) => {
             if (magnitude > 0.4) {
                 const distance = (i / magnitudes.length) * this.maxRadius;
-                const angle = sweepAngle + (Math.random() - 0.5) * 0.5;
+                const targetAngle = (i / magnitudes.length) * Math.PI * 2;
 
-                const blipX = this.centerX + Math.cos(angle) * distance;
-                const blipY = this.centerY + Math.sin(angle) * distance;
+                // Check if sweep is near this angle
+                let angleDiff = Math.abs(sweepAngle - targetAngle);
+                if (angleDiff > Math.PI) angleDiff = Math.PI * 2 - angleDiff;
 
-                const blipSize = 3 + magnitude * 12;
-                const brightness = 200 + magnitude * 55;
+                if (angleDiff < 0.3) { // Sweep detection window
+                    const blipX = this.centerX + Math.cos(targetAngle) * distance;
+                    const blipY = this.centerY + Math.sin(targetAngle) * distance;
 
-                this.ctx.fillStyle = `rgb(${brightness}, 255, ${brightness})`;
-                this.ctx.beginPath();
-                this.ctx.arc(blipX, blipY, blipSize, 0, Math.PI * 2);
-                this.ctx.fill();
+                    // Add blip to persistent array
+                    this.sonarBlips.push({
+                        x: blipX,
+                        y: blipY,
+                        size: 3 + magnitude * 12,
+                        life: 1,
+                        colorIndex: i,
+                        magnitude: magnitude
+                    });
+                }
             }
         });
+
+        // Update and draw persistent blips
+        this.sonarBlips = this.sonarBlips.filter(blip => {
+            blip.life -= 0.015;
+
+            if (blip.life > 0) {
+                const blipColor = this.getColor(blip.colorIndex, magnitudes.length);
+                const blipMatch = blipColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+
+                // Outer glow
+                if (blipMatch) {
+                    const [_, r, g, b] = blipMatch;
+                    this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${blip.life * 0.3})`;
+                } else {
+                    this.ctx.fillStyle = `rgba(255, 255, 255, ${blip.life * 0.3})`;
+                }
+                this.ctx.beginPath();
+                this.ctx.arc(blip.x, blip.y, blip.size * 2, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                // Inner bright blip
+                if (blipMatch) {
+                    const [_, r, g, b] = blipMatch;
+                    const brightness = Math.min(255, parseInt(r) + 100);
+                    this.ctx.fillStyle = `rgba(${brightness}, ${Math.min(255, parseInt(g) + 100)}, ${Math.min(255, parseInt(b) + 100)}, ${blip.life})`;
+                } else {
+                    const brightness = 200 + blip.magnitude * 55;
+                    this.ctx.fillStyle = `rgba(${brightness}, 255, ${brightness}, ${blip.life})`;
+                }
+                this.ctx.beginPath();
+                this.ctx.arc(blip.x, blip.y, blip.size, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                return true;
+            }
+            return false;
+        });
+
+        // Limit blip count
+        if (this.sonarBlips.length > 200) {
+            this.sonarBlips = this.sonarBlips.slice(-200);
+        }
+
+        // Draw center dot
+        if (sweepMatch) {
+            const [_, r, g, b] = sweepMatch;
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+        } else {
+            this.ctx.fillStyle = 'rgb(100, 255, 100)';
+        }
+        this.ctx.beginPath();
+        this.ctx.arc(this.centerX, this.centerY, 5, 0, Math.PI * 2);
+        this.ctx.fill();
     }
 
     /**
@@ -6718,51 +7028,92 @@ class Visualizer {
         const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4))
             .reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
 
         // Use Step 4 settings - numBars affects max vine length
         const numBars = this.settings.numBars || 72;
         const maxSegments = Math.floor(200 * (numBars / 72)); // ~200 segments at default 72 bars
 
         // Initialize vine
-        if (!this.vineSegments) this.vineSegments = [];
+        if (!this.vineSegments) {
+            this.vineSegments = [];
+            this.vinePhase = 0; // For swaying animation
+            this.fallingLeaves = []; // Leaves that fall off
+        }
+
+        this.vinePhase += 0.02 + avgMagnitude * 0.03; // Animation phase
 
         // Grow vine if not complete
         if (this.vineSegments.length < maxSegments) {
             if (this.vineSegments.length === 0) {
-                this.vineSegments.push({x: 100, y: this.canvas.height - 100, leaves: []});
+                this.vineSegments.push({
+                    x: 100,
+                    y: this.canvas.height - 100,
+                    baseX: 100,
+                    baseY: this.canvas.height - 100,
+                    leaves: []
+                });
             } else {
                 const last = this.vineSegments[this.vineSegments.length - 1];
-                // Vine meanders
-                const angle = -Math.PI / 6 + (Math.random() - 0.5) * Math.PI / 4;
-                const newX = last.x + Math.cos(angle) * 15;
-                const newY = last.y + Math.sin(angle) * 15;
+                // Vine meanders - more variation with audio
+                const angleVariation = (Math.random() - 0.5) * Math.PI / 4 + avgMagnitude * 0.2;
+                const angle = -Math.PI / 6 + angleVariation;
+                const stepSize = 12 + bass * 8; // Grow faster with bass
+                const newX = last.baseX + Math.cos(angle) * stepSize;
+                const newY = last.baseY + Math.sin(angle) * stepSize;
 
                 if (newX > 0 && newX < this.canvas.width && newY > 0 && newY < this.canvas.height) {
-                    const newSegment = {x: newX, y: newY, leaves: []};
+                    const newSegment = {
+                        x: newX,
+                        y: newY,
+                        baseX: newX,
+                        baseY: newY,
+                        leaves: []
+                    };
                     this.vineSegments.push(newSegment);
 
                     // Sprout leaf on beat
                     if (bass > 0.5) {
                         const leafSize = 10 + bass * 30;
                         newSegment.leaves.push({
-                            offsetX: (Math.random() - 0.5) * 20,
-                            offsetY: (Math.random() - 0.5) * 20,
+                            offsetX: (Math.random() - 0.5) * 30,
+                            offsetY: (Math.random() - 0.5) * 30,
                             size: leafSize,
-                            colorIndex: this.vineSegments.length % numBars // Store color index
+                            colorIndex: this.vineSegments.length % numBars,
+                            rotation: Math.random() * Math.PI * 2,
+                            rotationSpeed: (Math.random() - 0.5) * 0.1,
+                            wobblePhase: Math.random() * Math.PI * 2,
+                            age: 0
                         });
                     }
                 }
             }
+        } else {
+            // Vine is complete - restart from beginning for continuous growth
+            if (Math.random() < 0.01) { // 1% chance per frame to restart
+                this.vineSegments = [];
+                this.fallingLeaves = [];
+            }
+        }
+
+        // Apply swaying motion to vine segments
+        const swayStrength = 15 + treble * 20; // Treble makes it sway more
+        for (let i = 0; i < this.vineSegments.length; i++) {
+            const seg = this.vineSegments[i];
+            const segmentRatio = i / this.vineSegments.length;
+            const swayAmount = Math.sin(this.vinePhase + segmentRatio * Math.PI) * swayStrength * segmentRatio;
+            seg.x = seg.baseX + swayAmount;
+            seg.y = seg.baseY + Math.cos(this.vinePhase * 0.5 + segmentRatio * Math.PI) * swayStrength * 0.3 * segmentRatio;
         }
 
         // Get vine color from color scheme (darker for stem)
         const vineBaseColor = this.getColor(0, numBars);
         const vineMatch = vineBaseColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
 
-        // Draw vine
+        // Draw vine with varying thickness
         if (vineMatch) {
             const [_, r, g, b] = vineMatch;
-            // Darken the color for vine stem
             const darkR = Math.floor(parseInt(r) * 0.3);
             const darkG = Math.floor(parseInt(g) * 0.6);
             const darkB = Math.floor(parseInt(b) * 0.3);
@@ -6771,23 +7122,50 @@ class Visualizer {
             this.ctx.strokeStyle = 'rgb(50, 120, 50)';
         }
 
-        this.ctx.lineWidth = 3;
-        this.ctx.beginPath();
         for (let i = 0; i < this.vineSegments.length - 1; i++) {
             const seg = this.vineSegments[i];
             const nextSeg = this.vineSegments[i + 1];
-            if (i === 0) {
-                this.ctx.moveTo(seg.x, seg.y);
-            }
+            const thickness = 4 - (i / this.vineSegments.length) * 2; // Thinner at the tip
+            this.ctx.lineWidth = Math.max(1, thickness + bass * 2);
+            this.ctx.lineCap = 'round';
+            this.ctx.beginPath();
+            this.ctx.moveTo(seg.x, seg.y);
             this.ctx.lineTo(nextSeg.x, nextSeg.y);
+            this.ctx.stroke();
         }
-        this.ctx.stroke();
 
-        // Draw leaves - use color scheme
-        for (const seg of this.vineSegments) {
+        // Update and draw leaves with animation
+        for (let segIdx = 0; segIdx < this.vineSegments.length; segIdx++) {
+            const seg = this.vineSegments[segIdx];
+            const leavesToKeep = [];
+
             for (const leaf of seg.leaves) {
-                const leafX = seg.x + leaf.offsetX;
-                const leafY = seg.y + leaf.offsetY;
+                leaf.age++;
+                leaf.wobblePhase += 0.05 + treble * 0.1;
+                leaf.rotation += leaf.rotationSpeed + avgMagnitude * 0.05;
+
+                // Some leaves fall off when old
+                if (leaf.age > 300 && Math.random() < 0.002) {
+                    // Leaf falls - add to falling leaves
+                    this.fallingLeaves.push({
+                        x: seg.x + leaf.offsetX,
+                        y: seg.y + leaf.offsetY,
+                        size: leaf.size,
+                        colorIndex: leaf.colorIndex,
+                        rotation: leaf.rotation,
+                        vx: (Math.random() - 0.5) * 2,
+                        vy: 1,
+                        rotationSpeed: (Math.random() - 0.5) * 0.2
+                    });
+                } else {
+                    leavesToKeep.push(leaf);
+                }
+
+                // Wobble effect
+                const wobbleX = Math.sin(leaf.wobblePhase) * 5 * (1 + avgMagnitude);
+                const wobbleY = Math.cos(leaf.wobblePhase * 0.7) * 3 * (1 + avgMagnitude);
+                const leafX = seg.x + leaf.offsetX + wobbleX;
+                const leafY = seg.y + leaf.offsetY + wobbleY;
 
                 // Use color scheme for leaves
                 const leafColor = this.getColor(leaf.colorIndex || 0, numBars);
@@ -6795,7 +7173,6 @@ class Visualizer {
 
                 if (leafMatch) {
                     const [_, r, g, b] = leafMatch;
-                    // Brighten for leaves
                     const brightR = Math.min(255, Math.floor(parseInt(r) * 0.6 + 100));
                     const brightG = Math.min(255, Math.floor(parseInt(g) * 1.2 + 100));
                     const brightB = Math.min(255, Math.floor(parseInt(b) * 0.6 + 100));
@@ -6804,11 +7181,54 @@ class Visualizer {
                     this.ctx.fillStyle = 'rgb(100, 255, 100)';
                 }
 
+                // Draw leaf with rotation (ellipse for more organic look)
+                this.ctx.save();
+                this.ctx.translate(leafX, leafY);
+                this.ctx.rotate(leaf.rotation);
                 this.ctx.beginPath();
-                this.ctx.arc(leafX, leafY, leaf.size, 0, Math.PI * 2);
+                this.ctx.ellipse(0, 0, leaf.size, leaf.size * 0.6, 0, 0, Math.PI * 2);
                 this.ctx.fill();
+                this.ctx.restore();
             }
+
+            seg.leaves = leavesToKeep;
         }
+
+        // Update and draw falling leaves
+        this.fallingLeaves = this.fallingLeaves.filter(leaf => {
+            leaf.x += leaf.vx;
+            leaf.y += leaf.vy;
+            leaf.vy += 0.1; // Gravity
+            leaf.vx *= 0.99; // Air resistance
+            leaf.rotation += leaf.rotationSpeed;
+
+            // Remove if off screen
+            if (leaf.y > this.canvas.height + 50) return false;
+
+            // Draw falling leaf
+            const leafColor = this.getColor(leaf.colorIndex || 0, numBars);
+            const leafMatch = leafColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+
+            if (leafMatch) {
+                const [_, r, g, b] = leafMatch;
+                const brightR = Math.min(255, Math.floor(parseInt(r) * 0.6 + 100));
+                const brightG = Math.min(255, Math.floor(parseInt(g) * 1.2 + 100));
+                const brightB = Math.min(255, Math.floor(parseInt(b) * 0.6 + 100));
+                this.ctx.fillStyle = `rgba(${brightR}, ${brightG}, ${brightB}, 0.7)`;
+            } else {
+                this.ctx.fillStyle = 'rgba(100, 255, 100, 0.7)';
+            }
+
+            this.ctx.save();
+            this.ctx.translate(leaf.x, leaf.y);
+            this.ctx.rotate(leaf.rotation);
+            this.ctx.beginPath();
+            this.ctx.ellipse(0, 0, leaf.size, leaf.size * 0.6, 0, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.restore();
+
+            return true;
+        });
     }
 
     renderHauntedFaces(magnitudes) {
@@ -6977,16 +7397,23 @@ class Visualizer {
         const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
         const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75)).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
 
-        // Initialize columns
-        if (!this.matrixColumns) {
+        // Use settings
+        const circleCount = this.settings.circleCount || 50;
+        const barCount = this.settings.barCount || 72;
+
+        // Number of columns controlled by barCount
+        const numColumns = Math.max(10, Math.min(80, Math.floor(barCount * 0.8)));
+        const columnSpacing = this.canvas.width / numColumns;
+
+        // Initialize columns - reinitialize if count changed
+        if (!this.matrixColumns || this.matrixColumns.length !== numColumns) {
             this.matrixColumns = [];
-            const numColumns = Math.floor(this.canvas.width / 20);
             for (let i = 0; i < numColumns; i++) {
                 this.matrixColumns.push({
-                    x: i * 20,
+                    x: i * columnSpacing,
                     y: -Math.random() * this.canvas.height,
                     speed: 2 + Math.random() * 3,
-                    chars: []
+                    colorIndex: i % 10
                 });
             }
         }
@@ -6994,6 +7421,9 @@ class Visualizer {
         // Clear with fade for trail effect
         this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Trail length controlled by circleCount
+        const trailLength = Math.max(10, Math.min(30, Math.floor(circleCount / 2.5)));
 
         // Update and draw columns
         this.ctx.font = '16px monospace';
@@ -7006,17 +7436,33 @@ class Visualizer {
                 column.y = -100;
             }
 
+            // Get column color from scheme
+            const baseColor = this.getColor(column.colorIndex, 10);
+            const match = baseColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+            let r = 50, g = 255, b = 50;
+            if (match) {
+                r = parseInt(match[1]);
+                g = parseInt(match[2]);
+                b = parseInt(match[3]);
+            }
+
             // Draw trail of characters
-            const trailLength = 20;
             for (let i = 0; i < trailLength; i++) {
                 const charY = column.y - i * 16;
                 if (charY < 0 || charY > this.canvas.height) continue;
 
                 // Brightness fades towards tail, treble adds flash
-                const brightness = 150 - i * 8 + treble * 105;
+                const fadeFactor = 1 - (i / trailLength);
+                const trebleBrightness = treble * 0.5;
+                const brightnessFactor = (0.6 + fadeFactor * 0.4 + trebleBrightness);
+
+                const finalR = Math.max(0, Math.min(255, Math.floor(r * brightnessFactor)));
+                const finalG = Math.max(0, Math.min(255, Math.floor(g * brightnessFactor)));
+                const finalB = Math.max(0, Math.min(255, Math.floor(b * brightnessFactor)));
+
                 const char = String.fromCharCode(33 + Math.floor(Math.random() * 94));
 
-                this.ctx.fillStyle = `rgb(50, ${Math.max(0, Math.min(255, brightness))}, 50)`;
+                this.ctx.fillStyle = `rgb(${finalR}, ${finalG}, ${finalB})`;
                 this.ctx.fillText(char, column.x, charY);
             }
         }
@@ -7075,32 +7521,94 @@ class Visualizer {
     renderDNAHelixRungs(magnitudes) {
         // Mode 84: DNA double helix with rungs lighting up per frequency
         const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+
+        // Use Step 4 settings
+        const numBars = this.settings.numBars || 72;
 
         this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        const numRungs = 40;
-        const helixRadius = 100;
+        // Initialize particles for rung lighting effects
+        if (!this.dnaParticles) this.dnaParticles = [];
+        if (!this.dnaPhase) this.dnaPhase = 0;
+
+        this.dnaPhase += 0.015 + avgMagnitude * 0.02;
+
+        const numRungs = Math.floor(40 * (numBars / 72)); // Scale with numBars
+        const helixRadius = 80 + bass * 40; // Pulsing radius with bass
         const centerX = this.canvas.width / 2;
+
+        // Get colors from scheme
+        const color1 = this.getColor(0, numBars);
+        const color2 = this.getColor(Math.floor(numBars / 2), numBars);
 
         for (let i = 0; i < numRungs; i++) {
             const t = (i / numRungs) * Math.PI * 4 + this.frameCounter * 0.02;
             const y = (i / numRungs) * this.canvas.height;
 
-            // Left strand
-            const x1 = centerX + Math.cos(t) * helixRadius;
-            // Right strand
-            const x2 = centerX + Math.cos(t + Math.PI) * helixRadius;
+            // Add breathing motion to helix
+            const breathe = Math.sin(this.dnaPhase + i * 0.1) * 10;
+            const helixRadiusAnimated = helixRadius + breathe + avgMagnitude * 20;
 
-            // Strand beads
-            this.ctx.fillStyle = 'rgba(100, 150, 255, 0.8)';
+            // Left strand
+            const x1 = centerX + Math.cos(t) * helixRadiusAnimated;
+            // Right strand
+            const x2 = centerX + Math.cos(t + Math.PI) * helixRadiusAnimated;
+
+            // Strand beads with pulsing size
+            const beadSize = 6 + Math.sin(this.dnaPhase + i * 0.2) * 2 + avgMagnitude * 4;
+
+            // Parse colors for strands
+            const color1Match = color1.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+            const color2Match = color2.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+
+            // Left strand bead
+            if (color1Match) {
+                const [_, r, g, b] = color1Match;
+                this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.8)`;
+            } else {
+                this.ctx.fillStyle = 'rgba(100, 150, 255, 0.8)';
+            }
             this.ctx.beginPath();
-            this.ctx.arc(x1, y, 8, 0, Math.PI * 2);
+            this.ctx.arc(x1, y, beadSize, 0, Math.PI * 2);
             this.ctx.fill();
 
-            this.ctx.fillStyle = 'rgba(255, 100, 150, 0.8)';
+            // Add glow
+            const glowSize = beadSize + 4;
+            if (color1Match) {
+                const [_, r, g, b] = color1Match;
+                this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.3)`;
+            } else {
+                this.ctx.fillStyle = 'rgba(100, 150, 255, 0.3)';
+            }
             this.ctx.beginPath();
-            this.ctx.arc(x2, y, 8, 0, Math.PI * 2);
+            this.ctx.arc(x1, y, glowSize, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Right strand bead
+            if (color2Match) {
+                const [_, r, g, b] = color2Match;
+                this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.8)`;
+            } else {
+                this.ctx.fillStyle = 'rgba(255, 100, 150, 0.8)';
+            }
+            this.ctx.beginPath();
+            this.ctx.arc(x2, y, beadSize, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Add glow
+            if (color2Match) {
+                const [_, r, g, b] = color2Match;
+                this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.3)`;
+            } else {
+                this.ctx.fillStyle = 'rgba(255, 100, 150, 0.3)';
+            }
+            this.ctx.beginPath();
+            this.ctx.arc(x2, y, glowSize, 0, Math.PI * 2);
             this.ctx.fill();
 
             // Rung connecting strands (lit by frequency)
@@ -7108,15 +7616,72 @@ class Visualizer {
             const magnitude = magnitudes[freqIdx];
 
             if (magnitude > 0.3) {
-                const brightness = magnitude * 255;
-                this.ctx.strokeStyle = `rgba(${brightness}, 255, ${brightness}, ${magnitude})`;
-                this.ctx.lineWidth = 3;
+                // Animated rung thickness
+                const rungThickness = 2 + magnitude * 6;
+
+                // Get rung color
+                const rungColor = this.getColor(freqIdx, magnitudes.length);
+                const rungMatch = rungColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+
+                if (rungMatch) {
+                    const [_, r, g, b] = rungMatch;
+                    const brightness = Math.min(255, parseInt(r) + magnitude * 100);
+                    this.ctx.strokeStyle = `rgba(${brightness}, ${Math.min(255, parseInt(g) + magnitude * 100)}, ${Math.min(255, parseInt(b) + magnitude * 100)}, ${magnitude})`;
+                } else {
+                    const brightness = magnitude * 255;
+                    this.ctx.strokeStyle = `rgba(${brightness}, 255, ${brightness}, ${magnitude})`;
+                }
+
+                this.ctx.lineWidth = rungThickness;
+                this.ctx.lineCap = 'round';
                 this.ctx.beginPath();
                 this.ctx.moveTo(x1, y);
                 this.ctx.lineTo(x2, y);
                 this.ctx.stroke();
+
+                // Emit particles when rung is very bright
+                if (magnitude > 0.7 && Math.random() < 0.3) {
+                    const midX = (x1 + x2) / 2;
+                    this.dnaParticles.push({
+                        x: midX,
+                        y: y,
+                        vx: (Math.random() - 0.5) * 4,
+                        vy: (Math.random() - 0.5) * 4,
+                        life: 1,
+                        colorIndex: freqIdx,
+                        size: 2 + magnitude * 3
+                    });
+                }
             }
         }
+
+        // Update and draw particles
+        this.dnaParticles = this.dnaParticles.filter(particle => {
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+            particle.life -= 0.02;
+            particle.vx *= 0.98;
+            particle.vy *= 0.98;
+
+            if (particle.life > 0) {
+                const particleColor = this.getColor(particle.colorIndex, magnitudes.length);
+                const particleMatch = particleColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+
+                if (particleMatch) {
+                    const [_, r, g, b] = particleMatch;
+                    this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${particle.life})`;
+                } else {
+                    this.ctx.fillStyle = `rgba(255, 255, 100, ${particle.life})`;
+                }
+
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                return true;
+            }
+            return false;
+        });
     }
 
     renderAudioReactiveShader(magnitudes) {
@@ -7430,77 +7995,188 @@ class Visualizer {
     renderMicroscopicView(magnitudes) {
         // Mode 90: Cells jiggle and divide based on frequency
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25)).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75)).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
         const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
-        // Initialize cells
+        // Use Step 4 settings
+        const numBars = this.settings.numBars || 72;
+
+        // Initialize cells and animation state
         if (!this.microscopicCells) {
             this.microscopicCells = [];
-            for (let i = 0; i < 10; i++) {
+            const initialCellCount = Math.floor(10 * (numBars / 72));
+            for (let i = 0; i < initialCellCount; i++) {
                 this.microscopicCells.push({
                     x: Math.random() * this.canvas.width,
                     y: Math.random() * this.canvas.height,
                     radius: 30 + Math.random() * 30,
+                    baseRadius: 30 + Math.random() * 30,
                     vx: (Math.random() - 0.5) * 2,
                     vy: (Math.random() - 0.5) * 2,
-                    freqIdx: i % magnitudes.length
+                    freqIdx: i % magnitudes.length,
+                    pulsePhase: Math.random() * Math.PI * 2,
+                    wobblePhase: Math.random() * Math.PI * 2,
+                    organelles: [] // Internal structures
                 });
+
+                // Add organelles (nuclei, mitochondria-like structures)
+                const lastCell = this.microscopicCells[this.microscopicCells.length - 1];
+                const numOrganelles = 2 + Math.floor(Math.random() * 3);
+                for (let j = 0; j < numOrganelles; j++) {
+                    lastCell.organelles.push({
+                        angle: Math.random() * Math.PI * 2,
+                        distance: Math.random() * lastCell.radius * 0.5,
+                        size: 3 + Math.random() * 5,
+                        rotationSpeed: (Math.random() - 0.5) * 0.05
+                    });
+                }
             }
+            this.cellPhase = 0;
         }
 
-        // Clear
-        this.ctx.fillStyle = 'rgb(240, 240, 250)';
+        this.cellPhase += 0.02 + avgMagnitude * 0.03;
+
+        // Clear with slight transparency for trails
+        this.ctx.fillStyle = 'rgba(240, 240, 250, 0.9)';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Update cells
         const newCells = [];
+        const maxCells = Math.floor(50 * (numBars / 72));
+
         for (const cell of this.microscopicCells) {
             const freqIdx = cell.freqIdx % magnitudes.length;
             const magnitude = magnitudes[freqIdx];
 
+            // Pulsing/breathing animation
+            cell.pulsePhase += 0.05 + magnitude * 0.1;
+            const pulseFactor = 1 + Math.sin(cell.pulsePhase) * 0.15 * (1 + magnitude);
+            cell.radius = cell.baseRadius * pulseFactor;
+
+            // Wobbling membrane
+            cell.wobblePhase += 0.03 + treble * 0.05;
+
             // Jiggle (agitation from overall volume)
-            const jiggleX = (Math.random() - 0.5) * avgMagnitude * 10;
-            const jiggleY = (Math.random() - 0.5) * avgMagnitude * 10;
+            const jiggleX = (Math.random() - 0.5) * avgMagnitude * 15;
+            const jiggleY = (Math.random() - 0.5) * avgMagnitude * 15;
+
+            // Organic movement (like swimming)
+            const swimAngle = Math.atan2(cell.vy, cell.vx);
+            const swimForce = 0.1 + magnitude * 0.2;
+            cell.vx += Math.cos(swimAngle + Math.sin(this.cellPhase) * 0.5) * swimForce;
+            cell.vy += Math.sin(swimAngle + Math.sin(this.cellPhase) * 0.5) * swimForce;
+
+            // Damping for more fluid motion
+            cell.vx *= 0.98;
+            cell.vy *= 0.98;
 
             cell.x += cell.vx + jiggleX;
             cell.y += cell.vy + jiggleY;
 
-            // Bounce off walls
+            // Bounce off walls with damping
             if (cell.x < cell.radius || cell.x > this.canvas.width - cell.radius) {
-                cell.vx *= -1;
+                cell.vx *= -0.8;
+                cell.x = Math.max(cell.radius, Math.min(this.canvas.width - cell.radius, cell.x));
             }
             if (cell.y < cell.radius || cell.y > this.canvas.height - cell.radius) {
-                cell.vy *= -1;
+                cell.vy *= -0.8;
+                cell.y = Math.max(cell.radius, Math.min(this.canvas.height - cell.radius, cell.y));
             }
 
             // Divide when amplitude is high
-            if (magnitude > 0.7 && newCells.length < 50 && Math.random() < 0.05) {
-                // Create daughter cell
-                newCells.push({
-                    x: cell.x + 20,
-                    y: cell.y + 20,
-                    radius: cell.radius * 0.7,
-                    vx: -cell.vx,
-                    vy: -cell.vy,
-                    freqIdx: freqIdx
-                });
-                cell.radius *= 0.7;
+            if (magnitude > 0.7 && newCells.length < maxCells && Math.random() < 0.03) {
+                const angle = Math.random() * Math.PI * 2;
+                const distance = cell.radius * 0.5;
+
+                // Create daughter cell with inheritance
+                const daughterCell = {
+                    x: cell.x + Math.cos(angle) * distance,
+                    y: cell.y + Math.sin(angle) * distance,
+                    radius: cell.baseRadius * 0.6,
+                    baseRadius: cell.baseRadius * 0.6,
+                    vx: Math.cos(angle) * 2,
+                    vy: Math.sin(angle) * 2,
+                    freqIdx: freqIdx,
+                    pulsePhase: Math.random() * Math.PI * 2,
+                    wobblePhase: Math.random() * Math.PI * 2,
+                    organelles: []
+                };
+
+                // Daughter gets organelles
+                const numOrganelles = 1 + Math.floor(Math.random() * 2);
+                for (let j = 0; j < numOrganelles; j++) {
+                    daughterCell.organelles.push({
+                        angle: Math.random() * Math.PI * 2,
+                        distance: Math.random() * daughterCell.radius * 0.5,
+                        size: 2 + Math.random() * 4,
+                        rotationSpeed: (Math.random() - 0.5) * 0.05
+                    });
+                }
+
+                newCells.push(daughterCell);
+                cell.baseRadius *= 0.8; // Parent shrinks slightly
             }
 
-            // Draw cell - use color scheme
-            this.ctx.fillStyle = this.getColor(freqIdx, magnitudes.length);
+            // Draw cell membrane with wobble
+            const cellColor = this.getColor(freqIdx, magnitudes.length);
+            this.ctx.fillStyle = cellColor;
             this.ctx.beginPath();
-            this.ctx.arc(cell.x, cell.y, cell.radius, 0, Math.PI * 2);
+
+            // Draw wobbling membrane (not perfect circle)
+            const numPoints = 20;
+            for (let i = 0; i <= numPoints; i++) {
+                const angle = (i / numPoints) * Math.PI * 2;
+                const wobble = Math.sin(angle * 4 + cell.wobblePhase) * 3 * (1 + magnitude * 0.5);
+                const r = cell.radius + wobble;
+                const x = cell.x + Math.cos(angle) * r;
+                const y = cell.y + Math.sin(angle) * r;
+
+                if (i === 0) {
+                    this.ctx.moveTo(x, y);
+                } else {
+                    this.ctx.lineTo(x, y);
+                }
+            }
+            this.ctx.closePath();
             this.ctx.fill();
 
+            // Cell membrane outline
             const strokeColorIndex = (freqIdx + 1) % magnitudes.length;
             this.ctx.strokeStyle = this.getColor(strokeColorIndex, magnitudes.length);
-            this.ctx.lineWidth = 2;
+            this.ctx.lineWidth = 2 + magnitude * 2;
             this.ctx.stroke();
+
+            // Draw organelles (rotating internal structures)
+            for (const organelle of cell.organelles) {
+                organelle.angle += organelle.rotationSpeed + avgMagnitude * 0.02;
+
+                const orgX = cell.x + Math.cos(organelle.angle) * organelle.distance;
+                const orgY = cell.y + Math.sin(organelle.angle) * organelle.distance;
+
+                // Organelle glow
+                const orgGlow = this.ctx.createRadialGradient(orgX, orgY, 0, orgX, orgY, organelle.size * 2);
+                const orgColor = this.getColor((freqIdx + 10) % magnitudes.length, magnitudes.length);
+                const orgMatch = orgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+
+                if (orgMatch) {
+                    const [_, r, g, b] = orgMatch;
+                    orgGlow.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0.8)`);
+                    orgGlow.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0.1)`);
+                } else {
+                    orgGlow.addColorStop(0, 'rgba(255, 100, 100, 0.8)');
+                    orgGlow.addColorStop(1, 'rgba(255, 100, 100, 0.1)');
+                }
+
+                this.ctx.fillStyle = orgGlow;
+                this.ctx.beginPath();
+                this.ctx.arc(orgX, orgY, organelle.size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
 
             newCells.push(cell);
         }
 
-        this.microscopicCells = newCells.slice(0, 50);
+        this.microscopicCells = newCells.slice(0, maxCells);
     }
 
     /**
@@ -7953,12 +8629,18 @@ class Visualizer {
      * Voronoi diagram with cells pulsing and seed points moving
      */
     renderVoronoiTessellation(magnitudes) {
-        const numSeeds = Math.min(magnitudes.length, 20);
+        // Use settings - circleCount controls number of seeds
+        const circleCount = this.settings.circleCount || 50;
+        const barCount = this.settings.barCount || 72;
+
+        // Number of seeds controlled by circleCount
+        const numSeeds = Math.max(8, Math.min(30, Math.floor(circleCount / 2.5)));
+
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
             .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
 
-        // Initialize seed positions
-        if (!this.voronoiSeeds || this.voronoiSeeds.length === 0) {
+        // Initialize seed positions - reinitialize if count changed
+        if (!this.voronoiSeeds || this.voronoiSeeds.length !== numSeeds) {
             this.voronoiSeeds = [];
             for (let i = 0; i < numSeeds; i++) {
                 this.voronoiSeeds.push({
@@ -7982,9 +8664,12 @@ class Visualizer {
             seed.y = Math.max(0, Math.min(this.canvas.height, seed.y));
         }
 
+        // Cell resolution controlled by barCount
+        const cellSize = Math.max(3, Math.min(8, Math.floor(10 - barCount / 18)));
+
         // Draw Voronoi cells (simplified - sample points)
-        for (let y = 0; y < this.canvas.height; y += 5) {
-            for (let x = 0; x < this.canvas.width; x += 5) {
+        for (let y = 0; y < this.canvas.height; y += cellSize) {
+            for (let x = 0; x < this.canvas.width; x += cellSize) {
                 // Find closest seed
                 let minDist = Infinity;
                 let closestIdx = 0;
@@ -7998,22 +8683,43 @@ class Visualizer {
                     }
                 }
 
-                // Color based on closest seed and its magnitude
-                const magnitude = closestIdx < magnitudes.length ? magnitudes[closestIdx] : 0;
-                const hue = (closestIdx / numSeeds) * 180;
-                const saturation = 78 + magnitude * 22;
-                const value = 39 + magnitude * 61;
-                const color = this.hsvToRgb(hue, saturation, value);
+                // Use color scheme instead of hard-coded HSV
+                const baseColor = this.getColor(closestIdx, numSeeds);
+                const match = baseColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+                let r = 100, g = 100, b = 150;
+                if (match) {
+                    r = parseInt(match[1]);
+                    g = parseInt(match[2]);
+                    b = parseInt(match[3]);
+                }
 
-                this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
-                this.ctx.fillRect(x, y, 5, 5);
+                // Adjust brightness based on magnitude
+                const magnitude = closestIdx < magnitudes.length ? magnitudes[closestIdx] : 0;
+                const brightnessFactor = 0.4 + magnitude * 0.6;
+                r = Math.floor(r * brightnessFactor);
+                g = Math.floor(g * brightnessFactor);
+                b = Math.floor(b * brightnessFactor);
+
+                this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+                this.ctx.fillRect(x, y, cellSize, cellSize);
             }
         }
 
         // Draw seed points
         for (let i = 0; i < numSeeds && i < this.voronoiSeeds.length; i++) {
             const seed = this.voronoiSeeds[i];
-            this.ctx.fillStyle = 'rgb(255, 255, 255)';
+
+            // Get seed color from scheme (use lighter version)
+            const seedColor = this.getColor(i, numSeeds);
+            const seedMatch = seedColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+            let seedR = 255, seedG = 255, seedB = 255;
+            if (seedMatch) {
+                seedR = Math.min(255, parseInt(seedMatch[1]) + 100);
+                seedG = Math.min(255, parseInt(seedMatch[2]) + 100);
+                seedB = Math.min(255, parseInt(seedMatch[3]) + 100);
+            }
+
+            this.ctx.fillStyle = `rgb(${seedR}, ${seedG}, ${seedB})`;
             this.ctx.beginPath();
             this.ctx.arc(seed.x, seed.y, 6, 0, Math.PI * 2);
             this.ctx.fill();
@@ -8573,10 +9279,17 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length * 0.25), Math.floor(magnitudes.length * 0.75))
             .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.5);
 
-        // Initialize crystal lattice nodes
-        if (!this.crystalLatticeNodes) {
+        // Use settings - circleCount controls grid density
+        const circleCount = this.settings.circleCount || 50;
+        const barCount = this.settings.barCount || 72;
+
+        // Grid size controlled by circleCount (3-7 range)
+        const gridSize = Math.max(3, Math.min(7, Math.floor(3 + circleCount / 16.67)));
+
+        // Initialize crystal lattice nodes - reinitialize if grid size changed
+        if (!this.crystalLatticeNodes || !this.lastCrystalGridSize || this.lastCrystalGridSize !== gridSize) {
             this.crystalLatticeNodes = [];
-            const gridSize = 5;
+            this.lastCrystalGridSize = gridSize;
             const spacing = Math.min(this.canvas.width, this.canvas.height) / (gridSize + 1);
             for (let i = 0; i < gridSize; i++) {
                 for (let j = 0; j < gridSize; j++) {
@@ -8585,7 +9298,8 @@ class Visualizer {
                             x3d: (i - gridSize / 2) * spacing,
                             y3d: (j - gridSize / 2) * spacing,
                             z3d: (k - gridSize / 2) * spacing,
-                            magnitude: 0
+                            magnitude: 0,
+                            index: i * gridSize * gridSize + j * gridSize + k
                         });
                     }
                 }
@@ -8620,6 +9334,9 @@ class Visualizer {
             node.z2d = zRot;
         }
 
+        // Connection distance threshold controlled by barCount
+        const connectionThreshold = 150 + (barCount / 72) * 100;
+
         // Draw connections between nearby nodes
         for (let i = 0; i < this.crystalLatticeNodes.length; i++) {
             const node1 = this.crystalLatticeNodes[i];
@@ -8631,10 +9348,26 @@ class Visualizer {
                     (node1.z3d - node2.z3d) ** 2
                 );
 
-                if (dist < 250) {
+                if (dist < connectionThreshold) {
                     const intensity = (node1.magnitude + node2.magnitude) * 127.5;
                     if (intensity > 30) {
-                        this.ctx.strokeStyle = `rgb(${intensity}, ${intensity}, ${intensity + 50})`;
+                        // Use color scheme for connections
+                        const connColor = this.getColor(i, this.crystalLatticeNodes.length);
+                        const connMatch = connColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+                        let connR = 128, connG = 128, connB = 150;
+                        if (connMatch) {
+                            connR = parseInt(connMatch[1]);
+                            connG = parseInt(connMatch[2]);
+                            connB = parseInt(connMatch[3]);
+                        }
+
+                        // Dim the connection colors
+                        const dimFactor = 0.3 + (intensity / 255) * 0.4;
+                        connR = Math.floor(connR * dimFactor);
+                        connG = Math.floor(connG * dimFactor);
+                        connB = Math.floor(connB * dimFactor);
+
+                        this.ctx.strokeStyle = `rgb(${connR}, ${connG}, ${connB})`;
                         this.ctx.lineWidth = 1;
                         this.ctx.beginPath();
                         this.ctx.moveTo(node1.x2d, node1.y2d);
@@ -8645,18 +9378,37 @@ class Visualizer {
             }
         }
 
-        // Draw nodes
-        for (const node of this.crystalLatticeNodes) {
+        // Draw nodes with color scheme
+        for (let i = 0; i < this.crystalLatticeNodes.length; i++) {
+            const node = this.crystalLatticeNodes[i];
             const radius = 5 + node.magnitude * 15;
-            const hue = ((node.z2d + 300) / 600) * 180;
-            const color = this.hsvToRgb(hue, 100, 100);
 
-            this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+            // Use color scheme instead of hard-coded HSV
+            const baseColor = this.getColor(i, this.crystalLatticeNodes.length);
+            const match = baseColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+            let r = 150, g = 150, b = 200;
+            if (match) {
+                r = parseInt(match[1]);
+                g = parseInt(match[2]);
+                b = parseInt(match[3]);
+            }
+
+            // Brighten based on magnitude
+            const brightnessFactor = 0.7 + node.magnitude * 0.5;
+            r = Math.min(255, Math.floor(r * brightnessFactor));
+            g = Math.min(255, Math.floor(g * brightnessFactor));
+            b = Math.min(255, Math.floor(b * brightnessFactor));
+
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
             this.ctx.beginPath();
             this.ctx.arc(node.x2d, node.y2d, radius, 0, Math.PI * 2);
             this.ctx.fill();
 
-            this.ctx.strokeStyle = 'rgb(255, 255, 255)';
+            // Outline using lighter version of color
+            const outlineR = Math.min(255, r + 80);
+            const outlineG = Math.min(255, g + 80);
+            const outlineB = Math.min(255, b + 80);
+            this.ctx.strokeStyle = `rgb(${outlineR}, ${outlineG}, ${outlineB})`;
             this.ctx.lineWidth = 1;
             this.ctx.beginPath();
             this.ctx.arc(node.x2d, node.y2d, radius + 2, 0, Math.PI * 2);

@@ -1648,7 +1648,15 @@ const VISUALIZATION_MODES = {
         description: 'Bass launches rockets that explode with colored particles',
         category: 'Particles',
         mode: 89,
-        tags: ['fireworks', 'particles', 'explosion']
+        tags: ['fireworks', 'particles', 'explosion'],
+        parameters: {
+            bassThreshold: { min: 0.1, max: 0.8, default: 0.3, label: 'Bass Threshold' },
+            particleCount: { min: 50, max: 300, default: 150, label: 'Particle Count' },
+            rocketSpeed: { min: 5, max: 20, default: 12, label: 'Rocket Speed' },
+            particleSpeed: { min: 2, max: 12, default: 6, label: 'Explosion Speed' },
+            particleSize: { min: 1, max: 10, default: 4, label: 'Particle Size' },
+            trailLength: { min: 0.05, max: 0.3, default: 0.15, label: 'Trail Length' }
+        }
     },
     microscopic_view: {
         id: 'microscopic_view',
@@ -1768,7 +1776,16 @@ const VISUALIZATION_MODES = {
         description: 'Thousands of particles forming shapes',
         category: 'Particles',
         mode: 104,
-        tags: ['particles', 'swarm', 'formation']
+        tags: ['particles', 'swarm', 'formation'],
+        parameters: {
+            particleCount: { min: 100, max: 3000, default: 1000, label: 'Max Particles' },
+            spawnRate: { min: 1, max: 30, default: 10, label: 'Spawn Rate' },
+            formationRadius: { min: 50, max: 400, default: 150, label: 'Formation Radius' },
+            movementSpeed: { min: 0.01, max: 0.2, default: 0.05, label: 'Movement Speed' },
+            trailLength: { min: 0, max: 20, default: 5, label: 'Trail Length' },
+            particleSize: { min: 1, max: 5, default: 2, label: 'Particle Size' },
+            trailOpacity: { min: 0.01, max: 0.3, default: 0.05, label: 'Trail Fade' }
+        }
     },
     crystal_lattice: {
         id: 'crystal_lattice',

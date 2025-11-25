@@ -7134,23 +7134,45 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length * 0.25), Math.floor(magnitudes.length * 0.75)).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.5);
         const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75)).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
 
+        // Get parameters with defaults
+        const bassThreshold = this.settings.fireworkShowBassThreshold || 0.3;
+        const particleCount = this.settings.fireworkShowParticleCount || 150;
+        const rocketSpeed = this.settings.fireworkShowRocketSpeed || 12;
+        const particleSpeed = this.settings.fireworkShowParticleSpeed || 6;
+        const particleSize = this.settings.fireworkShowParticleSize || 4;
+        const trailLength = this.settings.fireworkShowTrailLength || 0.15;
+
         // Initialize rockets array
         if (!this.fireworkRockets) {
             this.fireworkRockets = [];
         }
 
-        // Clear with fade
-        this.ctx.fillStyle = 'rgba(0, 0, 10, 0.15)';
+        // Clear with fade (controlled by trailLength parameter)
+        this.ctx.fillStyle = `rgba(0, 0, 10, ${trailLength})`;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Launch rockets on bass hits
-        if (bass > 0.55 && this.frameCounter % 10 === 0) {
+        // Calculate average magnitude for general activity
+        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Launch rockets on bass hits OR periodically with any audio activity
+        const shouldLaunchBass = bass > bassThreshold && this.frameCounter % 10 === 0;
+        const shouldLaunchAny = avgMagnitude > 0.2 && this.frameCounter % 30 === 0;
+        const shouldLaunchIdle = this.frameCounter % 60 === 0; // Always launch some even without audio
+
+        if (shouldLaunchBass || shouldLaunchAny || shouldLaunchIdle) {
+            // Store color index for this rocket so explosion uses consistent color
+            const colorIndex = Math.floor(Math.random() * magnitudes.length);
+
+            // Use bass for velocity if available, otherwise use avg magnitude
+            const velocityMultiplier = bass > 0.1 ? bass : Math.max(avgMagnitude, 0.3);
+
             this.fireworkRockets.push({
                 x: Math.random() * (this.canvas.width / 2) + this.canvas.width / 4,
                 y: this.canvas.height - 50,
-                vy: -10 - bass * 8,
+                vy: -rocketSpeed - velocityMultiplier * 8,
                 exploded: false,
-                particles: []
+                particles: [],
+                colorIndex: colorIndex
             });
         }
 
@@ -7161,8 +7183,10 @@ class Visualizer {
                 rocket.y += rocket.vy;
                 rocket.vy += 0.3;  // Gravity
 
-                // Draw rocket trail
-                this.ctx.fillStyle = 'rgb(200, 200, 255)';
+                // Draw rocket trail (use the rocket's assigned color)
+                const rocketColorStr = this.getColor(rocket.colorIndex, magnitudes.length);
+                const rocketColor = this.parseRgbColor(rocketColorStr);
+                this.ctx.fillStyle = `rgb(${rocketColor[0]}, ${rocketColor[1]}, ${rocketColor[2]})`;
                 this.ctx.beginPath();
                 this.ctx.arc(rocket.x, rocket.y, 5, 0, Math.PI * 2);
                 this.ctx.fill();
@@ -7170,17 +7194,23 @@ class Visualizer {
                 // Explode at peak
                 if (rocket.vy > 0) {
                     rocket.exploded = true;
-                    // Create particle burst
-                    const numParticles = 50 + mids * 100;
+                    // Create particle burst (particle count controlled by parameter)
+                    const numParticles = Math.floor(particleCount * (0.5 + mids * 0.5));
                     for (let i = 0; i < numParticles; i++) {
                         const angle = Math.random() * 2 * Math.PI;
-                        const speed = 2 + Math.random() * 8;
+                        const speed = particleSpeed * (0.5 + Math.random() * 0.5);
+
+                        // Vary color slightly for each particle
+                        const colorVariation = Math.floor((i / numParticles) * magnitudes.length);
+                        const particleColorIndex = (rocket.colorIndex + colorVariation) % magnitudes.length;
+
                         rocket.particles.push({
                             x: rocket.x,
                             y: rocket.y,
                             vx: Math.cos(angle) * speed,
                             vy: Math.sin(angle) * speed,
-                            life: 1.0
+                            life: 1.0,
+                            colorIndex: particleColorIndex
                         });
                     }
                 }
@@ -7196,13 +7226,13 @@ class Visualizer {
                     particle.life -= 0.015;
 
                     if (particle.life > 0) {
-                        // Color from mids - use color scheme
-                        const colorIndex = Math.floor(mids * magnitudes.length);
-                        const colorStr = this.getColor(colorIndex, magnitudes.length);
+                        // Use particle's stored color index for consistent coloring
+                        const colorStr = this.getColor(particle.colorIndex, magnitudes.length);
                         const color = this.parseRgbColor(colorStr);
 
-                        const size = 2 + treble * 6;
-                        this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+                        // Size controlled by parameter and audio reactivity
+                        const size = particleSize * (0.5 + treble * 0.5) * particle.life;
+                        this.ctx.fillStyle = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${particle.life})`;
                         this.ctx.beginPath();
                         this.ctx.arc(particle.x, particle.y, size, 0, Math.PI * 2);
                         this.ctx.fill();
@@ -8149,34 +8179,51 @@ class Visualizer {
         const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
             .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
 
+        // Get parameters with defaults
+        const particleCount = this.settings.particleSwarmParticleCount || 1000;
+        const spawnRate = this.settings.particleSwarmSpawnRate || 10;
+        const formationRadius = (this.settings.particleSwarmFormationRadius || 150) * this.scaleFactor;
+        const movementSpeed = this.settings.particleSwarmMovementSpeed || 0.05;
+        const trailLength = this.settings.particleSwarmTrailLength || 5;
+        const particleSize = (this.settings.particleSwarmParticleSize || 2) * this.scaleFactor;
+        const trailOpacity = this.settings.particleSwarmTrailOpacity || 0.05;
+
         if (!this.particleSwarmArray) this.particleSwarmArray = [];
 
-        // Fade background
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+        // Fade background (controlled by trailOpacity parameter)
+        this.ctx.fillStyle = `rgba(0, 0, 0, ${trailOpacity})`;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         const centerX = this.canvas.width / 2;
         const centerY = this.canvas.height / 2;
 
-        // Spawn particles
-        if (this.particleSwarmArray.length < 1000) {
-            for (let i = 0; i < 10; i++) {
+        // Spawn particles (controlled by particleCount and spawnRate parameters)
+        // Scale factor ensures consistent appearance in preview and final video
+        if (this.particleSwarmArray.length < particleCount) {
+            for (let i = 0; i < spawnRate; i++) {
                 const angle = Math.random() * 2 * Math.PI;
-                const distance = Math.random() * 200;
+                const distance = Math.random() * formationRadius * 1.5;
                 this.particleSwarmArray.push({
                     x: centerX + Math.cos(angle) * distance,
                     y: centerY + Math.sin(angle) * distance,
                     vx: 0,
                     vy: 0,
-                    trail: []
+                    trail: [],
+                    colorIndex: Math.floor(Math.random() * magnitudes.length)
                 });
             }
         }
 
-        const targetRadius = 150 + bass * 200;
+        // Calculate target radius based on bass and parameters (scaled for consistency)
+        const targetRadius = formationRadius + bass * formationRadius * 1.5;
+
+        // Get color scheme
+        const scheme = COLOR_SCHEMES[this.settings.colorScheme];
+        const numColors = magnitudes.length;
 
         // Update particle positions
-        for (const particle of this.particleSwarmArray) {
+        for (let i = 0; i < this.particleSwarmArray.length; i++) {
+            const particle = this.particleSwarmArray[i];
             const dx = centerX - particle.x;
             const dy = centerY - particle.y;
             const distance = Math.sqrt(dx * dx + dy * dy);
@@ -8186,44 +8233,75 @@ class Visualizer {
 
                 let targetX, targetY;
                 if (bass > 0.5) {
+                    // Form circular shape on strong bass
                     targetX = centerX + Math.cos(angle) * targetRadius;
                     targetY = centerY + Math.sin(angle) * targetRadius;
                 } else {
-                    targetX = centerX + Math.cos(angle + treble * Math.PI) * (distance + treble * 100);
-                    targetY = centerY + Math.sin(angle + treble * Math.PI) * (distance + treble * 100);
+                    // Create spiral/swirling motion on treble
+                    const rotationSpeed = treble * Math.PI;
+                    const expansionFactor = 1 + treble * 0.5;
+                    targetX = centerX + Math.cos(angle + rotationSpeed) * (distance * expansionFactor);
+                    targetY = centerY + Math.sin(angle + rotationSpeed) * (distance * expansionFactor);
                 }
 
-                particle.vx = (targetX - particle.x) * 0.05;
-                particle.vy = (targetY - particle.y) * 0.05;
+                // Apply movement speed parameter
+                particle.vx = (targetX - particle.x) * movementSpeed;
+                particle.vy = (targetY - particle.y) * movementSpeed;
             }
 
             particle.x += particle.vx;
             particle.y += particle.vy;
 
-            // Update trail
+            // Update trail (length controlled by parameter)
             particle.trail.push({ x: particle.x, y: particle.y });
-            if (particle.trail.length > 5) particle.trail.shift();
+            if (particle.trail.length > trailLength) particle.trail.shift();
 
-            // Velocity-based color
+            // Get color from color scheme based on particle's velocity and position
             const velocity = Math.sqrt(particle.vx ** 2 + particle.vy ** 2);
-            const hue = 120 - Math.min(velocity * 50, 120);
-            const color = this.hsvToRgb(hue, 100, 100);
+            const velocityFactor = Math.min(velocity * 50, 1);
 
-            // Draw trail
-            if (particle.trail.length > 1) {
-                this.ctx.strokeStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
-                this.ctx.lineWidth = 1;
-                this.ctx.beginPath();
-                this.ctx.moveTo(particle.trail[0].x, particle.trail[0].y);
-                for (let i = 1; i < particle.trail.length; i++) {
-                    this.ctx.lineTo(particle.trail[i].x, particle.trail[i].y);
+            // Blend between primary and secondary colors based on velocity
+            const colorStr = this.getColor(particle.colorIndex, numColors);
+            const color = this.parseRgbColor(colorStr);
+
+            // Add velocity-based brightness
+            const brightnessFactor = 0.7 + velocityFactor * 0.3;
+            const r = Math.min(255, Math.floor(color[0] * brightnessFactor));
+            const g = Math.min(255, Math.floor(color[1] * brightnessFactor));
+            const b = Math.min(255, Math.floor(color[2] * brightnessFactor));
+
+            // Draw trail with fading alpha
+            if (particle.trail.length > 1 && trailLength > 0) {
+                for (let t = 0; t < particle.trail.length - 1; t++) {
+                    const alpha = (t / particle.trail.length) * 0.5;
+                    this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                    this.ctx.lineWidth = 1;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(particle.trail[t].x, particle.trail[t].y);
+                    this.ctx.lineTo(particle.trail[t + 1].x, particle.trail[t + 1].y);
+                    this.ctx.stroke();
                 }
-                this.ctx.stroke();
             }
 
-            // Draw particle
-            this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
-            this.ctx.fillRect(particle.x - 1, particle.y - 1, 2, 2);
+            // Draw particle with size parameter
+            const size = particleSize * (0.8 + velocityFactor * 0.4);
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
+            this.ctx.beginPath();
+            this.ctx.arc(particle.x, particle.y, size / 2, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Add glow effect for brighter particles
+            if (velocityFactor > 0.5) {
+                this.ctx.fillStyle = `rgba(${Math.min(255, r + 50)}, ${Math.min(255, g + 50)}, ${Math.min(255, b + 50)}, 0.4)`;
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x, particle.y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+
+        // Remove excess particles if count was reduced
+        if (this.particleSwarmArray.length > particleCount) {
+            this.particleSwarmArray = this.particleSwarmArray.slice(0, particleCount);
         }
     }
 
@@ -13719,36 +13797,92 @@ class Visualizer {
      */
         render360BatSwarm(magnitudes) {
         const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
+        // Use mode-specific parameters
+        const batCount = params.batCount || 50;
+        const swarmSpeed = params.swarmSpeed || 0.08;
+        const wingSpan = params.wingSpan || 12;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
 
+        // Use Step 4 settings
+        const barCount = this.settings.barCount || 72;
+        const innerRadius = this.getEffectiveInnerRadius();
+
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        this.frameCounter = (this.frameCounter || 0) + swarmSpeed * speed;
 
-        const numParticles = Math.floor(30 * complexity);
-        for (let i = 0; i < numParticles; i++) {
+        // Get color scheme
+        const scheme = COLOR_SCHEMES[this.settings.colorScheme];
+        const caveColor = scheme.primary;
+
+        // Cave entrance at bottom center (size affected by innerRadius setting)
+        const caveX = this.centerX;
+        const caveY = this.canvas.height - 50;
+        const caveWidth = 60 + (innerRadius / 180) * 40;  // 60-100px based on innerRadius
+        const caveHeight = caveWidth * 0.5;
+
+        // Draw cave entrance with scheme color (darker version)
+        this.ctx.fillStyle = `rgba(${caveColor[0] * 0.3}, ${caveColor[1] * 0.3}, ${caveColor[2] * 0.3}, 0.8)`;
+        this.ctx.beginPath();
+        this.ctx.ellipse(caveX, caveY, caveWidth, caveHeight, 0, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Draw bats swarming out (affected by barCount setting)
+        const numBats = Math.floor(batCount * (0.5 + energy * 0.5) * (barCount / 72));
+        for (let i = 0; i < numBats; i++) {
             const magnitude = magnitudes[i % magnitudes.length];
-            const angle = (i / numParticles) * Math.PI * 2 + this.frameCounter * 0.02 * speed;
-            const distance = this.maxRadius * (0.5 + Math.sin(this.frameCounter * 0.03 + i) * 0.3) * magnitude * intensity;
 
-            const x = this.centerX + Math.cos(angle) * distance;
-            const y = this.centerY + Math.sin(angle) * distance;
+            // Spiral motion from cave
+            const phase = this.frameCounter + i * 0.2;
+            const spiralAngle = phase * (1 + complexity * 0.1);
+            const spiralDist = Math.min(phase * 15, this.maxRadius * 0.8);
 
-            const size = 1 + magnitude * 4 * intensity;
-            const hue = ((i * 10 + this.frameCounter * 0.5) % 360) / 360;
-            const rgb = this.hsvToRgb(hue, 0.8, 0.9);
+            // Add some randomness to make it organic
+            const wobbleX = Math.sin(phase * 3 + i) * 20 * magnitude;
+            const wobbleY = Math.cos(phase * 2.3 + i) * 15 * magnitude;
 
-            this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${0.3 + magnitude * 0.7})`;
-            this.ctx.shadowBlur = 8 * intensity;
-            this.ctx.shadowColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.5)`;
-            this.ctx.beginPath();
-            this.ctx.arc(x, y, size, 0, Math.PI * 2);
-            this.ctx.fill();
-            this.ctx.shadowBlur = 0;
+            const x = caveX + Math.sin(spiralAngle) * spiralDist + wobbleX;
+            const y = caveY - spiralDist * 0.6 + Math.cos(spiralAngle * 0.7) * spiralDist * 0.3 + wobbleY;
+
+            // Only draw bats that are visible on screen
+            if (x >= 0 && x <= this.canvas.width && y >= 0 && y <= this.canvas.height) {
+                // Get color from scheme with gradient
+                const batColor = this.getColor(i, numBats);
+
+                // Parse RGB from the color string
+                const match = batColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+                let r = 20, g = 20, b = 20;
+                if (match) {
+                    r = parseInt(match[1]);
+                    g = parseInt(match[2]);
+                    b = parseInt(match[3]);
+                }
+
+                const opacity = Math.min(1, spiralDist / 100) * (0.6 + magnitude * 0.4);
+                this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+                this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+                this.ctx.lineWidth = 2;
+
+                // Wing flap animation
+                const wingFlap = Math.sin(phase * 8) * 0.3 + 0.7; // Oscillates between 0.4 and 1.0
+                const currentWingSpan = wingSpan * wingFlap;
+
+                // Draw bat shape (body + wings)
+                this.ctx.beginPath();
+                // Left wing
+                this.ctx.moveTo(x - currentWingSpan, y);
+                this.ctx.lineTo(x, y - 5);
+                // Right wing
+                this.ctx.lineTo(x + currentWingSpan, y);
+                this.ctx.stroke();
+
+                // Bat body
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, 2, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
         }
     }
 

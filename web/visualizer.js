@@ -10905,39 +10905,105 @@ class Visualizer {
 
     /**
      * Mode 183: Nebula Inkblot
-     * Mode 183: Nebula Inkblot - mirrored volumetric smoke; hue by dominant band
+     * Mirrored volumetric smoke with hue by dominant band
      */
-        render183NebulaInkblot(magnitudes) {
+    render183NebulaInkblot(magnitudes) {
         const params = this.settings.parameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
 
+        // Use Step 4 settings
+        const barCount = this.settings.barCount || 72;
+        const innerRadius = this.getEffectiveInnerRadius();
+
+        // Calculate frequency bands
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        const numParticles = Math.floor(30 * complexity);
+        // Create volumetric smoke effect with fade trails
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+        this.ctx.fillRect(0, 0, this.width, this.height);
+
+        // Determine dominant band for color influence
+        let dominantBand = 0;
+        if (bass > mids && bass > treble) dominantBand = 0; // Bass - more red
+        else if (mids > bass && mids > treble) dominantBand = 0.5; // Mids - green
+        else dominantBand = 1; // Treble - blue
+
+        // Number of particles affected by barCount and complexity
+        const numParticles = Math.floor(40 * complexity * (barCount / 72));
+
+        // Initialize particle history if not exists
+        if (!this.nebulaParticles || this.nebulaParticles.length !== numParticles) {
+            this.nebulaParticles = [];
+            for (let i = 0; i < numParticles; i++) {
+                this.nebulaParticles.push({
+                    angle: (i / numParticles) * Math.PI * 2,
+                    offset: Math.random() * Math.PI * 2
+                });
+            }
+        }
+
         for (let i = 0; i < numParticles; i++) {
+            const particle = this.nebulaParticles[i];
             const magnitude = magnitudes[i % magnitudes.length];
-            const angle = (i / numParticles) * Math.PI * 2 + this.frameCounter * 0.02 * speed;
-            const distance = this.maxRadius * (0.5 + Math.sin(this.frameCounter * 0.03 + i) * 0.3) * magnitude * intensity;
 
-            const x = this.centerX + Math.cos(angle) * distance;
-            const y = this.centerY + Math.sin(angle) * distance;
+            // Update particle position with flowing motion
+            particle.angle += 0.005 * speed;
+            const flowAngle = particle.angle + Math.sin(this.frameCounter * 0.02 + particle.offset) * 0.5;
 
-            const size = 1 + magnitude * 4 * intensity;
-            const hue = ((i * 10 + this.frameCounter * 0.5) % 360) / 360;
-            const rgb = this.hsvToRgb(hue, 0.8, 0.9);
+            // Distance from center affected by innerRadius and magnitude
+            const baseDistance = (innerRadius / 180) * 0.2 + 0.4;
+            const distance = this.maxRadius * (baseDistance + Math.sin(this.frameCounter * 0.03 + particle.offset) * 0.2) * (0.5 + magnitude * 0.5) * intensity;
 
-            this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${0.3 + magnitude * 0.7})`;
-            this.ctx.shadowBlur = 8 * intensity;
-            this.ctx.shadowColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.5)`;
+            // Calculate position
+            const offsetX = Math.cos(flowAngle) * distance;
+            const offsetY = Math.sin(flowAngle) * distance;
+
+            const size = (3 + magnitude * 8 * intensity) * (Math.min(innerRadius, 120) / 120);
+
+            // Get base color from gradient
+            const baseColor = this.getColor(i, numParticles);
+            const match = baseColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+            let r = 150, g = 150, b = 200;
+            if (match) {
+                r = parseInt(match[1]);
+                g = parseInt(match[2]);
+                b = parseInt(match[3]);
+            }
+
+            // Apply dominant band color shift
+            const bandInfluence = 0.5 + magnitude * 0.3;
+            if (dominantBand < 0.3) { // Bass - enhance red
+                r = Math.min(255, r * (1 + bandInfluence * 0.5));
+                b = Math.max(0, b * (1 - bandInfluence * 0.3));
+            } else if (dominantBand > 0.7) { // Treble - enhance blue
+                b = Math.min(255, b * (1 + bandInfluence * 0.5));
+                r = Math.max(0, r * (1 - bandInfluence * 0.3));
+            } else { // Mids - enhance green
+                g = Math.min(255, g * (1 + bandInfluence * 0.4));
+            }
+
+            const opacity = (0.3 + magnitude * 0.5) * intensity;
+            this.ctx.fillStyle = `rgba(${Math.floor(r)}, ${Math.floor(g)}, ${Math.floor(b)}, ${opacity})`;
+            this.ctx.shadowBlur = 15 * intensity * (1 + magnitude);
+            this.ctx.shadowColor = `rgba(${Math.floor(r)}, ${Math.floor(g)}, ${Math.floor(b)}, 0.6)`;
+
+            // Draw mirrored particles (Rorschach inkblot effect)
+            // Right side
             this.ctx.beginPath();
-            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.arc(this.centerX + offsetX, this.centerY + offsetY, size, 0, Math.PI * 2);
             this.ctx.fill();
+
+            // Left side (mirrored)
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX - offsetX, this.centerY + offsetY, size, 0, Math.PI * 2);
+            this.ctx.fill();
+
             this.ctx.shadowBlur = 0;
         }
     }
@@ -12698,35 +12764,181 @@ class Visualizer {
      * Mode 331: Molten lava flowing
      */
         render331LavaFlow(magnitudes) {
-        const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        // Get parameters with defaults
+        const lavaLayers = this.settings.mode331LavaFlowLavaLayers || 6;
+        const flowSpeed = this.settings.mode331LavaFlowFlowSpeed || 1.5;
+        const viscosity = this.settings.mode331LavaFlowViscosity || 0.03;
+        const waveAmplitude = (this.settings.mode331LavaFlowWaveAmplitude || 40) * this.scaleFactor;
+        const glowIntensity = this.settings.mode331LavaFlowGlowIntensity || 1;
+        const trailOpacity = this.settings.mode331LavaFlowTrailOpacity || 0.15;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Calculate audio bands
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4))
+            .reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
+        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4))
+            .reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
+        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        // Initialize lava flow particles
+        if (!this.lavaFlowParticles) {
+            this.lavaFlowParticles = [];
+        }
 
-        const numWaves = Math.floor(8 * complexity);
-        for (let i = 0; i < numWaves; i++) {
-            const magnitude = magnitudes[i % magnitudes.length];
-            const baseY = this.centerY + (i - numWaves / 2) * 20;
+        // Fade background for trail effect
+        this.ctx.fillStyle = `rgba(10, 0, 0, ${trailOpacity})`;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-            const hue = ((i * 40 + this.frameCounter) % 360) / 360;
-            const rgb = this.hsvToRgb(hue, 0.7, 0.8);
+        this.frameCounter = (this.frameCounter || 0) + flowSpeed * 0.02;
 
-            this.ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${0.4 + magnitude * 0.6})`;
-            this.ctx.lineWidth = 2 + magnitude * 3 * intensity;
+        // Get color scheme
+        const scheme = COLOR_SCHEMES[this.settings.colorScheme];
+        const color1 = scheme.primary;
+        const color2 = scheme.secondary;
+
+        // Create lava-specific warm gradient from color scheme
+        // Shift colors toward red/orange/yellow for lava effect
+        const lavaColor1 = [
+            Math.min(255, color1[0] + 50),  // Add red
+            Math.max(0, color1[1] - 20),     // Reduce green
+            Math.max(0, color1[2] - 50)      // Reduce blue
+        ];
+        const lavaColor2 = [
+            Math.min(255, color2[0] + 80),   // More red
+            Math.min(200, color2[1] + 30),   // Add some yellow
+            Math.max(0, color2[2] - 80)      // Much less blue
+        ];
+
+        // Spawn lava bubbles on strong bass
+        if (bass > 0.4 && Math.random() < bass * 0.3) {
+            const spawnY = this.canvas.height - 50 * this.scaleFactor;
+            const spawnX = Math.random() * this.canvas.width;
+            this.lavaFlowParticles.push({
+                x: spawnX,
+                y: spawnY,
+                vy: -(2 + bass * 4) * this.scaleFactor,
+                vx: (Math.random() - 0.5) * 2 * this.scaleFactor,
+                size: (5 + bass * 10) * this.scaleFactor,
+                life: 1.0,
+                colorIndex: Math.floor(Math.random() * magnitudes.length)
+            });
+        }
+
+        // Draw flowing lava layers
+        const layerSpacing = this.canvas.height / (lavaLayers + 1);
+
+        for (let layer = 0; layer < lavaLayers; layer++) {
+            const baseY = this.canvas.height - layerSpacing * (layer + 1);
+            const magnitude = magnitudes[Math.floor((layer / lavaLayers) * magnitudes.length)];
+
+            // Calculate wave properties
+            const waveFrequency = viscosity * (layer + 1);
+            const phaseShift = layer * 0.5;
+
+            // Interpolate between lava colors based on layer depth
+            const colorBlend = layer / lavaLayers;
+            const r = Math.floor(lavaColor1[0] * (1 - colorBlend) + lavaColor2[0] * colorBlend);
+            const g = Math.floor(lavaColor1[1] * (1 - colorBlend) + lavaColor2[1] * colorBlend);
+            const b = Math.floor(lavaColor1[2] * (1 - colorBlend) + lavaColor2[2] * colorBlend);
+
+            // Add heat glow based on magnitude
+            const heatBoost = magnitude * glowIntensity;
+            const glowR = Math.min(255, r + heatBoost * 50);
+            const glowG = Math.min(255, g + heatBoost * 30);
+            const glowB = Math.max(0, b);
+
+            // Draw flowing lava wave
             this.ctx.beginPath();
+            this.ctx.moveTo(0, this.canvas.height);
 
-            for (let x = 0; x < this.canvas.width; x += 10) {
-                const y = baseY + Math.sin(x * 0.02 + this.frameCounter * 0.05 * speed + i) * magnitude * 50 * intensity;
-                if (x === 0) this.ctx.moveTo(x, y);
-                else this.ctx.lineTo(x, y);
+            for (let x = 0; x <= this.canvas.width; x += 5) {
+                const wave1 = Math.sin(x * waveFrequency + this.frameCounter + phaseShift) * waveAmplitude;
+                const wave2 = Math.sin(x * waveFrequency * 1.5 + this.frameCounter * 0.7) * waveAmplitude * 0.5;
+                const audioReactive = magnitude * waveAmplitude * 0.5;
+                const y = baseY + wave1 + wave2 + audioReactive;
+
+                this.ctx.lineTo(x, y);
             }
-            this.ctx.stroke();
+
+            this.ctx.lineTo(this.canvas.width, this.canvas.height);
+            this.ctx.closePath();
+
+            // Fill with gradient
+            const gradient = this.ctx.createLinearGradient(0, baseY - waveAmplitude, 0, baseY + waveAmplitude);
+            gradient.addColorStop(0, `rgba(${glowR}, ${glowG}, ${glowB}, ${0.3 + magnitude * 0.4})`);
+            gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, ${0.6 + magnitude * 0.3})`);
+
+            this.ctx.fillStyle = gradient;
+            this.ctx.fill();
+
+            // Add glow on top
+            if (glowIntensity > 0.5) {
+                this.ctx.strokeStyle = `rgba(${glowR}, ${glowG}, ${glowB}, ${0.4 * magnitude})`;
+                this.ctx.lineWidth = 2 * this.scaleFactor;
+                this.ctx.stroke();
+            }
+        }
+
+        // Update and draw lava bubbles/splashes
+        const newParticles = [];
+        for (const particle of this.lavaFlowParticles) {
+            particle.x += particle.vx;
+            particle.y += particle.vy;
+            particle.vy += 0.3 * this.scaleFactor; // Gravity
+            particle.life -= 0.02;
+
+            if (particle.life > 0 && particle.y < this.canvas.height) {
+                // Get color from scheme
+                const colorStr = this.getColor(particle.colorIndex, magnitudes.length);
+                const color = this.parseRgbColor(colorStr);
+
+                // Make it lava-colored
+                const lavaR = Math.min(255, color[0] + 80);
+                const lavaG = Math.min(180, color[1]);
+                const lavaB = Math.max(0, color[2] - 80);
+
+                const alpha = particle.life * 0.8;
+                const size = particle.size * particle.life;
+
+                // Draw bubble with glow
+                this.ctx.shadowBlur = 20 * this.scaleFactor * glowIntensity;
+                this.ctx.shadowColor = `rgba(${lavaR}, ${Math.min(255, lavaG + 50)}, ${lavaB}, ${alpha})`;
+
+                this.ctx.fillStyle = `rgba(${lavaR}, ${lavaG}, ${lavaB}, ${alpha})`;
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x, particle.y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                // Bright core
+                this.ctx.fillStyle = `rgba(255, ${200 + mids * 55}, ${100 + treble * 100}, ${alpha * 0.6})`;
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x, particle.y, size * 0.5, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                this.ctx.shadowBlur = 0;
+
+                newParticles.push(particle);
+            }
+        }
+        this.lavaFlowParticles = newParticles;
+
+        // Add heat distortion effect on strong audio
+        if (bass > 0.6 || treble > 0.7) {
+            const numHeatWaves = Math.floor(3 + (bass + treble) * 5);
+            for (let i = 0; i < numHeatWaves; i++) {
+                const x = Math.random() * this.canvas.width;
+                const y = this.canvas.height - Math.random() * this.canvas.height * 0.3;
+                const size = (10 + Math.random() * 30) * this.scaleFactor;
+
+                const gradient = this.ctx.createRadialGradient(x, y, 0, x, y, size);
+                gradient.addColorStop(0, 'rgba(255, 150, 0, 0.1)');
+                gradient.addColorStop(1, 'rgba(255, 50, 0, 0)');
+
+                this.ctx.fillStyle = gradient;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
         }
     }
 
@@ -14506,35 +14718,229 @@ class Visualizer {
      * Mode 377: Water droplet impact and splash
      */
         render377WaterDroplet(magnitudes) {
-        const params = this.settings.parameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        // Get parameters with defaults
+        const dropletSize = (this.settings.mode377WaterDropletDropletSize || 8) * this.scaleFactor;
+        const dropFrequency = this.settings.mode377WaterDropletDropFrequency || 0.1;
+        const splashIntensity = this.settings.mode377WaterDropletSplashIntensity || 1;
+        const rippleCount = this.settings.mode377WaterDropletRippleCount || 5;
+        const impactThreshold = this.settings.mode377WaterDropletImpactThreshold || 0.4;
+        const trailOpacity = this.settings.mode377WaterDropletTrailOpacity || 0.08;
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        // Calculate audio bands
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4))
+            .reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
+        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4))
+            .reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
+        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
 
-        this.frameCounter = (this.frameCounter || 0) + speed;
+        // Initialize droplet arrays
+        if (!this.waterDroplets) this.waterDroplets = [];
+        if (!this.waterRipples) this.waterRipples = [];
+        if (!this.waterSplashes) this.waterSplashes = [];
 
-        const numElements = Math.floor(20 * complexity);
-        for (let i = 0; i < numElements; i++) {
-            const magnitude = magnitudes[i % magnitudes.length];
-            const angle = (i / numElements) * Math.PI * 2 + this.frameCounter * 0.01 * speed;
-            const radius = this.maxRadius * (0.3 + magnitude * 0.5) * intensity;
+        // Fade background for trail effect
+        this.ctx.fillStyle = `rgba(0, 5, 15, ${trailOpacity})`;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-            const x = this.centerX + Math.cos(angle) * radius;
-            const y = this.centerY + Math.sin(angle) * radius;
+        // Get color scheme (make it water-themed)
+        const scheme = COLOR_SCHEMES[this.settings.colorScheme];
+        const color1 = scheme.primary;
+        const color2 = scheme.secondary;
 
-            const size = 2 + magnitude * 8 * intensity;
-            const hue = ((i * 15 + this.frameCounter) % 360) / 360;
-            const rgb = this.hsvToRgb(hue, 0.7, 0.8);
+        // Create water-specific colors (shift toward blue/cyan)
+        const waterColor1 = [
+            Math.max(0, color1[0] - 50),      // Reduce red
+            Math.min(255, color1[1] + 30),    // Add green
+            Math.min(255, color1[2] + 80)     // Add blue
+        ];
+        const waterColor2 = [
+            Math.max(0, color2[0] - 80),      // Much less red
+            Math.min(255, color2[1] + 50),    // More green
+            Math.min(255, color2[2] + 100)    // Much more blue
+        ];
 
-            this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${0.4 + magnitude * 0.6})`;
-            this.ctx.beginPath();
-            this.ctx.arc(x, y, size, 0, Math.PI * 2);
-            this.ctx.fill();
+        // Spawn water droplets
+        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const spawnChance = dropFrequency * (0.5 + avgMagnitude * 0.5);
+
+        if (Math.random() < spawnChance || (bass > impactThreshold && Math.random() < 0.3)) {
+            const x = this.centerX + (Math.random() - 0.5) * this.canvas.width * 0.6;
+            const colorIndex = Math.floor(Math.random() * magnitudes.length);
+            this.waterDroplets.push({
+                x: x,
+                y: 0,
+                vy: (2 + Math.random() * 3) * this.scaleFactor,
+                size: dropletSize * (0.7 + Math.random() * 0.6),
+                colorIndex: colorIndex
+            });
         }
+
+        // Water surface level
+        const waterLevel = this.canvas.height * 0.7;
+
+        // Update and draw falling droplets
+        const newDroplets = [];
+        for (const droplet of this.waterDroplets) {
+            droplet.y += droplet.vy;
+            droplet.vy += 0.2 * this.scaleFactor; // Gravity
+
+            // Check if droplet hits water surface
+            if (droplet.y >= waterLevel) {
+                // Create splash
+                const splashSize = droplet.size * splashIntensity;
+                const numSplashParticles = Math.floor(8 + bass * 12);
+
+                for (let i = 0; i < numSplashParticles; i++) {
+                    const angle = (i / numSplashParticles) * Math.PI - Math.PI / 2;
+                    const speed = (2 + Math.random() * 4) * splashIntensity * this.scaleFactor;
+                    this.waterSplashes.push({
+                        x: droplet.x,
+                        y: waterLevel,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        size: splashSize * (0.5 + Math.random() * 0.5),
+                        life: 1.0,
+                        colorIndex: droplet.colorIndex
+                    });
+                }
+
+                // Create ripples
+                this.waterRipples.push({
+                    x: droplet.x,
+                    y: waterLevel,
+                    radius: 0,
+                    maxRadius: (50 + bass * 100) * this.scaleFactor,
+                    life: 1.0,
+                    colorIndex: droplet.colorIndex
+                });
+            } else if (droplet.y < waterLevel) {
+                // Draw falling droplet
+                const colorStr = this.getColor(droplet.colorIndex, magnitudes.length);
+                const color = this.parseRgbColor(colorStr);
+
+                // Make it water-colored
+                const waterR = Math.max(0, color[0] - 50);
+                const waterG = Math.min(255, color[1] + 30);
+                const waterB = Math.min(255, color[2] + 80);
+
+                // Draw droplet with motion blur
+                this.ctx.fillStyle = `rgba(${waterR}, ${waterG}, ${waterB}, 0.7)`;
+                this.ctx.beginPath();
+                this.ctx.ellipse(droplet.x, droplet.y, droplet.size * 0.6, droplet.size, 0, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                // Highlight
+                this.ctx.fillStyle = `rgba(${Math.min(255, waterR + 100)}, ${Math.min(255, waterG + 100)}, 255, 0.6)`;
+                this.ctx.beginPath();
+                this.ctx.arc(droplet.x - droplet.size * 0.2, droplet.y - droplet.size * 0.2, droplet.size * 0.3, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                newDroplets.push(droplet);
+            }
+        }
+        this.waterDroplets = newDroplets;
+
+        // Update and draw splash particles
+        const newSplashes = [];
+        for (const splash of this.waterSplashes) {
+            splash.x += splash.vx;
+            splash.y += splash.vy;
+            splash.vy += 0.3 * this.scaleFactor; // Gravity
+            splash.life -= 0.02;
+
+            if (splash.life > 0 && splash.y < waterLevel + 50 * this.scaleFactor) {
+                const colorStr = this.getColor(splash.colorIndex, magnitudes.length);
+                const color = this.parseRgbColor(colorStr);
+
+                const waterR = Math.max(0, color[0] - 50);
+                const waterG = Math.min(255, color[1] + 30);
+                const waterB = Math.min(255, color[2] + 80);
+
+                const alpha = splash.life * 0.7;
+                const size = splash.size * splash.life;
+
+                this.ctx.fillStyle = `rgba(${waterR}, ${waterG}, ${waterB}, ${alpha})`;
+                this.ctx.beginPath();
+                this.ctx.arc(splash.x, splash.y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                newSplashes.push(splash);
+            }
+        }
+        this.waterSplashes = newSplashes;
+
+        // Update and draw ripples
+        const newRipples = [];
+        for (const ripple of this.waterRipples) {
+            ripple.radius += (ripple.maxRadius / 50) * this.scaleFactor;
+            ripple.life -= 0.015;
+
+            if (ripple.life > 0 && ripple.radius < ripple.maxRadius) {
+                const colorStr = this.getColor(ripple.colorIndex, magnitudes.length);
+                const color = this.parseRgbColor(colorStr);
+
+                const waterR = Math.max(0, color[0] - 50);
+                const waterG = Math.min(255, color[1] + 30);
+                const waterB = Math.min(255, color[2] + 80);
+
+                // Draw multiple concentric ripples
+                for (let i = 0; i < rippleCount; i++) {
+                    const rippleRadius = ripple.radius - i * 20 * this.scaleFactor;
+                    if (rippleRadius > 0) {
+                        const alpha = ripple.life * (0.3 - i * 0.05);
+                        const lineWidth = (2 + mids * 3) * this.scaleFactor;
+
+                        this.ctx.strokeStyle = `rgba(${waterR}, ${waterG}, ${waterB}, ${alpha})`;
+                        this.ctx.lineWidth = lineWidth;
+                        this.ctx.beginPath();
+                        this.ctx.arc(ripple.x, ripple.y, rippleRadius, 0, Math.PI * 2);
+                        this.ctx.stroke();
+
+                        // Bright highlight
+                        this.ctx.strokeStyle = `rgba(${Math.min(255, waterR + 100)}, ${Math.min(255, waterG + 100)}, 255, ${alpha * 0.5})`;
+                        this.ctx.lineWidth = lineWidth * 0.5;
+                        this.ctx.stroke();
+                    }
+                }
+
+                newRipples.push(ripple);
+            }
+        }
+        this.waterRipples = newRipples;
+
+        // Draw water surface
+        this.ctx.strokeStyle = `rgba(${waterColor1[0]}, ${waterColor1[1]}, ${waterColor1[2]}, 0.3)`;
+        this.ctx.lineWidth = 2 * this.scaleFactor;
+        this.ctx.beginPath();
+
+        for (let x = 0; x <= this.canvas.width; x += 5) {
+            const wave = Math.sin(x * 0.02 + this.frameCounter * 0.1) * 5 * this.scaleFactor * mids;
+            const y = waterLevel + wave;
+            if (x === 0) this.ctx.moveTo(x, y);
+            else this.ctx.lineTo(x, y);
+        }
+        this.ctx.stroke();
+
+        // Add shimmer effect on water surface
+        if (treble > 0.5) {
+            const numShimmers = Math.floor(3 + treble * 7);
+            for (let i = 0; i < numShimmers; i++) {
+                const x = Math.random() * this.canvas.width;
+                const size = (5 + Math.random() * 15) * this.scaleFactor;
+
+                const gradient = this.ctx.createRadialGradient(x, waterLevel, 0, x, waterLevel, size);
+                gradient.addColorStop(0, `rgba(${Math.min(255, waterColor2[0] + 100)}, ${Math.min(255, waterColor2[1] + 100)}, 255, 0.4)`);
+                gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+                this.ctx.fillStyle = gradient;
+                this.ctx.beginPath();
+                this.ctx.arc(x, waterLevel, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+
+        this.frameCounter = (this.frameCounter || 0) + 1;
     }
 
     /**

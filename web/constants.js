@@ -1520,7 +1520,15 @@ const VISUALIZATION_MODES = {
         description: 'Storm cloud with lightning bolts on treble hits',
         category: 'Nature',
         mode: 73,
-        tags: ['storm', 'lightning', 'weather']
+        tags: ['storm', 'lightning', 'weather'],
+        parameters: {
+            cloudDensity: { min: 10, max: 50, default: 25, label: 'Cloud Density' },
+            cloudSize: { min: 20, max: 100, default: 50, label: 'Cloud Particle Size' },
+            lightningFrequency: { min: 0.3, max: 0.9, default: 0.5, label: 'Lightning Threshold' },
+            lightningSegments: { min: 3, max: 15, default: 8, label: 'Lightning Segments' },
+            lightningWidth: { min: 2, max: 15, default: 6, label: 'Lightning Width' },
+            trailOpacity: { min: 0.05, max: 0.3, default: 0.12, label: 'Trail Fade' }
+        }
     },
     bouncing_balls: {
         id: 'bouncing_balls',
@@ -4086,11 +4094,12 @@ const VISUALIZATION_MODES = {
         mode: 331,
         tags: ["lava", "flow"],
         parameters: {
-            lavaLayers: { min: 4, max: 8, default: 6, label: 'Lava Layers' },
-            flowSpeed: { min: 0.1, max: 0.3, default: 0.15, label: 'Flow Speed' },
-            heatIntensity: { min: 0.5, max: 2, default: 1, label: 'Heat Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            lavaLayers: { min: 4, max: 12, default: 6, label: 'Lava Layers' },
+            flowSpeed: { min: 0.5, max: 3, default: 1.5, label: 'Flow Speed' },
+            viscosity: { min: 0.01, max: 0.1, default: 0.03, label: 'Viscosity' },
+            waveAmplitude: { min: 10, max: 100, default: 40, label: 'Wave Height' },
+            glowIntensity: { min: 0.5, max: 2, default: 1, label: 'Glow Intensity' },
+            trailOpacity: { min: 0.05, max: 0.4, default: 0.15, label: 'Trail Fade' }
         }
     },
     mode_332_ice_crystals: {
@@ -4776,11 +4785,12 @@ const VISUALIZATION_MODES = {
         mode: 377,
         tags: ["water", "droplet"],
         parameters: {
-            dropletSize: { min: 6, max: 12, default: 8, label: 'Droplet Size' },
-            splashCount: { min: 8, max: 16, default: 12, label: 'Splash Rays' },
-            impactThreshold: { min: 0.3, max: 0.6, default: 0.4, label: 'Impact Threshold' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            dropletSize: { min: 3, max: 15, default: 8, label: 'Droplet Size' },
+            dropFrequency: { min: 0.01, max: 0.3, default: 0.1, label: 'Drop Frequency' },
+            splashIntensity: { min: 0.5, max: 2, default: 1, label: 'Splash Intensity' },
+            rippleCount: { min: 3, max: 8, default: 5, label: 'Ripple Waves' },
+            impactThreshold: { min: 0.2, max: 0.7, default: 0.4, label: 'Impact Threshold' },
+            trailOpacity: { min: 0.02, max: 0.2, default: 0.08, label: 'Trail Fade' }
         }
     },
     mode_378_succulent_rosette: {

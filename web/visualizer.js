@@ -244,6 +244,27 @@ class Visualizer {
             case 'linear_spectrum':
                 this.renderLinearSpectrum(magnitudes);
                 break;
+            case 'classic_particles':
+                this.renderClassicParticles(magnitudes);
+                break;
+            case 'classic_polygon':
+                this.renderClassicPolygon(magnitudes);
+                break;
+            case 'classic_spiral':
+                this.renderClassicSpiral(magnitudes);
+                break;
+            case 'classic_dna_helix':
+                this.renderClassicDNAHelix(magnitudes);
+                break;
+            case 'classic_kaleidoscope':
+                this.renderClassicKaleidoscope(magnitudes);
+                break;
+            case 'classic_pulse_rings':
+                this.renderClassicPulseRings(magnitudes);
+                break;
+            case 'classic_star_burst':
+                this.renderClassicStarBurst(magnitudes);
+                break;
             case 'classic_bars':
                 this.renderClassicBars(magnitudes);
                 break;
@@ -3863,6 +3884,329 @@ class Visualizer {
             this.ctx.fillStyle = color;
 
             this.ctx.fillRect(x, y, barWidth * 0.9, barHeight);
+        }
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Classic Mode 3: Particles - Glowing particle system
+     */
+    renderClassicParticles(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const particleCount = params.particleCount || 200;
+        const particleSize = params.particleSize || 3;
+        const glowIntensity = params.glowIntensity || 1;
+
+        // Initialize particles if not exists
+        if (!this.classicParticles || this.classicParticles.length !== particleCount) {
+            this.classicParticles = [];
+            for (let i = 0; i < particleCount; i++) {
+                this.classicParticles.push({
+                    angle: (Math.PI * 2 * i) / particleCount,
+                    distance: Math.random() * this.maxRadius * 0.5,
+                    speed: 0.5 + Math.random() * 1.5,
+                    phase: Math.random() * Math.PI * 2
+                });
+            }
+        }
+
+        this.ctx.shadowBlur = 15 * glowIntensity;
+
+        this.classicParticles.forEach((particle, i) => {
+            const magnitude = magnitudes[Math.floor((i / particleCount) * magnitudes.length)];
+            particle.phase += 0.02;
+            particle.angle += particle.speed * 0.01;
+
+            const radius = particle.distance + magnitude * this.maxRadius * 0.3;
+            const x = this.centerX + Math.cos(particle.angle) * radius;
+            const y = this.centerY + Math.sin(particle.angle) * radius;
+
+            const color = this.getColor(i, particleCount);
+            this.ctx.shadowColor = color;
+            this.ctx.fillStyle = color;
+
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, particleSize, 0, Math.PI * 2);
+            this.ctx.fill();
+        });
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Classic Mode 5: Polygon - Geometric polygon that pulses
+     */
+    renderClassicPolygon(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const sides = Math.floor(params.sides || 6);
+        const rotationSpeed = params.rotationSpeed || 1;
+        const pulseIntensity = params.pulseIntensity || 1;
+
+        if (!this.polygonRotation) this.polygonRotation = 0;
+        this.polygonRotation += 0.01 * rotationSpeed;
+
+        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const baseRadius = this.maxRadius * 0.5;
+        const pulseRadius = baseRadius + avgMagnitude * this.maxRadius * 0.3 * pulseIntensity;
+
+        this.ctx.shadowBlur = 20;
+        this.ctx.lineWidth = 4;
+
+        // Draw main polygon
+        this.ctx.beginPath();
+        for (let i = 0; i <= sides; i++) {
+            const angle = (Math.PI * 2 * i) / sides + this.polygonRotation;
+            const magIndex = Math.floor((i / sides) * magnitudes.length);
+            const magnitude = magnitudes[magIndex];
+            const radius = pulseRadius + magnitude * 50;
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            if (i === 0) {
+                this.ctx.moveTo(x, y);
+            } else {
+                this.ctx.lineTo(x, y);
+            }
+        }
+
+        const color = this.getColor(0, 1);
+        this.ctx.strokeStyle = color;
+        this.ctx.shadowColor = color;
+        this.ctx.stroke();
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Classic Mode 6: Spiral - Spiral pattern radiating from center
+     */
+    renderClassicSpiral(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const spiralArms = Math.floor(params.spiralArms || 3);
+        const tightness = params.tightness || 1;
+        const rotationSpeed = params.rotationSpeed || 1;
+
+        if (!this.spiralRotation) this.spiralRotation = 0;
+        this.spiralRotation += 0.02 * rotationSpeed;
+
+        this.ctx.shadowBlur = 15;
+        this.ctx.lineWidth = 3;
+
+        for (let arm = 0; arm < spiralArms; arm++) {
+            this.ctx.beginPath();
+            const armOffset = (Math.PI * 2 * arm) / spiralArms;
+
+            for (let i = 0; i < magnitudes.length; i++) {
+                const progress = i / magnitudes.length;
+                const angle = progress * Math.PI * 4 * tightness + armOffset + this.spiralRotation;
+                const radius = progress * this.maxRadius * 0.8;
+                const magnitude = magnitudes[i];
+
+                const x = this.centerX + Math.cos(angle) * (radius + magnitude * 30);
+                const y = this.centerY + Math.sin(angle) * (radius + magnitude * 30);
+
+                if (i === 0) {
+                    this.ctx.moveTo(x, y);
+                } else {
+                    this.ctx.lineTo(x, y);
+                }
+            }
+
+            const color = this.getColor(arm * 30, spiralArms * 30);
+            this.ctx.strokeStyle = color;
+            this.ctx.shadowColor = color;
+            this.ctx.stroke();
+        }
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Classic Mode 7: DNA Helix - Double helix structure
+     */
+    renderClassicDNAHelix(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const helixTightness = params.helixTightness || 1;
+        const rotationSpeed = params.rotationSpeed || 1.5;
+        const basePairs = Math.floor(params.basePairs || 20);
+
+        if (!this.helixRotation) this.helixRotation = 0;
+        this.helixRotation += 0.02 * rotationSpeed;
+
+        this.ctx.shadowBlur = 12;
+        this.ctx.lineWidth = 3;
+
+        const numPoints = magnitudes.length;
+        const heightSpacing = this.canvas.height / numPoints;
+
+        // Draw both helices
+        for (let helix = 0; helix < 2; helix++) {
+            this.ctx.beginPath();
+            const phaseShift = helix * Math.PI;
+
+            for (let i = 0; i < numPoints; i++) {
+                const y = i * heightSpacing;
+                const angle = (i / numPoints) * Math.PI * 6 * helixTightness + this.helixRotation + phaseShift;
+                const magnitude = magnitudes[i];
+                const radius = 100 + magnitude * 50;
+                const x = this.centerX + Math.cos(angle) * radius;
+
+                if (i === 0) {
+                    this.ctx.moveTo(x, y);
+                } else {
+                    this.ctx.lineTo(x, y);
+                }
+            }
+
+            const color = this.getColor(helix * 50, 100);
+            this.ctx.strokeStyle = color;
+            this.ctx.shadowColor = color;
+            this.ctx.stroke();
+        }
+
+        // Draw base pairs
+        for (let i = 0; i < basePairs; i++) {
+            const index = Math.floor((i / basePairs) * numPoints);
+            const y = index * heightSpacing;
+            const angle1 = (index / numPoints) * Math.PI * 6 * helixTightness + this.helixRotation;
+            const angle2 = angle1 + Math.PI;
+            const magnitude = magnitudes[index];
+            const radius = 100 + magnitude * 50;
+
+            const x1 = this.centerX + Math.cos(angle1) * radius;
+            const x2 = this.centerX + Math.cos(angle2) * radius;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(x1, y);
+            this.ctx.lineTo(x2, y);
+            this.ctx.strokeStyle = this.getColor(i, basePairs);
+            this.ctx.stroke();
+        }
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Classic Mode 8: Kaleidoscope - Mirrored symmetric patterns
+     */
+    renderClassicKaleidoscope(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const segments = Math.floor(params.segments || 8);
+        const complexity = Math.floor(params.complexity || 5);
+        const rotationSpeed = params.rotationSpeed || 1;
+
+        if (!this.kaleidoscopeRotation) this.kaleidoscopeRotation = 0;
+        this.kaleidoscopeRotation += 0.01 * rotationSpeed;
+
+        this.ctx.shadowBlur = 15;
+
+        for (let seg = 0; seg < segments; seg++) {
+            const segmentAngle = (Math.PI * 2 * seg) / segments;
+
+            this.ctx.save();
+            this.ctx.translate(this.centerX, this.centerY);
+            this.ctx.rotate(segmentAngle + this.kaleidoscopeRotation);
+
+            for (let i = 0; i < complexity; i++) {
+                const magIndex = Math.floor((i / complexity) * magnitudes.length);
+                const magnitude = magnitudes[magIndex];
+                const radius = (i / complexity) * this.maxRadius * 0.7;
+                const size = magnitude * 30 + 5;
+
+                const color = this.getColor(i + seg * complexity, complexity * segments);
+                this.ctx.fillStyle = color;
+                this.ctx.shadowColor = color;
+
+                this.ctx.beginPath();
+                this.ctx.arc(radius, 0, size, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                // Mirror
+                this.ctx.beginPath();
+                this.ctx.arc(radius, 0, size, 0, Math.PI * 2);
+                this.ctx.scale(1, -1);
+                this.ctx.fill();
+                this.ctx.scale(1, -1);
+            }
+
+            this.ctx.restore();
+        }
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Classic Mode 9: Pulse Rings - Pulsing concentric rings
+     */
+    renderClassicPulseRings(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const ringCount = Math.floor(params.ringCount || 8);
+        const pulseSpeed = params.pulseSpeed || 1;
+        const spacing = params.spacing || 25;
+
+        if (!this.ringPulsePhase) this.ringPulsePhase = 0;
+        this.ringPulsePhase += 0.05 * pulseSpeed;
+
+        this.ctx.shadowBlur = 18;
+        this.ctx.lineWidth = 4;
+
+        for (let i = 0; i < ringCount; i++) {
+            const magIndex = Math.floor((i / ringCount) * magnitudes.length);
+            const magnitude = magnitudes[magIndex];
+            const baseRadius = (i + 1) * spacing + (this.maxRadius * 0.2);
+            const pulse = Math.sin(this.ringPulsePhase + i * 0.5) * 20;
+            const radius = baseRadius + magnitude * 40 + pulse;
+
+            const color = this.getColor(i, ringCount);
+            this.ctx.strokeStyle = color;
+            this.ctx.shadowColor = color;
+
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Classic Mode 10: Star Burst - Starburst effect radiating from center
+     */
+    renderClassicStarBurst(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const rayCount = Math.floor(params.rayCount || 24);
+        const rayLength = params.rayLength || 1;
+        const pulseIntensity = params.pulseIntensity || 1;
+
+        this.ctx.shadowBlur = 20;
+        this.ctx.lineWidth = 3;
+        this.ctx.lineCap = 'round';
+
+        const angleStep = (Math.PI * 2) / rayCount;
+
+        for (let i = 0; i < rayCount; i++) {
+            const angle = i * angleStep;
+            const magIndex = Math.floor((i / rayCount) * magnitudes.length);
+            const magnitude = magnitudes[magIndex];
+
+            const startRadius = this.maxRadius * 0.1;
+            const endRadius = this.maxRadius * 0.7 * rayLength + magnitude * this.maxRadius * 0.3 * pulseIntensity;
+
+            const x1 = this.centerX + Math.cos(angle) * startRadius;
+            const y1 = this.centerY + Math.sin(angle) * startRadius;
+            const x2 = this.centerX + Math.cos(angle) * endRadius;
+            const y2 = this.centerY + Math.sin(angle) * endRadius;
+
+            const color = this.getColor(i, rayCount);
+            this.ctx.strokeStyle = color;
+            this.ctx.shadowColor = color;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(x1, y1);
+            this.ctx.lineTo(x2, y2);
+            this.ctx.stroke();
         }
 
         this.ctx.shadowBlur = 0;

@@ -548,6 +548,7 @@ const HIDDEN_MODES = [
     'mode_556_projection_mapping',
     'mode_557_holographic_art',
     'mode_558_augmented_reality_art',
+    'mode_106_aurora_waves',
     'mode_559_vr_art',
     'mode_560_procedural_art',
     'mode_561_parametric_art',
@@ -1243,7 +1244,7 @@ const VISUALIZATION_MODES = {
         name: 'Particles',
         description: 'Glowing particle system',
         category: 'Particles',
-        mode: 3,
+        mode: 103,
         tags: ['particles', 'glow', 'dynamic']
     },
     fireworks: {
@@ -1311,7 +1312,7 @@ const VISUALIZATION_MODES = {
         name: 'Vinyl Grooves',
         description: 'Rotating vinyl record aesthetic',
         category: 'Retro',
-        mode: 6,
+        mode: 106,
         tags: ['vintage', 'vinyl', 'rotation']
     },
     neon_tubes: {
@@ -1319,7 +1320,7 @@ const VISUALIZATION_MODES = {
         name: 'Neon Tubes',
         description: 'Minimal glowing neon tubes',
         category: 'Retro',
-        mode: 5,
+        mode: 105,
         tags: ['neon', 'minimal', 'glow']
     },
     pixel_clouds: {
@@ -1345,7 +1346,7 @@ const VISUALIZATION_MODES = {
         name: 'Liquid Mercury',
         description: 'Flowing metallic liquid',
         category: 'Fluid',
-        mode: 8,
+        mode: 108,
         tags: ['fluid', 'metallic', 'smooth']
     },
     soul_aura: {
@@ -1353,7 +1354,7 @@ const VISUALIZATION_MODES = {
         name: 'Soul Aura',
         description: 'Pulsing organic ethereal glow',
         category: 'Fluid',
-        mode: 7,
+        mode: 107,
         tags: ['organic', 'glow', 'ethereal']
     },
     lava_lamp: {
@@ -1387,7 +1388,7 @@ const VISUALIZATION_MODES = {
         name: 'Aurora Waves',
         description: 'Northern lights flowing ribbons',
         category: 'Nature',
-        mode: 9,
+        mode: 109,
         tags: ['ethereal', 'nature', 'lights']
     },
     crystal_growth: {
@@ -1429,7 +1430,7 @@ const VISUALIZATION_MODES = {
         name: 'Mandala Growth',
         description: 'Sacred geometric mandala patterns',
         category: 'Geometric',
-        mode: 10,
+        mode: 110,
         tags: ['geometric', 'sacred', 'symmetry']
     },
     kaleidoscope: {

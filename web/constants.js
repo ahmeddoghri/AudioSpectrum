@@ -943,7 +943,12 @@ const VISUALIZATION_MODES = {
         description: 'Classic radial bars extending from center',
         category: 'Classic',
         mode: 1,
-        tags: ['radial', 'bars', 'classic']
+        tags: ['radial', 'bars', 'classic'],
+        parameters: {
+            barCount: { min: 32, max: 128, default: 64, label: 'Bar Count' },
+            innerRadius: { min: 50, max: 300, default: 150, label: 'Inner Radius' },
+            barWidth: { min: 1, max: 10, default: 4, label: 'Bar Width' }
+        }
     },
     waves: {
         id: 'waves',
@@ -951,7 +956,12 @@ const VISUALIZATION_MODES = {
         description: 'Concentric waves that pulse with music',
         category: 'Classic',
         mode: 2,
-        tags: ['waves', 'pulse', 'smooth']
+        tags: ['waves', 'pulse', 'smooth'],
+        parameters: {
+            waveCount: { min: 3, max: 15, default: 8, label: 'Wave Count' },
+            waveSpeed: { min: 0.1, max: 3, default: 1, label: 'Wave Speed' },
+            amplitude: { min: 0.5, max: 2, default: 1, label: 'Wave Amplitude' }
+        }
     },
     smooth_waveform: {
         id: 'smooth_waveform',
@@ -959,7 +969,12 @@ const VISUALIZATION_MODES = {
         description: 'Elegant continuous waveform',
         category: 'Classic',
         mode: 4,
-        tags: ['waveform', 'smooth', 'elegant']
+        tags: ['waveform', 'smooth', 'elegant'],
+        parameters: {
+            lineWidth: { min: 1, max: 10, default: 3, label: 'Line Width' },
+            amplitude: { min: 0.5, max: 2, default: 1, label: 'Amplitude' },
+            smoothness: { min: 0.5, max: 1, default: 0.85, label: 'Smoothness' }
+        }
     },
     frequency_bars: {
         id: 'frequency_bars',
@@ -967,7 +982,12 @@ const VISUALIZATION_MODES = {
         description: 'Traditional frequency spectrum bars',
         category: 'Classic',
         mode: 11,
-        tags: ['bars', 'spectrum', 'traditional']
+        tags: ['bars', 'spectrum', 'traditional'],
+        parameters: {
+            barCount: { min: 32, max: 128, default: 64, label: 'Bar Count' },
+            barWidth: { min: 2, max: 20, default: 8, label: 'Bar Width' },
+            spacing: { min: 1, max: 10, default: 2, label: 'Bar Spacing' }
+        }
     },
     linear_spectrum: {
         id: 'linear_spectrum',
@@ -975,7 +995,233 @@ const VISUALIZATION_MODES = {
         description: 'Horizontal frequency bars',
         category: 'Classic',
         mode: 12,
-        tags: ['linear', 'horizontal', 'clean']
+        tags: ['linear', 'horizontal', 'clean'],
+        parameters: {
+            barCount: { min: 32, max: 128, default: 64, label: 'Bar Count' },
+            barHeight: { min: 50, max: 400, default: 200, label: 'Max Bar Height' },
+            spacing: { min: 1, max: 10, default: 3, label: 'Bar Spacing' }
+        }
+    },
+    classic_bars: {
+        id: 'classic_bars',
+        name: 'Classic Bars',
+        description: 'Traditional vertical bars visualization',
+        category: 'Classic',
+        mode: 851,
+        tags: ['bars', 'vertical', 'classic', 'lines'],
+        parameters: {
+            barWidth: { min: 2, max: 20, default: 8, label: 'Bar Width' },
+            barSpacing: { min: 1, max: 10, default: 2, label: 'Bar Spacing' },
+            barRounding: { min: 0, max: 10, default: 0, label: 'Bar Rounding' }
+        }
+    },
+    mirror_symmetry: {
+        id: 'mirror_symmetry',
+        name: 'Mirror Symmetry',
+        description: 'Mirrored visualization with central symmetry',
+        category: 'Classic',
+        mode: 852,
+        tags: ['mirror', 'symmetry', 'lines'],
+        parameters: {
+            barWidth: { min: 2, max: 20, default: 8, label: 'Bar Width' },
+            barSpacing: { min: 1, max: 10, default: 2, label: 'Bar Spacing' },
+            mirrorGap: { min: 0, max: 100, default: 20, label: 'Mirror Gap' }
+        }
+    },
+    waterfall: {
+        id: 'waterfall',
+        name: 'Waterfall',
+        description: 'Cascading effect with trailing bars',
+        category: 'Classic',
+        mode: 853,
+        tags: ['waterfall', 'cascade', 'lines'],
+        parameters: {
+            trailLength: { min: 3, max: 20, default: 10, label: 'Trail Length' },
+            fallSpeed: { min: 1, max: 10, default: 5, label: 'Fall Speed' },
+            fadeAmount: { min: 0.1, max: 0.9, default: 0.5, label: 'Fade Amount' }
+        }
+    },
+    converging_lines: {
+        id: 'converging_lines',
+        name: 'Converging Lines',
+        description: 'Lines meeting at center point',
+        category: 'Classic',
+        mode: 854,
+        tags: ['converging', 'radial', 'lines'],
+        parameters: {
+            lineCount: { min: 20, max: 100, default: 50, label: 'Line Count' },
+            convergencePoint: { min: 0.3, max: 0.7, default: 0.5, label: 'Convergence Point' },
+            lineWidth: { min: 1, max: 10, default: 2, label: 'Line Width' }
+        }
+    },
+    wave_morph: {
+        id: 'wave_morph',
+        name: 'Wave Morph',
+        description: 'Morphing wave patterns with dynamic shapes',
+        category: 'Classic',
+        mode: 855,
+        tags: ['wave', 'morph', 'lines'],
+        parameters: {
+            waveAmplitude: { min: 10, max: 100, default: 50, label: 'Wave Amplitude' },
+            waveFrequency: { min: 1, max: 10, default: 3, label: 'Wave Frequency' },
+            morphSpeed: { min: 0.1, max: 2, default: 0.5, label: 'Morph Speed' }
+        }
+    },
+    staggered_pulse: {
+        id: 'staggered_pulse',
+        name: 'Staggered Pulse',
+        description: 'Offset pulsing bars with delay effect',
+        category: 'Classic',
+        mode: 856,
+        tags: ['pulse', 'stagger', 'lines'],
+        parameters: {
+            staggerAmount: { min: 0, max: 10, default: 3, label: 'Stagger Amount' },
+            pulseSpeed: { min: 0.5, max: 3, default: 1, label: 'Pulse Speed' },
+            barCount: { min: 30, max: 120, default: 60, label: 'Bar Count' }
+        }
+    },
+    geometric_tunnel: {
+        id: 'geometric_tunnel',
+        name: 'Geometric Tunnel',
+        description: '3D tunnel effect with perspective',
+        category: 'Classic',
+        mode: 857,
+        tags: ['3d', 'tunnel', 'geometric', 'lines'],
+        parameters: {
+            tunnelDepth: { min: 3, max: 15, default: 8, label: 'Tunnel Depth' },
+            rotationSpeed: { min: 0, max: 5, default: 1, label: 'Rotation Speed' },
+            segmentCount: { min: 3, max: 12, default: 6, label: 'Segment Count' }
+        }
+    },
+    dancing_ribbons: {
+        id: 'dancing_ribbons',
+        name: 'Dancing Ribbons',
+        description: 'Flowing ribbon-like curves',
+        category: 'Classic',
+        mode: 858,
+        tags: ['ribbons', 'flow', 'lines'],
+        parameters: {
+            ribbonWidth: { min: 5, max: 50, default: 20, label: 'Ribbon Width' },
+            flowSpeed: { min: 0.5, max: 3, default: 1.5, label: 'Flow Speed' },
+            waveCount: { min: 2, max: 10, default: 4, label: 'Wave Count' }
+        }
+    },
+    particle_stream: {
+        id: 'particle_stream',
+        name: 'Particle Stream',
+        description: 'Particle streams flowing along lines',
+        category: 'Classic',
+        mode: 859,
+        tags: ['particles', 'stream', 'lines'],
+        parameters: {
+            particleCount: { min: 50, max: 500, default: 200, label: 'Particle Count' },
+            streamSpeed: { min: 1, max: 10, default: 5, label: 'Stream Speed' },
+            particleSize: { min: 1, max: 10, default: 3, label: 'Particle Size' }
+        }
+    },
+    glitch_art: {
+        id: 'glitch_art',
+        name: 'Glitch Art',
+        description: 'Glitch aesthetic with digital artifacts',
+        category: 'Classic',
+        mode: 860,
+        tags: ['glitch', 'digital', 'art', 'lines'],
+        parameters: {
+            glitchIntensity: { min: 0.1, max: 1, default: 0.5, label: 'Glitch Intensity' },
+            glitchFrequency: { min: 0.1, max: 1, default: 0.3, label: 'Glitch Frequency' },
+            colorShift: { min: 0, max: 50, default: 10, label: 'Color Shift' }
+        }
+    },
+    classic_particles: {
+        id: 'classic_particles',
+        name: 'Particles',
+        description: 'Classic glowing particle system',
+        category: 'Classic',
+        mode: 3,
+        tags: ['particles', 'glow', 'dynamic', 'classic'],
+        parameters: {
+            particleCount: { min: 50, max: 500, default: 200, label: 'Particle Count' },
+            particleSize: { min: 1, max: 10, default: 3, label: 'Particle Size' },
+            glowIntensity: { min: 0.1, max: 2, default: 1, label: 'Glow Intensity' }
+        }
+    },
+    classic_polygon: {
+        id: 'classic_polygon',
+        name: 'Polygon',
+        description: 'Geometric polygon that pulses with music',
+        category: 'Classic',
+        mode: 5,
+        tags: ['geometric', 'polygon', 'classic'],
+        parameters: {
+            sides: { min: 3, max: 12, default: 6, label: 'Number of Sides' },
+            rotationSpeed: { min: 0, max: 5, default: 1, label: 'Rotation Speed' },
+            pulseIntensity: { min: 0.1, max: 2, default: 1, label: 'Pulse Intensity' }
+        }
+    },
+    classic_spiral: {
+        id: 'classic_spiral',
+        name: 'Spiral',
+        description: 'Spiral pattern radiating from center',
+        category: 'Classic',
+        mode: 6,
+        tags: ['spiral', 'rotation', 'classic'],
+        parameters: {
+            spiralArms: { min: 1, max: 8, default: 3, label: 'Spiral Arms' },
+            tightness: { min: 0.1, max: 2, default: 1, label: 'Spiral Tightness' },
+            rotationSpeed: { min: 0, max: 5, default: 1, label: 'Rotation Speed' }
+        }
+    },
+    classic_dna_helix: {
+        id: 'classic_dna_helix',
+        name: 'DNA Helix',
+        description: 'Double helix structure twisting with music',
+        category: 'Classic',
+        mode: 7,
+        tags: ['helix', 'dna', 'classic'],
+        parameters: {
+            helixTightness: { min: 0.5, max: 3, default: 1, label: 'Helix Tightness' },
+            rotationSpeed: { min: 0, max: 5, default: 1.5, label: 'Rotation Speed' },
+            basePairs: { min: 10, max: 40, default: 20, label: 'Base Pairs' }
+        }
+    },
+    classic_kaleidoscope: {
+        id: 'classic_kaleidoscope',
+        name: 'Kaleidoscope',
+        description: 'Mirrored symmetric patterns',
+        category: 'Classic',
+        mode: 8,
+        tags: ['kaleidoscope', 'symmetry', 'classic'],
+        parameters: {
+            segments: { min: 4, max: 16, default: 8, label: 'Mirror Segments' },
+            complexity: { min: 1, max: 10, default: 5, label: 'Pattern Complexity' },
+            rotationSpeed: { min: 0, max: 5, default: 1, label: 'Rotation Speed' }
+        }
+    },
+    classic_pulse_rings: {
+        id: 'classic_pulse_rings',
+        name: 'Pulse Rings',
+        description: 'Pulsing concentric rings',
+        category: 'Classic',
+        mode: 9,
+        tags: ['rings', 'pulse', 'classic'],
+        parameters: {
+            ringCount: { min: 3, max: 15, default: 8, label: 'Number of Rings' },
+            pulseSpeed: { min: 0.1, max: 3, default: 1, label: 'Pulse Speed' },
+            spacing: { min: 10, max: 50, default: 25, label: 'Ring Spacing' }
+        }
+    },
+    classic_star_burst: {
+        id: 'classic_star_burst',
+        name: 'Star Burst',
+        description: 'Starburst effect radiating from center',
+        category: 'Classic',
+        mode: 10,
+        tags: ['starburst', 'radial', 'classic'],
+        parameters: {
+            rayCount: { min: 8, max: 64, default: 24, label: 'Number of Rays' },
+            rayLength: { min: 0.3, max: 1.5, default: 1, label: 'Ray Length' },
+            pulseIntensity: { min: 0.1, max: 2, default: 1, label: 'Pulse Intensity' }
+        }
     },
 
     // Particle Effects

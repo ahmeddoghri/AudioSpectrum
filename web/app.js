@@ -1180,14 +1180,82 @@ class AudioSpectrumApp {
      */
     updateDynamicParameters(modeId) {
         const mode = VISUALIZATION_MODES[modeId];
+        const settingsGrid = document.querySelector('.settings-grid');
+
+        // Remove any previously added dynamic parameters
+        const existingDynamicParams = settingsGrid.querySelectorAll('.setting-item[data-dynamic="true"]');
+        existingDynamicParams.forEach(el => el.remove());
+
         if (!mode || !mode.parameters) {
-            // No custom parameters for this mode, hide all mode-specific settings
+            // No custom parameters for this mode
             return;
         }
 
-        // TODO: Dynamically show/hide parameter controls based on mode.parameters
-        // For now, we'll implement this in the next iteration
-        console.log(`Mode ${modeId} has custom parameters:`, mode.parameters);
+        // Create dynamic parameter controls
+        Object.entries(mode.parameters).forEach(([paramKey, paramConfig]) => {
+            const settingItem = document.createElement('div');
+            settingItem.className = 'setting-item';
+            settingItem.setAttribute('data-dynamic', 'true');
+            settingItem.setAttribute('data-param', paramKey);
+
+            const paramId = `param_${paramKey}`;
+            const valueId = `${paramId}Value`;
+
+            // Create label with value display
+            const label = document.createElement('label');
+            label.htmlFor = paramId;
+            label.className = 'setting-label';
+            label.innerHTML = `
+                ${paramConfig.label}: <span id="${valueId}">${paramConfig.default}</span>
+                <span class="setting-tooltip" title="${paramConfig.label} (${paramConfig.min}-${paramConfig.max})">ⓘ</span>
+            `;
+
+            // Create range input
+            const input = document.createElement('input');
+            input.type = 'range';
+            input.id = paramId;
+            input.min = paramConfig.min;
+            input.max = paramConfig.max;
+            input.value = paramConfig.default;
+            input.step = this.calculateStep(paramConfig.min, paramConfig.max);
+            input.className = 'slider';
+
+            // Add event listener to update value display
+            input.addEventListener('input', (e) => {
+                const valueSpan = document.getElementById(valueId);
+                valueSpan.textContent = e.target.value;
+
+                // Store parameter value in settings
+                if (!this.settings.modeParameters) {
+                    this.settings.modeParameters = {};
+                }
+                this.settings.modeParameters[paramKey] = parseFloat(e.target.value);
+
+                // Update preview
+                this.updatePreview();
+            });
+
+            // Initialize parameter value in settings
+            if (!this.settings.modeParameters) {
+                this.settings.modeParameters = {};
+            }
+            this.settings.modeParameters[paramKey] = paramConfig.default;
+
+            settingItem.appendChild(label);
+            settingItem.appendChild(input);
+            settingsGrid.appendChild(settingItem);
+        });
+    }
+
+    /**
+     * Calculate appropriate step size for a range input
+     */
+    calculateStep(min, max) {
+        const range = max - min;
+        if (range <= 10) return 0.1;
+        if (range <= 50) return 1;
+        if (range <= 100) return 1;
+        return 5;
     }
 
     /**

@@ -244,6 +244,36 @@ class Visualizer {
             case 'linear_spectrum':
                 this.renderLinearSpectrum(magnitudes);
                 break;
+            case 'classic_bars':
+                this.renderClassicBars(magnitudes);
+                break;
+            case 'mirror_symmetry':
+                this.renderMirrorSymmetry(magnitudes);
+                break;
+            case 'waterfall':
+                this.renderWaterfall(magnitudes);
+                break;
+            case 'converging_lines':
+                this.renderConvergingLines(magnitudes);
+                break;
+            case 'wave_morph':
+                this.renderWaveMorph(magnitudes);
+                break;
+            case 'staggered_pulse':
+                this.renderStaggeredPulse(magnitudes);
+                break;
+            case 'geometric_tunnel':
+                this.renderGeometricTunnel(magnitudes);
+                break;
+            case 'dancing_ribbons':
+                this.renderDancingRibbons(magnitudes);
+                break;
+            case 'particle_stream':
+                this.renderParticleStream(magnitudes);
+                break;
+            case 'glitch_art':
+                this.renderGlitchArt(magnitudes);
+                break;
 
             // Particle Effects
             case 'jazzy_fireworks':
@@ -3836,6 +3866,458 @@ class Visualizer {
         }
 
         this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 851: Classic Bars - Traditional vertical bars
+     */
+    renderClassicBars(magnitudes) {
+        const params = this.settings.parameters || {};
+        const barWidth = params.barWidth || 8;
+        const barSpacing = params.barSpacing || 2;
+        const barRounding = params.barRounding || 0;
+
+        const numBars = magnitudes.length;
+        const totalWidth = numBars * (barWidth + barSpacing);
+        const startX = (this.canvas.width - totalWidth) / 2;
+        const baseY = this.canvas.height * 0.8;
+
+        this.ctx.shadowBlur = 10;
+
+        for (let i = 0; i < numBars; i++) {
+            const barHeight = magnitudes[i] * this.canvas.height * 0.65;
+            const x = startX + i * (barWidth + barSpacing);
+            const y = baseY - barHeight;
+
+            const color = this.getColor(i, numBars);
+            this.ctx.shadowColor = color;
+            this.ctx.fillStyle = color;
+
+            if (barRounding > 0) {
+                this.roundedRect(x, y, barWidth, barHeight, barRounding);
+            } else {
+                this.ctx.fillRect(x, y, barWidth, barHeight);
+            }
+        }
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 852: Mirror Symmetry - Mirrored bars with central symmetry
+     */
+    renderMirrorSymmetry(magnitudes) {
+        const params = this.settings.parameters || {};
+        const barWidth = params.barWidth || 8;
+        const barSpacing = params.barSpacing || 2;
+        const mirrorGap = params.mirrorGap || 20;
+
+        const numBars = magnitudes.length;
+        const totalWidth = numBars * (barWidth + barSpacing);
+        const startX = (this.canvas.width - totalWidth) / 2;
+        const centerY = this.canvas.height / 2;
+
+        this.ctx.shadowBlur = 10;
+
+        for (let i = 0; i < numBars; i++) {
+            const barHeight = magnitudes[i] * this.canvas.height * 0.35;
+            const x = startX + i * (barWidth + barSpacing);
+
+            const color = this.getColor(i, numBars);
+            this.ctx.shadowColor = color;
+            this.ctx.fillStyle = color;
+
+            // Top bars
+            this.ctx.fillRect(x, centerY - barHeight - mirrorGap / 2, barWidth, barHeight);
+            // Bottom bars (mirrored)
+            this.ctx.fillRect(x, centerY + mirrorGap / 2, barWidth, barHeight);
+        }
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 853: Waterfall - Cascading effect with trailing bars
+     */
+    renderWaterfall(magnitudes) {
+        const params = this.settings.parameters || {};
+        const trailLength = params.trailLength || 10;
+        const fallSpeed = params.fallSpeed || 5;
+        const fadeAmount = params.fadeAmount || 0.5;
+
+        if (!this.waterfallHistory) {
+            this.waterfallHistory = [];
+        }
+
+        // Add current magnitudes to history
+        this.waterfallHistory.unshift([...magnitudes]);
+
+        // Keep only trailLength frames
+        if (this.waterfallHistory.length > trailLength) {
+            this.waterfallHistory.pop();
+        }
+
+        const numBars = magnitudes.length;
+        const barWidth = this.canvas.width / numBars;
+
+        // Draw each historical frame
+        for (let t = 0; t < this.waterfallHistory.length; t++) {
+            const histMagnitudes = this.waterfallHistory[t];
+            const y = t * (this.canvas.height / trailLength);
+            const alpha = 1 - (t / this.waterfallHistory.length) * fadeAmount;
+
+            this.ctx.globalAlpha = alpha;
+
+            for (let i = 0; i < numBars; i++) {
+                const barHeight = histMagnitudes[i] * (this.canvas.height / trailLength) * 0.8;
+                const x = i * barWidth;
+
+                const color = this.getColor(i, numBars);
+                this.ctx.fillStyle = color;
+                this.ctx.fillRect(x, y, barWidth * 0.9, barHeight);
+            }
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    /**
+     * Mode 854: Converging Lines - Lines meeting at center point
+     */
+    renderConvergingLines(magnitudes) {
+        const params = this.settings.parameters || {};
+        const lineCount = params.lineCount || 50;
+        const convergencePoint = params.convergencePoint || 0.5;
+        const lineWidth = params.lineWidth || 2;
+
+        const numBars = Math.min(magnitudes.length, lineCount);
+        const angleStep = (Math.PI * 2) / numBars;
+        const convergeX = this.canvas.width * convergencePoint;
+        const convergeY = this.canvas.height * convergencePoint;
+
+        this.ctx.lineWidth = lineWidth;
+        this.ctx.shadowBlur = 8;
+
+        for (let i = 0; i < numBars; i++) {
+            const angle = i * angleStep;
+            const magnitude = magnitudes[i];
+            const distance = magnitude * Math.min(this.canvas.width, this.canvas.height) * 0.45;
+
+            const startX = convergeX + Math.cos(angle) * distance;
+            const startY = convergeY + Math.sin(angle) * distance;
+
+            const color = this.getColor(i, numBars);
+            this.ctx.strokeStyle = color;
+            this.ctx.shadowColor = color;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(convergeX, convergeY);
+            this.ctx.stroke();
+        }
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 855: Wave Morph - Morphing wave patterns
+     */
+    renderWaveMorph(magnitudes) {
+        const params = this.settings.parameters || {};
+        const waveAmplitude = params.waveAmplitude || 50;
+        const waveFrequency = params.waveFrequency || 3;
+        const morphSpeed = params.morphSpeed || 0.5;
+
+        const numPoints = magnitudes.length;
+        const segmentWidth = this.canvas.width / (numPoints - 1);
+        const centerY = this.canvas.height / 2;
+        const time = this.frameCounter * morphSpeed * 0.01;
+
+        this.ctx.lineWidth = 3;
+        this.ctx.shadowBlur = 15;
+
+        // Draw multiple morphing waves
+        for (let wave = 0; wave < 3; wave++) {
+            this.ctx.beginPath();
+
+            for (let i = 0; i < numPoints; i++) {
+                const x = i * segmentWidth;
+                const magnitude = magnitudes[i];
+                const morphOffset = Math.sin(time + wave * Math.PI * 0.66) * waveAmplitude;
+                const waveOffset = Math.sin((i / numPoints) * Math.PI * waveFrequency + time) * waveAmplitude;
+                const y = centerY + (magnitude * waveAmplitude * 2) + morphOffset + waveOffset;
+
+                if (i === 0) {
+                    this.ctx.moveTo(x, y);
+                } else {
+                    this.ctx.lineTo(x, y);
+                }
+            }
+
+            const color = this.getColor(wave * (numPoints / 3), numPoints);
+            this.ctx.strokeStyle = color;
+            this.ctx.shadowColor = color;
+            this.ctx.stroke();
+        }
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 856: Staggered Pulse - Offset pulsing bars with delay
+     */
+    renderStaggeredPulse(magnitudes) {
+        const params = this.settings.parameters || {};
+        const staggerAmount = params.staggerAmount || 3;
+        const pulseSpeed = params.pulseSpeed || 1;
+        const barCount = params.barCount || 60;
+
+        const numBars = Math.min(magnitudes.length, barCount);
+        const barWidth = this.canvas.width / numBars;
+        const baseY = this.canvas.height * 0.8;
+
+        this.ctx.shadowBlur = 12;
+
+        for (let i = 0; i < numBars; i++) {
+            // Calculate stagger offset for each bar
+            const staggerOffset = Math.sin((this.frameCounter * pulseSpeed * 0.05) - (i * staggerAmount * 0.1));
+            const barHeight = magnitudes[i] * this.canvas.height * 0.6 * (0.5 + staggerOffset * 0.5);
+            const x = i * barWidth;
+            const y = baseY - barHeight;
+
+            const color = this.getColor(i, numBars);
+            this.ctx.shadowColor = color;
+            this.ctx.fillStyle = color;
+
+            this.ctx.fillRect(x, y, barWidth * 0.85, barHeight);
+        }
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 857: Geometric Tunnel - 3D tunnel effect with perspective
+     */
+    renderGeometricTunnel(magnitudes) {
+        const params = this.settings.parameters || {};
+        const tunnelDepth = params.tunnelDepth || 8;
+        const rotationSpeed = params.rotationSpeed || 1;
+        const segmentCount = params.segmentCount || 6;
+
+        const rotation = this.frameCounter * rotationSpeed * 0.02;
+
+        this.ctx.shadowBlur = 15;
+
+        for (let depth = tunnelDepth; depth > 0; depth--) {
+            const scale = depth / tunnelDepth;
+            const size = scale * Math.min(this.canvas.width, this.canvas.height) * 0.4;
+            const angleOffset = rotation * (tunnelDepth - depth + 1);
+            const magIndex = Math.floor(((tunnelDepth - depth) / tunnelDepth) * magnitudes.length);
+            const magnitude = magnitudes[magIndex];
+
+            this.ctx.save();
+            this.ctx.translate(this.centerX, this.centerY);
+            this.ctx.rotate(angleOffset);
+
+            const color = this.getColor(magIndex, magnitudes.length);
+            this.ctx.strokeStyle = color;
+            this.ctx.shadowColor = color;
+            this.ctx.lineWidth = 2 + magnitude * 5;
+
+            this.ctx.beginPath();
+            for (let i = 0; i <= segmentCount; i++) {
+                const angle = (i / segmentCount) * Math.PI * 2;
+                const x = Math.cos(angle) * size * (1 + magnitude * 0.3);
+                const y = Math.sin(angle) * size * (1 + magnitude * 0.3);
+
+                if (i === 0) {
+                    this.ctx.moveTo(x, y);
+                } else {
+                    this.ctx.lineTo(x, y);
+                }
+            }
+            this.ctx.closePath();
+            this.ctx.stroke();
+
+            this.ctx.restore();
+        }
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 858: Dancing Ribbons - Flowing ribbon-like curves
+     */
+    renderDancingRibbons(magnitudes) {
+        const params = this.settings.parameters || {};
+        const ribbonWidth = params.ribbonWidth || 20;
+        const flowSpeed = params.flowSpeed || 1.5;
+        const waveCount = params.waveCount || 4;
+
+        const numPoints = magnitudes.length;
+        const segmentWidth = this.canvas.width / (numPoints - 1);
+        const time = this.frameCounter * flowSpeed * 0.02;
+
+        for (let ribbon = 0; ribbon < waveCount; ribbon++) {
+            const yOffset = (this.canvas.height / (waveCount + 1)) * (ribbon + 1);
+            const phase = (ribbon / waveCount) * Math.PI * 2;
+
+            this.ctx.lineWidth = ribbonWidth;
+            this.ctx.lineCap = 'round';
+            this.ctx.shadowBlur = 20;
+
+            const color = this.getColor(ribbon * (numPoints / waveCount), numPoints);
+            this.ctx.strokeStyle = color;
+            this.ctx.shadowColor = color;
+
+            this.ctx.beginPath();
+            for (let i = 0; i < numPoints; i++) {
+                const x = i * segmentWidth;
+                const magnitude = magnitudes[i];
+                const waveY = Math.sin((i / numPoints) * Math.PI * 3 + time + phase) * 50;
+                const y = yOffset + waveY + (magnitude * 100);
+
+                if (i === 0) {
+                    this.ctx.moveTo(x, y);
+                } else {
+                    this.ctx.lineTo(x, y);
+                }
+            }
+            this.ctx.stroke();
+        }
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 859: Particle Stream - Particle streams flowing along lines
+     */
+    renderParticleStream(magnitudes) {
+        const params = this.settings.parameters || {};
+        const particleCount = params.particleCount || 200;
+        const streamSpeed = params.streamSpeed || 5;
+        const particleSize = params.particleSize || 3;
+
+        if (!this.streamParticles) {
+            this.streamParticles = [];
+        }
+
+        // Create new particles
+        while (this.streamParticles.length < particleCount) {
+            this.streamParticles.push({
+                x: Math.random() * this.canvas.width,
+                y: Math.random() * this.canvas.height,
+                vx: (Math.random() - 0.5) * streamSpeed,
+                vy: (Math.random() - 0.5) * streamSpeed,
+                age: Math.random()
+            });
+        }
+
+        this.ctx.shadowBlur = 15;
+
+        // Update and draw particles
+        for (let i = this.streamParticles.length - 1; i >= 0; i--) {
+            const particle = this.streamParticles[i];
+            const magIndex = Math.floor((particle.x / this.canvas.width) * magnitudes.length);
+            const magnitude = magnitudes[magIndex] || 0;
+
+            // Update position
+            particle.x += particle.vx;
+            particle.y += particle.vy * (1 + magnitude);
+            particle.age += 0.01;
+
+            // Wrap around screen
+            if (particle.x < 0) particle.x = this.canvas.width;
+            if (particle.x > this.canvas.width) particle.x = 0;
+            if (particle.y < 0) particle.y = this.canvas.height;
+            if (particle.y > this.canvas.height) particle.y = 0;
+
+            // Draw particle
+            const color = this.getColor(magIndex, magnitudes.length);
+            this.ctx.shadowColor = color;
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.7;
+
+            this.ctx.beginPath();
+            this.ctx.arc(particle.x, particle.y, particleSize * (0.5 + magnitude * 0.5), 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 860: Glitch Art - Glitch aesthetic with digital artifacts
+     */
+    renderGlitchArt(magnitudes) {
+        const params = this.settings.parameters || {};
+        const glitchIntensity = params.glitchIntensity || 0.5;
+        const glitchFrequency = params.glitchFrequency || 0.3;
+        const colorShift = params.colorShift || 10;
+
+        const numBars = magnitudes.length;
+        const barWidth = this.canvas.width / numBars;
+        const baseY = this.canvas.height * 0.75;
+
+        // Determine if this frame should glitch
+        const shouldGlitch = Math.random() < glitchFrequency;
+
+        for (let i = 0; i < numBars; i++) {
+            const barHeight = magnitudes[i] * this.canvas.height * 0.6;
+            const x = i * barWidth;
+            let y = baseY - barHeight;
+
+            // Apply glitch offset
+            if (shouldGlitch) {
+                y += (Math.random() - 0.5) * glitchIntensity * 100;
+            }
+
+            const color = this.getColor(i, numBars);
+
+            // RGB split effect on glitch
+            if (shouldGlitch && Math.random() < glitchIntensity) {
+                // Draw RGB channels separately
+                this.ctx.fillStyle = `rgba(255, 0, 0, 0.5)`;
+                this.ctx.fillRect(x - colorShift, y, barWidth * 0.9, barHeight);
+
+                this.ctx.fillStyle = `rgba(0, 255, 0, 0.5)`;
+                this.ctx.fillRect(x, y, barWidth * 0.9, barHeight);
+
+                this.ctx.fillStyle = `rgba(0, 0, 255, 0.5)`;
+                this.ctx.fillRect(x + colorShift, y, barWidth * 0.9, barHeight);
+            } else {
+                this.ctx.fillStyle = color;
+                this.ctx.fillRect(x, y, barWidth * 0.9, barHeight);
+            }
+
+            // Add digital artifacts
+            if (shouldGlitch && Math.random() < glitchIntensity * 0.5) {
+                this.ctx.fillStyle = `rgba(255, 255, 255, ${Math.random() * 0.5})`;
+                this.ctx.fillRect(
+                    Math.random() * this.canvas.width,
+                    Math.random() * this.canvas.height,
+                    Math.random() * 100,
+                    Math.random() * 5
+                );
+            }
+        }
+    }
+
+    /**
+     * Helper: Draw rounded rectangle
+     */
+    roundedRect(x, y, width, height, radius) {
+        this.ctx.beginPath();
+        this.ctx.moveTo(x + radius, y);
+        this.ctx.lineTo(x + width - radius, y);
+        this.ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+        this.ctx.lineTo(x + width, y + height);
+        this.ctx.lineTo(x, y + height);
+        this.ctx.lineTo(x, y + radius);
+        this.ctx.quadraticCurveTo(x, y, x + radius, y);
+        this.ctx.closePath();
+        this.ctx.fill();
     }
 
     /**

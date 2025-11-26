@@ -1133,6 +1133,71 @@ const VISUALIZATION_MODES = {
             colorShift: { min: 0, max: 50, default: 10, label: 'Color Shift' }
         }
     },
+    circular_waves: {
+        id: 'circular_waves',
+        name: 'Circular Waves',
+        description: 'Concentric circular waves that expand from center',
+        category: 'Classic',
+        mode: 861,
+        tags: ['circular', 'waves', 'ripple', 'classic'],
+        parameters: {
+            waveCount: { min: 5, max: 20, default: 10, label: 'Wave Count' },
+            waveThickness: { min: 1, max: 10, default: 3, label: 'Wave Thickness' },
+            waveSpacing: { min: 10, max: 50, default: 25, label: 'Wave Spacing' }
+        }
+    },
+    line_spectrum: {
+        id: 'line_spectrum',
+        name: 'Line Spectrum',
+        description: 'Horizontal frequency lines stacked vertically',
+        category: 'Classic',
+        mode: 862,
+        tags: ['lines', 'horizontal', 'spectrum', 'classic'],
+        parameters: {
+            lineCount: { min: 20, max: 100, default: 50, label: 'Line Count' },
+            lineThickness: { min: 1, max: 10, default: 2, label: 'Line Thickness' },
+            lineSpacing: { min: 2, max: 20, default: 5, label: 'Line Spacing' }
+        }
+    },
+    radial_pulse: {
+        id: 'radial_pulse',
+        name: 'Radial Pulse',
+        description: 'Pulsing circles radiating from center',
+        category: 'Classic',
+        mode: 863,
+        tags: ['radial', 'pulse', 'circles', 'classic'],
+        parameters: {
+            ringCount: { min: 5, max: 30, default: 15, label: 'Ring Count' },
+            pulseIntensity: { min: 0.5, max: 2, default: 1, label: 'Pulse Intensity' },
+            ringThickness: { min: 1, max: 10, default: 4, label: 'Ring Thickness' }
+        }
+    },
+    double_helix: {
+        id: 'double_helix',
+        name: 'Double Helix',
+        description: 'DNA-like double spiral pattern',
+        category: 'Classic',
+        mode: 864,
+        tags: ['helix', 'spiral', 'dna', 'classic'],
+        parameters: {
+            helixTurns: { min: 2, max: 10, default: 5, label: 'Helix Turns' },
+            helixWidth: { min: 50, max: 200, default: 100, label: 'Helix Width' },
+            pointSize: { min: 2, max: 15, default: 6, label: 'Point Size' }
+        }
+    },
+    spiral_bars: {
+        id: 'spiral_bars',
+        name: 'Spiral Bars',
+        description: 'Frequency bars arranged in spiral pattern',
+        category: 'Classic',
+        mode: 865,
+        tags: ['spiral', 'bars', 'rotation', 'classic'],
+        parameters: {
+            spiralTurns: { min: 1, max: 8, default: 3, label: 'Spiral Turns' },
+            barLength: { min: 20, max: 100, default: 50, label: 'Bar Length' },
+            spiralTightness: { min: 0.5, max: 2, default: 1, label: 'Spiral Tightness' }
+        }
+    },
     classic_particles: {
         id: 'classic_particles',
         name: 'Particles',
@@ -13273,7 +13338,13 @@ const AUDIO_CONFIG = {
 const FILE_CONSTRAINTS = {
     maxSizeMB: 50,
     acceptedFormats: ['.mp3', '.wav'],
-    acceptedMimeTypes: ['audio/mpeg', 'audio/wav', 'audio/mp3']
+    acceptedMimeTypes: [
+        'audio/mpeg',
+        'audio/mp3',
+        'audio/wav',      // Standard .wav MIME type
+        'audio/x-wav',    // Safari/older browsers .wav MIME type
+        'audio/wave'      // Alternative .wav MIME type
+    ]
 };
 
 // Animation

@@ -1226,20 +1226,20 @@ class AudioSpectrumApp {
                 valueSpan.textContent = e.target.value;
 
                 // Store parameter value in settings
-                if (!this.settings.modeParameters) {
-                    this.settings.modeParameters = {};
+                if (!this.state.settings.parameters) {
+                    this.state.settings.parameters = {};
                 }
-                this.settings.modeParameters[paramKey] = parseFloat(e.target.value);
+                this.state.settings.parameters[paramKey] = parseFloat(e.target.value);
 
                 // Update preview
                 this.updatePreview();
             });
 
             // Initialize parameter value in settings
-            if (!this.settings.modeParameters) {
-                this.settings.modeParameters = {};
+            if (!this.state.settings.parameters) {
+                this.state.settings.parameters = {};
             }
-            this.settings.modeParameters[paramKey] = paramConfig.default;
+            this.state.settings.parameters[paramKey] = paramConfig.default;
 
             settingItem.appendChild(label);
             settingItem.appendChild(input);

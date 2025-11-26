@@ -4968,13 +4968,22 @@ class Visualizer {
      * Mode 41: Lightning Strikes
      */
     renderLightningStrikes(magnitudes) {
+        // Get parameters with defaults
+        const threshold = this.settings.lightningStrikesThreshold || 0.5;
+        const baseSegments = this.settings.lightningStrikesSegments || 10;
+        const segmentRange = this.settings.lightningStrikesSegmentRange || 10;
+        const zigzagAmount = this.settings.lightningStrikesZigzagAmount || 40;
+        const branchProbability = this.settings.lightningStrikesBranchProbability || 0.7;
+        const baseLineWidth = this.settings.lightningStrikesLineWidth || 2;
+        const lineWidthRange = this.settings.lightningStrikesLineWidthRange || 4;
+
         const numBolts = magnitudes.length;
 
         this.ctx.shadowBlur = 25;
 
         for (let i = 0; i < numBolts; i++) {
             const magnitude = magnitudes[i];
-            if (magnitude < 0.5) continue;
+            if (magnitude < threshold) continue;
 
             const startX = (i / numBolts) * this.canvas.width;
             const startY = 0;
@@ -4983,23 +4992,23 @@ class Visualizer {
             const color = this.getColor(i, numBolts);
             this.ctx.shadowColor = color;
             this.ctx.strokeStyle = color;
-            this.ctx.lineWidth = 2 + magnitude * 4;
+            this.ctx.lineWidth = baseLineWidth + magnitude * lineWidthRange;
 
             this.ctx.beginPath();
             this.ctx.moveTo(startX, startY);
 
             let currentX = startX;
             let currentY = startY;
-            const segments = 10 + Math.floor(magnitude * 10);
+            const segments = baseSegments + Math.floor(magnitude * segmentRange);
 
             for (let s = 0; s < segments; s++) {
                 currentY += (endY - startY) / segments;
-                currentX += (Math.random() - 0.5) * 40 * magnitude;
+                currentX += (Math.random() - 0.5) * zigzagAmount * magnitude;
 
                 this.ctx.lineTo(currentX, currentY);
 
                 // Branch
-                if (Math.random() > 0.7) {
+                if (Math.random() > branchProbability) {
                     const branchX = currentX + (Math.random() - 0.5) * 60;
                     const branchY = currentY + 40;
                     this.ctx.moveTo(currentX, currentY);
@@ -5018,27 +5027,34 @@ class Visualizer {
      * Mode 42: Plasma Storm
      */
     renderPlasmaStorm(magnitudes) {
-        const time = this.frameCounter * 0.03;
-        const numVortices = 3;
+        // Get parameters with defaults
+        const numVortices = this.settings.plasmaStormNumVortices || 3;
+        const rotationSpeed = this.settings.plasmaStormRotationSpeed || 0.03;
+        const vortexDistance = this.settings.plasmaStormVortexDistance || 0.5;
+        const particleDistance = this.settings.plasmaStormParticleDistance || 100;
+        const baseParticleSize = this.settings.plasmaStormParticleSize || 2;
+        const particleSizeRange = this.settings.plasmaStormParticleSizeRange || 6;
+
+        const time = this.frameCounter * rotationSpeed;
 
         this.ctx.shadowBlur = 30;
 
         for (let v = 0; v < numVortices; v++) {
             const vortexAngle = (v / numVortices) * Math.PI * 2 + time;
-            const vortexDist = this.getEffectiveInnerRadius() * 0.5;
+            const vortexDist = this.getEffectiveInnerRadius() * vortexDistance;
             const vortexX = this.centerX + Math.cos(vortexAngle) * vortexDist;
             const vortexY = this.centerY + Math.sin(vortexAngle) * vortexDist;
 
-            const numParticles = magnitudes.length / numVortices;
+            const numParticles = Math.floor(magnitudes.length / numVortices);
 
             for (let i = 0; i < numParticles; i++) {
                 const magnitude = magnitudes[v * numParticles + i % magnitudes.length];
                 const angle = (i / numParticles) * Math.PI * 2 + time * 2;
-                const distance = magnitude * 100;
+                const distance = magnitude * particleDistance;
 
                 const x = vortexX + Math.cos(angle) * distance;
                 const y = vortexY + Math.sin(angle) * distance;
-                const size = 2 + magnitude * 6;
+                const size = baseParticleSize + magnitude * particleSizeRange;
 
                 const color = this.getColor(v * numParticles + i, magnitudes.length);
                 this.ctx.shadowColor = color;
@@ -5059,17 +5075,27 @@ class Visualizer {
      * Mode 43: Laser Show
      */
     renderLaserShow(magnitudes) {
-        const numLasers = Math.min(magnitudes.length / 2, 20);
-        const time = this.frameCounter * 0.05;
+        // Get parameters with defaults
+        const maxLasers = this.settings.laserShowMaxLasers || 20;
+        const threshold = this.settings.laserShowThreshold || 0.3;
+        const rotationSpeed = this.settings.laserShowRotationSpeed || 0.05;
+        const laserLength = this.settings.laserShowLaserLength || 1.5;
+        const baseLineWidth = this.settings.laserShowLineWidth || 3;
+        const lineWidthRange = this.settings.laserShowLineWidthRange || 5;
+        const endGlowSize = this.settings.laserShowEndGlowSize || 5;
+        const endGlowRange = this.settings.laserShowEndGlowRange || 10;
+
+        const numLasers = Math.min(magnitudes.length / 2, maxLasers);
+        const time = this.frameCounter * rotationSpeed;
 
         this.ctx.shadowBlur = 30;
 
         for (let i = 0; i < numLasers; i++) {
             const magnitude = magnitudes[i * 2 % magnitudes.length];
-            if (magnitude < 0.3) continue;
+            if (magnitude < threshold) continue;
 
             const angle = (i / numLasers) * Math.PI * 2 + time + magnitude;
-            const length = this.maxRadius * 1.5;
+            const length = this.maxRadius * laserLength;
 
             const x1 = this.centerX;
             const y1 = this.centerY;
@@ -5079,7 +5105,7 @@ class Visualizer {
             const color = this.getColor(i, numLasers);
             this.ctx.shadowColor = color;
             this.ctx.strokeStyle = color;
-            this.ctx.lineWidth = 3 + magnitude * 5;
+            this.ctx.lineWidth = baseLineWidth + magnitude * lineWidthRange;
             this.ctx.globalAlpha = 0.8;
 
             this.ctx.beginPath();
@@ -5090,7 +5116,7 @@ class Visualizer {
             // End glow
             this.ctx.fillStyle = color;
             this.ctx.beginPath();
-            this.ctx.arc(x2, y2, 5 + magnitude * 10, 0, Math.PI * 2);
+            this.ctx.arc(x2, y2, endGlowSize + magnitude * endGlowRange, 0, Math.PI * 2);
             this.ctx.fill();
         }
 
@@ -5102,20 +5128,26 @@ class Visualizer {
      * Mode 44: Energy Pulses
      */
     renderEnergyPulses(magnitudes) {
-        const numPulses = 6;
-        const time = this.frameCounter * 0.1;
+        // Get parameters with defaults
+        const numPulses = this.settings.energyPulsesNumPulses || 6;
+        const pulseSpeed = this.settings.energyPulsesPulseSpeed || 0.1;
+        const pulseSpread = this.settings.energyPulsesPulseSpread || 100;
+        const baseLineWidth = this.settings.energyPulsesLineWidth || 3;
+        const lineWidthRange = this.settings.energyPulsesLineWidthRange || 8;
+
+        const time = this.frameCounter * pulseSpeed;
 
         this.ctx.shadowBlur = 25;
 
         for (let p = 0; p < numPulses; p++) {
             const phase = (time + p * 0.5) % 3;
-            const radius = this.getEffectiveInnerRadius() + phase * 100;
-            const magnitude = magnitudes[p * (magnitudes.length / numPulses) % magnitudes.length];
+            const radius = this.getEffectiveInnerRadius() + phase * pulseSpread;
+            const magnitude = magnitudes[Math.floor(p * (magnitudes.length / numPulses)) % magnitudes.length];
 
             const color = this.getColor(p * 10, numPulses * 10);
             this.ctx.shadowColor = color;
             this.ctx.strokeStyle = color;
-            this.ctx.lineWidth = 3 + magnitude * 8;
+            this.ctx.lineWidth = baseLineWidth + magnitude * lineWidthRange;
             this.ctx.globalAlpha = Math.max(0, 1 - phase / 3);
 
             this.ctx.beginPath();
@@ -8899,6 +8931,15 @@ class Visualizer {
      * Neural network with pulsing nodes and lighting connections
      */
     renderNeuralPulse(magnitudes) {
+        // Get parameters from settings
+        const nodeCount = this.settings.neuralPulseNodeCount || 30;
+        const layerCount = this.settings.neuralPulseLayerCount || 3;
+        const connectionThreshold = this.settings.neuralPulseConnectionThreshold || 50;
+        const nodeSize = (this.settings.neuralPulseNodeSize || 8) * this.scaleFactor;
+        const pulseIntensity = (this.settings.neuralPulsePulseIntensity || 20) * this.scaleFactor;
+        const trailFade = this.settings.neuralPulseTrailFade || 0.1;
+        const glowRadius = (this.settings.neuralPulseGlowRadius || 3) * this.scaleFactor;
+
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
             .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
         const mids = magnitudes.slice(Math.floor(magnitudes.length * 0.25), Math.floor(magnitudes.length * 0.75))
@@ -8906,27 +8947,29 @@ class Visualizer {
         const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
             .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
 
-        // Initialize neural network nodes
-        if (!this.neuralNodes) {
+        // Initialize neural network nodes (reinitialize if parameters changed)
+        if (!this.neuralNodes || this.neuralNodes.length !== nodeCount || this.lastLayerCount !== layerCount) {
             this.neuralNodes = [];
-            for (let i = 0; i < 30; i++) {
+            this.lastLayerCount = layerCount;
+            for (let i = 0; i < nodeCount; i++) {
                 this.neuralNodes.push({
-                    x: 100 + Math.random() * (this.canvas.width - 200),
-                    y: 100 + Math.random() * (this.canvas.height - 200),
-                    layer: i % 3,  // 3 layers
+                    x: 100 * this.scaleFactor + Math.random() * (this.canvas.width - 200 * this.scaleFactor),
+                    y: 100 * this.scaleFactor + Math.random() * (this.canvas.height - 200 * this.scaleFactor),
+                    layer: i % layerCount,
                     active: 0
                 });
             }
         }
 
-        // Fade background
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        // Fade background with configurable trail
+        this.ctx.fillStyle = `rgba(0, 0, 0, ${trailFade})`;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Update node activation based on frequency bands
         for (const node of this.neuralNodes) {
-            if (node.layer === 0) node.active = bass;
-            else if (node.layer === 1) node.active = mids;
+            const layerIndex = node.layer % 3;
+            if (layerIndex === 0) node.active = bass;
+            else if (layerIndex === 1) node.active = mids;
             else node.active = treble;
         }
 
@@ -8937,10 +8980,10 @@ class Visualizer {
                 const node2 = this.neuralNodes[j];
                 if (Math.abs(node1.layer - node2.layer) === 1) {
                     const intensity = (node1.active + node2.active) * 127.5;
-                    if (intensity > 50) {
+                    if (intensity > connectionThreshold) {
                         const thickness = intensity < 150 ? 1 : 2;
                         this.ctx.strokeStyle = `rgb(${intensity}, ${intensity * 0.5}, ${intensity + 50})`;
-                        this.ctx.lineWidth = thickness;
+                        this.ctx.lineWidth = thickness * this.scaleFactor;
                         this.ctx.beginPath();
                         this.ctx.moveTo(node1.x, node1.y);
                         this.ctx.lineTo(node2.x, node2.y);
@@ -8952,8 +8995,8 @@ class Visualizer {
 
         // Draw pulsing nodes
         for (const node of this.neuralNodes) {
-            const radius = 8 + node.active * 20;
-            const hue = 140 + node.layer * 30;
+            const radius = nodeSize + node.active * pulseIntensity;
+            const hue = 140 + node.layer * (180 / layerCount);
             const intensity = 200 + node.active * 55;
             const color = this.hsvToRgb(hue, 100, intensity / 255 * 100);
 
@@ -8963,9 +9006,9 @@ class Visualizer {
             this.ctx.fill();
 
             this.ctx.strokeStyle = 'rgb(255, 255, 255)';
-            this.ctx.lineWidth = 1;
+            this.ctx.lineWidth = 1 * this.scaleFactor;
             this.ctx.beginPath();
-            this.ctx.arc(node.x, node.y, radius + 3, 0, Math.PI * 2);
+            this.ctx.arc(node.x, node.y, radius + glowRadius, 0, Math.PI * 2);
             this.ctx.stroke();
         }
     }

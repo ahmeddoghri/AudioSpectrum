@@ -363,18 +363,62 @@ class Modes851_900(BaseModeVisualizer):
 
     def draw_mode_874_goddess_energy(self, frame, magnitudes):
         """Mode 874: Goddess energy visualization"""
-        for ring in range(5):
-            radius = 50 + ring * 60
-            num_points = 6 + ring * 4
+        # Get overall energy for pulsing effect
+        energy = self.get_energy(magnitudes)
+        bass = self.get_bass(magnitudes)
+
+        # Dynamic number of rings based on energy (3-7 rings)
+        num_rings = int(3 + energy * 4)
+
+        for ring in range(num_rings):
+            # Dynamic radius that responds to bass
+            base_radius = 40 + ring * 50
+            radius = base_radius + bass * 60
+
+            # More points in outer rings for goddess mandala effect
+            num_points = 8 + ring * 6
+
             for i in range(num_points):
-                angle = (i / num_points) * 2 * np.pi
+                # Slow rotation over time
+                angle = (i / num_points) * 2 * np.pi + self.frame_count * 0.02
+
+                # Get magnitude for this specific point
                 mag_idx = (ring * 10 + i) % len(magnitudes)
                 mag = magnitudes[mag_idx]
-                x = int(self.center_x + np.cos(angle) * radius)
-                y = int(self.center_y + np.sin(angle) * radius)
-                hue = (ring * 36) % 180
-                color = self.hsv_to_bgr(hue, 255, int(150 + mag * 105))
-                cv2.circle(frame, (x, y), 5 + int(mag * 10), color, -1)
+
+                # Radius varies with individual magnitude
+                point_radius = radius + mag * 40
+
+                x = int(self.center_x + np.cos(angle) * point_radius)
+                y = int(self.center_y + np.sin(angle) * point_radius)
+
+                # Dynamic size based on magnitude (larger range: 8-45 pixels)
+                size = 8 + int(mag * 37)
+
+                # Goddess colors: flowing through purples, magentas, and warm tones
+                # Hue shifts over time and varies per ring
+                hue = int((ring * 25 + i * 8 + self.frame_count * 0.5)) % 180
+
+                # High saturation for vibrant goddess energy
+                saturation = int(200 + mag * 55)
+
+                # Value varies with magnitude for dynamic brightness
+                value = int(180 + mag * 75)
+
+                color = self.hsv_to_bgr(hue, saturation, value)
+
+                # Add glow effect for stronger frequencies
+                if mag > 0.6:
+                    cv2.circle(frame, (x, y), size + 5, color, 2)
+
+                cv2.circle(frame, (x, y), size, color, -1)
+
+        # Central goddess focal point that pulses with bass
+        center_size = int(15 + bass * 25)
+        center_hue = int(self.frame_count * 2) % 180
+        center_color = self.hsv_to_bgr(center_hue, 255, 255)
+        cv2.circle(frame, (self.center_x, self.center_y), center_size, center_color, -1)
+
         return frame
 
     def draw_mode_875_sacred_masculine(self, frame, magnitudes):

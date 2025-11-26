@@ -1310,7 +1310,16 @@ const VISUALIZATION_MODES = {
         description: 'Electric bolts connecting peaks',
         category: 'Energy',
         mode: 41,
-        tags: ['electric', 'energy', 'intense']
+        tags: ['electric', 'energy', 'intense'],
+        parameters: {
+            threshold: { min: 0.1, max: 0.9, default: 0.5, label: 'Strike Threshold' },
+            segments: { min: 5, max: 30, default: 10, label: 'Base Segments' },
+            segmentRange: { min: 5, max: 20, default: 10, label: 'Segment Range' },
+            zigzagAmount: { min: 10, max: 80, default: 40, label: 'Zigzag Intensity' },
+            branchProbability: { min: 0.3, max: 0.9, default: 0.7, label: 'Branch Probability' },
+            lineWidth: { min: 1, max: 6, default: 2, label: 'Base Line Width' },
+            lineWidthRange: { min: 2, max: 8, default: 4, label: 'Line Width Range' }
+        }
     },
     plasma_storm: {
         id: 'plasma_storm',
@@ -1318,7 +1327,15 @@ const VISUALIZATION_MODES = {
         description: 'Swirling energy vortex',
         category: 'Energy',
         mode: 42,
-        tags: ['chaotic', 'energy', 'vortex']
+        tags: ['chaotic', 'energy', 'vortex'],
+        parameters: {
+            numVortices: { min: 1, max: 6, default: 3, label: 'Number of Vortices' },
+            rotationSpeed: { min: 0.01, max: 0.1, default: 0.03, label: 'Rotation Speed' },
+            vortexDistance: { min: 0.2, max: 0.8, default: 0.5, label: 'Vortex Distance' },
+            particleDistance: { min: 50, max: 200, default: 100, label: 'Particle Distance' },
+            particleSize: { min: 1, max: 5, default: 2, label: 'Base Particle Size' },
+            particleSizeRange: { min: 2, max: 10, default: 6, label: 'Particle Size Range' }
+        }
     },
     laser_show: {
         id: 'laser_show',
@@ -1326,7 +1343,17 @@ const VISUALIZATION_MODES = {
         description: 'Concert-style laser beams',
         category: 'Energy',
         mode: 43,
-        tags: ['laser', 'concert', 'edm']
+        tags: ['laser', 'concert', 'edm'],
+        parameters: {
+            maxLasers: { min: 5, max: 40, default: 20, label: 'Max Lasers' },
+            threshold: { min: 0.1, max: 0.7, default: 0.3, label: 'Activation Threshold' },
+            rotationSpeed: { min: 0.01, max: 0.15, default: 0.05, label: 'Rotation Speed' },
+            laserLength: { min: 1, max: 2, default: 1.5, label: 'Laser Length' },
+            lineWidth: { min: 1, max: 6, default: 3, label: 'Base Line Width' },
+            lineWidthRange: { min: 2, max: 10, default: 5, label: 'Line Width Range' },
+            endGlowSize: { min: 3, max: 15, default: 5, label: 'End Glow Base Size' },
+            endGlowRange: { min: 5, max: 20, default: 10, label: 'End Glow Range' }
+        }
     },
     energy_pulses: {
         id: 'energy_pulses',
@@ -1334,7 +1361,14 @@ const VISUALIZATION_MODES = {
         description: 'Radiating shockwaves from center',
         category: 'Energy',
         mode: 44,
-        tags: ['pulse', 'radial', 'waves']
+        tags: ['pulse', 'radial', 'waves'],
+        parameters: {
+            numPulses: { min: 3, max: 12, default: 6, label: 'Number of Pulses' },
+            pulseSpeed: { min: 0.05, max: 0.3, default: 0.1, label: 'Pulse Speed' },
+            pulseSpread: { min: 50, max: 200, default: 100, label: 'Pulse Spread' },
+            lineWidth: { min: 1, max: 10, default: 3, label: 'Base Line Width' },
+            lineWidthRange: { min: 2, max: 15, default: 8, label: 'Line Width Range' }
+        }
     },
     rainbow_prism: {
         id: 'rainbow_prism',
@@ -1760,7 +1794,16 @@ const VISUALIZATION_MODES = {
         description: 'Neural network with pulsing nodes and lighting connections',
         category: 'Tech',
         mode: 101,
-        tags: ['neural', 'network', 'ai']
+        tags: ['neural', 'network', 'ai'],
+        parameters: {
+            nodeCount: { min: 10, max: 100, default: 30, label: 'Node Count' },
+            layerCount: { min: 2, max: 5, default: 3, label: 'Network Layers' },
+            connectionThreshold: { min: 10, max: 200, default: 50, label: 'Connection Threshold' },
+            nodeSize: { min: 2, max: 20, default: 8, label: 'Base Node Size' },
+            pulseIntensity: { min: 5, max: 50, default: 20, label: 'Pulse Intensity' },
+            trailFade: { min: 0.05, max: 0.3, default: 0.1, label: 'Trail Fade' },
+            glowRadius: { min: 1, max: 10, default: 3, label: 'Node Glow' }
+        }
     },
     liquid_mercury: {
         id: 'liquid_mercury',

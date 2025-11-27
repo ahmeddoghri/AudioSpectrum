@@ -3,6 +3,31 @@
  * Helper functions for the application
  */
 
+// Polyfill for requestAnimationFrame (cross-browser compatibility)
+(function() {
+    if (!window.requestAnimationFrame) {
+        window.requestAnimationFrame = (
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame ||
+            window.msRequestAnimationFrame ||
+            function(callback) {
+                return window.setTimeout(callback, 1000 / 60);
+            }
+        );
+    }
+
+    if (!window.cancelAnimationFrame) {
+        window.cancelAnimationFrame = (
+            window.webkitCancelAnimationFrame ||
+            window.mozCancelAnimationFrame ||
+            window.msCancelAnimationFrame ||
+            function(id) {
+                window.clearTimeout(id);
+            }
+        );
+    }
+})();
+
 class Utils {
     /**
      * Format bytes to human readable format
@@ -176,31 +201,107 @@ class Utils {
 
     /**
      * Check if browser supports required APIs
+     * Compatible with Chrome, Safari, Firefox, and other modern browsers
      */
     static checkBrowserSupport() {
         const required = {
-            audioContext: 'AudioContext' in window || 'webkitAudioContext' in window,
-            canvas: 'HTMLCanvasElement' in window,
-            webgl: (() => {
+            audioContext: (() => {
                 try {
-                    const canvas = document.createElement('canvas');
-                    return !!(canvas.getContext('webgl') || canvas.getContext('experimental-webgl'));
+                    // Check for AudioContext with vendor prefixes
+                    const AudioContextClass = window.AudioContext ||
+                                             window.webkitAudioContext ||
+                                             window.mozAudioContext ||
+                                             window.msAudioContext;
+                    return !!AudioContextClass;
                 } catch (e) {
                     return false;
                 }
             })(),
-            fileReader: 'FileReader' in window,
-            blob: 'Blob' in window,
-            url: 'URL' in window
+            canvas2d: (() => {
+                try {
+                    // Verify Canvas 2D rendering context
+                    const canvas = document.createElement('canvas');
+                    if (!canvas || typeof canvas.getContext !== 'function') {
+                        return false;
+                    }
+                    const ctx = canvas.getContext('2d');
+                    // Verify essential 2D context methods exist
+                    return !!(ctx &&
+                            typeof ctx.fillRect === 'function' &&
+                            typeof ctx.clearRect === 'function' &&
+                            typeof ctx.drawImage === 'function');
+                } catch (e) {
+                    return false;
+                }
+            })(),
+            fileReader: (() => {
+                try {
+                    return 'FileReader' in window && typeof FileReader !== 'undefined';
+                } catch (e) {
+                    return false;
+                }
+            })(),
+            blob: (() => {
+                try {
+                    // Verify Blob constructor and basic functionality
+                    if (!('Blob' in window) || typeof Blob === 'undefined') {
+                        return false;
+                    }
+                    // Test Blob creation
+                    const testBlob = new Blob(['test'], { type: 'text/plain' });
+                    return testBlob instanceof Blob;
+                } catch (e) {
+                    return false;
+                }
+            })(),
+            url: (() => {
+                try {
+                    // Check for URL API with createObjectURL method
+                    const URLClass = window.URL || window.webkitURL;
+                    return !!(URLClass && typeof URLClass.createObjectURL === 'function');
+                } catch (e) {
+                    return false;
+                }
+            })(),
+            mediaRecorder: (() => {
+                try {
+                    return 'MediaRecorder' in window && typeof MediaRecorder !== 'undefined';
+                } catch (e) {
+                    return false;
+                }
+            })(),
+            requestAnimationFrame: (() => {
+                try {
+                    // Check for requestAnimationFrame with vendor prefixes
+                    return !!(window.requestAnimationFrame ||
+                            window.webkitRequestAnimationFrame ||
+                            window.mozRequestAnimationFrame ||
+                            window.msRequestAnimationFrame);
+                } catch (e) {
+                    return false;
+                }
+            })()
         };
 
         const unsupported = Object.entries(required)
             .filter(([key, value]) => !value)
             .map(([key]) => key);
 
+        // Get browser info for better error messages
+        const userAgent = navigator.userAgent;
+        const browserInfo = {
+            isChrome: /Chrome/.test(userAgent) && /Google Inc/.test(navigator.vendor),
+            isSafari: /Safari/.test(userAgent) && /Apple Computer/.test(navigator.vendor),
+            isFirefox: /Firefox/.test(userAgent),
+            isEdge: /Edg/.test(userAgent),
+            isMobile: /Mobile|Android|iOS/.test(userAgent)
+        };
+
         return {
             supported: unsupported.length === 0,
-            unsupported
+            unsupported,
+            details: required,
+            browserInfo
         };
     }
 

@@ -49,13 +49,46 @@ class AudioSpectrumApp {
         // Check browser support
         const support = Utils.checkBrowserSupport();
         if (!support.supported) {
-            Utils.showToast(
-                `Your browser doesn't support required features: ${support.unsupported.join(', ')}`,
-                'error',
-                5000
-            );
+            const browserName = support.browserInfo.isChrome ? 'Chrome' :
+                               support.browserInfo.isSafari ? 'Safari' :
+                               support.browserInfo.isFirefox ? 'Firefox' :
+                               support.browserInfo.isEdge ? 'Edge' : 'your browser';
+
+            let errorMessage = `Your browser doesn't support required features: ${support.unsupported.join(', ')}. `;
+
+            // Add helpful troubleshooting tips
+            if (support.browserInfo.isChrome || support.browserInfo.isEdge) {
+                errorMessage += 'Try updating Chrome to the latest version or enable hardware acceleration in chrome://settings.';
+            } else if (support.browserInfo.isSafari) {
+                errorMessage += 'Try updating Safari to the latest version. Make sure Safari preferences allow media playback.';
+            } else if (support.browserInfo.isFirefox) {
+                errorMessage += 'Try updating Firefox to the latest version or check about:config for media settings.';
+            } else {
+                errorMessage += 'Please use a modern browser like Chrome, Safari, or Firefox.';
+            }
+
+            console.error('[Browser Support] Compatibility check failed:', {
+                unsupported: support.unsupported,
+                details: support.details,
+                browserInfo: support.browserInfo,
+                userAgent: navigator.userAgent
+            });
+
+            Utils.showToast(errorMessage, 'error', 10000);
+
+            // Show a more detailed error in the UI
+            const heroHeading = document.querySelector('.hero-heading');
+            if (heroHeading) {
+                heroHeading.textContent = `Browser Compatibility Issue`;
+                const heroSubheading = document.querySelector('.hero-subheading');
+                if (heroSubheading) {
+                    heroSubheading.textContent = errorMessage;
+                }
+            }
             return;
         }
+
+        console.log('[Browser Support] All required features are supported', support.details);
 
         // Cache DOM elements
         this.cacheElements();
@@ -514,11 +547,14 @@ class AudioSpectrumApp {
             let hoverVisualizer = null;
 
             card.addEventListener('mouseenter', () => {
+                // Stained glass mode needs 60 bars (6 rows × 10 cols) to fill the entire display
+                const numBars = mode.id === 'stained_glass' ? 60 : 48;
+
                 // Create a visualizer for this mode
                 const tempSettings = {
                     ...DEFAULT_SETTINGS,
                     mode: mode.id,
-                    numBars: 48,
+                    numBars: numBars,
                     // Use small settings for 280x280 preview canvas
                     innerRadius: 50,  // Adjusted for better visibility in preview
                     barWidthMultiplier: 1.0
@@ -529,7 +565,7 @@ class AudioSpectrumApp {
                 let animationTime = 0;
                 const animate = () => {
                     // Generate animated magnitudes that change over time
-                    const magnitudes = new Float32Array(48);
+                    const magnitudes = new Float32Array(numBars);
                     for (let i = 0; i < magnitudes.length; i++) {
                         // Create smooth animated values with controlled range for preview
                         const value =
@@ -634,10 +670,13 @@ class AudioSpectrumApp {
      * Generate mode preview
      */
     generateModePreview(canvas, modeId) {
+        // Stained glass mode needs 60 bars (6 rows × 10 cols) to fill the entire display
+        const numBars = modeId === 'stained_glass' ? 60 : 48;
+
         const tempSettings = {
             ...DEFAULT_SETTINGS,
             mode: modeId,
-            numBars: 48,
+            numBars: numBars,
             // Use settings for preview canvas (280x280) to ensure full visibility
             innerRadius: 50,  // Match hover animation settings
             barWidthMultiplier: 1.0
@@ -646,14 +685,28 @@ class AudioSpectrumApp {
         const tempVisualizer = new Visualizer(canvas, tempSettings);
 
         // Generate demo magnitudes with controlled values for preview
-        const magnitudes = new Float32Array(48);
+        const magnitudes = new Float32Array(numBars);
         for (let i = 0; i < magnitudes.length; i++) {
             const value = 0.25 + Math.random() * 0.25 + Math.sin(i * 0.2) * 0.12;
             // Clamp to safe range matching animation
             magnitudes[i] = Math.min(Math.max(value, 0.15), 0.65);
         }
 
-        tempVisualizer.render(magnitudes);
+        // Particle-based effects need multiple frames to fill the display
+        const particleEffects = ['pixel_storm'];
+        if (particleEffects.includes(modeId)) {
+            // Render multiple frames to populate particles across the canvas
+            for (let frame = 0; frame < 60; frame++) {
+                // Vary magnitudes slightly each frame for more natural look
+                for (let i = 0; i < magnitudes.length; i++) {
+                    const value = 0.25 + Math.random() * 0.25 + Math.sin(i * 0.2 + frame * 0.1) * 0.12;
+                    magnitudes[i] = Math.min(Math.max(value, 0.15), 0.65);
+                }
+                tempVisualizer.render(magnitudes);
+            }
+        } else {
+            tempVisualizer.render(magnitudes);
+        }
     }
 
     /**

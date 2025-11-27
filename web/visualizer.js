@@ -8997,10 +8997,23 @@ class Visualizer {
             // Use bass for velocity if available, otherwise use avg magnitude
             const velocityMultiplier = bass > 0.1 ? bass : Math.max(avgMagnitude, 0.3);
 
+            // Calculate target explosion position in the middle of the screen
+            // Randomize around center with limited spread
+            const spreadX = this.canvas.width * 0.2; // 20% spread horizontally
+            const targetX = this.centerX + (Math.random() - 0.5) * spreadX;
+            const targetY = this.centerY + (Math.random() - 0.5) * this.canvas.height * 0.3; // 30% spread vertically around center
+
+            // Calculate initial velocity to reach target position
+            const rocketX = Math.random() * (this.canvas.width / 2) + this.canvas.width / 4;
+            const rocketY = this.canvas.height - 50;
+            const baseSpeed = rocketSpeed + velocityMultiplier * 8;
+
             this.fireworkRockets.push({
-                x: Math.random() * (this.canvas.width / 2) + this.canvas.width / 4,
-                y: this.canvas.height - 50,
-                vy: -rocketSpeed - velocityMultiplier * 8,
+                x: rocketX,
+                y: rocketY,
+                vy: -baseSpeed,
+                targetY: targetY,
+                targetX: targetX,
                 exploded: false,
                 particles: [],
                 colorIndex: colorIndex
@@ -9014,6 +9027,10 @@ class Visualizer {
                 rocket.y += rocket.vy;
                 rocket.vy += 0.3;  // Gravity
 
+                // Move horizontally towards target
+                const dx = rocket.targetX - rocket.x;
+                rocket.x += dx * 0.05;
+
                 // Draw rocket trail (use the rocket's assigned color)
                 const rocketColorStr = this.getColor(rocket.colorIndex, magnitudes.length);
                 const rocketColor = this.parseRgbColor(rocketColorStr);
@@ -9022,9 +9039,16 @@ class Visualizer {
                 this.ctx.arc(rocket.x, rocket.y, 5, 0, Math.PI * 2);
                 this.ctx.fill();
 
-                // Explode at peak
-                if (rocket.vy > 0) {
+                // Explode at target position or when velocity becomes positive
+                const reachedTarget = rocket.y <= rocket.targetY;
+                const reachedPeak = rocket.vy > 0;
+
+                if (reachedTarget || reachedPeak) {
                     rocket.exploded = true;
+                    // Snap to target position for explosion
+                    rocket.x = rocket.targetX;
+                    rocket.y = rocket.targetY;
+
                     // Create particle burst (particle count controlled by parameter)
                     const numParticles = Math.floor(particleCount * (0.5 + mids * 0.5));
                     for (let i = 0; i < numParticles; i++) {
@@ -38431,7 +38455,7 @@ class Visualizer {
     }
     /**
      * Mode 646: MultiverseBubble
-     * Multiverse Bubble visualization with configurable parameters
+     * Multiverse Bubble visualization with configurable parameters - particle-based
      */
     render646MultiverseBubble(magnitudes) {
         const params = this.settings.parameters || {};
@@ -38442,6 +38466,18 @@ class Visualizer {
         // Use complexity to determine number of columns (3-12 range)
         const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
+        // Particle properties (configurable via parameters)
+        const particleSize = params.particleSize || 4; // Size of each square particle
+        const particleSpacing = params.particleSpacing || 5; // Space between particles
+        const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 15;
+        const barWidth = 40; // Width of the bar
+
+        // Animation time for floating effect
+        const time = Date.now() * 0.001 * speed;
+
+        // Enable glow effect
+        this.ctx.shadowBlur = glowIntensity;
+
         for (let i = 0; i < numColumns; i++) {
             const x = (i / numColumns) * this.canvas.width + this.canvas.width / (2 * numColumns);
             const magIdx = Math.floor((i * magnitudes.length) / numColumns);
@@ -38449,16 +38485,54 @@ class Visualizer {
             const height = mag * this.canvas.height * 0.7;
 
             const color = this.getColor(i, numColumns);
+            this.ctx.shadowColor = color;
 
-            // Filled rectangle
-            this.ctx.fillStyle = color;
-            this.ctx.fillRect(x - 20, this.canvas.height - height, 40, height);
+            // Calculate number of particles needed to fill the height
+            const numParticlesVertical = Math.floor(height / particleSpacing);
+            const numParticlesHorizontal = Math.floor(barWidth / particleSpacing);
 
-            // Border rectangle for depth
-            this.ctx.strokeStyle = this.adjustBrightness(color, 20);
-            this.ctx.lineWidth = 2;
-            this.ctx.strokeRect(x - 20, this.canvas.height - height, 40, height);
+            // Draw particles forming the bar
+            for (let py = 0; py < numParticlesVertical; py++) {
+                for (let px = 0; px < numParticlesHorizontal; px++) {
+                    // Calculate particle position
+                    const particleX = x - barWidth/2 + px * particleSpacing;
+                    const particleY = this.canvas.height - (py * particleSpacing);
+
+                    // Add floating/bubble animation
+                    const floatOffset = Math.sin(time + i + py * 0.5 + px * 0.3) * 3;
+                    const driftOffset = Math.cos(time * 0.7 + i + py * 0.2) * 2;
+
+                    // Vary particle opacity based on position (fade towards top)
+                    const opacityFactor = 0.6 + (py / numParticlesVertical) * 0.4;
+
+                    // Extract RGB from color string
+                    const rgb = color.match(/\d+/g);
+                    this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${opacityFactor})`;
+
+                    // Draw small square particle
+                    this.ctx.fillRect(
+                        particleX + driftOffset,
+                        particleY + floatOffset,
+                        particleSize,
+                        particleSize
+                    );
+
+                    // Add bright core to some particles for extra glow
+                    if ((px + py) % 3 === 0) {
+                        this.ctx.fillStyle = `rgba(255, 255, 255, ${opacityFactor * 0.3})`;
+                        this.ctx.fillRect(
+                            particleX + driftOffset + particleSize/4,
+                            particleY + floatOffset + particleSize/4,
+                            particleSize/2,
+                            particleSize/2
+                        );
+                    }
+                }
+            }
         }
+
+        // Reset shadow
+        this.ctx.shadowBlur = 0;
     }
     /**
      * Mode 647: ParallelUniverse

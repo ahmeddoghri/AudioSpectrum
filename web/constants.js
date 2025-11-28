@@ -4880,16 +4880,18 @@ const VISUALIZATION_MODES = {
     mode_360_bat_swarm: {
         id: 'mode_360_bat_swarm',
         name: 'Bat Swarm',
-        description: 'Mode 360: Bats swarming from cave',
+        description: 'Birds/bats moving in murmuration patterns with flocking behavior',
         category: 'Particles',
         mode: 360,
-        tags: ["swarm"],
+        tags: ["swarm", "bat", "murmuration", "flocking", "particles", "glow"],
         parameters: {
             batCount: { min: 30, max: 100, default: 50, label: 'Bat Count' },
             swarmSpeed: { min: 0.05, max: 0.15, default: 0.08, label: 'Swarm Speed' },
             wingSpan: { min: 8, max: 16, default: 12, label: 'Wing Span' },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' },
+            trailLength: { min: 0, max: 0.5, default: 0.15, label: 'Motion Trail' },
+            glowIntensity: { min: 0, max: 20, default: 8, label: 'Glow Intensity' }
         }
     },
     mode_361_tide_motion: {
@@ -13294,6 +13296,104 @@ const VISUALIZATION_MODES = {
             intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+        }
+    },
+    mode_1001_cassette_tape_deck: {
+        id: 'mode_1001_cassette_tape_deck',
+        name: 'Cassette Tape Deck',
+        description: 'Mode 1001: Retro cassette with spinning reels & VU meters',
+        category: 'Retro',
+        mode: 1001,
+        tags: ["retro", "cassette", "vintage", "analog"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Reel Speed' },
+            glowIntensity: { min: 0, max: 30, default: 10, label: 'Glow Intensity' }
+        }
+    },
+    mode_1002_arcade_pixel_bars: {
+        id: 'mode_1002_arcade_pixel_bars',
+        name: 'Arcade Pixel Bars',
+        description: 'Mode 1002: Chunky 8-bit bars with retro arcade style',
+        category: 'Retro',
+        mode: 1002,
+        tags: ["retro", "8bit", "pixel", "arcade"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            pixelSize: { min: 4, max: 16, default: 8, label: 'Pixel Size' },
+            glowIntensity: { min: 0, max: 30, default: 15, label: 'Glow Intensity' }
+        }
+    },
+    mode_1003_vector_oscilloscope: {
+        id: 'mode_1003_vector_oscilloscope',
+        name: 'Vector Oscilloscope',
+        description: 'Mode 1003: Classic green oscilloscope with glowing waveform',
+        category: 'Retro',
+        mode: 1003,
+        tags: ["retro", "oscilloscope", "vector", "crt", "green"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            lineThickness: { min: 1, max: 8, default: 3, label: 'Line Thickness' },
+            glowIntensity: { min: 5, max: 40, default: 20, label: 'Glow Intensity' }
+        }
+    },
+    mode_1004_led_spectrum_grid: {
+        id: 'mode_1004_led_spectrum_grid',
+        name: 'LED Spectrum Grid',
+        description: 'Mode 1004: Old-school LED spectrum analyzer with discrete blocks',
+        category: 'Retro',
+        mode: 1004,
+        tags: ["retro", "led", "spectrum", "grid", "analyzer"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            ledSize: { min: 4, max: 12, default: 8, label: 'LED Size' },
+            ledGap: { min: 1, max: 5, default: 2, label: 'LED Gap' }
+        }
+    },
+    mode_1005_v_formation_migration: {
+        id: 'mode_1005_v_formation_migration',
+        name: 'V-Formation Migration',
+        description: 'Geese flying in V-shaped formation with leader switching',
+        category: 'Particles',
+        mode: 1005,
+        tags: ["birds", "geese", "migration", "formation", "v-shape"],
+        parameters: {
+            birdCount: { min: 15, max: 40, default: 25, label: 'Bird Count' },
+            wingSpan: { min: 10, max: 20, default: 15, label: 'Wing Span' },
+            formationSpread: { min: 20, max: 60, default: 40, label: 'Formation Spread' },
+            speed: { min: 0.5, max: 3, default: 1.5, label: 'Flight Speed' },
+            trailLength: { min: 0, max: 0.5, default: 0.2, label: 'Motion Trail' }
+        }
+    },
+    mode_1006_diving_seagulls: {
+        id: 'mode_1006_diving_seagulls',
+        name: 'Diving Seagulls',
+        description: 'Seagulls diving down and swooping back up in graceful arcs',
+        category: 'Particles',
+        mode: 1006,
+        tags: ["birds", "seagulls", "diving", "swooping", "ocean"],
+        parameters: {
+            birdCount: { min: 10, max: 30, default: 20, label: 'Bird Count' },
+            wingSpan: { min: 12, max: 22, default: 17, label: 'Wing Span' },
+            diveSpeed: { min: 1, max: 4, default: 2.5, label: 'Dive Speed' },
+            diveHeight: { min: 0.3, max: 0.8, default: 0.6, label: 'Dive Height' },
+            trailLength: { min: 0, max: 0.5, default: 0.15, label: 'Motion Trail' }
+        }
+    },
+    mode_1007_sparrow_scatter: {
+        id: 'mode_1007_sparrow_scatter',
+        name: 'Sparrow Scatter',
+        description: 'Small birds that scatter explosively on bass, then regroup',
+        category: 'Particles',
+        mode: 1007,
+        tags: ["birds", "sparrows", "scatter", "flock", "explosive"],
+        parameters: {
+            birdCount: { min: 30, max: 80, default: 50, label: 'Bird Count' },
+            wingSpan: { min: 6, max: 12, default: 8, label: 'Wing Span' },
+            scatterRadius: { min: 50, max: 200, default: 120, label: 'Scatter Radius' },
+            bassThreshold: { min: 0.2, max: 0.7, default: 0.4, label: 'Bass Threshold' },
+            trailLength: { min: 0, max: 0.5, default: 0.1, label: 'Motion Trail' }
         }
     },
 

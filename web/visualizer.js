@@ -3145,6 +3145,27 @@ class Visualizer {
             case 'mode_1000_mechanical_living':
                 this.render1000MechanicalLiving(magnitudes);
                 break;
+            case 'mode_1001_cassette_tape_deck':
+                this.render1001CassetteTapeDeck(magnitudes);
+                break;
+            case 'mode_1002_arcade_pixel_bars':
+                this.render1002ArcadePixelBars(magnitudes);
+                break;
+            case 'mode_1003_vector_oscilloscope':
+                this.render1003VectorOscilloscope(magnitudes);
+                break;
+            case 'mode_1004_led_spectrum_grid':
+                this.render1004LEDSpectrumGrid(magnitudes);
+                break;
+            case 'mode_1005_v_formation_migration':
+                this.render1005VFormationMigration(magnitudes);
+                break;
+            case 'mode_1006_diving_seagulls':
+                this.render1006DivingSeagulls(magnitudes);
+                break;
+            case 'mode_1007_sparrow_scatter':
+                this.render1007SparrowScatter(magnitudes);
+                break;
             default:
                 this.renderCircularBars(magnitudes);
             }
@@ -16141,8 +16162,8 @@ class Visualizer {
     }
 
     /**
-     * Mode 360: Bat Swarm
-     * Mode 360: Bats swarming from cave
+     * Mode 360: Bat Swarm - Murmuration
+     * Mode 360: Birds/bats moving in realistic flocking patterns like a murmuration
      */
         render360BatSwarm(magnitudes) {
         const params = this.settings.parameters || {};
@@ -16152,87 +16173,189 @@ class Visualizer {
         const wingSpan = params.wingSpan || 12;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
-
-        // Use Step 4 settings
-        const barCount = this.settings.barCount || 72;
-        const innerRadius = this.getEffectiveInnerRadius();
+        const trailLength = params.trailLength !== undefined ? params.trailLength : 0.15;
+        const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 8;
 
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length * 0.25);
         const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
-        this.frameCounter = (this.frameCounter || 0) + swarmSpeed * speed;
-
-        // Get color scheme
-        const scheme = COLOR_SCHEMES[this.settings.colorScheme];
-        const caveColor = scheme.primary;
-
-        // Cave entrance at bottom center (size affected by innerRadius setting)
-        const caveX = this.centerX;
-        const caveY = this.canvas.height - 50;
-        const caveWidth = 60 + (innerRadius / 180) * 40;  // 60-100px based on innerRadius
-        const caveHeight = caveWidth * 0.5;
-
-        // Draw cave entrance with scheme color (darker version)
-        this.ctx.fillStyle = `rgba(${caveColor[0] * 0.3}, ${caveColor[1] * 0.3}, ${caveColor[2] * 0.3}, 0.8)`;
-        this.ctx.beginPath();
-        this.ctx.ellipse(caveX, caveY, caveWidth, caveHeight, 0, 0, Math.PI * 2);
-        this.ctx.fill();
-
-        // Draw bats swarming out (affected by barCount setting)
-        const numBats = Math.floor(batCount * (0.5 + energy * 0.5) * (barCount / 72));
-        for (let i = 0; i < numBats; i++) {
-            const magnitude = magnitudes[i % magnitudes.length];
-
-            // Spiral motion from cave
-            const phase = this.frameCounter + i * 0.2;
-            const spiralAngle = phase * (1 + complexity * 0.1);
-            const spiralDist = Math.min(phase * 15, this.maxRadius * 0.8);
-
-            // Add some randomness to make it organic
-            const wobbleX = Math.sin(phase * 3 + i) * 20 * magnitude;
-            const wobbleY = Math.cos(phase * 2.3 + i) * 15 * magnitude;
-
-            const x = caveX + Math.sin(spiralAngle) * spiralDist + wobbleX;
-            const y = caveY - spiralDist * 0.6 + Math.cos(spiralAngle * 0.7) * spiralDist * 0.3 + wobbleY;
-
-            // Only draw bats that are visible on screen
-            if (x >= 0 && x <= this.canvas.width && y >= 0 && y <= this.canvas.height) {
-                // Get color from scheme with gradient
-                const batColor = this.getColor(i, numBats);
-
-                // Parse RGB from the color string
-                const match = batColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
-                let r = 20, g = 20, b = 20;
-                if (match) {
-                    r = parseInt(match[1]);
-                    g = parseInt(match[2]);
-                    b = parseInt(match[3]);
-                }
-
-                const opacity = Math.min(1, spiralDist / 100) * (0.6 + magnitude * 0.4);
-                this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
-                this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
-                this.ctx.lineWidth = 2;
-
-                // Wing flap animation
-                const wingFlap = Math.sin(phase * 8) * 0.3 + 0.7; // Oscillates between 0.4 and 1.0
-                const currentWingSpan = wingSpan * wingFlap;
-
-                // Draw bat shape (body + wings)
-                this.ctx.beginPath();
-                // Left wing
-                this.ctx.moveTo(x - currentWingSpan, y);
-                this.ctx.lineTo(x, y - 5);
-                // Right wing
-                this.ctx.lineTo(x + currentWingSpan, y);
-                this.ctx.stroke();
-
-                // Bat body
-                this.ctx.beginPath();
-                this.ctx.arc(x, y, 2, 0, Math.PI * 2);
-                this.ctx.fill();
+        // Initialize boid array for flocking behavior
+        if (!this.batSwarmBoids || this.batSwarmBoids.length !== batCount) {
+            this.batSwarmBoids = [];
+            for (let i = 0; i < batCount; i++) {
+                this.batSwarmBoids.push({
+                    x: Math.random() * this.canvas.width,
+                    y: Math.random() * this.canvas.height,
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: (Math.random() - 0.5) * 4,
+                    phase: Math.random() * Math.PI * 2
+                });
             }
         }
+
+        // Add motion trail effect
+        if (trailLength > 0) {
+            this.ctx.fillStyle = `rgba(0, 0, 0, ${trailLength})`;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        } else {
+            this.drawBackground();
+        }
+
+        // Enable glow
+        this.ctx.shadowBlur = glowIntensity;
+
+        // Audio-reactive parameters
+        const flockRadius = 80 + complexity * 10;
+        const separationDist = 30;
+        const maxSpeed = 2 + swarmSpeed * speed * 10 + bass * 3;
+        const maxForce = 0.05 + energy * 0.05;
+
+        // Update each boid with flocking behavior
+        for (let i = 0; i < this.batSwarmBoids.length; i++) {
+            const boid = this.batSwarmBoids[i];
+            const magnitude = magnitudes[i % magnitudes.length];
+
+            // Flocking forces
+            let separationX = 0, separationY = 0;
+            let alignmentX = 0, alignmentY = 0;
+            let cohesionX = 0, cohesionY = 0;
+            let neighborCount = 0;
+
+            // Check neighbors
+            for (let j = 0; j < this.batSwarmBoids.length; j++) {
+                if (i === j) continue;
+
+                const other = this.batSwarmBoids[j];
+                const dx = other.x - boid.x;
+                const dy = other.y - boid.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                if (dist < flockRadius) {
+                    // Separation: steer away from close neighbors
+                    if (dist < separationDist && dist > 0) {
+                        separationX -= dx / dist;
+                        separationY -= dy / dist;
+                    }
+
+                    // Alignment: match velocity of neighbors
+                    alignmentX += other.vx;
+                    alignmentY += other.vy;
+
+                    // Cohesion: move towards center of neighbors
+                    cohesionX += other.x;
+                    cohesionY += other.y;
+
+                    neighborCount++;
+                }
+            }
+
+            // Calculate steering forces
+            if (neighborCount > 0) {
+                // Average alignment
+                alignmentX /= neighborCount;
+                alignmentY /= neighborCount;
+
+                // Average cohesion position
+                cohesionX /= neighborCount;
+                cohesionY /= neighborCount;
+                cohesionX -= boid.x;
+                cohesionY -= boid.y;
+            }
+
+            // Apply forces with weights
+            const separationWeight = 1.5;
+            const alignmentWeight = 1.0;
+            const cohesionWeight = 1.0;
+
+            boid.vx += separationX * separationWeight * maxForce;
+            boid.vy += separationY * separationWeight * maxForce;
+            boid.vx += alignmentX * alignmentWeight * maxForce * 0.05;
+            boid.vy += alignmentY * alignmentWeight * maxForce * 0.05;
+            boid.vx += cohesionX * cohesionWeight * maxForce * 0.01;
+            boid.vy += cohesionY * cohesionWeight * maxForce * 0.01;
+
+            // Add audio-reactive drift and flow
+            const flowAngle = (this.frameCounter || 0) * 0.02 * speed + i * 0.1;
+            const flowForce = energy * 0.3;
+            boid.vx += Math.cos(flowAngle) * flowForce * maxForce;
+            boid.vy += Math.sin(flowAngle) * flowForce * maxForce;
+
+            // Add organic wobble based on audio
+            boid.vx += Math.sin((this.frameCounter || 0) * 0.1 + i) * magnitude * maxForce * 2;
+            boid.vy += Math.cos((this.frameCounter || 0) * 0.15 + i) * magnitude * maxForce * 2;
+
+            // Limit speed
+            const currentSpeed = Math.sqrt(boid.vx * boid.vx + boid.vy * boid.vy);
+            if (currentSpeed > maxSpeed) {
+                boid.vx = (boid.vx / currentSpeed) * maxSpeed;
+                boid.vy = (boid.vy / currentSpeed) * maxSpeed;
+            }
+
+            // Update position
+            boid.x += boid.vx;
+            boid.y += boid.vy;
+
+            // Wrap around edges
+            if (boid.x < -50) boid.x = this.canvas.width + 50;
+            if (boid.x > this.canvas.width + 50) boid.x = -50;
+            if (boid.y < -50) boid.y = this.canvas.height + 50;
+            if (boid.y > this.canvas.height + 50) boid.y = -50;
+
+            // Update wing flap phase
+            boid.phase += (0.3 + treble * 0.2) * speed;
+
+            // Draw the boid
+            const batColor = this.getColor(i, this.batSwarmBoids.length);
+            const match = batColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+            let r = 20, g = 20, b = 20;
+            if (match) {
+                r = parseInt(match[1]);
+                g = parseInt(match[2]);
+                b = parseInt(match[3]);
+            }
+
+            const opacity = 0.7 + magnitude * 0.3;
+            const batSize = 1.0 + magnitude * 0.3;
+
+            this.ctx.shadowColor = `rgba(${r}, ${g}, ${b}, ${opacity * 0.8})`;
+            this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+            this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+            this.ctx.lineWidth = 2 * batSize;
+
+            // Wing flap animation
+            const wingFlap = Math.sin(boid.phase) * 0.4 + 0.6;
+            const currentWingSpan = wingSpan * wingFlap * batSize;
+
+            // Calculate heading angle for direction
+            const heading = Math.atan2(boid.vy, boid.vx);
+
+            // Draw bird/bat with heading
+            this.ctx.save();
+            this.ctx.translate(boid.x, boid.y);
+            this.ctx.rotate(heading);
+
+            // Draw wings
+            this.ctx.beginPath();
+            this.ctx.moveTo(-currentWingSpan, 2);
+            this.ctx.quadraticCurveTo(-currentWingSpan * 0.5, -6 * batSize, -2 * batSize, -3 * batSize);
+            this.ctx.lineTo(0, -5 * batSize);
+            this.ctx.lineTo(2 * batSize, -3 * batSize);
+            this.ctx.quadraticCurveTo(currentWingSpan * 0.5, -6 * batSize, currentWingSpan, 2);
+            this.ctx.stroke();
+
+            // Body
+            this.ctx.beginPath();
+            this.ctx.arc(0, 0, 2.5 * batSize, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            this.ctx.restore();
+        }
+
+        // Reset shadow
+        this.ctx.shadowBlur = 0;
+
+        this.frameCounter = (this.frameCounter || 0) + 1;
     }
 
     /**
@@ -28902,6 +29025,325 @@ class Visualizer {
             this.ctx.fill();
         }
         this.ctx.globalAlpha = 1.0;
+    }
+
+    /**
+     * Mode 1001: Cassette Tape Deck
+     * Retro cassette tape with spinning reels and VU meters
+     */
+    render1001CassetteTapeDeck(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 10;
+
+        // Use Step 4 settings
+        const barCount = this.settings.barCount || 72;
+        const innerRadius = this.getEffectiveInnerRadius();
+
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        this.frameCounter = (this.frameCounter || 0) + speed * 2;
+
+        // Cassette body
+        const tapeWidth = Math.min(400, this.canvas.width * 0.6) * (0.8 + innerRadius / 500);
+        const tapeHeight = tapeWidth * 0.4;
+        const tapeX = this.centerX - tapeWidth / 2;
+        const tapeY = this.centerY - tapeHeight / 2;
+
+        // Draw cassette shell
+        this.ctx.fillStyle = '#2a2a2a';
+        this.ctx.fillRect(tapeX, tapeY, tapeWidth, tapeHeight);
+
+        // Cassette label area
+        this.ctx.fillStyle = '#f0f0f0';
+        this.ctx.fillRect(tapeX + 20, tapeY + 20, tapeWidth - 40, tapeHeight * 0.4);
+
+        // Enable glow
+        this.ctx.shadowBlur = glowIntensity;
+
+        // Draw spinning reels
+        const reelRadius = tapeHeight * 0.2;
+        const reel1X = tapeX + tapeWidth * 0.3;
+        const reel2X = tapeX + tapeWidth * 0.7;
+        const reelY = tapeY + tapeHeight * 0.7;
+
+        // Reel rotation based on audio
+        const rotation = this.frameCounter * 0.1 * (1 + energy);
+
+        for (let reelX of [reel1X, reel2X]) {
+            // Reel circle
+            const color = this.getColor(reelX > this.centerX ? 0 : barCount / 2, barCount);
+            this.ctx.shadowColor = color;
+            this.ctx.strokeStyle = color;
+            this.ctx.fillStyle = '#1a1a1a';
+            this.ctx.lineWidth = 3;
+
+            this.ctx.beginPath();
+            this.ctx.arc(reelX, reelY, reelRadius, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.stroke();
+
+            // Spinning spokes
+            const numSpokes = 6;
+            for (let i = 0; i < numSpokes; i++) {
+                const angle = rotation + (i / numSpokes) * Math.PI * 2;
+                const x1 = reelX + Math.cos(angle) * reelRadius * 0.3;
+                const y1 = reelY + Math.sin(angle) * reelRadius * 0.3;
+                const x2 = reelX + Math.cos(angle) * reelRadius * 0.9;
+                const y2 = reelY + Math.sin(angle) * reelRadius * 0.9;
+
+                this.ctx.beginPath();
+                this.ctx.moveTo(x1, y1);
+                this.ctx.lineTo(x2, y2);
+                this.ctx.stroke();
+            }
+        }
+
+        // VU meter bars at top
+        const vuBarWidth = tapeWidth * 0.35;
+        const vuBarHeight = 15;
+        const vuY = tapeY + 35;
+
+        // Left VU meter
+        const leftLevel = magnitudes.slice(0, magnitudes.length / 2).reduce((a, b) => a + b, 0) / (magnitudes.length / 2) * intensity;
+        const leftColor = this.getColor(0, barCount);
+        this.ctx.shadowColor = leftColor;
+        this.ctx.fillStyle = leftColor;
+        this.ctx.fillRect(tapeX + 30, vuY, vuBarWidth * leftLevel, vuBarHeight);
+
+        // Right VU meter
+        const rightLevel = magnitudes.slice(magnitudes.length / 2).reduce((a, b) => a + b, 0) / (magnitudes.length / 2) * intensity;
+        const rightColor = this.getColor(barCount / 2, barCount);
+        this.ctx.shadowColor = rightColor;
+        this.ctx.fillStyle = rightColor;
+        this.ctx.fillRect(tapeX + tapeWidth - 30 - vuBarWidth, vuY, vuBarWidth * rightLevel, vuBarHeight);
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 1002: Arcade Pixel Bars
+     * Chunky 8-bit style bars with retro arcade colors
+     */
+    render1002ArcadePixelBars(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const pixelSize = params.pixelSize !== undefined ? params.pixelSize : 8;
+        const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 15;
+
+        // Use Step 4 settings
+        const barCount = this.settings.barCount || 72;
+        const innerRadius = this.getEffectiveInnerRadius();
+
+        this.ctx.shadowBlur = glowIntensity;
+
+        // Keep bars chunky on small canvases (previews) by limiting bar count to available pixel width
+        const maxBarsForWidth = Math.max(8, Math.floor(this.canvas.width / Math.max(pixelSize, 6)));
+        const numBars = Math.min(barCount, magnitudes.length, maxBarsForWidth);
+        const barSpacing = this.canvas.width / numBars;
+
+        for (let i = 0; i < numBars; i++) {
+            const magIdx = Math.floor((i * magnitudes.length) / numBars);
+            const magnitude = magnitudes[magIdx] * intensity;
+
+            // Pixel-perfect bar height
+            const maxBarHeight = this.canvas.height * 0.8;
+            const barHeight = Math.floor((magnitude * maxBarHeight) / pixelSize) * pixelSize;
+
+            // Arcade-style colors (bright, saturated)
+            const color = this.getColor(i, numBars);
+            this.ctx.shadowColor = color;
+            this.ctx.fillStyle = color;
+
+            // Draw pixelated bar from bottom
+            const x = i * barSpacing + barSpacing * 0.1;
+            const barWidth = Math.max(
+                pixelSize,
+                Math.floor(Math.max(barSpacing * 0.8, pixelSize) / pixelSize) * pixelSize
+            );
+            const y = this.canvas.height - barHeight - (this.canvas.height * 0.1 + innerRadius / 5);
+
+            // Main bar with pixel blocks
+            for (let py = 0; py < barHeight; py += pixelSize) {
+                this.ctx.fillRect(x, y + py, barWidth, pixelSize - 1);
+            }
+
+            // Highlight on top for 3D effect
+            if (barHeight > pixelSize) {
+                this.ctx.fillStyle = `rgba(255, 255, 255, 0.4)`;
+                this.ctx.fillRect(x, y, barWidth, pixelSize);
+            }
+        }
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 1003: Vector Oscilloscope
+     * Classic green oscilloscope with glowing vector lines
+     */
+    render1003VectorOscilloscope(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity ?? 1;
+        const speed = params.speed ?? 1;
+        const lineThickness = params.lineThickness ?? 3;
+        const glowIntensity = params.glowIntensity ?? 20;
+
+        // Use Step 4 settings
+        const barCount = this.settings.barCount || 72;
+        const time = (this.frameCounter || 0) * 0.02 * speed;
+
+        // Classic oscilloscope green
+        const beamAlpha = Math.min(1, 0.55 + intensity * 0.4);
+        const scopeColor = `rgba(0, 255, 0, ${beamAlpha})`;
+
+        // CRT screen background
+        const phosphorFade = Math.min(0.35, 0.18 + speed * 0.06);
+        this.ctx.fillStyle = `rgba(0, 20, 0, ${phosphorFade})`;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Draw grid (like oscilloscope)
+        this.ctx.strokeStyle = `rgba(0, 255, 0, ${0.05 + intensity * 0.05})`;
+        this.ctx.lineWidth = Math.max(0.5, lineThickness * 0.2);
+        const gridSpacing = Math.max(35, Math.min(70, this.canvas.width / Math.max(6, barCount / 12)));
+
+        for (let x = 0; x < this.canvas.width; x += gridSpacing) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(x, 0);
+            this.ctx.lineTo(x, this.canvas.height);
+            this.ctx.stroke();
+        }
+        for (let y = 0; y < this.canvas.height; y += gridSpacing) {
+            this.ctx.beginPath();
+            this.ctx.moveTo(0, y);
+            this.ctx.lineTo(this.canvas.width, y);
+            this.ctx.stroke();
+        }
+
+        // Draw waveform
+        this.ctx.strokeStyle = scopeColor;
+        this.ctx.lineWidth = lineThickness;
+        this.ctx.shadowBlur = glowIntensity;
+        this.ctx.shadowColor = scopeColor;
+        this.ctx.lineCap = 'round';
+        this.ctx.lineJoin = 'round';
+
+        const numPoints = Math.min(barCount * 2, magnitudes.length);
+        const xStep = this.canvas.width / Math.max(1, numPoints - 1);
+        const sweepOffset = (time * 12) % magnitudes.length;
+
+        this.ctx.beginPath();
+        for (let i = 0; i < numPoints; i++) {
+            const magIdx = Math.floor(((i + sweepOffset) % numPoints) * (magnitudes.length / numPoints));
+            const magnitude = (magnitudes[magIdx] || 0) * intensity;
+
+            const x = i * xStep;
+            const jitter = Math.sin(time + i * 0.35) * 6 * speed;
+            const y = this.centerY + (magnitude - 0.5) * this.canvas.height * 0.6 + jitter;
+
+            if (i === 0) {
+                this.ctx.moveTo(x, y);
+            } else {
+                this.ctx.lineTo(x, y);
+            }
+        }
+        this.ctx.stroke();
+
+        // Add second trace for dual-trace effect
+        this.ctx.strokeStyle = 'rgba(0, 255, 0, 0.5)';
+        this.ctx.shadowBlur = glowIntensity * 0.5;
+        this.ctx.beginPath();
+        for (let i = 0; i < numPoints; i++) {
+            const magIdx = Math.floor(((i + sweepOffset * 0.6) % numPoints) * (magnitudes.length / numPoints));
+            const magnitude = (magnitudes[magIdx] || 0) * intensity * 0.6;
+
+            const x = i * xStep;
+            const y = this.centerY - (magnitude - 0.25) * this.canvas.height * 0.4 + Math.cos(time * 1.3 + i * 0.25) * 4 * speed;
+
+            if (i === 0) {
+                this.ctx.moveTo(x, y);
+            } else {
+                this.ctx.lineTo(x, y);
+            }
+        }
+        this.ctx.stroke();
+
+        // Sweeping beam accent to make speed parameter immediately visible
+        const sweepX = (this.canvas.width + (time * this.canvas.width * 0.15)) % this.canvas.width;
+        this.ctx.fillStyle = `rgba(0, 255, 0, ${0.05 + speed * 0.08})`;
+        this.ctx.fillRect(sweepX, 0, Math.max(2, lineThickness), this.canvas.height);
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 1004: LED Spectrum Grid
+     * Old-school LED spectrum analyzer with discrete LED blocks
+     */
+    render1004LEDSpectrumGrid(magnitudes) {
+        const params = this.settings.parameters || {};
+        const intensity = params.intensity || 1;
+        const ledSize = params.ledSize !== undefined ? params.ledSize : 8;
+        const ledGap = params.ledGap !== undefined ? params.ledGap : 2;
+
+        // Use Step 4 settings
+        const barCount = this.settings.barCount || 72;
+        const innerRadius = this.getEffectiveInnerRadius();
+
+        // Background (dark)
+        this.ctx.fillStyle = '#0a0a0a';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Calculate grid
+        const numColumns = Math.min(barCount, magnitudes.length);
+        const columnWidth = (this.canvas.width * 0.9) / numColumns;
+        const startX = this.canvas.width * 0.05;
+
+        const maxRows = Math.floor((this.canvas.height * 0.8) / (ledSize + ledGap));
+        const startY = this.canvas.height * 0.1 + innerRadius / 10;
+
+        for (let col = 0; col < numColumns; col++) {
+            const magIdx = Math.floor((col * magnitudes.length) / numColumns);
+            const magnitude = magnitudes[magIdx] * intensity;
+
+            // Number of lit LEDs
+            const litLEDs = Math.floor(magnitude * maxRows);
+
+            const x = startX + col * columnWidth;
+
+            for (let row = 0; row < maxRows; row++) {
+                const y = this.canvas.height - startY - (row * (ledSize + ledGap));
+                const ledX = x + (columnWidth - ledSize) / 2;
+
+                if (row < litLEDs) {
+                    // Lit LED - color based on height (green at bottom, yellow mid, red top)
+                    let color;
+                    const heightRatio = row / maxRows;
+                    if (heightRatio < 0.5) {
+                        color = this.getColor(col, numColumns);
+                    } else if (heightRatio < 0.7) {
+                        color = '#ffff00'; // Yellow
+                    } else {
+                        color = '#ff3000'; // Red
+                    }
+
+                    this.ctx.fillStyle = color;
+                    this.ctx.shadowBlur = 8;
+                    this.ctx.shadowColor = color;
+                } else {
+                    // Unlit LED (dim)
+                    this.ctx.fillStyle = '#222222';
+                    this.ctx.shadowBlur = 0;
+                }
+
+                // Draw LED rectangle
+                this.ctx.fillRect(ledX, y, ledSize, ledSize);
+            }
+        }
+
+        this.ctx.shadowBlur = 0;
     }
 
     /**
@@ -43228,6 +43670,377 @@ class Visualizer {
             this.ctx.fill();
             this.ctx.shadowBlur = 0;
         });
+    }
+
+    /**
+     * Mode 1005: V-Formation Migration
+     * Geese flying in V-shaped formation
+     */
+    render1005VFormationMigration(magnitudes) {
+        const params = this.settings.parameters || {};
+        const birdCount = params.birdCount || 25;
+        const wingSpan = params.wingSpan || 15;
+        const formationSpread = params.formationSpread || 40;
+        const speed = params.speed || 1.5;
+        const trailLength = params.trailLength !== undefined ? params.trailLength : 0.2;
+
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length * 0.25);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Initialize formation
+        if (!this.vFormationBirds || this.vFormationBirds.length !== birdCount) {
+            this.vFormationBirds = [];
+            for (let i = 0; i < birdCount; i++) {
+                this.vFormationBirds.push({
+                    phase: Math.random() * Math.PI * 2,
+                    wingPhase: Math.random() * Math.PI * 2
+                });
+            }
+            this.vFormationLeaderSwitch = 0;
+        }
+
+        // Motion trail
+        if (trailLength > 0) {
+            this.ctx.fillStyle = `rgba(0, 0, 0, ${trailLength})`;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        } else {
+            this.drawBackground();
+        }
+
+        // Formation parameters
+        const time = (this.frameCounter || 0) * 0.02 * speed;
+        const centerX = this.centerX + Math.sin(time * 0.5) * 100;
+        const centerY = this.centerY - 100 + Math.sin(time * 0.3) * 50;
+
+        // Bass causes leader switch
+        if (bass > 0.6 && (this.frameCounter || 0) - this.vFormationLeaderSwitch > 60) {
+            this.vFormationLeaderSwitch = this.frameCounter || 0;
+        }
+
+        const leaderIndex = Math.floor(this.vFormationLeaderSwitch / 60) % birdCount;
+
+        // Draw V-formation
+        let formationPosition = 0;
+        for (let i = 0; i < birdCount; i++) {
+            const bird = this.vFormationBirds[i];
+            const isLeader = i === leaderIndex;
+
+            // Calculate position in V-formation (proper V-shape)
+            let xOffset, yOffset;
+            if (isLeader) {
+                xOffset = 0;
+                yOffset = 0;
+            } else {
+                formationPosition++;
+                const side = formationPosition % 2 === 0 ? 1 : -1;
+                const position = Math.floor((formationPosition + 1) / 2);
+                // V-formation: birds trail behind AND to the sides
+                xOffset = side * position * formationSpread * 0.7;
+                yOffset = position * formationSpread * 0.8; // Birds trail behind leader
+            }
+
+            const x = centerX + xOffset;
+            const y = centerY + yOffset;
+
+            // Wing flapping (faster with treble)
+            bird.wingPhase += (0.3 + treble * 0.2) * speed;
+            const wingFlap = Math.sin(bird.wingPhase) * 0.4 + 0.6;
+            const currentWingSpan = wingSpan * wingFlap;
+
+            // Color
+            const batColor = this.getColor(i, birdCount);
+            const match = batColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+            let r = 80, g = 80, b = 80;
+            if (match) {
+                r = parseInt(match[1]);
+                g = parseInt(match[2]);
+                b = parseInt(match[3]);
+            }
+
+            const magnitude = magnitudes[i % magnitudes.length];
+            const opacity = 0.8 + magnitude * 0.2;
+            const birdSize = (isLeader ? 1.3 : 1.0) * (1 + magnitude * 0.2);
+
+            this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+            this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+            this.ctx.lineWidth = 2 * birdSize;
+            this.ctx.shadowBlur = isLeader ? 15 : 8;
+            this.ctx.shadowColor = `rgba(${r}, ${g}, ${b}, 0.6)`;
+
+            // Draw bird facing forward (V-formation flies horizontally)
+            this.ctx.save();
+            this.ctx.translate(x, y);
+
+            // Draw wings
+            this.ctx.beginPath();
+            this.ctx.moveTo(-currentWingSpan, 2);
+            this.ctx.quadraticCurveTo(-currentWingSpan * 0.5, -6 * birdSize, -2 * birdSize, -3 * birdSize);
+            this.ctx.lineTo(0, -5 * birdSize);
+            this.ctx.lineTo(2 * birdSize, -3 * birdSize);
+            this.ctx.quadraticCurveTo(currentWingSpan * 0.5, -6 * birdSize, currentWingSpan, 2);
+            this.ctx.stroke();
+
+            // Body
+            this.ctx.beginPath();
+            this.ctx.arc(0, 0, 2.5 * birdSize, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            this.ctx.restore();
+        }
+
+        this.ctx.shadowBlur = 0;
+        this.frameCounter = (this.frameCounter || 0) + 1;
+    }
+
+    /**
+     * Mode 1006: Diving Seagulls
+     * Seagulls diving down and swooping back up
+     */
+    render1006DivingSeagulls(magnitudes) {
+        const params = this.settings.parameters || {};
+        const birdCount = params.birdCount || 20;
+        const wingSpan = params.wingSpan || 17;
+        const diveSpeed = params.diveSpeed || 2.5;
+        const diveHeight = params.diveHeight || 0.6;
+        const trailLength = params.trailLength !== undefined ? params.trailLength : 0.15;
+
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length * 0.25);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Initialize seagulls
+        if (!this.divingSeagulls || this.divingSeagulls.length !== birdCount) {
+            this.divingSeagulls = [];
+            for (let i = 0; i < birdCount; i++) {
+                this.divingSeagulls.push({
+                    phase: Math.random() * Math.PI * 2,
+                    offsetX: Math.random() * this.canvas.width,
+                    offsetY: Math.random() * this.canvas.height * 0.8, // Vary starting heights
+                    diveDepth: 0.4 + Math.random() * 0.5, // Each bird dives to different depths
+                    wingPhase: Math.random() * Math.PI * 2
+                });
+            }
+        }
+
+        // Motion trail
+        if (trailLength > 0) {
+            this.ctx.fillStyle = `rgba(135, 206, 235, ${trailLength})`;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        } else {
+            this.drawBackground();
+        }
+
+        const time = (this.frameCounter || 0) * 0.02 * diveSpeed;
+
+        // Draw diving seagulls
+        for (let i = 0; i < this.divingSeagulls.length; i++) {
+            const bird = this.divingSeagulls[i];
+            const magnitude = magnitudes[i % magnitudes.length];
+
+            // Update phases
+            bird.phase += 0.02 * diveSpeed * (1 + bass * 0.5);
+            bird.wingPhase += (0.4 + treble * 0.3);
+
+            // Diving arc motion - spread across entire canvas
+            const diveProgress = (Math.sin(bird.phase) + 1) / 2;
+            // Wrap x position around canvas width for continuous movement
+            const x = (bird.offsetX + (time * 30 * (0.8 + i * 0.05))) % this.canvas.width;
+            // Use varied y positions across full height
+            const yTop = bird.offsetY;
+            const yBottom = bird.offsetY + this.canvas.height * bird.diveDepth;
+            const y = yTop + (yBottom - yTop) * (1 - Math.abs(Math.cos(bird.phase)));
+
+            // Wing flapping
+            const wingFlap = Math.sin(bird.wingPhase) * 0.4 + 0.6;
+            const currentWingSpan = wingSpan * wingFlap;
+
+            // Calculate heading for dive
+            const heading = Math.atan2(Math.sin(bird.phase), 1) * 0.5;
+
+            // Color
+            const batColor = this.getColor(i, this.divingSeagulls.length);
+            const match = batColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+            let r = 240, g = 240, b = 240;
+            if (match) {
+                r = parseInt(match[1]);
+                g = parseInt(match[2]);
+                b = parseInt(match[3]);
+            }
+
+            const opacity = 0.7 + magnitude * 0.3;
+            const birdSize = 1.0 + magnitude * 0.3;
+
+            this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+            this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+            this.ctx.lineWidth = 2 * birdSize;
+            this.ctx.shadowBlur = 10;
+            this.ctx.shadowColor = `rgba(${r}, ${g}, ${b}, 0.5)`;
+
+            // Draw seagull
+            this.ctx.save();
+            this.ctx.translate(x, y);
+            this.ctx.rotate(heading);
+
+            // Draw wings
+            this.ctx.beginPath();
+            this.ctx.moveTo(-currentWingSpan, 2);
+            this.ctx.quadraticCurveTo(-currentWingSpan * 0.5, -6 * birdSize, -2 * birdSize, -3 * birdSize);
+            this.ctx.lineTo(0, -5 * birdSize);
+            this.ctx.lineTo(2 * birdSize, -3 * birdSize);
+            this.ctx.quadraticCurveTo(currentWingSpan * 0.5, -6 * birdSize, currentWingSpan, 2);
+            this.ctx.stroke();
+
+            // Body
+            this.ctx.beginPath();
+            this.ctx.arc(0, 0, 2.5 * birdSize, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            this.ctx.restore();
+        }
+
+        this.ctx.shadowBlur = 0;
+        this.frameCounter = (this.frameCounter || 0) + 1;
+    }
+
+    /**
+     * Mode 1007: Sparrow Scatter
+     * Small birds that scatter explosively on bass, then regroup
+     */
+    render1007SparrowScatter(magnitudes) {
+        const params = this.settings.parameters || {};
+        const birdCount = params.birdCount || 50;
+        const wingSpan = params.wingSpan || 8;
+        const scatterRadius = params.scatterRadius || 120;
+        const bassThreshold = params.bassThreshold || 0.4;
+        const trailLength = params.trailLength !== undefined ? params.trailLength : 0.1;
+
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length * 0.25);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Initialize sparrows
+        if (!this.sparrowBirds || this.sparrowBirds.length !== birdCount) {
+            this.sparrowBirds = [];
+            for (let i = 0; i < birdCount; i++) {
+                const angle = (i / birdCount) * Math.PI * 2;
+                this.sparrowBirds.push({
+                    x: this.centerX + Math.cos(angle) * 50,
+                    y: this.centerY + Math.sin(angle) * 50,
+                    vx: 0,
+                    vy: 0,
+                    scatterAngle: angle,
+                    wingPhase: Math.random() * Math.PI * 2
+                });
+            }
+            this.lastScatterTime = 0;
+        }
+
+        // Motion trail
+        if (trailLength > 0) {
+            this.ctx.fillStyle = `rgba(0, 0, 0, ${trailLength})`;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        } else {
+            this.drawBackground();
+        }
+
+        // Bass causes scatter
+        const shouldScatter = bass > bassThreshold && ((this.frameCounter || 0) - this.lastScatterTime) > 40;
+        if (shouldScatter) {
+            this.lastScatterTime = this.frameCounter || 0;
+            // Randomize scatter angles
+            this.sparrowBirds.forEach(bird => {
+                bird.scatterAngle = Math.random() * Math.PI * 2;
+            });
+        }
+
+        // Update each bird
+        for (let i = 0; i < this.sparrowBirds.length; i++) {
+            const bird = this.sparrowBirds[i];
+            const magnitude = magnitudes[i % magnitudes.length];
+
+            // Scatter/regroup behavior
+            const scatterForce = shouldScatter ? 10 : 0;
+            const targetX = this.centerX + Math.cos(bird.scatterAngle) * scatterRadius * bass;
+            const targetY = this.centerY + Math.sin(bird.scatterAngle) * scatterRadius * bass;
+
+            // Move towards target (regroup)
+            const dx = targetX - bird.x;
+            const dy = targetY - bird.y;
+            bird.vx += dx * 0.02;
+            bird.vy += dy * 0.02;
+
+            // Add scatter impulse
+            if (shouldScatter) {
+                bird.vx += Math.cos(bird.scatterAngle) * scatterForce;
+                bird.vy += Math.sin(bird.scatterAngle) * scatterForce;
+            }
+
+            // Damping
+            bird.vx *= 0.95;
+            bird.vy *= 0.95;
+
+            // Update position
+            bird.x += bird.vx;
+            bird.y += bird.vy;
+
+            // Keep within bounds (soft)
+            if (bird.x < 0) bird.vx += 1;
+            if (bird.x > this.canvas.width) bird.vx -= 1;
+            if (bird.y < 0) bird.vy += 1;
+            if (bird.y > this.canvas.height) bird.vy -= 1;
+
+            // Wing flapping (faster with treble and when scattering)
+            bird.wingPhase += (0.5 + treble * 0.3 + (shouldScatter ? 1 : 0));
+            const wingFlap = Math.sin(bird.wingPhase) * 0.4 + 0.6;
+            const currentWingSpan = wingSpan * wingFlap;
+
+            // Heading based on velocity
+            const heading = Math.atan2(bird.vy, bird.vx);
+
+            // Color
+            const batColor = this.getColor(i, this.sparrowBirds.length);
+            const match = batColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+            let r = 139, g = 90, b = 60;
+            if (match) {
+                r = parseInt(match[1]);
+                g = parseInt(match[2]);
+                b = parseInt(match[3]);
+            }
+
+            const opacity = 0.7 + magnitude * 0.3;
+            const birdSize = 0.8 + magnitude * 0.2;
+
+            this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+            this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${opacity})`;
+            this.ctx.lineWidth = 1.5 * birdSize;
+            this.ctx.shadowBlur = 5;
+            this.ctx.shadowColor = `rgba(${r}, ${g}, ${b}, 0.5)`;
+
+            // Draw sparrow
+            this.ctx.save();
+            this.ctx.translate(bird.x, bird.y);
+            this.ctx.rotate(heading);
+
+            // Small wings
+            this.ctx.beginPath();
+            this.ctx.moveTo(-currentWingSpan, 1);
+            this.ctx.quadraticCurveTo(-currentWingSpan * 0.5, -4 * birdSize, -1.5 * birdSize, -2 * birdSize);
+            this.ctx.lineTo(0, -3 * birdSize);
+            this.ctx.lineTo(1.5 * birdSize, -2 * birdSize);
+            this.ctx.quadraticCurveTo(currentWingSpan * 0.5, -4 * birdSize, currentWingSpan, 1);
+            this.ctx.stroke();
+
+            // Small body
+            this.ctx.beginPath();
+            this.ctx.arc(0, 0, 1.8 * birdSize, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            this.ctx.restore();
+        }
+
+        this.ctx.shadowBlur = 0;
+        this.frameCounter = (this.frameCounter || 0) + 1;
     }
 
     dispose() {

@@ -1358,25 +1358,20 @@ class AudioSpectrumApp {
      * Update preview dimensions
      */
     updatePreviewDimensions() {
-        const aspectRatio = this.state.settings.width / this.state.settings.height;
-        const maxSize = 400;
+        const width = this.state.settings.width;
+        const height = this.state.settings.height;
+        const aspectRatio = width / height;
 
-        let canvasWidth, canvasHeight;
+        // Set the aspect ratio on the container using CSS custom property
+        const container = this.elements.previewCanvas.parentElement;
+        const aspectRatioPercent = (height / width) * 100;
+        container.style.setProperty('--aspect-ratio', `${aspectRatioPercent}%`);
 
-        if (aspectRatio > 1) {
-            // Landscape
-            canvasWidth = maxSize;
-            canvasHeight = maxSize / aspectRatio;
-        } else {
-            // Portrait or square
-            canvasHeight = maxSize;
-            canvasWidth = maxSize * aspectRatio;
-        }
+        // Set canvas resolution to match the actual output resolution for accurate preview
+        this.elements.previewCanvas.width = width;
+        this.elements.previewCanvas.height = height;
 
-        this.elements.previewCanvas.width = canvasWidth;
-        this.elements.previewCanvas.height = canvasHeight;
-
-        this.visualizer.updateDimensions(canvasWidth, canvasHeight);
+        this.visualizer.updateDimensions(width, height);
         this.updatePreview();
     }
 

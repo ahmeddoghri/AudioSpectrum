@@ -1,0 +1,321 @@
+{
+    "design_style": {
+    "vibe": "minimal, premium SaaS with soft gradients",
+    "mood": "clean, calm, futuristic but approachable",
+    "visual_metaphors": [
+    "full-width hero with central card",
+    "sectioned vertical story layout",
+    "dashboard with left sidebar and right inspector",
+    "pill-shaped CTAs and tags",
+    "content cards and statistic panels"
+    ]
+    },
+    "layout": {
+    "grid": {
+    "columns": 12,
+    "max_width_px": 1200,
+    "gutters_px": 24,
+    "outer_margin_px": 24,
+    "common_alignments": [
+    "top nav aligned to full width with centered content container",
+    "hero content centered with text above or beside a feature card",
+    "section titles left-aligned within centered container",
+    "dashboard: fixed-width left sidebar, fluid main canvas, fixed-width right panel"
+    ]
+    },
+    "page_patterns": [
+    "marketing page with top nav, hero, feature cards, product sections, testimonials, and footer",
+    "alternating light and dark content bands for major sections",
+    "card grid sections (2-up and 3-up on desktop)",
+    "application layout with vertical sidebar, main content canvas, and right properties panel",
+    "settings panels with stacked controls and labeled sliders"
+    ],
+    "component_density": {
+    "description": "spacious but information-rich, with generous white space around major sections and tighter grouping within cards",
+    "section_padding_y_px": 80,
+    "card_padding_px": 24,
+    "control_spacing_px": 12
+    }
+    },
+    "color_system": {
+    "palette": {
+    "primary": "#ff6adf",
+    "primary_variant": "#ffb766",
+    "primary_gradient": ["#ff6adf", "#ffb766", "#7f7dff"],
+    "background": "#f5f5f7",
+    "background_dark": "#050507",
+    "surface": "#ffffff",
+    "surface_subtle": "#f7f7f9",
+    "surface_dark": "#141416",
+    "border_subtle": "#e4e4ea",
+    "border_strong": "#c5c5cf",
+    "text_primary": "#0b0b0f",
+    "text_secondary": "#6f6f79",
+    "text_inverse": "#f9f9fb",
+    "accent_muted": "#ececf5",
+    "error": "#ff4b4b",
+    "success": "#16a34a",
+    "warning": "#facc15",
+    "info": "#3b82f6"
+    },
+    "usage_rules": [
+    "background is a very light grey; most cards sit on top as pure white surfaces",
+    "primary gradient is reserved for hero highlights, featured cards, and key CTAs or selected states",
+    "solid black or very dark surfaces are used for contrast-heavy sections and some feature cards near the bottom of the page",
+    "subtle grey borders define cards and inputs instead of heavy outlines",
+    "chips and small tags often use muted grey fills; important tags may use gradient or dark fills",
+    "in the app view, the main canvas stays white while sidebars use slightly darker off-white to separate regions"
+    ]
+    },
+    "typography": {
+    "font_family_style": "modern neo-grotesque sans (similar to Inter or SF Pro)",
+    "scale": {
+    "hero_heading_px": 36,
+    "section_heading_px": 28,
+    "subheading_px": 18,
+    "body_px": 14,
+    "small_caption_px": 12,
+    "weight_hero": 600,
+    "weight_heading": 600,
+    "weight_body": 400,
+    "weight_emphasis": 500
+    },
+    "text_treatments": [
+    "headings in sentence case with tight leading and slightly negative letter-spacing",
+    "body text left-aligned with comfortable line-height around 1.5",
+    "buttons mostly in sentence case; occasional all-caps micro-labels for small badges like status or version labels",
+    "secondary metadata uses lighter color and slightly smaller size",
+    "numeric stats often set in medium or semi-bold weight for emphasis"
+    ]
+    },
+    "components": {
+    "buttons": {
+    "shapes": [
+    "primary pill button with full border-radius (9999px)",
+    "secondary ghost pill with thin border",
+    "icon-only circular controls for media and small actions"
+    ],
+    "corner_radius_px": {
+    "pill": 9999,
+    "standard": 10
+    },
+    "sizes": {
+    "small_height_px": 28,
+    "medium_height_px": 40,
+    "large_height_px": 48,
+    "horizontal_padding_px": 20
+    },
+    "icon_use": [
+    "leading icons inside pill buttons for key CTAs",
+    "small glyphs inside settings buttons and segmented controls"
+    ],
+    "states": [
+    "default: solid fill (black or gradient) with white text",
+    "hover: slight darken or lightening plus subtle shadow increase",
+    "focus: soft outline or glow in primary color around button",
+    "disabled: reduced opacity with no shadow"
+    ]
+    },
+    "inputs": {
+    "text_fields": {
+    "border_style": "subtle 1px solid with light grey color",
+    "background": "white",
+    "corner_radius_px": 10,
+    "padding_px": 10,
+    "focus_state": "border and/or shadow tinted with primary color and slight elevation",
+    "label_placement": "labels above the field in smaller, muted text",
+    "helper_text": "optional line below input in smaller, grey text for hints or counts"
+    },
+    "sliders": {
+    "track_height_px": 3,
+    "track_background": "#e4e4ea",
+    "active_track_color": "#0b0b0f",
+    "thumb_diameter_px": 14,
+    "thumb_style": "solid circular handle with strong contrast",
+    "labeling": "labels appear above the slider with left/right captions on each end for min/max descriptions"
+    },
+    "toggles": {
+    "track_radius_px": 9999,
+    "thumb_diameter_px": 18,
+    "off_state": "light grey track with white thumb",
+    "on_state": "track filled with primary color or dark grey and white thumb shifted to the right"
+    },
+    "dropdowns": {
+    "appearance": "pill or rounded rectangle with text label and chevron icon",
+    "border": "subtle grey",
+    "background": "white with shadowed dropdown list when opened"
+    }
+    },
+    "cards": {
+    "style": "rounded, shadowed surfaces with strong hierarchy between header, content, and footer",
+    "corner_radius_px": 20,
+    "padding_px": 24,
+    "shadow": "soft medium blur with low opacity to create lift from light background",
+    "header_patterns": [
+    "title at top left with small label or badge above or beside it",
+    "optional icon or small avatar-like glyph on the left"
+    ],
+    "footer_patterns": [
+    "primary and secondary CTAs aligned horizontally at bottom",
+    "small meta text or tags in bottom-left or bottom-right"
+    ],
+    "variants": [
+    "light cards on light grey background",
+    "dark cards on black section background with soft inner shadows and gradients",
+    "gradient-backed cards for featured content"
+    ]
+    },
+    "navigation": {
+    "top_nav": {
+    "position": "fixed or sticky at top with translucent or white background",
+    "structure": "left-aligned wordmark, centered nav links, right-aligned CTAs and account controls",
+    "link_style": "minimal text links with subtle hover underline or color change",
+    "height_px": 64
+    },
+    "sidebar": {
+    "placement": "left side of application layout",
+    "width_px": 220,
+    "background": "#fafafc",
+    "item_style": "row with small icon and label, light grey pills for active items",
+    "section_grouping": "nav items grouped under small uppercase captions",
+    "active_state": "filled pill in off-white or subtle tint with bold text and possibly a dot or accent line"
+    },
+    "tabs": {
+    "style": "small segmented control with 2–3 options, underlined or filled for active state",
+    "placement": "top of right-hand settings panel",
+    "active_state": "darker text and small underline or pill background"
+    },
+    "breadcrumbs": {
+    "usage": "minimal; page titles used instead of full breadcrumb chains in app view"
+    }
+    },
+    "chips_tags_badges": {
+    "shape": "pill with 9999px radius",
+    "padding_px": 8,
+    "text_style": "tiny or small uppercase/semi-bold text",
+    "color_variants": [
+    "light grey background with dark text for neutral statuses",
+    "dark or colored background with white text for highlighted statuses",
+    "gradient fills for highly promoted labels"
+    ]
+    },
+    "other_key_components": {
+    "code_or_demo_block": {
+    "description": "wide card that showcases a sample interface or preview within the hero; uses gradient accent strip and subtle rounded corners",
+    "background": "white with gradient accent inside or along top edge"
+    },
+    "stat_band": {
+    "description": "strip of brand or client logos in a horizontal row with muted monochrome styling",
+    "background": "transparent or very light surface"
+    },
+    "api_cards": {
+    "description": "dark section grid of feature cards describing external interfaces, each with concise content and CTAs",
+    "style": "dark surfaces with subtle borders and light text"
+    },
+    "property_panel": {
+    "description": "right-hand column listing controls like voice selection, model selection, sliders, and toggles stacked vertically with section titles",
+    "background": "white, separated from canvas by thin divider"
+    },
+    "status_bar": {
+    "description": "bottom strip indicating remaining credits or character count with tiny text and subtle icons",
+    "alignment": "left/right split across width of main canvas"
+    }
+    }
+    },
+    "elevation_and_borders": {
+    "use_of_shadows": "shadows are used sparingly for primary cards and floating panels to indicate interaction focus",
+    "shadow_strength": "soft, wide blur with low opacity; never harsh drop shadows",
+    "borders": "thin, low-contrast borders in light grey used for delineating sections, tables, and subtle card edges",
+    "flat_elements": "navigation bars and sidebars are mostly flat with only separators and background color shifts"
+    },
+    "iconography_and_illustration": {
+    "icon_style": {
+    "type": "simple line or minimal filled icons with rounded corners",
+    "stroke_weight": "medium, matching text weight visually",
+    "size_px": 16
+    },
+    "illustration_style": {
+    "hero_illustrations": "soft 3D or pseudo-3D cards with layered panels and gradients",
+    "color_usage": "rich gradients with pink, purple, blue, and orange hues",
+    "shape_language": "rounded rectangles, soft shadows, and overlapping layers to suggest depth and technology"
+    }
+    },
+    "motion_and_interaction": {
+    "implied_animations": [
+    "gradient backgrounds may subtly shimmer or move in hero sections",
+    "buttons and cards likely scale up very slightly on hover with shadow increase",
+    "tab and slider changes are animated with smooth transitions",
+    "toggle switches slide the thumb with a short ease-in-out animation"
+    ],
+    "state_changes": [
+    "hover: increase in contrast, subtle elevation, or border emphasis",
+    "active: darker background tone and pressed shadow or inset effect",
+    "focus: soft colored outline or glow around focused controls",
+    "disabled: reduced opacity and muted text color",
+    "error: red border and small helper text below input",
+    "success/info: subtle color bars or badges rather than large banners"
+    ]
+    },
+    "responsive_behaviour": {
+    "marketing_pages": [
+    "on smaller screens, the top nav collapses to a single row with a menu button; CTAs stack below or move into a drawer",
+    "hero layout shifts from side-by-side content + card to vertically stacked with text first and preview card below",
+    "card grids reduce from 3-up to 2-up and then to single column",
+    "testimonial and partner logo rows likely become horizontal scrollable carousels on mobile"
+    ],
+    "application_layout": [
+    "left sidebar may collapse to icon-only bar on tablet and mobile",
+    "right property panel might slide in as overlay or stack below canvas on small screens",
+    "sliders and controls expand to full-width blocks, maintaining vertical stacking",
+    "status bar and character counters wrap to multiple lines if needed"
+    ]
+    },
+    "implementation_hints": {
+    "tailwind_tokens": {
+    "colors": {
+    "bg_body": "slate-50 / neutral-50 approximating #f5f5f7",
+    "bg_surface": "white",
+    "bg_surface_dark": "neutral-900 approximating #050507",
+    "border_subtle": "neutral-200",
+    "text_primary": "neutral-900",
+    "text_secondary": "neutral-500",
+    "primary": "from-pink-400 via-amber-300 to-indigo-400 gradient",
+    "accent_muted": "slate-100"
+    },
+    "radii": {
+    "pill": "full",
+    "card": "xl",
+    "input": "lg"
+    },
+    "spacing_scale": "use 4px base grid (Tailwind 1 = 4px); sections ~20 (80px), cards ~6 (24px), inline gaps ~3 (12px)",
+    "shadows": {
+    "card": "shadow-lg with low opacity, slightly blurred",
+    "button": "shadow-md on hover only"
+    },
+    "typography": {
+    "font_family": "font-sans with system or Inter-like stack",
+    "hero": "text-4xl md:text-5xl font-semibold",
+    "section_heading": "text-3xl font-semibold",
+    "body": "text-sm md:text-base leading-relaxed",
+    "caption": "text-xs text-neutral-500"
+    },
+    "components": {
+    "primary_button": "inline-flex items-center justify-center px-5 py-2.5 rounded-full text-sm font-medium text-white bg-neutral-900 hover:bg-neutral-800 transition",
+    "gradient_button": "bg-gradient-to-r from-pink-400 via-amber-300 to-indigo-400 text-neutral-900 rounded-full",
+    "card": "rounded-2xl bg-white shadow-lg p-6",
+    "dark_card": "rounded-2xl bg-neutral-900 text-white shadow-xl p-6",
+    "sidebar": "w-56 bg-neutral-50 border-r border-neutral-200 flex flex-col",
+    "slider_track": "h-[3px] rounded-full bg-neutral-200",
+    "slider_thumb": "h-3.5 w-3.5 rounded-full bg-neutral-900"
+    }
+    },
+    "general_guidelines": [
+    "build on an 8px or 4px spacing grid for consistent rhythm",
+    "prefer pill shapes for interactive elements and softer 16–24px radii for containers",
+    "limit gradient use to hero, key CTAs, and highlighted cards to keep the interface clean",
+    "use alternating light and dark sections to structure long marketing pages",
+    "keep sidebars slightly tinted relative to the main canvas to reinforce information hierarchy"
+    ]
+    }
+    }
+    

@@ -1344,6 +1344,38 @@ const VISUALIZATION_MODES = {
         mode: 16,
         tags: ['particles', 'snow', 'gentle']
     },
+    fog_smoke: {
+        id: 'fog_smoke',
+        name: 'Fog/Smoke',
+        description: 'Wispy fog and smoke effects with audio-reactive turbulence',
+        category: 'Nature',
+        mode: 1008,
+        tags: ['nature', 'atmospheric', 'fog', 'smoke', 'wispy'],
+        parameters: {
+            density: { min: 0.3, max: 1.5, default: 0.7, label: 'Particle Density' },
+            speed: { min: 0.1, max: 2, default: 0.5, label: 'Movement Speed' },
+            dissipation: { min: 0, max: 1, default: 0.3, label: 'Dissipation Rate' },
+            particleSize: { min: 20, max: 100, default: 50, label: 'Particle Size' },
+            drift: { min: 0, max: 3, default: 1, label: 'Drift Amount' },
+            turbulence: { min: 0, max: 2, default: 0.5, label: 'Turbulence' }
+        }
+    },
+    clouds: {
+        id: 'clouds',
+        name: 'Clouds',
+        description: 'Fluffy drifting clouds with audio-reactive puffiness',
+        category: 'Nature',
+        mode: 1009,
+        tags: ['nature', 'clouds', 'fluffy', 'atmospheric'],
+        parameters: {
+            cloudCount: { min: 3, max: 30, default: 12, label: 'Number of Clouds' },
+            cloudSize: { min: 0.3, max: 2.5, default: 1, label: 'Cloud Size' },
+            puffiness: { min: 0.2, max: 1.5, default: 0.7, label: 'Puffiness' },
+            speed: { min: 0.1, max: 1.5, default: 0.3, label: 'Drift Speed' },
+            verticalDrift: { min: 0, max: 1, default: 0.2, label: 'Vertical Drift' },
+            density: { min: 0.2, max: 1.5, default: 0.8, label: 'Opacity/Density' }
+        }
+    },
 
     // Retro & Vintage
     soul_aura: {
@@ -1445,6 +1477,156 @@ const VISUALIZATION_MODES = {
         category: 'Fluid',
         mode: 22,
         tags: ['water', 'ripples', 'interference']
+    },
+    organic_blob: {
+        id: 'organic_blob',
+        name: 'Organic Blob',
+        description: 'Smooth flowing blob with audio-reactive waves',
+        category: 'Fluid',
+        mode: 999,
+        tags: ['organic', 'blob', 'smooth', 'flowing'],
+        parameters: {
+            blobRadius: { min: 100, max: 400, default: 200, label: 'Blob Radius' },
+            wavePoints: { min: 32, max: 128, default: 64, label: 'Wave Points' },
+            waveAmplitude: { min: 10, max: 100, default: 40, label: 'Wave Amplitude' },
+            smoothness: { min: 0.3, max: 0.95, default: 0.7, label: 'Smoothness' },
+            showBars: { min: 0, max: 1, default: 0, label: 'Show Radial Bars' }
+        }
+    },
+    neon_contour: {
+        id: 'neon_contour',
+        name: 'Neon Contour',
+        description: 'Multi-layered rainbow outline with chromatic offset effect',
+        category: 'Fluid',
+        mode: 998,
+        tags: ['neon', 'outline', 'rainbow', 'chromatic', 'layers'],
+        parameters: {
+            contourSize: { min: 100, max: 500, default: 250, label: 'Contour Size' },
+            numLayers: { min: 2, max: 8, default: 4, label: 'Number of Layers' },
+            layerOffset: { min: 5, max: 30, default: 12, label: 'Layer Offset' },
+            waveIntensity: { min: 10, max: 80, default: 35, label: 'Wave Intensity' },
+            complexity: { min: 24, max: 96, default: 48, label: 'Shape Complexity' }
+        }
+    },
+    circular_spectrum_bars: {
+        id: 'circular_spectrum_bars',
+        name: 'Circular Spectrum Bars',
+        description: 'Radial spectrum bars with blue-to-purple gradient emanating from a circular frame',
+        category: 'Geometric',
+        mode: 997,
+        tags: ['circular', 'spectrum', 'bars', 'gradient', 'radial', 'equalizer'],
+        parameters: {
+            circleSize: { min: 80, max: 300, default: 150, label: 'Circle Size' },
+            barCount: { min: 20, max: 80, default: 48, label: 'Bar Count' },
+            barWidth: { min: 3, max: 15, default: 8, label: 'Bar Width' },
+            barHeight: { min: 50, max: 250, default: 120, label: 'Max Bar Height' },
+            spreadAngle: { min: 90, max: 270, default: 180, label: 'Spread Angle' }
+        }
+    },
+    vinyl_record: {
+        id: 'vinyl_record',
+        name: 'Vinyl Record',
+        description: 'Spinning vinyl disc with two horizontal audio spectrum lines',
+        category: 'Retro',
+        mode: 996,
+        tags: ['vinyl', 'record', 'retro', 'disc', 'spectrum', 'sparkles'],
+        parameters: {
+            discSize: { min: 100, max: 350, default: 200, label: 'Disc Size' },
+            grooveCount: { min: 3, max: 12, default: 6, label: 'Groove Count' },
+            rotationSpeed: { min: 0.1, max: 3, default: 0.8, label: 'Rotation Speed' },
+            lineWidth: { min: 400, max: 1200, default: 800, label: 'Line Width' },
+            sparkleCount: { min: 0, max: 20, default: 8, label: 'Sparkle Count' }
+        }
+    },
+    pulse_ring: {
+        id: 'pulse_ring',
+        name: 'Pulse Ring',
+        description: 'Segmented circular ring with audio-reactive dashed border',
+        category: 'Geometric',
+        mode: 995,
+        tags: ['circle', 'ring', 'pulse', 'segments', 'modern', 'loader'],
+        parameters: {
+            ringSize: { min: 100, max: 400, default: 200, label: 'Ring Size' },
+            ringThickness: { min: 5, max: 30, default: 12, label: 'Ring Thickness' },
+            segmentCount: { min: 8, max: 48, default: 24, label: 'Segment Count' },
+            gapSize: { min: 2, max: 20, default: 8, label: 'Gap Size' },
+            sparkleCount: { min: 0, max: 30, default: 12, label: 'Sparkle Count' }
+        }
+    },
+    sunburst_arc: {
+        id: 'sunburst_arc',
+        name: 'Sunburst Arc',
+        description: 'Semi-circular arc with radiating bars forming a sunburst pattern',
+        category: 'Geometric',
+        mode: 994,
+        tags: ['arc', 'sunburst', 'radial', 'bars', 'elegant', 'fan'],
+        parameters: {
+            arcRadius: { min: 100, max: 350, default: 180, label: 'Arc Radius' },
+            barCount: { min: 20, max: 60, default: 40, label: 'Bar Count' },
+            barWidth: { min: 2, max: 12, default: 6, label: 'Bar Width' },
+            maxBarLength: { min: 50, max: 200, default: 100, label: 'Max Bar Length' },
+            arcSpread: { min: 120, max: 200, default: 160, label: 'Arc Spread (degrees)' }
+        }
+    },
+    gradient_waveform_circle: {
+        id: 'gradient_waveform_circle',
+        name: 'Gradient Waveform Circle',
+        description: 'Circular ring with audio-reactive jagged edge and rainbow gradient',
+        category: 'Fluid',
+        mode: 993,
+        tags: ['circle', 'waveform', 'gradient', 'rainbow', 'audio', 'oscillating'],
+        parameters: {
+            circleRadius: { min: 100, max: 350, default: 200, label: 'Circle Radius' },
+            waveAmplitude: { min: 10, max: 60, default: 30, label: 'Wave Amplitude' },
+            lineThickness: { min: 3, max: 15, default: 8, label: 'Line Thickness' },
+            resolution: { min: 100, max: 300, default: 180, label: 'Circle Resolution' },
+            sparkleCount: { min: 0, max: 40, default: 20, label: 'Sparkle Count' }
+        }
+    },
+    minimal_audio_ring: {
+        id: 'minimal_audio_ring',
+        name: 'Minimal Audio Ring',
+        description: 'Clean white circular ring with subtle audio-reactive edge',
+        category: 'Minimal',
+        mode: 992,
+        tags: ['circle', 'minimal', 'simple', 'clean', 'white', 'ring'],
+        parameters: {
+            circleRadius: { min: 100, max: 400, default: 220, label: 'Circle Radius' },
+            waveAmplitude: { min: 5, max: 40, default: 15, label: 'Wave Amplitude' },
+            lineThickness: { min: 2, max: 12, default: 5, label: 'Line Thickness' },
+            resolution: { min: 120, max: 300, default: 200, label: 'Circle Resolution' },
+            glowIntensity: { min: 0, max: 20, default: 8, label: 'Glow Intensity' }
+        }
+    },
+    triangle_spectrum: {
+        id: 'triangle_spectrum',
+        name: 'Triangle Spectrum',
+        description: 'Glowing triangle frame with vertical waveform bars',
+        category: 'Geometric',
+        mode: 991,
+        tags: ['triangle', 'spectrum', 'equalizer', 'glow', 'neon', 'bars'],
+        parameters: {
+            triangleSize: { min: 150, max: 400, default: 280, label: 'Triangle Size' },
+            barCount: { min: 20, max: 80, default: 50, label: 'Bar Count' },
+            barWidth: { min: 2, max: 10, default: 4, label: 'Bar Width' },
+            maxBarHeight: { min: 50, max: 200, default: 100, label: 'Max Bar Height' },
+            glowIntensity: { min: 5, max: 30, default: 15, label: 'Glow Intensity' }
+        }
+    },
+    wavy_cloud_ring: {
+        id: 'wavy_cloud_ring',
+        name: 'Wavy Cloud Ring',
+        description: 'Soft circular ring with organic wavy edges and pink gradient',
+        category: 'Fluid',
+        mode: 990,
+        tags: ['circle', 'wavy', 'cloud', 'organic', 'soft', 'melting', 'pink'],
+        parameters: {
+            circleRadius: { min: 100, max: 350, default: 200, label: 'Circle Radius' },
+            waveFrequency: { min: 4, max: 20, default: 10, label: 'Wave Frequency' },
+            waveAmplitude: { min: 5, max: 40, default: 18, label: 'Wave Amplitude' },
+            lineThickness: { min: 8, max: 25, default: 15, label: 'Line Thickness' },
+            animationSpeed: { min: 0.1, max: 2, default: 0.5, label: 'Animation Speed' }
+        }
     },
 
     // Nature & Ethereal

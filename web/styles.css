@@ -216,15 +216,25 @@ h1, h2, h3, h4, h5, h6 {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    min-height: 64px;
 }
 
 .nav-logo {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
+    gap: var(--spacing-md);
     font-weight: 600;
     color: var(--color-text-primary);
-    font-size: 18px;
+    font-size: 20px;
+}
+
+.nav-logo img {
+    filter: drop-shadow(0 0 8px rgba(255, 106, 223, 0.3));
+    transition: filter var(--transition-base);
+}
+
+.nav-logo img:hover {
+    filter: drop-shadow(0 0 12px rgba(255, 106, 223, 0.5));
 }
 
 .nav-logo svg {
@@ -258,8 +268,12 @@ h1, h2, h3, h4, h5, h6 {
     text-align: center;
     position: relative;
     overflow: hidden;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
 }
 
+/* Animated gradient orbs */
 .hero::before {
     content: '';
     position: absolute;
@@ -267,8 +281,10 @@ h1, h2, h3, h4, h5, h6 {
     right: -20%;
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, rgba(255, 106, 223, 0.12) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(255, 106, 223, 0.15) 0%, transparent 70%);
     pointer-events: none;
+    animation: float 20s ease-in-out infinite;
+    filter: blur(60px);
 }
 
 .hero::after {
@@ -278,12 +294,32 @@ h1, h2, h3, h4, h5, h6 {
     left: -20%;
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, rgba(127, 125, 255, 0.12) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(127, 125, 255, 0.15) 0%, transparent 70%);
     pointer-events: none;
+    animation: float 25s ease-in-out infinite reverse;
+    filter: blur(60px);
 }
 
 .hero .container {
     max-width: 800px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Hero content fade-in animation */
+.hero-heading {
+    animation: fadeInUp 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+.hero-subheading {
+    animation: fadeInUp 0.8s ease-out 0.2s forwards;
+    opacity: 0;
+}
+
+.hero .btn {
+    animation: fadeInUp 0.8s ease-out 0.4s forwards;
+    opacity: 0;
 }
 
 /* ===================================
@@ -1731,6 +1767,94 @@ input[type="color"]:hover {
         padding: 12px 24px;
         font-size: 16px;
     }
+}
+
+/* ===================================
+   Animations & Keyframes
+   =================================== */
+
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+    }
+    33% {
+        transform: translate(30px, -30px) scale(1.1);
+    }
+    66% {
+        transform: translate(-20px, 20px) scale(0.9);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.05);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -1000px 0;
+    }
+    100% {
+        background-position: 1000px 0;
+    }
+}
+
+/* Floating particles */
+.hero .particle {
+    position: absolute;
+    width: 4px;
+    height: 4px;
+    background: radial-gradient(circle, rgba(255, 106, 223, 0.8), transparent);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: particleFloat 15s ease-in-out infinite;
+}
+
+@keyframes particleFloat {
+    0%, 100% {
+        transform: translate(0, 0);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        transform: translate(100px, -500px);
+        opacity: 0;
+    }
+}
+
+/* Smooth hover effects */
+.btn, .mode-card, .chip {
+    transition: all var(--transition-base);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.mode-card:hover {
+    transform: translateY(-4px);
 }
 
 /* ===================================

@@ -70,6 +70,11 @@ class Visualizer {
     updateSettings(newSettings) {
         this.settings = { ...this.settings, ...newSettings };
 
+        // Map parameters to modeParameters for consistency
+        if (newSettings.parameters) {
+            this.settings.modeParameters = newSettings.parameters;
+        }
+
         // Recalculate scale factor if width/height changed
         if (newSettings.width !== undefined || newSettings.height !== undefined) {
             const targetSize = Math.min(this.settings.width || 1080, this.settings.height || 1080);
@@ -330,6 +335,12 @@ class Visualizer {
             case 'snow_particles':
                 this.renderSnowParticles(magnitudes);
                 break;
+            case 'fog_smoke':
+                this.renderFogSmoke(magnitudes);
+                break;
+            case 'clouds':
+                this.renderClouds(magnitudes);
+                break;
 
             // Retro & Vintage
             case 'neon_rain':
@@ -363,6 +374,36 @@ class Visualizer {
                 break;
             case 'water_ripples':
                 this.renderWaterRipples(magnitudes);
+                break;
+            case 'organic_blob':
+                this.renderOrganicBlob(magnitudes);
+                break;
+            case 'neon_contour':
+                this.renderNeonContour(magnitudes);
+                break;
+            case 'circular_spectrum_bars':
+                this.renderCircularSpectrumBars(magnitudes);
+                break;
+            case 'vinyl_record':
+                this.renderVinylRecord(magnitudes);
+                break;
+            case 'pulse_ring':
+                this.renderPulseRing(magnitudes);
+                break;
+            case 'sunburst_arc':
+                this.renderSunburstArc(magnitudes);
+                break;
+            case 'gradient_waveform_circle':
+                this.renderGradientWaveformCircle(magnitudes);
+                break;
+            case 'minimal_audio_ring':
+                this.renderMinimalAudioRing(magnitudes);
+                break;
+            case 'triangle_spectrum':
+                this.renderTriangleSpectrum(magnitudes);
+                break;
+            case 'wavy_cloud_ring':
+                this.renderWavyCloudRing(magnitudes);
                 break;
 
             // Nature & Ethereal
@@ -4252,7 +4293,7 @@ class Visualizer {
      * Mode 851: Classic Bars - Traditional vertical bars
      */
     renderClassicBars(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const barWidth = params.barWidth || 8;
         const barSpacing = params.barSpacing || 2;
         const barRounding = params.barRounding || 0;
@@ -4287,7 +4328,7 @@ class Visualizer {
      * Mode 852: Mirror Symmetry - Mirrored bars with central symmetry
      */
     renderMirrorSymmetry(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const barWidth = params.barWidth || 8;
         const barSpacing = params.barSpacing || 2;
         const mirrorGap = params.mirrorGap || 20;
@@ -4320,7 +4361,7 @@ class Visualizer {
      * Mode 853: Waterfall - Cascading effect with trailing bars
      */
     renderWaterfall(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const trailLength = params.trailLength || 10;
         const fallSpeed = params.fallSpeed || 5;
         const fadeAmount = params.fadeAmount || 0.5;
@@ -4365,7 +4406,7 @@ class Visualizer {
      * Mode 854: Converging Lines - Lines meeting at center point
      */
     renderConvergingLines(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const lineCount = params.lineCount || 50;
         const convergencePoint = params.convergencePoint || 0.5;
         const lineWidth = params.lineWidth || 2;
@@ -4403,7 +4444,7 @@ class Visualizer {
      * Mode 855: Wave Morph - Morphing wave patterns
      */
     renderWaveMorph(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const waveAmplitude = params.waveAmplitude || 50;
         const waveFrequency = params.waveFrequency || 3;
         const morphSpeed = params.morphSpeed || 0.5;
@@ -4447,7 +4488,7 @@ class Visualizer {
      * Mode 856: Staggered Pulse - Offset pulsing bars with delay
      */
     renderStaggeredPulse(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const staggerAmount = params.staggerAmount || 3;
         const pulseSpeed = params.pulseSpeed || 1;
         const barCount = params.barCount || 60;
@@ -4479,7 +4520,7 @@ class Visualizer {
      * Mode 857: Geometric Tunnel - 3D tunnel effect with perspective
      */
     renderGeometricTunnel(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const tunnelDepth = params.tunnelDepth || 8;
         const rotationSpeed = params.rotationSpeed || 1;
         const segmentCount = params.segmentCount || 6;
@@ -4529,7 +4570,7 @@ class Visualizer {
      * Mode 858: Dancing Ribbons - Flowing ribbon-like curves
      */
     renderDancingRibbons(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const ribbonWidth = params.ribbonWidth || 20;
         const flowSpeed = params.flowSpeed || 1.5;
         const waveCount = params.waveCount || 4;
@@ -4573,7 +4614,7 @@ class Visualizer {
      * Mode 859: Particle Stream - Particle streams flowing along lines
      */
     renderParticleStream(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const particleCount = params.particleCount || 200;
         const streamSpeed = params.streamSpeed || 5;
         const particleSize = params.particleSize || 3;
@@ -4631,7 +4672,7 @@ class Visualizer {
      * Mode 860: Glitch Art - Glitch aesthetic with digital artifacts
      */
     renderGlitchArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const glitchIntensity = params.glitchIntensity || 0.5;
         const glitchFrequency = params.glitchFrequency || 0.3;
         const colorShift = params.colorShift || 10;
@@ -4688,7 +4729,7 @@ class Visualizer {
      * Mode 861: Circular Waves - Concentric circular waves that expand from center
      */
     renderCircularWaves(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const waveCount = params.waveCount || 10;
         const waveThickness = params.waveThickness || 3;
         const waveSpacing = params.waveSpacing || 25;
@@ -4732,7 +4773,7 @@ class Visualizer {
      * Mode 862: Line Spectrum - Horizontal frequency lines stacked vertically
      */
     renderLineSpectrum(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const lineCount = params.lineCount || 50;
         const lineThickness = params.lineThickness || 2;
         const lineSpacing = params.lineSpacing || 5;
@@ -4769,7 +4810,7 @@ class Visualizer {
      * Mode 863: Radial Pulse - Pulsing circles radiating from center
      */
     renderRadialPulse(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const ringCount = params.ringCount || 15;
         const pulseIntensity = params.pulseIntensity || 1;
         const ringThickness = params.ringThickness || 4;
@@ -4806,7 +4847,7 @@ class Visualizer {
      * Mode 864: Double Helix - DNA-like double spiral pattern
      */
     renderDoubleHelix(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const helixTurns = params.helixTurns || 5;
         const helixWidth = params.helixWidth || 100;
         const pointSize = params.pointSize || 6;
@@ -4865,7 +4906,7 @@ class Visualizer {
      * Mode 865: Spiral Bars - Frequency bars arranged in spiral pattern
      */
     renderSpiralBars(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const spiralTurns = params.spiralTurns || 3;
         const barLength = params.barLength || 50;
         const spiralTightness = params.spiralTightness || 1;
@@ -5054,6 +5095,130 @@ class Visualizer {
     }
 
     /**
+     * Mode 1008: Fog/Smoke
+     */
+    renderFogSmoke(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const density = params.density || 0.7;
+        const speed = params.speed || 0.5;
+        const dissipation = params.dissipation || 0.3;
+        const particleSize = params.particleSize || 50;
+        const drift = params.drift || 1;
+        const turbulence = params.turbulence || 0.5;
+
+        const numParticles = Math.floor(magnitudes.length * density * 3);
+        const time = this.frameCounter * 0.01 * speed;
+
+        this.ctx.shadowBlur = 30;
+
+        for (let i = 0; i < numParticles; i++) {
+            const magnitude = magnitudes[i % magnitudes.length];
+
+            // Create wispy, drifting motion
+            const xOffset = Math.sin(time * 0.5 + i * 0.1) * 100 * drift;
+            const yOffset = Math.cos(time * 0.3 + i * 0.15) * 80 * drift;
+            const turbulenceX = Math.sin(time * 2 + i) * 40 * turbulence;
+            const turbulenceY = Math.cos(time * 1.5 + i) * 40 * turbulence;
+
+            const x = ((i / numParticles) * this.canvas.width + xOffset + turbulenceX) % this.canvas.width;
+            const y = ((time * 30 + i * 20 + yOffset + turbulenceY) % this.canvas.height);
+
+            // Particles expand and dissipate based on audio
+            const baseSize = particleSize * this.scaleFactor;
+            const size = baseSize + magnitude * baseSize * 0.8;
+
+            // Calculate alpha with dissipation effect
+            const lifeProgress = (y / this.canvas.height);
+            const alpha = (0.15 + magnitude * 0.25) * (1 - lifeProgress * dissipation);
+
+            const color = this.getColor(i, numParticles);
+            this.ctx.shadowColor = color;
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = Math.max(0, alpha);
+
+            // Draw soft, wispy circles with gradient
+            const gradient = this.ctx.createRadialGradient(x, y, 0, x, y, size);
+            gradient.addColorStop(0, color);
+            gradient.addColorStop(0.5, color.replace('rgb', 'rgba').replace(')', ', 0.5)'));
+            gradient.addColorStop(1, color.replace('rgb', 'rgba').replace(')', ', 0)'));
+            this.ctx.fillStyle = gradient;
+
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 1009: Clouds
+     */
+    renderClouds(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const cloudCount = Math.floor(params.cloudCount || 12);
+        const cloudSize = params.cloudSize || 1;
+        const puffiness = params.puffiness || 0.7;
+        const speed = params.speed || 0.3;
+        const verticalDrift = params.verticalDrift || 0.2;
+        const density = params.density || 0.8;
+
+        const time = this.frameCounter * 0.01 * speed;
+
+        this.ctx.shadowBlur = 20;
+
+        for (let i = 0; i < cloudCount; i++) {
+            const magnitude = magnitudes[i % magnitudes.length];
+
+            // Cloud movement - horizontal with slight vertical drift
+            const cloudSpeed = 50 + (i % 3) * 30;
+            const x = ((time * cloudSpeed + i * 200) % (this.canvas.width + 400)) - 200;
+            const yBase = (i / cloudCount) * this.canvas.height;
+            const yDrift = Math.sin(time * 0.5 + i) * 30 * verticalDrift;
+            const y = yBase + yDrift;
+
+            // Cloud size affected by audio
+            const baseSize = 80 * cloudSize * this.scaleFactor;
+            const reactiveSize = baseSize + magnitude * baseSize * 0.4;
+
+            // Number of puffs per cloud
+            const numPuffs = Math.floor(3 + puffiness * 5);
+
+            const color = this.getColor(i, cloudCount);
+
+            // Draw cloud as multiple overlapping circles (puffs)
+            for (let p = 0; p < numPuffs; p++) {
+                const puffAngle = (p / numPuffs) * Math.PI * 2;
+                const puffDistance = reactiveSize * 0.4 * (0.5 + Math.random() * 0.5);
+                const puffX = x + Math.cos(puffAngle) * puffDistance;
+                const puffY = y + Math.sin(puffAngle) * puffDistance * 0.6; // Flatten vertically
+                const puffSize = reactiveSize * (0.6 + Math.random() * 0.4);
+
+                // Soft, fluffy appearance
+                const alpha = (0.3 + magnitude * 0.4) * density;
+
+                // Create soft gradient for each puff
+                const gradient = this.ctx.createRadialGradient(puffX, puffY, 0, puffX, puffY, puffSize);
+                gradient.addColorStop(0, color);
+                gradient.addColorStop(0.4, color.replace('rgb', 'rgba').replace(')', ', 0.6)'));
+                gradient.addColorStop(1, color.replace('rgb', 'rgba').replace(')', ', 0)'));
+
+                this.ctx.fillStyle = gradient;
+                this.ctx.globalAlpha = alpha;
+                this.ctx.shadowColor = color;
+
+                this.ctx.beginPath();
+                this.ctx.arc(puffX, puffY, puffSize, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+
+        this.ctx.globalAlpha = 1;
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
      * Mode 18: Pixel Clouds
      */
     renderPixelClouds(magnitudes) {
@@ -5222,6 +5387,998 @@ class Visualizer {
 
         this.ctx.globalAlpha = 1;
         this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 999: Organic Blob
+     * Smooth flowing blob with audio-reactive waves inspired by TikTok visualizers
+     */
+    renderOrganicBlob(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const blobRadius = params.blobRadius || 200;
+        const wavePoints = params.wavePoints || 64;
+        const waveAmplitude = params.waveAmplitude || 40;
+        const smoothness = params.smoothness || 0.7;
+        const showBars = params.showBars || 0;
+
+        const effectiveRadius = blobRadius * this.scaleFactor;
+        const angleStep = (Math.PI * 2) / wavePoints;
+        const time = this.frameCounter * 0.02;
+
+        // Create smooth blob outline with audio-reactive deformations
+        this.ctx.beginPath();
+
+        // Generate blob points with smooth waves
+        const points = [];
+        for (let i = 0; i < wavePoints; i++) {
+            const angle = i * angleStep;
+
+            // Sample multiple frequencies for smoother, more organic movement
+            const magnitudeIndex = Math.floor((i / wavePoints) * magnitudes.length);
+            const magnitude = magnitudes[magnitudeIndex] || 0;
+
+            // Add wave motion with time-based animation
+            const waveOffset = Math.sin(angle * 4 + time) * 0.15 +
+                             Math.sin(angle * 7 - time * 1.5) * 0.1;
+
+            // Calculate radius with audio reactivity and organic waves
+            const radius = effectiveRadius +
+                          (magnitude * waveAmplitude * this.scaleFactor) +
+                          (waveOffset * effectiveRadius * 0.2);
+
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            points.push({ x, y, magnitude });
+        }
+
+        // Draw smooth blob using cardinal spline interpolation
+        this.ctx.beginPath();
+        this.ctx.moveTo(points[0].x, points[0].y);
+
+        for (let i = 0; i < points.length; i++) {
+            const p0 = points[(i - 1 + points.length) % points.length];
+            const p1 = points[i];
+            const p2 = points[(i + 1) % points.length];
+            const p3 = points[(i + 2) % points.length];
+
+            // Cardinal spline control points for smooth curves
+            const tension = 1 - smoothness;
+            const cp1x = p1.x + (p2.x - p0.x) / 6 * tension;
+            const cp1y = p1.y + (p2.y - p0.y) / 6 * tension;
+            const cp2x = p2.x - (p3.x - p1.x) / 6 * tension;
+            const cp2y = p2.y - (p3.y - p1.y) / 6 * tension;
+
+            this.ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
+        }
+
+        this.ctx.closePath();
+
+        // Style the blob with gradient and glow
+        const color = this.getColor(0, 1);
+        this.ctx.strokeStyle = color;
+        this.ctx.lineWidth = 3 * this.scaleFactor;
+        this.ctx.shadowBlur = 20 * this.scaleFactor;
+        this.ctx.shadowColor = color;
+        this.ctx.stroke();
+
+        // Optional: Draw radial bars extending from blob (like circular spectrum)
+        if (showBars > 0.5) {
+            this.ctx.shadowBlur = 10 * this.scaleFactor;
+
+            for (let i = 0; i < wavePoints; i++) {
+                const angle = i * angleStep;
+                const magnitude = magnitudes[Math.floor((i / wavePoints) * magnitudes.length)] || 0;
+
+                if (magnitude > 0.1) {
+                    const innerR = effectiveRadius * 1.1;
+                    const outerR = innerR + (magnitude * waveAmplitude * this.scaleFactor * 2);
+
+                    const x1 = this.centerX + Math.cos(angle) * innerR;
+                    const y1 = this.centerY + Math.sin(angle) * innerR;
+                    const x2 = this.centerX + Math.cos(angle) * outerR;
+                    const y2 = this.centerY + Math.sin(angle) * outerR;
+
+                    const barColor = this.getColor(i, wavePoints);
+                    this.ctx.strokeStyle = barColor;
+                    this.ctx.shadowColor = barColor;
+                    this.ctx.lineWidth = 2 * this.scaleFactor;
+                    this.ctx.lineCap = 'round';
+
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(x1, y1);
+                    this.ctx.lineTo(x2, y2);
+                    this.ctx.stroke();
+                }
+            }
+        }
+
+        this.ctx.shadowBlur = 0;
+        this.ctx.globalAlpha = 1;
+    }
+
+    /**
+     * Mode 998: Neon Contour
+     * Multi-layered rainbow outline with chromatic offset effect inspired by TikTok/Instagram
+     */
+    renderNeonContour(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const contourSize = params.contourSize || 250;
+        const numLayers = Math.floor(params.numLayers || 4);
+        const layerOffset = params.layerOffset || 12;
+        const waveIntensity = params.waveIntensity || 35;
+        const complexity = Math.floor(params.complexity || 48);
+
+        const baseRadius = contourSize * this.scaleFactor;
+        const time = this.frameCounter * 0.015;
+        const angleStep = (Math.PI * 2) / complexity;
+
+        // Rainbow colors for chromatic aberration effect
+        const layerColors = [
+            'rgba(255, 220, 0, 0.9)',    // Yellow
+            'rgba(100, 255, 100, 0.85)',  // Green
+            'rgba(0, 255, 200, 0.8)',     // Cyan
+            'rgba(100, 150, 255, 0.75)',  // Blue
+            'rgba(200, 100, 255, 0.7)',   // Purple
+            'rgba(255, 100, 200, 0.65)',  // Pink
+            'rgba(255, 150, 100, 0.6)',   // Orange
+            'rgba(255, 255, 150, 0.55)'   // Light Yellow
+        ];
+
+        // Generate base contour shape points
+        const generateContourPoints = (radiusMultiplier, phaseShift = 0) => {
+            const points = [];
+
+            for (let i = 0; i < complexity; i++) {
+                const angle = i * angleStep;
+
+                // Sample audio magnitude
+                const magnitudeIndex = Math.floor((i / complexity) * magnitudes.length);
+                const magnitude = magnitudes[magnitudeIndex] || 0;
+
+                // Create organic shape with multiple frequency waves
+                const baseShape = Math.sin(angle * 3 + time + phaseShift) * 0.2 +
+                                Math.sin(angle * 5 - time * 1.3 + phaseShift) * 0.15 +
+                                Math.cos(angle * 2 + time * 0.7 + phaseShift) * 0.1;
+
+                // Calculate radius with audio reactivity and organic deformation
+                const radius = baseRadius * radiusMultiplier +
+                              (baseShape * baseRadius * 0.3) +
+                              (magnitude * waveIntensity * this.scaleFactor);
+
+                const x = this.centerX + Math.cos(angle) * radius;
+                const y = this.centerY + Math.sin(angle) * radius;
+
+                points.push({ x, y });
+            }
+
+            return points;
+        };
+
+        // Draw each layer with offset (chromatic aberration effect)
+        for (let layer = numLayers - 1; layer >= 0; layer--) {
+            const offset = layer * layerOffset * this.scaleFactor;
+            const radiusMultiplier = 1 + (offset / baseRadius);
+            const phaseShift = layer * 0.3; // Slight phase shift for each layer
+
+            const points = generateContourPoints(radiusMultiplier, phaseShift);
+
+            // Draw smooth contour using cardinal spline
+            this.ctx.beginPath();
+            this.ctx.moveTo(points[0].x, points[0].y);
+
+            for (let i = 0; i < points.length; i++) {
+                const p0 = points[(i - 1 + points.length) % points.length];
+                const p1 = points[i];
+                const p2 = points[(i + 1) % points.length];
+                const p3 = points[(i + 2) % points.length];
+
+                // Cardinal spline control points for smooth curves
+                const tension = 0.5;
+                const cp1x = p1.x + (p2.x - p0.x) / 6 * tension;
+                const cp1y = p1.y + (p2.y - p0.y) / 6 * tension;
+                const cp2x = p2.x - (p3.x - p1.x) / 6 * tension;
+                const cp2y = p2.y - (p3.y - p1.y) / 6 * tension;
+
+                this.ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, p2.x, p2.y);
+            }
+
+            this.ctx.closePath();
+
+            // Style each layer with rainbow colors and glow
+            const color = layerColors[layer % layerColors.length];
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = (4 - layer * 0.3) * this.scaleFactor;
+            this.ctx.shadowBlur = 15 * this.scaleFactor;
+            this.ctx.shadowColor = color;
+            this.ctx.lineCap = 'round';
+            this.ctx.lineJoin = 'round';
+            this.ctx.stroke();
+        }
+
+        this.ctx.shadowBlur = 0;
+        this.ctx.globalAlpha = 1;
+    }
+
+    /**
+     * Mode 997: Circular Spectrum Bars
+     * Radial spectrum bars with blue-to-purple gradient emanating from a circular frame
+     */
+    renderCircularSpectrumBars(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const circleSize = params.circleSize || 150;
+        const barCount = Math.floor(params.barCount || 48);
+        const barWidth = params.barWidth || 8;
+        const barHeight = params.barHeight || 120;
+        const spreadAngle = params.spreadAngle || 180;
+
+        const circleRadius = circleSize * this.scaleFactor;
+        const maxBarHeight = barHeight * this.scaleFactor;
+        const barWidthScaled = barWidth * this.scaleFactor;
+
+        // Calculate starting angle (bottom of circle) and spread
+        const startAngle = Math.PI / 2 - (spreadAngle * Math.PI / 180) / 2;
+        const endAngle = Math.PI / 2 + (spreadAngle * Math.PI / 180) / 2;
+        const angleStep = (endAngle - startAngle) / (barCount - 1);
+
+        // Draw the circular frame first
+        this.ctx.beginPath();
+        this.ctx.arc(this.centerX, this.centerY, circleRadius, 0, Math.PI * 2);
+        this.ctx.strokeStyle = 'rgba(230, 220, 200, 0.8)';
+        this.ctx.lineWidth = 12 * this.scaleFactor;
+        this.ctx.stroke();
+
+        // Inner circle for depth
+        this.ctx.beginPath();
+        this.ctx.arc(this.centerX, this.centerY, circleRadius * 0.92, 0, Math.PI * 2);
+        this.ctx.strokeStyle = 'rgba(200, 190, 170, 0.4)';
+        this.ctx.lineWidth = 6 * this.scaleFactor;
+        this.ctx.stroke();
+
+        // Draw spectrum bars in radial pattern
+        for (let i = 0; i < barCount; i++) {
+            const angle = startAngle + i * angleStep;
+
+            // Sample magnitude
+            const magnitudeIndex = Math.floor((i / barCount) * magnitudes.length);
+            const magnitude = magnitudes[magnitudeIndex] || 0;
+
+            // Calculate bar height based on magnitude
+            const currentBarHeight = magnitude * maxBarHeight;
+
+            // Calculate gradient color (blue to purple/magenta)
+            const colorProgress = i / (barCount - 1);
+            const r = Math.floor(100 + colorProgress * 155); // 100 -> 255
+            const g = Math.floor(100 - colorProgress * 100); // 100 -> 0
+            const b = Math.floor(255 - colorProgress * 55);  // 255 -> 200
+            const alpha = 0.85 + colorProgress * 0.15;
+
+            // Starting point on circle edge
+            const startX = this.centerX + Math.cos(angle) * circleRadius;
+            const startY = this.centerY + Math.sin(angle) * circleRadius;
+
+            // End point extends outward
+            const endX = this.centerX + Math.cos(angle) * (circleRadius + currentBarHeight);
+            const endY = this.centerY + Math.sin(angle) * (circleRadius + currentBarHeight);
+
+            // Draw 3D bar with gradient
+            const gradient = this.ctx.createLinearGradient(startX, startY, endX, endY);
+            gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha})`);
+            gradient.addColorStop(1, `rgba(${r + 20}, ${g}, ${b + 20}, ${alpha - 0.2})`);
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.strokeStyle = gradient;
+            this.ctx.lineWidth = barWidthScaled;
+            this.ctx.lineCap = 'round';
+            this.ctx.shadowBlur = 8 * this.scaleFactor;
+            this.ctx.shadowColor = `rgba(${r}, ${g}, ${b}, 0.6)`;
+            this.ctx.stroke();
+
+            // Add highlight for 3D effect
+            if (currentBarHeight > maxBarHeight * 0.1) {
+                const highlightGradient = this.ctx.createLinearGradient(startX, startY, endX, endY);
+                highlightGradient.addColorStop(0, `rgba(255, 255, 255, 0.3)`);
+                highlightGradient.addColorStop(1, `rgba(255, 255, 255, 0)`);
+
+                this.ctx.beginPath();
+                this.ctx.moveTo(startX, startY);
+                this.ctx.lineTo(endX, endY);
+                this.ctx.strokeStyle = highlightGradient;
+                this.ctx.lineWidth = barWidthScaled * 0.4;
+                this.ctx.shadowBlur = 0;
+                this.ctx.stroke();
+            }
+        }
+
+        this.ctx.shadowBlur = 0;
+        this.ctx.globalAlpha = 1;
+    }
+
+    /**
+     * Mode 996: Vinyl Record
+     * Spinning vinyl disc with two horizontal audio spectrum lines
+     */
+    renderVinylRecord(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const discSize = params.discSize || 200;
+        const grooveCount = Math.floor(params.grooveCount || 6);
+        const rotationSpeed = params.rotationSpeed || 0.8;
+        const lineWidth = params.lineWidth || 800;
+        const sparkleCount = Math.floor(params.sparkleCount || 8);
+
+        const discRadius = discSize * this.scaleFactor;
+        const time = this.frameCounter * 0.01 * rotationSpeed;
+
+        // Draw vinyl disc
+        this.ctx.save();
+        this.ctx.translate(this.centerX, this.centerY);
+        this.ctx.rotate(time);
+
+        // Main disc body (white/cream)
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, discRadius, 0, Math.PI * 2);
+        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+        this.ctx.fill();
+        this.ctx.strokeStyle = 'rgba(200, 200, 200, 0.5)';
+        this.ctx.lineWidth = 2 * this.scaleFactor;
+        this.ctx.stroke();
+
+        // Center label (darker circle)
+        const labelRadius = discRadius * 0.35;
+        const gradient = this.ctx.createRadialGradient(0, 0, 0, 0, 0, labelRadius);
+        gradient.addColorStop(0, 'rgba(100, 100, 100, 0.6)');
+        gradient.addColorStop(0.7, 'rgba(150, 150, 150, 0.4)');
+        gradient.addColorStop(1, 'rgba(180, 180, 180, 0.2)');
+
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, labelRadius, 0, Math.PI * 2);
+        this.ctx.fillStyle = gradient;
+        this.ctx.fill();
+
+        // Center hole
+        this.ctx.beginPath();
+        this.ctx.arc(0, 0, discRadius * 0.08, 0, Math.PI * 2);
+        this.ctx.fillStyle = 'rgba(80, 80, 80, 0.8)';
+        this.ctx.fill();
+        this.ctx.strokeStyle = 'rgba(60, 60, 60, 0.9)';
+        this.ctx.lineWidth = 1 * this.scaleFactor;
+        this.ctx.stroke();
+
+        // Grooves (concentric circles)
+        for (let i = 0; i < grooveCount; i++) {
+            const grooveRadius = labelRadius + (discRadius - labelRadius) * ((i + 1) / (grooveCount + 1));
+            this.ctx.beginPath();
+            this.ctx.arc(0, 0, grooveRadius, 0, Math.PI * 2);
+            this.ctx.strokeStyle = `rgba(120, 120, 120, ${0.3 - i * 0.03})`;
+            this.ctx.lineWidth = 1.5 * this.scaleFactor;
+            this.ctx.stroke();
+        }
+
+        this.ctx.restore();
+
+        // Two horizontal lines with audio spectrum
+        const lineHalfWidth = (lineWidth * this.scaleFactor) / 2;
+        const barCount = 30;
+        const barWidth = 3 * this.scaleFactor;
+        const maxBarHeight = 40 * this.scaleFactor;
+        const barSpacing = (lineHalfWidth - discRadius) / barCount;
+
+        // Left line with spectrum
+        const leftStartX = this.centerX - discRadius;
+        for (let i = 0; i < barCount; i++) {
+            const x = leftStartX - i * barSpacing;
+
+            // Sample magnitude from left half
+            const magnitudeIndex = Math.floor((i / barCount) * (magnitudes.length / 2));
+            const magnitude = magnitudes[magnitudeIndex] || 0;
+
+            const barHeight = magnitude * maxBarHeight;
+
+            // Draw bar
+            this.ctx.beginPath();
+            this.ctx.rect(x - barWidth / 2, this.centerY - barHeight / 2, barWidth, barHeight);
+            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            this.ctx.fill();
+        }
+
+        // Right line with spectrum
+        const rightStartX = this.centerX + discRadius;
+        for (let i = 0; i < barCount; i++) {
+            const x = rightStartX + i * barSpacing;
+
+            // Sample magnitude from right half
+            const magnitudeIndex = Math.floor(magnitudes.length / 2 + (i / barCount) * (magnitudes.length / 2));
+            const magnitude = magnitudes[magnitudeIndex] || 0;
+
+            const barHeight = magnitude * maxBarHeight;
+
+            // Draw bar
+            this.ctx.beginPath();
+            this.ctx.rect(x - barWidth / 2, this.centerY - barHeight / 2, barWidth, barHeight);
+            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            this.ctx.fill();
+        }
+
+        // Draw base lines
+        this.ctx.beginPath();
+        this.ctx.moveTo(leftStartX, this.centerY);
+        this.ctx.lineTo(this.centerX - lineHalfWidth, this.centerY);
+        this.ctx.moveTo(rightStartX, this.centerY);
+        this.ctx.lineTo(this.centerX + lineHalfWidth, this.centerY);
+        this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+        this.ctx.lineWidth = 2 * this.scaleFactor;
+        this.ctx.stroke();
+
+        // Sparkles/stars scattered around
+        for (let i = 0; i < sparkleCount; i++) {
+            const angle = (i / sparkleCount) * Math.PI * 2 + time * 0.5;
+            const distance = discRadius * (1.3 + Math.sin(time * 2 + i) * 0.2);
+            const x = this.centerX + Math.cos(angle) * distance;
+            const y = this.centerY + Math.sin(angle) * distance;
+
+            // Twinkle effect
+            const twinkle = Math.abs(Math.sin(time * 3 + i * 1.7));
+            const sparkleSize = (3 + twinkle * 2) * this.scaleFactor;
+
+            this.ctx.save();
+            this.ctx.translate(x, y);
+            this.ctx.rotate(time * 2 + i);
+
+            // Draw star shape
+            this.ctx.beginPath();
+            for (let j = 0; j < 4; j++) {
+                const armAngle = (j / 4) * Math.PI * 2;
+                const armX = Math.cos(armAngle) * sparkleSize;
+                const armY = Math.sin(armAngle) * sparkleSize;
+                if (j === 0) this.ctx.moveTo(armX, armY);
+                else this.ctx.lineTo(armX, armY);
+            }
+            this.ctx.closePath();
+            this.ctx.fillStyle = `rgba(255, 255, 255, ${0.6 + twinkle * 0.4})`;
+            this.ctx.fill();
+
+            this.ctx.restore();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    /**
+     * Mode 995: Pulse Ring
+     * Segmented circular ring with audio-reactive dashed border
+     */
+    renderPulseRing(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const ringSize = params.ringSize || 200;
+        const ringThickness = params.ringThickness || 12;
+        const segmentCount = Math.floor(params.segmentCount || 24);
+        const gapSize = params.gapSize || 8;
+        const sparkleCount = Math.floor(params.sparkleCount || 12);
+
+        const ringRadius = ringSize * this.scaleFactor;
+        const thickness = ringThickness * this.scaleFactor;
+        const time = this.frameCounter * 0.02;
+
+        // Calculate average magnitude for overall pulse
+        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const pulseScale = 1 + avgMagnitude * 0.15;
+
+        // Draw segmented ring
+        const segmentAngle = (Math.PI * 2) / segmentCount;
+        const gapAngle = (gapSize * Math.PI) / 180;
+
+        for (let i = 0; i < segmentCount; i++) {
+            const startAngle = i * segmentAngle;
+            const endAngle = (i + 1) * segmentAngle - gapAngle;
+
+            // Sample magnitude for this segment
+            const magnitudeIndex = Math.floor((i / segmentCount) * magnitudes.length);
+            const magnitude = magnitudes[magnitudeIndex] || 0;
+
+            // Segment-specific pulse
+            const segmentPulse = 1 + magnitude * 0.2;
+            const currentRadius = ringRadius * pulseScale * segmentPulse;
+
+            // Gradient from pink to white
+            const gradient = this.ctx.createRadialGradient(
+                this.centerX, this.centerY, currentRadius - thickness,
+                this.centerX, this.centerY, currentRadius
+            );
+            gradient.addColorStop(0, 'rgba(255, 200, 220, 0.9)');
+            gradient.addColorStop(1, 'rgba(255, 255, 255, 0.95)');
+
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, currentRadius, startAngle, endAngle);
+            this.ctx.lineWidth = thickness;
+            this.ctx.strokeStyle = gradient;
+            this.ctx.lineCap = 'round';
+            this.ctx.shadowBlur = 10 * this.scaleFactor;
+            this.ctx.shadowColor = 'rgba(255, 200, 220, 0.6)';
+            this.ctx.stroke();
+        }
+
+        // Sparkles scattered around
+        for (let i = 0; i < sparkleCount; i++) {
+            const angle = (i / sparkleCount) * Math.PI * 2 + time;
+            const distance = ringRadius * (0.6 + Math.random() * 0.8);
+            const x = this.centerX + Math.cos(angle) * distance;
+            const y = this.centerY + Math.sin(angle) * distance;
+
+            // Twinkle effect
+            const twinkle = Math.abs(Math.sin(time * 2 + i * 1.3));
+            const sparkleSize = (2 + twinkle * 3) * this.scaleFactor;
+
+            this.ctx.save();
+            this.ctx.translate(x, y);
+            this.ctx.rotate(time + i);
+
+            // Draw star
+            this.ctx.beginPath();
+            for (let j = 0; j < 4; j++) {
+                const armAngle = (j / 4) * Math.PI * 2;
+                const armX = Math.cos(armAngle) * sparkleSize;
+                const armY = Math.sin(armAngle) * sparkleSize;
+                if (j === 0) this.ctx.moveTo(armX, armY);
+                else this.ctx.lineTo(armX, armY);
+            }
+            this.ctx.closePath();
+            this.ctx.fillStyle = `rgba(255, 255, 255, ${0.5 + twinkle * 0.5})`;
+            this.ctx.shadowBlur = 5 * this.scaleFactor;
+            this.ctx.shadowColor = 'rgba(255, 255, 255, 0.8)';
+            this.ctx.fill();
+
+            this.ctx.restore();
+        }
+
+        this.ctx.shadowBlur = 0;
+        this.ctx.globalAlpha = 1;
+    }
+
+    /**
+     * Mode 994: Sunburst Arc
+     * Semi-circular arc with radiating bars forming a sunburst pattern
+     */
+    renderSunburstArc(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const arcRadius = params.arcRadius || 180;
+        const barCount = Math.floor(params.barCount || 40);
+        const barWidth = params.barWidth || 6;
+        const maxBarLength = params.maxBarLength || 100;
+        const arcSpread = params.arcSpread || 160;
+
+        const radius = arcRadius * this.scaleFactor;
+        const barWidthScaled = barWidth * this.scaleFactor;
+        const maxLength = maxBarLength * this.scaleFactor;
+
+        // Arc angle range (top semicircle)
+        const spreadRadians = (arcSpread * Math.PI) / 180;
+        const startAngle = Math.PI / 2 - spreadRadians / 2;
+        const endAngle = Math.PI / 2 + spreadRadians / 2;
+        const angleStep = (endAngle - startAngle) / (barCount - 1);
+
+        // Draw dotted inner circle
+        const dotCount = 30;
+        const dotRadius = 2 * this.scaleFactor;
+        for (let i = 0; i < dotCount; i++) {
+            const angle = startAngle + (i / (dotCount - 1)) * (endAngle - startAngle);
+            const x = this.centerX + Math.cos(angle) * radius;
+            const y = this.centerY + Math.sin(angle) * radius;
+
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, dotRadius, 0, Math.PI * 2);
+            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            this.ctx.fill();
+        }
+
+        // Draw radiating bars
+        for (let i = 0; i < barCount; i++) {
+            const angle = startAngle + i * angleStep;
+
+            // Sample magnitude
+            const magnitudeIndex = Math.floor((i / barCount) * magnitudes.length);
+            const magnitude = magnitudes[magnitudeIndex] || 0;
+
+            // Bar length based on magnitude
+            const barLength = maxLength * (0.3 + magnitude * 0.7);
+
+            // Starting point on the circle
+            const startX = this.centerX + Math.cos(angle) * radius;
+            const startY = this.centerY + Math.sin(angle) * radius;
+
+            // End point radiating outward
+            const endX = this.centerX + Math.cos(angle) * (radius + barLength);
+            const endY = this.centerY + Math.sin(angle) * (radius + barLength);
+
+            // Draw bar
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.95)';
+            this.ctx.lineWidth = barWidthScaled;
+            this.ctx.lineCap = 'round';
+            this.ctx.shadowBlur = 8 * this.scaleFactor;
+            this.ctx.shadowColor = 'rgba(255, 255, 255, 0.7)';
+            this.ctx.stroke();
+        }
+
+        this.ctx.shadowBlur = 0;
+        this.ctx.globalAlpha = 1;
+    }
+
+    /**
+     * Mode 993: Gradient Waveform Circle
+     * Circular ring with audio-reactive jagged edge and rainbow gradient
+     */
+    renderGradientWaveformCircle(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const circleRadius = params.circleRadius || 200;
+        const waveAmplitude = params.waveAmplitude || 30;
+        const lineThickness = params.lineThickness || 8;
+        const resolution = Math.floor(params.resolution || 180);
+        const sparkleCount = Math.floor(params.sparkleCount || 20);
+
+        const radius = circleRadius * this.scaleFactor;
+        const amplitude = waveAmplitude * this.scaleFactor;
+        const thickness = lineThickness * this.scaleFactor;
+        const time = this.frameCounter * 0.02;
+
+        // Generate waveform points around the circle
+        const points = [];
+        const angleStep = (Math.PI * 2) / resolution;
+
+        for (let i = 0; i < resolution; i++) {
+            const angle = i * angleStep;
+
+            // Sample magnitude
+            const magnitudeIndex = Math.floor((i / resolution) * magnitudes.length);
+            const magnitude = magnitudes[magnitudeIndex] || 0;
+
+            // Add waveform oscillation
+            const wave = magnitude * amplitude;
+            const currentRadius = radius + wave;
+
+            const x = this.centerX + Math.cos(angle) * currentRadius;
+            const y = this.centerY + Math.sin(angle) * currentRadius;
+
+            points.push({ x, y, angle });
+        }
+
+        // Draw the waveform circle with gradient
+        this.ctx.beginPath();
+        this.ctx.moveTo(points[0].x, points[0].y);
+
+        for (let i = 1; i < points.length; i++) {
+            this.ctx.lineTo(points[i].x, points[i].y);
+        }
+        this.ctx.closePath();
+
+        // Create gradient colors (cyan -> blue -> purple -> magenta -> pink)
+        this.ctx.lineWidth = thickness;
+        this.ctx.lineCap = 'round';
+        this.ctx.lineJoin = 'round';
+
+        // Draw segments with gradient colors
+        for (let i = 0; i < points.length; i++) {
+            const nextI = (i + 1) % points.length;
+
+            // Calculate gradient color based on position around circle
+            const colorProgress = i / points.length;
+            let r, g, b;
+
+            if (colorProgress < 0.25) {
+                // Cyan to Blue
+                const t = colorProgress / 0.25;
+                r = Math.floor(0 + t * 100);
+                g = Math.floor(255 - t * 105);
+                b = 255;
+            } else if (colorProgress < 0.5) {
+                // Blue to Purple
+                const t = (colorProgress - 0.25) / 0.25;
+                r = Math.floor(100 + t * 100);
+                g = Math.floor(150 - t * 50);
+                b = 255;
+            } else if (colorProgress < 0.75) {
+                // Purple to Magenta
+                const t = (colorProgress - 0.5) / 0.25;
+                r = Math.floor(200 + t * 55);
+                g = Math.floor(100 - t * 100);
+                b = Math.floor(255 - t * 55);
+            } else {
+                // Magenta to Hot Pink
+                const t = (colorProgress - 0.75) / 0.25;
+                r = 255;
+                g = Math.floor(0 + t * 20);
+                b = Math.floor(200 - t * 100);
+            }
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(points[i].x, points[i].y);
+            this.ctx.lineTo(points[nextI].x, points[nextI].y);
+            this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, 0.95)`;
+            this.ctx.shadowBlur = 10 * this.scaleFactor;
+            this.ctx.shadowColor = `rgba(${r}, ${g}, ${b}, 0.6)`;
+            this.ctx.stroke();
+        }
+
+        // Sparkles
+        for (let i = 0; i < sparkleCount; i++) {
+            const angle = (i / sparkleCount) * Math.PI * 2 + time;
+            const distance = radius * (0.5 + Math.random() * 1);
+            const x = this.centerX + Math.cos(angle) * distance;
+            const y = this.centerY + Math.sin(angle) * distance;
+
+            const twinkle = Math.abs(Math.sin(time * 2 + i * 1.5));
+            const sparkleSize = (2 + twinkle * 3) * this.scaleFactor;
+
+            // Random color from the gradient
+            const colorPos = (i / sparkleCount + time * 0.1) % 1;
+            let sr, sg, sb;
+            if (colorPos < 0.5) {
+                sr = 100; sg = 200; sb = 255;
+            } else {
+                sr = 255; sg = 100; sb = 200;
+            }
+
+            this.ctx.save();
+            this.ctx.translate(x, y);
+            this.ctx.rotate(time + i);
+
+            this.ctx.beginPath();
+            for (let j = 0; j < 4; j++) {
+                const armAngle = (j / 4) * Math.PI * 2;
+                const armX = Math.cos(armAngle) * sparkleSize;
+                const armY = Math.sin(armAngle) * sparkleSize;
+                if (j === 0) this.ctx.moveTo(armX, armY);
+                else this.ctx.lineTo(armX, armY);
+            }
+            this.ctx.closePath();
+            this.ctx.fillStyle = `rgba(${sr}, ${sg}, ${sb}, ${0.4 + twinkle * 0.6})`;
+            this.ctx.shadowBlur = 5 * this.scaleFactor;
+            this.ctx.shadowColor = `rgba(${sr}, ${sg}, ${sb}, 0.8)`;
+            this.ctx.fill();
+
+            this.ctx.restore();
+        }
+
+        this.ctx.shadowBlur = 0;
+        this.ctx.globalAlpha = 1;
+    }
+
+    /**
+     * Mode 992: Minimal Audio Ring
+     * Clean white circular ring with subtle audio-reactive edge
+     */
+    renderMinimalAudioRing(magnitudes) {
+        const circleRadius = this.settings.circleRadius || 220;
+        const waveAmplitude = this.settings.waveAmplitude || 15;
+        const lineThickness = this.settings.lineThickness || 5;
+        const resolution = Math.floor(this.settings.resolution || 200);
+        const glowIntensity = this.settings.glowIntensity || 8;
+
+        const radius = circleRadius * this.scaleFactor;
+        const amplitude = waveAmplitude * this.scaleFactor;
+        const thickness = lineThickness * this.scaleFactor;
+        const glow = glowIntensity * this.scaleFactor;
+
+        // Generate waveform points around the circle
+        const points = [];
+        const angleStep = (Math.PI * 2) / resolution;
+
+        for (let i = 0; i < resolution; i++) {
+            const angle = i * angleStep;
+
+            // Sample magnitude
+            const magnitudeIndex = Math.floor((i / resolution) * magnitudes.length);
+            const magnitude = magnitudes[magnitudeIndex] || 0;
+
+            // Add subtle waveform oscillation
+            const wave = magnitude * amplitude;
+            const currentRadius = radius + wave;
+
+            const x = this.centerX + Math.cos(angle) * currentRadius;
+            const y = this.centerY + Math.sin(angle) * currentRadius;
+
+            points.push({ x, y });
+        }
+
+        // Draw the waveform circle
+        this.ctx.beginPath();
+        this.ctx.moveTo(points[0].x, points[0].y);
+
+        for (let i = 1; i < points.length; i++) {
+            this.ctx.lineTo(points[i].x, points[i].y);
+        }
+        this.ctx.closePath();
+
+        // White stroke with subtle glow
+        this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.95)';
+        this.ctx.lineWidth = thickness;
+        this.ctx.lineCap = 'round';
+        this.ctx.lineJoin = 'round';
+        this.ctx.shadowBlur = glow;
+        this.ctx.shadowColor = 'rgba(255, 255, 255, 0.7)';
+        this.ctx.stroke();
+
+        this.ctx.shadowBlur = 0;
+        this.ctx.globalAlpha = 1;
+    }
+
+    /**
+     * Mode 991: Triangle Spectrum
+     * Glowing triangle frame with vertical waveform bars
+     */
+    renderTriangleSpectrum(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const triangleSize = params.triangleSize || 280;
+        const barCount = Math.floor(params.barCount || 50);
+        const barWidth = params.barWidth || 4;
+        const maxBarHeight = params.maxBarHeight || 100;
+        const glowIntensity = params.glowIntensity || 15;
+
+        const size = triangleSize * this.scaleFactor;
+        const barWidthScaled = barWidth * this.scaleFactor;
+        const maxHeight = maxBarHeight * this.scaleFactor;
+        const glow = glowIntensity * this.scaleFactor;
+
+        // Triangle vertices (equilateral, pointing up)
+        const height = (Math.sqrt(3) / 2) * size;
+        const topX = this.centerX;
+        const topY = this.centerY - height / 2;
+        const bottomLeftX = this.centerX - size / 2;
+        const bottomLeftY = this.centerY + height / 2;
+        const bottomRightX = this.centerX + size / 2;
+        const bottomRightY = this.centerY + height / 2;
+
+        // Draw glowing triangle outline
+        this.ctx.beginPath();
+        this.ctx.moveTo(topX, topY);
+        this.ctx.lineTo(bottomLeftX, bottomLeftY);
+        this.ctx.lineTo(bottomRightX, bottomRightY);
+        this.ctx.closePath();
+
+        // Cyan/blue gradient for glow
+        this.ctx.strokeStyle = 'rgba(100, 200, 255, 0.9)';
+        this.ctx.lineWidth = 4 * this.scaleFactor;
+        this.ctx.shadowBlur = glow;
+        this.ctx.shadowColor = 'rgba(100, 200, 255, 0.8)';
+        this.ctx.stroke();
+
+        // Add extra glow layer
+        this.ctx.strokeStyle = 'rgba(150, 220, 255, 0.6)';
+        this.ctx.lineWidth = 8 * this.scaleFactor;
+        this.ctx.shadowBlur = glow * 1.5;
+        this.ctx.stroke();
+
+        // Draw waveform bars at the bottom
+        const barStartY = bottomLeftY + 10 * this.scaleFactor;
+        const barAreaWidth = size * 0.8;
+        const barSpacing = barAreaWidth / barCount;
+        const barStartX = this.centerX - barAreaWidth / 2;
+
+        for (let i = 0; i < barCount; i++) {
+            const x = barStartX + i * barSpacing;
+
+            // Sample magnitude
+            const magnitudeIndex = Math.floor((i / barCount) * magnitudes.length);
+            const magnitude = magnitudes[magnitudeIndex] || 0;
+
+            // Bar height based on magnitude
+            const barHeight = magnitude * maxHeight;
+
+            // Draw bar
+            this.ctx.beginPath();
+            this.ctx.rect(x, barStartY, barWidthScaled, barHeight);
+            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            this.ctx.shadowBlur = 5 * this.scaleFactor;
+            this.ctx.shadowColor = 'rgba(255, 255, 255, 0.6)';
+            this.ctx.fill();
+        }
+
+        // Horizontal line beneath bars
+        const lineY = barStartY + maxHeight + 5 * this.scaleFactor;
+        this.ctx.beginPath();
+        this.ctx.moveTo(barStartX, lineY);
+        this.ctx.lineTo(barStartX + barAreaWidth, lineY);
+        this.ctx.strokeStyle = 'rgba(100, 200, 255, 0.7)';
+        this.ctx.lineWidth = 2 * this.scaleFactor;
+        this.ctx.shadowBlur = glow * 0.5;
+        this.ctx.shadowColor = 'rgba(100, 200, 255, 0.6)';
+        this.ctx.stroke();
+
+        this.ctx.shadowBlur = 0;
+        this.ctx.globalAlpha = 1;
+    }
+
+    /**
+     * Mode 990: Wavy Cloud Ring
+     * Soft circular ring with organic wavy edges and pink gradient
+     */
+    renderWavyCloudRing(magnitudes) {
+        const circleRadius = this.settings.circleRadius || 200;
+        const waveFrequency = this.settings.waveFrequency || 10;
+        const waveAmplitude = this.settings.waveAmplitude || 18;
+        const lineThickness = this.settings.lineThickness || 15;
+        const animationSpeed = this.settings.animationSpeed || 0.5;
+
+        const radius = circleRadius * this.scaleFactor;
+        const amplitude = waveAmplitude * this.scaleFactor;
+        const thickness = lineThickness * this.scaleFactor;
+        const time = this.frameCounter * 0.01 * animationSpeed;
+
+        // Calculate average magnitude for overall pulse
+        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Generate wavy circle points
+        const points = [];
+        const resolution = 120;
+        const angleStep = (Math.PI * 2) / resolution;
+
+        for (let i = 0; i < resolution; i++) {
+            const angle = i * angleStep;
+
+            // Create organic wave pattern
+            const wave1 = Math.sin(angle * waveFrequency + time) * amplitude * 0.5;
+            const wave2 = Math.sin(angle * (waveFrequency * 0.7) - time * 1.3) * amplitude * 0.3;
+            const wave3 = Math.cos(angle * (waveFrequency * 1.5) + time * 0.8) * amplitude * 0.2;
+
+            // Add audio reactivity
+            const magnitudeIndex = Math.floor((i / resolution) * magnitudes.length);
+            const magnitude = magnitudes[magnitudeIndex] || 0;
+            const audioWave = magnitude * amplitude * 0.4;
+
+            const currentRadius = radius + wave1 + wave2 + wave3 + audioWave;
+
+            const x = this.centerX + Math.cos(angle) * currentRadius;
+            const y = this.centerY + Math.sin(angle) * currentRadius;
+
+            points.push({ x, y });
+        }
+
+        // Draw smooth wavy circle
+        this.ctx.beginPath();
+        this.ctx.moveTo(points[0].x, points[0].y);
+
+        // Use quadratic curves for smooth organic shape
+        for (let i = 0; i < points.length; i++) {
+            const current = points[i];
+            const next = points[(i + 1) % points.length];
+            const controlX = (current.x + next.x) / 2;
+            const controlY = (current.y + next.y) / 2;
+
+            this.ctx.quadraticCurveTo(current.x, current.y, controlX, controlY);
+        }
+        this.ctx.closePath();
+
+        // Pink/coral gradient
+        const gradient = this.ctx.createLinearGradient(
+            this.centerX - radius,
+            this.centerY,
+            this.centerX + radius,
+            this.centerY
+        );
+        gradient.addColorStop(0, 'rgba(255, 180, 180, 0.9)');
+        gradient.addColorStop(0.5, 'rgba(255, 150, 150, 0.95)');
+        gradient.addColorStop(1, 'rgba(255, 200, 200, 0.9)');
+
+        this.ctx.strokeStyle = gradient;
+        this.ctx.lineWidth = thickness;
+        this.ctx.lineCap = 'round';
+        this.ctx.lineJoin = 'round';
+        this.ctx.shadowBlur = 12 * this.scaleFactor;
+        this.ctx.shadowColor = 'rgba(255, 150, 150, 0.5)';
+        this.ctx.stroke();
+
+        // Add soft inner glow
+        this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+        this.ctx.lineWidth = thickness * 0.5;
+        this.ctx.shadowBlur = 8 * this.scaleFactor;
+        this.ctx.shadowColor = 'rgba(255, 200, 200, 0.4)';
+        this.ctx.stroke();
+
+        this.ctx.shadowBlur = 0;
+        this.ctx.globalAlpha = 1;
     }
 
     /**
@@ -10615,7 +11772,7 @@ class Visualizer {
      * Mode 106: Aurora borealis flowing curtains
      */
         render116LightningStorm(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -10654,7 +11811,7 @@ class Visualizer {
      * Mode 117: Biological cell division and growth
      */
         render117CellularGrowth(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -10693,7 +11850,7 @@ class Visualizer {
      * Mode 118: 3D ribbons twisting through space
      */
         render118SoundRibbons(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -10730,7 +11887,7 @@ class Visualizer {
      * Mode 119: Matrix code rain
      */
         render119MatrixRain(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -10766,7 +11923,7 @@ class Visualizer {
      * Mode 120: Circular mandala made of flames
      */
         render120FireMandala(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -10802,7 +11959,7 @@ class Visualizer {
      * Mode 121: Escher-style morphing tessellations
      */
         render121TessellationShift(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -10841,7 +11998,7 @@ class Visualizer {
      * Mode 122: Seismograph readings with P-waves and S-waves
      */
         render122SeismicWaves(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -10877,7 +12034,7 @@ class Visualizer {
      * Mode 123: Cyberpunk city with pulsing lights
      */
         render123NeonCity(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -10916,7 +12073,7 @@ class Visualizer {
      * Mode 124: Magnetic field lines with particle clustering
      */
         render124MagneticField(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -10955,7 +12112,7 @@ class Visualizer {
      * Mode 125: Bubbles that float, merge, and pop
      */
         render125BubbleFusion(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -10994,7 +12151,7 @@ class Visualizer {
      * Mode 126: Tribal patterns pulsing like drum skins
      */
         render126TribalDrums(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11033,7 +12190,7 @@ class Visualizer {
      * Mode 127: Glass forming and shattering
      */
         render127GlassShatter(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11072,7 +12229,7 @@ class Visualizer {
      * Mode 128: Deep ocean bioluminescent creatures
      */
         render128Bioluminescence(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11111,7 +12268,7 @@ class Visualizer {
      * Mode 129: Impossible architecture constructing/deconstructing
      */
         render129SoundArchitecture(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11150,7 +12307,7 @@ class Visualizer {
      * Mode 130: Plasma globe with electrical tendrils
      */
         render130PlasmaBall(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11189,7 +12346,7 @@ class Visualizer {
      * Mode 131: Tibetan sand mandala forming grain by grain
      */
         render131SandMandala(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11228,7 +12385,7 @@ class Visualizer {
      * Mode 132: Concert laser beams sweeping and bouncing
      */
         render132LaserShow(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11267,7 +12424,7 @@ class Visualizer {
      * Mode 133: Growing coral reef with swaying polyps
      */
         render133CoralReef(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11303,7 +12460,7 @@ class Visualizer {
      * Mode 134: 3D wireframe objects morphing between shapes
      */
         render134WireframeMorph(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11342,7 +12499,7 @@ class Visualizer {
      * Mode 135: Abstract garden with blooming flowers
      */
         render135SoundGarden(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11381,7 +12538,7 @@ class Visualizer {
      * Mode 136: Glitching holographic interface
      */
         render136HologramGlitch(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11420,7 +12577,7 @@ class Visualizer {
      * Mode 137: Multiple pendulums creating wave patterns
      */
         render137PendulumWave(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11456,7 +12613,7 @@ class Visualizer {
      * Mode 138: Volcano erupting with lava and ash
      */
         render138VolcanoEruption(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11495,7 +12652,7 @@ class Visualizer {
      * Mode 139: Chaos theory Lorenz attractor
      */
         render139ButterflyEffect(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11531,7 +12688,7 @@ class Visualizer {
      * Mode 140: Silk threads weaving patterns
      */
         render140SilkWeaving(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11570,7 +12727,7 @@ class Visualizer {
      * Mode 141: Interlocking clockwork gears turning
      */
         render141ClockGears(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11609,7 +12766,7 @@ class Visualizer {
      * Mode 142: Rising smoke plumes forming patterns
      */
         render142SmokeSignals(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11648,7 +12805,7 @@ class Visualizer {
      * Mode 143: Glowing stained glass window
      */
         render143StainedGlass(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11687,7 +12844,7 @@ class Visualizer {
      * Mode 144: Theoretical strings vibrating in multiple dimensions
      */
         render144StringTheory(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11726,7 +12883,7 @@ class Visualizer {
      * Mode 145: Paper cutouts folding into 3D shapes
      */
         render145PaperCraft(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11765,7 +12922,7 @@ class Visualizer {
      * Mode 146: Realistic aurora borealis dancing
      */
         render146NorthernLights(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11804,7 +12961,7 @@ class Visualizer {
      * Mode 147: Conway's Game of Life with audio triggers
      */
         render147CellularAutomata(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11843,7 +13000,7 @@ class Visualizer {
      * Mode 148: Fractal dragon curve growing
      */
         render148DragonCurve(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11882,7 +13039,7 @@ class Visualizer {
      * Mode 149: Concentric circles like raindrops
      */
         render149RainCircles(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11918,7 +13075,7 @@ class Visualizer {
      * Mode 150: Rotating circles tracing Fourier series
      */
         render150FourierEpicycles(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11957,7 +13114,7 @@ class Visualizer {
      * Mode 151: Circular ring whose radius pulses with kick; emits radial spikes on snare
      */
         render151NeonHaloBurst(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -11996,7 +13153,7 @@ class Visualizer {
      * Mode 152: Two dots orbit a center with elastic distance; trails draw lissajous figure
      */
         render152TwinOrbiters(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12035,7 +13192,7 @@ class Visualizer {
      * Mode 153: Bars arranged in a spiral. Each bar length follows its band
      */
         render153BarSpiralGalaxy(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12074,7 +13231,7 @@ class Visualizer {
      * Mode 154: Wide ribbon undulates like cloth; bass lifts amplitude
      */
         render154RibbonWave(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12110,7 +13267,7 @@ class Visualizer {
      * Mode 155: 3D grid of extruded cubes like skyline; building heights react per frequency
      */
         render155VoxelCity(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12149,7 +13306,7 @@ class Visualizer {
      * Mode 156: 360° radial meter with ticks; ticks bend outward on mids
      */
         render156SunburstDial(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12185,7 +13342,7 @@ class Visualizer {
      * Mode 157: Horizontal waveform floats like water surface
      */
         render158LaserTunnel(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12224,7 +13381,7 @@ class Visualizer {
      * Mode 159: Thousands of particles follow a noise flow; velocity multiplies on mids
      */
         render159VectorFieldSprites(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12263,7 +13420,7 @@ class Visualizer {
      * Mode 160: Nested orbits with dots; each ring maps to a band
      */
         render160OrbitRingsMeter(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12302,7 +13459,7 @@ class Visualizer {
      * Mode 161: Stacked micro-bars like embroidered stitches
      */
         render161StitchBars(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12341,7 +13498,7 @@ class Visualizer {
      * Mode 162: Vertical curtains waving; bass widens curtain
      */
         render162AuroraCurtain(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12380,7 +13537,7 @@ class Visualizer {
      * Mode 164: Regular polygon in the center inflates on kicks
      */
         render164PolygonHeartbeat(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12419,7 +13576,7 @@ class Visualizer {
      * Mode 165: On peaks, spawn confetti bursts
      */
         render165ConfettiImpulse(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12456,7 +13613,7 @@ class Visualizer {
      * Mode 166: Hemispherical mesh; vertices displace along normals
      */
         render166WireframeDome(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12495,7 +13652,7 @@ class Visualizer {
      * Mode 167: Circular dashed stroke; dash length oscillates with mids
      */
         render167PulseDashes(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12532,7 +13689,7 @@ class Visualizer {
      * Mode 168: Scrolling heightmap like synthwave hills
      */
         render168TerrainSweep(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12568,7 +13725,7 @@ class Visualizer {
      * Mode 169: Mirrored bars with central symmetry; hue rotates
      */
         render169ChromaticBarsMirror(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12607,7 +13764,7 @@ class Visualizer {
      * Mode 170: Bubbles rise; size from band energy; pop on snare
      */
         render170BubbleChoir(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12646,7 +13803,7 @@ class Visualizer {
      * Mode 171: Stars quantized to a grid; cell brightness follows local band
      */
         render171StarfieldQuantizer(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12682,7 +13839,7 @@ class Visualizer {
      * Mode 172: Two sinusoid strands; rung length follows mids
      */
         render172DnaLadder(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12721,7 +13878,7 @@ class Visualizer {
      * Mode 173: Three concentric arcs for lows/mids/highs
      */
         render173ArcMeterTrio(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12760,7 +13917,7 @@ class Visualizer {
      * Mode 174: Oscilloscope line with ink-style splats at transients
      */
         render175HexCellBloom(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12799,7 +13956,7 @@ class Visualizer {
      * Mode 176: Event Horizon Lattice - warped grid bends toward a black hole; streaks on transients
      */
         render176EventHorizonLattice(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12835,7 +13992,7 @@ class Visualizer {
      * Mode 177: Comet Conveyor - endless belt carries comets; tails shear on treble
      */
         render177CometConveyor(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12874,7 +14031,7 @@ class Visualizer {
      * Mode 178: Quantum Foam Micro - foamy micro-bubbles pop; cascades on peaks
      */
         render178QuantumFoamMicro(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12913,7 +14070,7 @@ class Visualizer {
      * Mode 179: Aurora Crown - polar aurora dome overhead; ribbons brighten by mids
      */
         render179AuroraCrown(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12952,7 +14109,7 @@ class Visualizer {
      * Mode 180: Asteroid Excavator - drill depth increases with bass; debris size follows highs
      */
         render180AsteroidExcavator(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -12991,7 +14148,7 @@ class Visualizer {
      * Mode 181: Hyperloop Spectrotrain - car length scales to energy; station lights strobe
      */
         render181HyperloopSpectrotrain(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13027,7 +14184,7 @@ class Visualizer {
      * Mode 182: Galactic Pinball - bumpers map to bands; ball boosts on peaks
      */
         render182GalacticPinball(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13066,7 +14223,7 @@ class Visualizer {
      * Mirrored volumetric smoke with hue by dominant band
      */
     render183NebulaInkblot(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13171,7 +14328,7 @@ class Visualizer {
      * Mode 184: Satellite Telemetry Rings - rippling rings with dashed spectrum
      */
         render184SatelliteTelemetryRings(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13210,7 +14367,7 @@ class Visualizer {
      * Mode 185: Wormhole Origami - sheet folds into portal; depth by bass
      */
         render185WormholeOrigami(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13249,7 +14406,7 @@ class Visualizer {
      * Mode 186: Holographic Jellyfish - bell pulsates with lows; tentacles sparkle with highs
      */
         render186HolographicJellyfish(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13285,7 +14442,7 @@ class Visualizer {
      * Mode 187: Moon Quarry Crane - bins heights equal band magnitude; dust on kicks
      */
         render187MoonQuarryCrane(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13321,7 +14478,7 @@ class Visualizer {
      * Mode 188: Constellation TypoPlot - letters as stars; lines draw when band is hot
      */
         render188ConstellationTypoplot(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13360,7 +14517,7 @@ class Visualizer {
      * Mode 189: Cryo Crystal Garden - crystals grow per frequency slice; flare on treble
      */
         render189CryoCrystalGarden(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13399,7 +14556,7 @@ class Visualizer {
      * Mode 190: Meteorite Blueprint - technical UI; callouts to bands; red stamp on peaks
      */
         render190MeteoriteBlueprint(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13438,7 +14595,7 @@ class Visualizer {
      * Mode 191: Lunar Tide Pool - water level by bass; caustics sharpen with highs
      */
         render191LunarTidePool(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13474,7 +14631,7 @@ class Visualizer {
      * Mode 192: Orbital Barcode Slicer - rings slice vertical barcode; brightness per band
      */
         render192OrbitalBarcodeSlicer(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13510,7 +14667,7 @@ class Visualizer {
      * Mode 193: Satellite Swarm Flocking - simple flock; thrust bursts on kick
      */
         render193SatelliteSwarmFlocking(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13549,7 +14706,7 @@ class Visualizer {
      * Mode 194: Astro Pulse Weave - two opposing spiral waves; brightness sum of bands
      */
         render194AstroPulseWeave(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13586,7 +14743,7 @@ class Visualizer {
      * Mode 195: Zero-G Paint Spheres - spheres merge on peaks and split on highs
      */
         render195ZeroGPaintSpheres(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13625,7 +14782,7 @@ class Visualizer {
      * Mode 196: Supernova Countdown - star swells with energy; blasts at threshold
      */
         render196SupernovaCountdown(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13664,7 +14821,7 @@ class Visualizer {
      * Mode 197: Martian Wind Harp - dunes as strings; ripples by mids; dust devils on snares
      */
         render197MartianWindHarp(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13700,7 +14857,7 @@ class Visualizer {
      * Mode 198: Teleporting Bar Choir - bars pop at random radial positions; decay persists
      */
         render198TeleportingBarChoir(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13739,7 +14896,7 @@ class Visualizer {
      * Mode 199: Cosmic Vinyl Halo - record edge-on; grooves shimmer with spectrum
      */
         render199CosmicVinylHalo(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13778,7 +14935,7 @@ class Visualizer {
      * Mode 200: Photon Origination Chamber - photons exit slits; rate per band bucket
      */
         render200PhotonOriginationChamber(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13817,7 +14974,7 @@ class Visualizer {
      * Mode 201: Meteor Net - hex net catches meteors; nodes glow by band
      */
         render301ForestCanopy(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13853,7 +15010,7 @@ class Visualizer {
      * Mode 302: Flowing ocean waves with foam
      */
         render302OceanWaves(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13889,7 +15046,7 @@ class Visualizer {
      * Mode 303: Coral formations with flowing tentacles
      */
         render303CoralReef(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13925,7 +15082,7 @@ class Visualizer {
      * Mode 304: Butterflies dancing to music
      */
         render304ButterflySwarm(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13961,7 +15118,7 @@ class Visualizer {
      * Mode 305: Mountain ranges responding to frequencies
      */
         render305MountainPeaks(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -13997,7 +15154,7 @@ class Visualizer {
      * Mode 306: Fireflies glowing and flickering
      */
         render306Fireflies(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14033,7 +15190,7 @@ class Visualizer {
      * Mode 307: Flowers blooming radially
      */
         render307FlowerBloom(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14069,7 +15226,7 @@ class Visualizer {
      * Mode 308: Rain creating ripples on water surface
      */
         render308RainRipples(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14105,7 +15262,7 @@ class Visualizer {
      * Mode 309: Autumn leaves falling
      */
         render309LeafFall(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14141,7 +15298,7 @@ class Visualizer {
      * Mode 310: Growth rings of a tree
      */
         render310TreeRings(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14177,7 +15334,7 @@ class Visualizer {
      * Mode 311: Lightning bolts during storm
      */
         render311LightningStorm(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14216,7 +15373,7 @@ class Visualizer {
      * Mode 312: Koi fish swimming in pond
      */
         render312PondKoi(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14255,7 +15412,7 @@ class Visualizer {
      * Mode 313: Moss spreading organically
      */
         render313MossGrowth(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14291,7 +15448,7 @@ class Visualizer {
      * Mode 314: Northern lights over forest
      */
         render314AuroraForest(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14327,7 +15484,7 @@ class Visualizer {
      * Mode 315: Dandelion seeds floating in wind
      */
         render315DandelionSeeds(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14363,7 +15520,7 @@ class Visualizer {
      * Mode 316: Fractal fern patterns
      */
         render316FernFractals(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14399,7 +15556,7 @@ class Visualizer {
      * Mode 317: Hexagonal honeycomb pattern
      */
         render317BeehiveCells(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14438,7 +15595,7 @@ class Visualizer {
      * Mode 318: Wheat swaying in wind
      */
         render318WheatField(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14477,7 +15634,7 @@ class Visualizer {
      * Mode 319: Spider web with dew drops
      */
         render319SpiderWeb(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14516,7 +15673,7 @@ class Visualizer {
      * Mode 320: Mushroom spores floating
      */
         render320MushroomSpores(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14555,7 +15712,7 @@ class Visualizer {
      * Mode 321: Bamboo stalks swaying
      */
         render321BambooForest(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14591,7 +15748,7 @@ class Visualizer {
      * Mode 322: Tide pools with sea life
      */
         render322TidePools(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14627,7 +15784,7 @@ class Visualizer {
      * Mode 323: Growing vine tendrils
      */
         render323VineTendrils(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14663,7 +15820,7 @@ class Visualizer {
      * Mode 324: Crystalline cave formations
      */
         render324CrystalCave(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14702,7 +15859,7 @@ class Visualizer {
      * Mode 325: Flock of birds in murmuration
      */
         render325BirdMurmuration(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14738,7 +15895,7 @@ class Visualizer {
      * Mode 326: River flowing with currents
      */
         render326RiverFlow(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14775,7 +15932,7 @@ class Visualizer {
      * Mode 327: Seed pods bursting open
      */
         render327SeedPods(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14811,7 +15968,7 @@ class Visualizer {
      * Mode 328: Algae blooming in water
      */
         render328AlgaeBloom(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14847,7 +16004,7 @@ class Visualizer {
      * Mode 329: Cactus with radiating spines
      */
         render329CactusSpines(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -14886,7 +16043,7 @@ class Visualizer {
      * Mode 330: Unique snowflakes falling
      */
         render330Snowflakes(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15105,7 +16262,7 @@ class Visualizer {
      * Mode 332: Ice crystal formations
      */
         render332IceCrystals(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15141,7 +16298,7 @@ class Visualizer {
      * Mode 333: Pine cone spiral patterns
      */
         render333PineCones(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15180,7 +16337,7 @@ class Visualizer {
      * Mode 334: Geyser water erupting
      */
         render334GeyserEruption(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15219,7 +16376,7 @@ class Visualizer {
      * Mode 335: Pollen drifting in air
      */
         render335PollenCloud(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15255,7 +16412,7 @@ class Visualizer {
      * Mode 336: Sand dunes in wind
      */
         render336DesertDunes(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15291,7 +16448,7 @@ class Visualizer {
      * Mode 337: Water lilies on pond
      */
         render337LilyPads(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15330,7 +16487,7 @@ class Visualizer {
      * Mode 338: Termite mound structure
      */
         render338TermiteMound(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15369,7 +16526,7 @@ class Visualizer {
      * Mode 339: Cherry blossom petals falling
      */
         render339CherryBlossoms(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15408,7 +16565,7 @@ class Visualizer {
      * Mode 340: Underground root network
      */
         render340RootSystem(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15447,7 +16604,7 @@ class Visualizer {
      * Mode 341: Bioluminescent plankton
      */
         render341PlanktonSwarm(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15483,7 +16640,7 @@ class Visualizer {
      * Mode 342: Frost forming on glass
      */
         render342FrostPatterns(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15519,7 +16676,7 @@ class Visualizer {
      * Mode 343: Ant colony foraging trails
      */
         render343AntTrails(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15558,7 +16715,7 @@ class Visualizer {
      * Mode 344: Seaweed swaying underwater
      */
         render344SeaweedSway(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15597,7 +16754,7 @@ class Visualizer {
      * Mode 345: Volcanic ash cloud
      */
         render345VolcanoAsh(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15636,7 +16793,7 @@ class Visualizer {
      * Mode 346: Dragonfly wing patterns
      */
         render346DragonflyWings(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15675,7 +16832,7 @@ class Visualizer {
      * Mode 347: Pebbles dropping in water
      */
         render347PebbleRipples(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15712,7 +16869,7 @@ class Visualizer {
      * Mode 348: Moss growing on stone
      */
         render348MossTendrils(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15748,7 +16905,7 @@ class Visualizer {
      * Mode 349: Starfish with moving arms
      */
         render349StarfishArms(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15784,7 +16941,7 @@ class Visualizer {
      * Mode 350: Venus flytrap opening and closing
      */
         render350VenusFlytrap(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15823,7 +16980,7 @@ class Visualizer {
      * Mode 351: Rainbow appearing in mist
      */
         render351RainbowMist(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15859,7 +17016,7 @@ class Visualizer {
      * Mode 352: Crystal formations inside geode
      */
         render352GeodeCrystals(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15898,7 +17055,7 @@ class Visualizer {
      * Mode 353: Snake skin scale pattern
      */
         render353SnakeScales(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15937,7 +17094,7 @@ class Visualizer {
      * Mode 354: Water spiraling into whirlpool
      */
         render354Whirlpool(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -15976,7 +17133,7 @@ class Visualizer {
      * Mode 355: Owl eyes blinking
      */
         render355OwlEyes(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16015,7 +17172,7 @@ class Visualizer {
      * Mode 356: Tornado funnel with debris
      */
         render356TornadoFunnel(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16054,7 +17211,7 @@ class Visualizer {
      * Mode 357: Peacock tail feather display
      */
         render357PeacockFeathers(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16093,7 +17250,7 @@ class Visualizer {
      * Mode 358: Jellyfish pulsating
      */
         render358JellyfishPulse(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16129,7 +17286,7 @@ class Visualizer {
      * Mode 359: Ripples in sand from wind
      */
         render359SandRipples(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16166,7 +17323,7 @@ class Visualizer {
      * Mode 360: Birds/bats moving in realistic flocking patterns like a murmuration
      */
         render360BatSwarm(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         // Use mode-specific parameters
         const batCount = params.batCount || 50;
         const swarmSpeed = params.swarmSpeed || 0.08;
@@ -16363,7 +17520,7 @@ class Visualizer {
      * Mode 361: Tidal motion advancing and retreating
      */
         render361TideMotion(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16399,7 +17556,7 @@ class Visualizer {
      * Mode 362: Lichen spreading on rock
      */
         render362LichenGrowth(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16438,7 +17595,7 @@ class Visualizer {
      * Mode 363: Eagle soaring in thermals
      */
         render363EagleSoar(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16477,7 +17634,7 @@ class Visualizer {
      * Mode 364: Mangrove root system
      */
         render364MangroveRoots(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16516,7 +17673,7 @@ class Visualizer {
      * Mode 365: Aurora borealis curtain waves
      */
         render365AuroraWaves(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16552,7 +17709,7 @@ class Visualizer {
      * Mode 366: Dolphins leaping from water
      */
         render366DolphinLeap(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16591,7 +17748,7 @@ class Visualizer {
      * Mode 367: Tumbleweed rolling across desert
      */
         render367TumbleweedRoll(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16630,7 +17787,7 @@ class Visualizer {
      * Mode 368: Coral polyps extending tentacles
      */
         render368CoralPolyps(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16666,7 +17823,7 @@ class Visualizer {
      * Mode 369: Smoke wisps rising
      */
         render369SmokeWisps(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16705,7 +17862,7 @@ class Visualizer {
      * Mode 370: Nautilus shell spiral
      */
         render370NautilusShell(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16744,7 +17901,7 @@ class Visualizer {
      * Mode 371: Wolf howling at moon with sound waves
      */
         render371WolfHowl(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16783,7 +17940,7 @@ class Visualizer {
      * Mode 372: Various seashell patterns
      */
         render372SeashellPatterns(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16822,7 +17979,7 @@ class Visualizer {
      * Mode 373: Individual grass blades swaying
      */
         render373GrassBlades(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16861,7 +18018,7 @@ class Visualizer {
      * Mode 374: Cave stalactites and stalagmites
      */
         render374Stalactites(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16900,7 +18057,7 @@ class Visualizer {
      * Mode 375: Amoeba-like organic movement
      */
         render375AmoebaMovement(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -16939,7 +18096,7 @@ class Visualizer {
      * Mode 376: Pine needle clusters
      */
         render376PineNeedles(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17208,7 +18365,7 @@ class Visualizer {
      * Mode 378: Succulent plant rosette pattern
      */
         render378SucculentRosette(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17247,7 +18404,7 @@ class Visualizer {
      * Mode 379: Salmon swimming upstream
      */
         render379SalmonUpstream(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17284,7 +18441,7 @@ class Visualizer {
      * Mode 380: Clouds forming and dispersing
      */
         render380CloudFormation(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17320,7 +18477,7 @@ class Visualizer {
      * Mode 381: Fox tail swishing
      */
         render381FoxTail(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17359,7 +18516,7 @@ class Visualizer {
      * Mode 382: Field of four-leaf clovers
      */
         render382CloverField(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17398,7 +18555,7 @@ class Visualizer {
      * Mode 383: Multiple geysers erupting
      */
         render383GeyserField(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17437,7 +18594,7 @@ class Visualizer {
      * Mode 384: Compound eye of an insect
      */
         render384InsectCompoundEye(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17473,7 +18630,7 @@ class Visualizer {
      * Mode 385: Moonflower blooming at night
      */
         render385MoonflowerBloom(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17509,7 +18666,7 @@ class Visualizer {
      * Mode 386: Sand dollar pattern
      */
         render386SandDollar(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17548,7 +18705,7 @@ class Visualizer {
      * Mode 387: Deep crevasse in glacier
      */
         render387GlacierCrevasse(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17587,7 +18744,7 @@ class Visualizer {
      * Mode 388: Deer antler branching pattern
      */
         render388AntlerGrowth(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17626,7 +18783,7 @@ class Visualizer {
      * Mode 389: Feather duster worm plume
      */
         render389PlumeWorm(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17665,7 +18822,7 @@ class Visualizer {
      * Mode 390: Reeds swaying in marsh
      */
         render390ReedMarsh(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17704,7 +18861,7 @@ class Visualizer {
      * Mode 391: Iridescent beetle shell pattern
      */
         render391BeetleShell(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17743,7 +18900,7 @@ class Visualizer {
      * Mode 392: Sea anemone in tidal zone
      */
         render392TideAnemone(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17779,7 +18936,7 @@ class Visualizer {
      * Mode 393: Seismic waves propagating
      */
         render393EarthquakeWaves(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17815,7 +18972,7 @@ class Visualizer {
      * Mode 394: Butterfly metamorphosis stages
      */
         render394ButterflyLifecycle(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17851,7 +19008,7 @@ class Visualizer {
      * Mode 395: Palm tree with coconuts
      */
         render395CoconutPalm(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17890,7 +19047,7 @@ class Visualizer {
      * Mode 396: Frost fern patterns on window
      */
         render396FrostFerns(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17926,7 +19083,7 @@ class Visualizer {
      * Mode 397: Bioluminescent organisms in bay
      */
         render397BioluminescentBay(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -17965,7 +19122,7 @@ class Visualizer {
      * Mode 398: Water erosion creating patterns
      */
         render398ErosionPatterns(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18004,7 +19161,7 @@ class Visualizer {
      * Mode 399: Hedge maze from above
      */
         render399HedgeMaze(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18043,7 +19200,7 @@ class Visualizer {
      * Mode 400: Water lily with mirror reflection
      */
         render701BinaryRain(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18079,7 +19236,7 @@ class Visualizer {
      * Mode 702: Hexadecimal grid visualization
      */
         render702HexadecimalGrid(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18118,7 +19275,7 @@ class Visualizer {
      * Mode 703: Circuit board visualization
      */
         render703CircuitBoard(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18157,7 +19314,7 @@ class Visualizer {
      * Mode 704: Data flow visualization
      */
         render704DataFlow(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18196,7 +19353,7 @@ class Visualizer {
      * Mode 705: Packet transmission visualization
      */
         render705PacketTransmission(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18235,7 +19392,7 @@ class Visualizer {
      * Mode 706: Network topology visualization
      */
         render706NetworkTopology(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18274,7 +19431,7 @@ class Visualizer {
      * Mode 707: Server cluster visualization
      */
         render707ServerCluster(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18313,7 +19470,7 @@ class Visualizer {
      * Mode 708: Cloud computing visualization
      */
         render708CloudComputing(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18349,7 +19506,7 @@ class Visualizer {
      * Mode 709: Distributed system visualization
      */
         render709DistributedSystem(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18388,7 +19545,7 @@ class Visualizer {
      * Mode 710: Peer-to-peer visualization
      */
         render710PeerToPeer(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18427,7 +19584,7 @@ class Visualizer {
      * Mode 711: Blockchain visualization
      */
         render711Blockchain(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18466,7 +19623,7 @@ class Visualizer {
      * Mode 712: Hash function visualization
      */
         render712HashFunction(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18505,7 +19662,7 @@ class Visualizer {
      * Mode 713: Encryption visualization
      */
         render713Encryption(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18544,7 +19701,7 @@ class Visualizer {
      * Mode 714: Public key visualization
      */
         render714PublicKey(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18583,7 +19740,7 @@ class Visualizer {
      * Mode 715: Digital signature visualization
      */
         render715DigitalSignature(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18622,7 +19779,7 @@ class Visualizer {
      * Mode 716: Zero knowledge proof visualization
      */
         render716ZeroKnowledgeProof(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18661,7 +19818,7 @@ class Visualizer {
      * Mode 717: Homomorphic encryption visualization
      */
         render717HomomorphicEncryption(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18700,7 +19857,7 @@ class Visualizer {
      * Mode 718: Secure multiparty computation visualization
      */
         render718SecureMultipartyComputation(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18739,7 +19896,7 @@ class Visualizer {
      * Mode 719: Differential privacy visualization
      */
         render719DifferentialPrivacy(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18778,7 +19935,7 @@ class Visualizer {
      * Mode 720: Federated learning visualization
      */
         render720FederatedLearning(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18817,7 +19974,7 @@ class Visualizer {
      * Mode 721: Neural network visualization
      */
         render721NeuralNetwork(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18856,7 +20013,7 @@ class Visualizer {
      * Mode 722: Deep learning visualization
      */
         render722DeepLearning(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18895,7 +20052,7 @@ class Visualizer {
      * Mode 723: Convolutional layer visualization
      */
         render723ConvolutionalLayer(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18934,7 +20091,7 @@ class Visualizer {
      * Mode 724: Recurrent connection visualization
      */
         render724RecurrentConnection(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -18971,7 +20128,7 @@ class Visualizer {
      * Mode 725: Attention mechanism visualization
      */
         render725AttentionMechanism(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19010,7 +20167,7 @@ class Visualizer {
      * Mode 726: Transformer architecture visualization
      */
         render726TransformerArchitecture(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19049,7 +20206,7 @@ class Visualizer {
      * Mode 727: Residual connection visualization
      */
         render727ResidualConnection(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19088,7 +20245,7 @@ class Visualizer {
      * Mode 728: Skip connection visualization
      */
         render728SkipConnection(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19127,7 +20284,7 @@ class Visualizer {
      * Mode 729: Batch normalization visualization
      */
         render729BatchNormalization(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19166,7 +20323,7 @@ class Visualizer {
      * Mode 730: Dropout regularization visualization
      */
         render730DropoutRegularization(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19205,7 +20362,7 @@ class Visualizer {
      * Mode 731: Activation function visualization
      */
         render731ActivationFunction(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19244,7 +20401,7 @@ class Visualizer {
      * Mode 732: Gradient descent visualization
      */
         render732GradientDescent(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19283,7 +20440,7 @@ class Visualizer {
      * Mode 733: Backpropagation visualization
      */
         render733Backpropagation(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19322,7 +20479,7 @@ class Visualizer {
      * Mode 734: Loss landscape visualization
      */
         render734LossLandscape(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19361,7 +20518,7 @@ class Visualizer {
      * Mode 735: Optimizer trajectory visualization
      */
         render735OptimizerTrajectory(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19400,7 +20557,7 @@ class Visualizer {
      * Mode 736: Learning rate schedule visualization
      */
         render736LearningRateSchedule(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19439,7 +20596,7 @@ class Visualizer {
      * Mode 737: Momentum visualization
      */
         render737Momentum(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19478,7 +20635,7 @@ class Visualizer {
      * Mode 738: Adaptive learning visualization
      */
         render738AdaptiveLearning(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19517,7 +20674,7 @@ class Visualizer {
      * Mode 739: Weight decay visualization
      */
         render739WeightDecay(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19556,7 +20713,7 @@ class Visualizer {
      * Mode 740: Early stopping visualization
      */
         render740EarlyStopping(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19595,7 +20752,7 @@ class Visualizer {
      * Mode 741: Cross validation visualization
      */
         render741CrossValidation(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19634,7 +20791,7 @@ class Visualizer {
      * Mode 742: Ensemble method visualization
      */
         render742EnsembleMethod(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19673,7 +20830,7 @@ class Visualizer {
      * Mode 743: Boosting visualization
      */
         render743Boosting(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19712,7 +20869,7 @@ class Visualizer {
      * Mode 744: Bagging visualization
      */
         render744Bagging(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19751,7 +20908,7 @@ class Visualizer {
      * Mode 745: Random forest visualization
      */
         render745RandomForest(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19787,7 +20944,7 @@ class Visualizer {
      * Mode 746: Decision tree visualization
      */
         render746DecisionTree(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19823,7 +20980,7 @@ class Visualizer {
      * Mode 747: Support vector machine visualization
      */
         render747SupportVectorMachine(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19862,7 +21019,7 @@ class Visualizer {
      * Mode 748: Kernel trick visualization
      */
         render748KernelTrick(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19901,7 +21058,7 @@ class Visualizer {
      * Mode 749: Feature space visualization
      */
         render749FeatureSpace(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19940,7 +21097,7 @@ class Visualizer {
      * Mode 750: Dimensionality reduction visualization
      */
         render750DimensionalityReduction(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -19979,7 +21136,7 @@ class Visualizer {
      * Mode 751: Principal component analysis visualization
      */
         render751PrincipalComponentAnalysis(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20018,7 +21175,7 @@ class Visualizer {
      * Mode 752: T-sne embedding visualization
      */
         render752TSneEmbedding(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20057,7 +21214,7 @@ class Visualizer {
      * Mode 753: Autoencoder latent space visualization
      */
         render753AutoencoderLatentSpace(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20096,7 +21253,7 @@ class Visualizer {
      * Mode 754: Variational autoencoder visualization
      */
         render754VariationalAutoencoder(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20135,7 +21292,7 @@ class Visualizer {
      * Mode 755: Generative adversarial network visualization
      */
         render755GenerativeAdversarialNetwork(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20174,7 +21331,7 @@ class Visualizer {
      * Mode 756: Discriminator network visualization
      */
         render756DiscriminatorNetwork(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20213,7 +21370,7 @@ class Visualizer {
      * Mode 757: Generator network visualization
      */
         render757GeneratorNetwork(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20252,7 +21409,7 @@ class Visualizer {
      * Mode 758: Style transfer visualization
      */
         render758StyleTransfer(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20291,7 +21448,7 @@ class Visualizer {
      * Mode 759: Content loss visualization
      */
         render759ContentLoss(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20330,7 +21487,7 @@ class Visualizer {
      * Mode 760: Gram matrix visualization
      */
         render760GramMatrix(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20369,7 +21526,7 @@ class Visualizer {
      * Mode 761: Perceptual loss visualization
      */
         render761PerceptualLoss(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20408,7 +21565,7 @@ class Visualizer {
      * Mode 762: Adversarial loss visualization
      */
         render762AdversarialLoss(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20447,7 +21604,7 @@ class Visualizer {
      * Mode 763: Cycle consistency visualization
      */
         render763CycleConsistency(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20486,7 +21643,7 @@ class Visualizer {
      * Mode 764: Identity loss visualization
      */
         render764IdentityLoss(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20525,7 +21682,7 @@ class Visualizer {
      * Mode 765: Reconstruction loss visualization
      */
         render765ReconstructionLoss(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20564,7 +21721,7 @@ class Visualizer {
      * Mode 766: Kl divergence visualization
      */
         render766KlDivergence(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20603,7 +21760,7 @@ class Visualizer {
      * Mode 767: Wasserstein distance visualization
      */
         render767WassersteinDistance(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20642,7 +21799,7 @@ class Visualizer {
      * Mode 768: Earth mover distance visualization
      */
         render768EarthMoverDistance(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20681,7 +21838,7 @@ class Visualizer {
      * Mode 769: Inception score visualization
      */
         render769InceptionScore(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20720,7 +21877,7 @@ class Visualizer {
      * Mode 770: Frechet inception distance visualization
      */
         render770FrechetInceptionDistance(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20759,7 +21916,7 @@ class Visualizer {
      * Mode 771: Bleu score visualization
      */
         render771BleuScore(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20798,7 +21955,7 @@ class Visualizer {
      * Mode 772: Rouge score visualization
      */
         render772RougeScore(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20837,7 +21994,7 @@ class Visualizer {
      * Mode 773: Perplexity visualization
      */
         render773Perplexity(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20876,7 +22033,7 @@ class Visualizer {
      * Mode 774: Cross entropy visualization
      */
         render774CrossEntropy(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20915,7 +22072,7 @@ class Visualizer {
      * Mode 775: Mutual information visualization
      */
         render775MutualInformation(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20954,7 +22111,7 @@ class Visualizer {
      * Mode 776: Information bottleneck visualization
      */
         render776InformationBottleneck(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -20993,7 +22150,7 @@ class Visualizer {
      * Mode 777: Rate distortion visualization
      */
         render777RateDistortion(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21032,7 +22189,7 @@ class Visualizer {
      * Mode 778: Source coding visualization
      */
         render778SourceCoding(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21071,7 +22228,7 @@ class Visualizer {
      * Mode 779: Channel coding visualization
      */
         render779ChannelCoding(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21110,7 +22267,7 @@ class Visualizer {
      * Mode 780: Error correction visualization
      */
         render780ErrorCorrection(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21149,7 +22306,7 @@ class Visualizer {
      * Mode 781: Hamming distance visualization
      */
         render781HammingDistance(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21188,7 +22345,7 @@ class Visualizer {
      * Mode 782: Reed solomon visualization
      */
         render782ReedSolomon(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21227,7 +22384,7 @@ class Visualizer {
      * Mode 783: Turbo code visualization
      */
         render783TurboCode(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21266,7 +22423,7 @@ class Visualizer {
      * Mode 784: Ldpc code visualization
      */
         render784LdpcCode(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21305,7 +22462,7 @@ class Visualizer {
      * Mode 785: Polar code visualization
      */
         render785PolarCode(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21344,7 +22501,7 @@ class Visualizer {
      * Mode 786: Quantum error correction visualization
      */
         render786QuantumErrorCorrection(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21383,7 +22540,7 @@ class Visualizer {
      * Mode 787: Surface code visualization
      */
         render787SurfaceCode(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21422,7 +22579,7 @@ class Visualizer {
      * Mode 788: Toric code visualization
      */
         render788ToricCode(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21461,7 +22618,7 @@ class Visualizer {
      * Mode 789: Color code visualization
      */
         render789ColorCode(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21500,7 +22657,7 @@ class Visualizer {
      * Mode 790: Stabilizer formalism visualization
      */
         render790StabilizerFormalism(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21539,7 +22696,7 @@ class Visualizer {
      * Mode 791: Clifford gate visualization
      */
         render791CliffordGate(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21578,7 +22735,7 @@ class Visualizer {
      * Mode 792: Pauli group visualization
      */
         render792PauliGroup(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21617,7 +22774,7 @@ class Visualizer {
      * Mode 793: Measurement based quantum computing visualization
      */
         render793MeasurementBasedQuantumComputing(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21656,7 +22813,7 @@ class Visualizer {
      * Mode 794: One way quantum computer visualization
      */
         render794OneWayQuantumComputer(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21695,7 +22852,7 @@ class Visualizer {
      * Mode 795: Adiabatic quantum computation visualization
      */
         render795AdiabaticQuantumComputation(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21734,7 +22891,7 @@ class Visualizer {
      * Mode 796: Quantum annealing visualization
      */
         render796QuantumAnnealing(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21773,7 +22930,7 @@ class Visualizer {
      * Mode 797: Variational quantum eigensolver visualization
      */
         render797VariationalQuantumEigensolver(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21812,7 +22969,7 @@ class Visualizer {
      * Mode 798: Quantum approximate optimization visualization
      */
         render798QuantumApproximateOptimization(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21851,7 +23008,7 @@ class Visualizer {
      * Mode 799: Quantum phase estimation visualization
      */
         render799QuantumPhaseEstimation(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21890,7 +23047,7 @@ class Visualizer {
      * Mode 800: Quantum fourier transform visualization
      */
         render800QuantumFourierTransform(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21929,7 +23086,7 @@ class Visualizer {
      * Mode 801: Mandala visualization
      */
     render801Mandala(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21964,7 +23121,7 @@ class Visualizer {
      * Mode 802: Yantra visualization
      */
     render802Yantra(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -21999,7 +23156,7 @@ class Visualizer {
      * Mode 803: Lotus visualization
      */
     render803Lotus(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22034,7 +23191,7 @@ class Visualizer {
      * Mode 804: Om symbol visualization
      */
     render804OmSymbol(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22073,7 +23230,7 @@ class Visualizer {
      * Mode 805: Chakra visualization
      */
     render805Chakra(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22112,7 +23269,7 @@ class Visualizer {
      * Mode 806: Aura field visualization
      */
     render806AuraField(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22147,7 +23304,7 @@ class Visualizer {
      * Mode 807: Third eye visualization
      */
     render807ThirdEye(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22186,7 +23343,7 @@ class Visualizer {
      * Mode 808: Kundalini visualization
      */
     render808Kundalini(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22221,7 +23378,7 @@ class Visualizer {
      * Mode 809: Merkaba visualization
      */
     render809Merkaba(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22256,7 +23413,7 @@ class Visualizer {
      * Mode 810: Flower of life visualization
      */
     render810FlowerOfLife(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22295,7 +23452,7 @@ class Visualizer {
      * Mode 811: Seed of life visualization
      */
     render811SeedOfLife(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22330,7 +23487,7 @@ class Visualizer {
      * Mode 812: Tree of life visualization
      */
     render812TreeOfLife(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22399,7 +23556,7 @@ class Visualizer {
      * Mode 813: Metatron cube visualization
      */
     render813MetatronCube(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22434,7 +23591,7 @@ class Visualizer {
      * Mode 814: Sri yantra visualization
      */
     render814SriYantra(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22473,7 +23630,7 @@ class Visualizer {
      * Mode 815: Shri yantra visualization
      */
     render815ShriYantra(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22508,7 +23665,7 @@ class Visualizer {
      * Mode 816: Tibetan sand mandala visualization
      */
     render816TibetanSandMandala(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22543,7 +23700,7 @@ class Visualizer {
      * Mode 817: Zen circle visualization
      */
     render817ZenCircle(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22578,7 +23735,7 @@ class Visualizer {
      * Mode 818: Yin yang visualization
      */
     render818YinYang(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22617,7 +23774,7 @@ class Visualizer {
      * Mode 819: Tao symbol visualization
      */
     render819TaoSymbol(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22652,7 +23809,7 @@ class Visualizer {
      * Mode 820: Bagua visualization
      */
     render820Bagua(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22687,7 +23844,7 @@ class Visualizer {
      * Mode 821: I ching hexagram visualization
      */
     render821IChingHexagram(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22726,7 +23883,7 @@ class Visualizer {
      * Mode 822: Trigram visualization
      */
     render822Trigram(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22761,7 +23918,7 @@ class Visualizer {
      * Mode 823: Medicine wheel visualization
      */
     render823MedicineWheel(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22800,7 +23957,7 @@ class Visualizer {
      * Mode 824: Dreamcatcher visualization
      */
     render824Dreamcatcher(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22835,7 +23992,7 @@ class Visualizer {
      * Mode 825: Totem visualization
      */
     render825Totem(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22870,7 +24027,7 @@ class Visualizer {
      * Mode 826: Spirit animal visualization
      */
     render826SpiritAnimal(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22905,7 +24062,7 @@ class Visualizer {
      * Mode 827: Shamanic journey visualization
      */
     render827ShamanicJourney(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22940,7 +24097,7 @@ class Visualizer {
      * Mode 828: Ayahuasca vision visualization
      */
     render828AyahuascaVision(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -22979,7 +24136,7 @@ class Visualizer {
      * Mode 829: Dmt realm visualization
      */
     render829DmtRealm(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23014,7 +24171,7 @@ class Visualizer {
      * Mode 830: Astral projection visualization
      */
     render830AstralProjection(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23049,7 +24206,7 @@ class Visualizer {
      * Mode 831: Out of body experience visualization
      */
     render831OutOfBodyExperience(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23084,7 +24241,7 @@ class Visualizer {
      * Mode 832: Near death experience visualization
      */
     render832NearDeathExperience(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23119,7 +24276,7 @@ class Visualizer {
      * Mode 833: Tunnel of light visualization
      */
     render833TunnelOfLight(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23158,7 +24315,7 @@ class Visualizer {
      * Mode 834: Life review visualization
      */
     render834LifeReview(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23193,7 +24350,7 @@ class Visualizer {
      * Mode 835: Soul retrieval visualization
      */
     render835SoulRetrieval(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23228,7 +24385,7 @@ class Visualizer {
      * Mode 836: Past life regression visualization
      */
     render836PastLifeRegression(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23263,7 +24420,7 @@ class Visualizer {
      * Mode 837: Akashic records visualization
      */
     render837AkashicRecords(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23302,7 +24459,7 @@ class Visualizer {
      * Mode 838: Collective unconscious visualization
      */
     render838CollectiveUnconscious(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23337,7 +24494,7 @@ class Visualizer {
      * Mode 839: Archetypal realm visualization
      */
     render839ArchetypalRealm(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23372,7 +24529,7 @@ class Visualizer {
      * Mode 840: Synchronicity visualization
      */
     render840Synchronicity(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23407,7 +24564,7 @@ class Visualizer {
      * Mode 841: Meaningful coincidence visualization
      */
     render841MeaningfulCoincidence(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23442,7 +24599,7 @@ class Visualizer {
      * Mode 842: Serendipity visualization
      */
     render842Serendipity(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23477,7 +24634,7 @@ class Visualizer {
      * Mode 843: Providence visualization
      */
     render843Providence(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23512,7 +24669,7 @@ class Visualizer {
      * Mode 844: Fate visualization
      */
     render844Fate(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23547,7 +24704,7 @@ class Visualizer {
      * Mode 845: Destiny visualization
      */
     render845Destiny(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23586,7 +24743,7 @@ class Visualizer {
      * Mode 846: Karma visualization
      */
     render846Karma(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23621,7 +24778,7 @@ class Visualizer {
      * Mode 847: Dharma visualization
      */
     render847Dharma(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23656,7 +24813,7 @@ class Visualizer {
      * Mode 848: Samsara visualization
      */
     render848Samsara(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23691,7 +24848,7 @@ class Visualizer {
      * Mode 849: Nirvana visualization
      */
     render849Nirvana(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23726,7 +24883,7 @@ class Visualizer {
      * Mode 850: Enlightenment visualization
      */
     render850Enlightenment(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23765,7 +24922,7 @@ class Visualizer {
      * Mode 851: Samadhi visualization
      */
     render851Samadhi(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23804,7 +24961,7 @@ class Visualizer {
      * Mode 852: Satori visualization
      */
     render852Satori(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23843,7 +25000,7 @@ class Visualizer {
      * Mode 853: Kensho visualization
      */
     render853Kensho(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23882,7 +25039,7 @@ class Visualizer {
      * Mode 854: Moksha visualization
      */
     render854Moksha(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23921,7 +25078,7 @@ class Visualizer {
      * Mode 855: Liberation visualization
      */
     render855Liberation(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23956,7 +25113,7 @@ class Visualizer {
      * Mode 856: Self realization visualization
      */
     render856SelfRealization(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -23991,7 +25148,7 @@ class Visualizer {
      * Mode 857: God consciousness visualization
      */
     render857GodConsciousness(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24030,7 +25187,7 @@ class Visualizer {
      * Mode 858: Cosmic consciousness visualization
      */
     render858CosmicConsciousness(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24065,7 +25222,7 @@ class Visualizer {
      * Mode 859: Unity consciousness visualization
      */
     render859UnityConsciousness(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24100,7 +25257,7 @@ class Visualizer {
      * Mode 860: Non-dual awareness visualization
      */
     render860NonDualAwareness(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24135,7 +25292,7 @@ class Visualizer {
      * Mode 861: Witness consciousness visualization
      */
     render861WitnessConsciousness(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24170,7 +25327,7 @@ class Visualizer {
      * Mode 862: Pure awareness visualization
      */
     render862PureAwareness(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24205,7 +25362,7 @@ class Visualizer {
      * Mode 863: Presence visualization
      */
     render863Presence(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24240,7 +25397,7 @@ class Visualizer {
      * Mode 864: Now moment visualization
      */
     render864NowMoment(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24279,7 +25436,7 @@ class Visualizer {
      * Mode 865: Eternal present visualization
      */
     render865EternalPresent(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24314,7 +25471,7 @@ class Visualizer {
      * Mode 866: Timeless being visualization
      */
     render866TimelessBeing(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24349,7 +25506,7 @@ class Visualizer {
      * Mode 867: Infinite space visualization
      */
     render867InfiniteSpace(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24384,7 +25541,7 @@ class Visualizer {
      * Mode 868: Boundless compassion visualization
      */
     render868BoundlessCompassion(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24423,7 +25580,7 @@ class Visualizer {
      * Mode 869: Unconditional love visualization
      */
     render869UnconditionalLove(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24462,7 +25619,7 @@ class Visualizer {
      * Mode 870: Divine grace visualization
      */
     render870DivineGrace(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24497,7 +25654,7 @@ class Visualizer {
      * Mode 871: Holy spirit visualization
      */
     render871HolySpirit(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24532,7 +25689,7 @@ class Visualizer {
      * Mode 872: Shekinah visualization
      */
     render872Shekinah(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24567,7 +25724,7 @@ class Visualizer {
      * Mode 873: Divine feminine visualization
      */
     render873DivineFeminine(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24606,7 +25763,7 @@ class Visualizer {
      * Mode 874: Goddess energy visualization
      */
     render874GoddessEnergy(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24645,7 +25802,7 @@ class Visualizer {
      * Mode 875: Sacred masculine visualization
      */
     render875SacredMasculine(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24680,7 +25837,7 @@ class Visualizer {
      * Mode 876: Hieros gamos visualization
      */
     render876HierosGamos(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24719,7 +25876,7 @@ class Visualizer {
      * Mode 877: Alchemical wedding visualization
      */
     render877AlchemicalWedding(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24758,7 +25915,7 @@ class Visualizer {
      * Mode 878: Coniunctio visualization
      */
     render878Coniunctio(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24793,7 +25950,7 @@ class Visualizer {
      * Mode 879: Philosopher stone visualization
      */
     render879PhilosopherStone(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24832,7 +25989,7 @@ class Visualizer {
      * Mode 880: Prima materia visualization
      */
     render880PrimaMateria(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24867,7 +26024,7 @@ class Visualizer {
      * Mode 881: Nigredo visualization
      */
     render881Nigredo(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24902,7 +26059,7 @@ class Visualizer {
      * Mode 882: Albedo visualization
      */
     render882Albedo(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24937,7 +26094,7 @@ class Visualizer {
      * Mode 883: Citrinitas visualization
      */
     render883Citrinitas(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -24976,7 +26133,7 @@ class Visualizer {
      * Mode 884: Rubedo visualization
      */
     render884Rubedo(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25011,7 +26168,7 @@ class Visualizer {
      * Mode 885: Seven stages visualization
      */
     render885SevenStages(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25050,7 +26207,7 @@ class Visualizer {
      * Mode 886: Hermetic principle visualization
      */
     render886HermeticPrinciple(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25089,7 +26246,7 @@ class Visualizer {
      * Mode 887: As above so below visualization
      */
     render887AsAboveSoBelow(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25124,7 +26281,7 @@ class Visualizer {
      * Mode 888: Microcosm macrocosm visualization
      */
     render888MicrocosmMacrocosm(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25163,7 +26320,7 @@ class Visualizer {
      * Mode 889: Correspondence visualization
      */
     render889Correspondence(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25202,7 +26359,7 @@ class Visualizer {
      * Mode 890: Vibration visualization
      */
     render890Vibration(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25237,7 +26394,7 @@ class Visualizer {
      * Mode 891: Polarity visualization
      */
     render891Polarity(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25272,7 +26429,7 @@ class Visualizer {
      * Mode 892: Rhythm visualization
      */
     render892Rhythm(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25311,7 +26468,7 @@ class Visualizer {
      * Mode 893: Cause and effect visualization
      */
     render893CauseAndEffect(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25350,7 +26507,7 @@ class Visualizer {
      * Mode 894: Gender principle visualization
      */
     render894GenderPrinciple(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25385,7 +26542,7 @@ class Visualizer {
      * Mode 895: Mentalism visualization
      */
     render895Mentalism(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25420,7 +26577,7 @@ class Visualizer {
      * Mode 896: Emerald tablet visualization
      */
     render896EmeraldTablet(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25455,7 +26612,7 @@ class Visualizer {
      * Mode 897: Kybalion visualization
      */
     render897Kybalion(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25490,7 +26647,7 @@ class Visualizer {
      * Mode 898: Corpus hermeticum visualization
      */
     render898CorpusHermeticum(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25525,7 +26682,7 @@ class Visualizer {
      * Mode 899: Gnostic vision visualization
      */
     render899GnosticVision(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25564,7 +26721,7 @@ class Visualizer {
      * Mode 900: Sophia visualization
      */
     render900Sophia(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25599,7 +26756,7 @@ class Visualizer {
      * Mode 901: Spiral vortex visualization
      */
     render901SpiralVortex(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25634,7 +26791,7 @@ class Visualizer {
      * Mode 902: Concentric circles visualization
      */
     render902ConcentricCircles(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25666,7 +26823,7 @@ class Visualizer {
      * Mode 903: Expanding rings visualization
      */
     render903ExpandingRings(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25700,7 +26857,7 @@ class Visualizer {
      * Mode 904: Contracting circles visualization
      */
     render904ContractingCircles(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25734,7 +26891,7 @@ class Visualizer {
      * Mode 905: Pulsing orb visualization
      */
     render905PulsingOrb(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25766,7 +26923,7 @@ class Visualizer {
      * Mode 906: Oscillating wave visualization
      */
     render906OscillatingWave(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25800,7 +26957,7 @@ class Visualizer {
      * Mode 907: Pendulum swing visualization
      */
     render907PendulumSwing(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25834,7 +26991,7 @@ class Visualizer {
      * Mode 908: Hypnotic swirl visualization
      */
     render908HypnoticSwirl(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25868,7 +27025,7 @@ class Visualizer {
      * Mode 909: Tunnel zoom visualization
      */
     render909TunnelZoom(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25902,7 +27059,7 @@ class Visualizer {
      * Mode 910: Perspective shift visualization
      */
     render910PerspectiveShift(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25936,7 +27093,7 @@ class Visualizer {
      * Mode 911: Rotating polygon visualization
      */
     render911RotatingPolygon(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -25969,7 +27126,7 @@ class Visualizer {
      * Mode 912: Morphing shape visualization
      */
     render912MorphingShape(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26004,7 +27161,7 @@ class Visualizer {
      * Mode 913: Flowing liquid visualization
      */
     render913FlowingLiquid(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26037,7 +27194,7 @@ class Visualizer {
      * Mode 914: Ripple effect visualization
      */
     render914RippleEffect(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26072,7 +27229,7 @@ class Visualizer {
      * Mode 915: Interference pattern visualization
      */
     render915InterferencePattern(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26107,7 +27264,7 @@ class Visualizer {
      * Mode 916: Moire effect visualization
      */
     render916MoireEffect(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26142,7 +27299,7 @@ class Visualizer {
      * Mode 917: Strobing light visualization
      */
     render917StrobingLight(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26175,7 +27332,7 @@ class Visualizer {
      * Mode 918: Flickering visualization
      */
     render918Flickering(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26208,7 +27365,7 @@ class Visualizer {
      * Mode 919: Pulsating visualization
      */
     render919Pulsating(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26243,7 +27400,7 @@ class Visualizer {
      * Mode 920: Breathing pattern visualization
      */
     render920BreathingPattern(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26278,7 +27435,7 @@ class Visualizer {
      * Mode 921: Expansion contraction visualization
      */
     render921ExpansionContraction(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26311,7 +27468,7 @@ class Visualizer {
      * Mode 922: Growth decay visualization
      */
     render922GrowthDecay(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26346,7 +27503,7 @@ class Visualizer {
      * Mode 923: Birth death visualization
      */
     render923BirthDeath(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26381,7 +27538,7 @@ class Visualizer {
      * Mode 924: Ebb flow visualization
      */
     render924EbbFlow(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26416,7 +27573,7 @@ class Visualizer {
      * Mode 925: Inhale exhale visualization
      */
     render925InhaleExhale(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26451,7 +27608,7 @@ class Visualizer {
      * Mode 926: Systole diastole visualization
      */
     render926SystoleDiastole(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26484,7 +27641,7 @@ class Visualizer {
      * Mode 927: Tension release visualization
      */
     render927TensionRelease(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26519,7 +27676,7 @@ class Visualizer {
      * Mode 928: Charge discharge visualization
      */
     render928ChargeDischarge(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26554,7 +27711,7 @@ class Visualizer {
      * Mode 929: Loading unloading visualization
      */
     render929LoadingUnloading(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26589,7 +27746,7 @@ class Visualizer {
      * Mode 930: Compression rarefaction visualization
      */
     render930CompressionRarefaction(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26624,7 +27781,7 @@ class Visualizer {
      * Mode 931: Dense sparse visualization
      */
     render931DenseSparse(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26659,7 +27816,7 @@ class Visualizer {
      * Mode 932: Thick thin visualization
      */
     render932ThickThin(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26694,7 +27851,7 @@ class Visualizer {
      * Mode 933: Heavy light visualization
      */
     render933HeavyLight(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26729,7 +27886,7 @@ class Visualizer {
      * Mode 934: Dark bright visualization
      */
     render934DarkBright(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26764,7 +27921,7 @@ class Visualizer {
      * Mode 935: Shadow highlight visualization
      */
     render935ShadowHighlight(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26797,7 +27954,7 @@ class Visualizer {
      * Mode 936: Positive negative visualization
      */
     render936PositiveNegative(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26832,7 +27989,7 @@ class Visualizer {
      * Mode 937: Convex concave visualization
      */
     render937ConvexConcave(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26867,7 +28024,7 @@ class Visualizer {
      * Mode 938: Inside outside visualization
      */
     render938InsideOutside(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26902,7 +28059,7 @@ class Visualizer {
      * Mode 939: Figure ground visualization
      */
     render939FigureGround(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26937,7 +28094,7 @@ class Visualizer {
      * Mode 940: Foreground background visualization
      */
     render940ForegroundBackground(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -26972,7 +28129,7 @@ class Visualizer {
      * Mode 941: Solid void visualization
      */
     render941SolidVoid(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27007,7 +28164,7 @@ class Visualizer {
      * Mode 942: Matter antimatter visualization
      */
     render942MatterAntimatter(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27042,7 +28199,7 @@ class Visualizer {
      * Mode 943: Particle wave visualization
      */
     render943ParticleWave(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27077,7 +28234,7 @@ class Visualizer {
      * Mode 944: Discrete continuous visualization
      */
     render944DiscreteContinuous(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27110,7 +28267,7 @@ class Visualizer {
      * Mode 945: Quantized smooth visualization
      */
     render945QuantizedSmooth(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27143,7 +28300,7 @@ class Visualizer {
      * Mode 946: Digital analog visualization
      */
     render946DigitalAnalog(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27178,7 +28335,7 @@ class Visualizer {
      * Mode 947: Binary fluid visualization
      */
     render947BinaryFluid(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27213,7 +28370,7 @@ class Visualizer {
      * Mode 948: On off visualization
      */
     render948OnOff(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27248,7 +28405,7 @@ class Visualizer {
      * Mode 949: Yes no visualization
      */
     render949YesNo(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27281,7 +28438,7 @@ class Visualizer {
      * Mode 950: Zero one visualization
      */
     render950ZeroOne(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27316,7 +28473,7 @@ class Visualizer {
      * Mode 951: Presence absence visualization
      */
     render951PresenceAbsence(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27351,7 +28508,7 @@ class Visualizer {
      * Mode 952: Being nothingness visualization
      */
     render952BeingNothingness(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27386,7 +28543,7 @@ class Visualizer {
      * Mode 953: Existence void visualization
      */
     render953ExistenceVoid(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27419,7 +28576,7 @@ class Visualizer {
      * Mode 954: Form emptiness visualization
      */
     render954FormEmptiness(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27454,7 +28611,7 @@ class Visualizer {
      * Mode 955: Substance essence visualization
      */
     render955SubstanceEssence(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27489,7 +28646,7 @@ class Visualizer {
      * Mode 956: Appearance reality visualization
      */
     render956AppearanceReality(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27524,7 +28681,7 @@ class Visualizer {
      * Mode 957: Illusion truth visualization
      */
     render957IllusionTruth(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27559,7 +28716,7 @@ class Visualizer {
      * Mode 958: Maya brahman visualization
      */
     render958MayaBrahman(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27592,7 +28749,7 @@ class Visualizer {
      * Mode 959: Phenomena noumena visualization
      */
     render959PhenomenaNoumena(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27625,7 +28782,7 @@ class Visualizer {
      * Mode 960: Relative absolute visualization
      */
     render960RelativeAbsolute(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27660,7 +28817,7 @@ class Visualizer {
      * Mode 961: Changing unchanging visualization
      */
     render961ChangingUnchanging(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27693,7 +28850,7 @@ class Visualizer {
      * Mode 962: Temporal eternal visualization
      */
     render962TemporalEternal(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27728,7 +28885,7 @@ class Visualizer {
      * Mode 963: Finite infinite visualization
      */
     render963FiniteInfinite(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27763,7 +28920,7 @@ class Visualizer {
      * Mode 964: Limited boundless visualization
      */
     render964LimitedBoundless(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27798,7 +28955,7 @@ class Visualizer {
      * Mode 965: Mortal immortal visualization
      */
     render965MortalImmortal(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27833,7 +28990,7 @@ class Visualizer {
      * Mode 966: Perishable imperishable visualization
      */
     render966PerishableImperishable(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27866,7 +29023,7 @@ class Visualizer {
      * Mode 967: Transient permanent visualization
      */
     render967TransientPermanent(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27899,7 +29056,7 @@ class Visualizer {
      * Mode 968: Fleeting lasting visualization
      */
     render968FleetingLasting(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27934,7 +29091,7 @@ class Visualizer {
      * Mode 969: Ephemeral enduring visualization
      */
     render969EphemeralEnduring(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -27967,7 +29124,7 @@ class Visualizer {
      * Mode 970: Momentary timeless visualization
      */
     render970MomentaryTimeless(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28000,7 +29157,7 @@ class Visualizer {
      * Mode 971: Local universal visualization
      */
     render971LocalUniversal(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28035,7 +29192,7 @@ class Visualizer {
      * Mode 972: Particular general visualization
      */
     render972ParticularGeneral(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28070,7 +29227,7 @@ class Visualizer {
      * Mode 973: Specific generic visualization
      */
     render973SpecificGeneric(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28105,7 +29262,7 @@ class Visualizer {
      * Mode 974: Unique common visualization
      */
     render974UniqueCommon(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28138,7 +29295,7 @@ class Visualizer {
      * Mode 975: Individual collective visualization
      */
     render975IndividualCollective(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28173,7 +29330,7 @@ class Visualizer {
      * Mode 976: One many visualization
      */
     render976OneMany(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28208,7 +29365,7 @@ class Visualizer {
      * Mode 977: Unity multiplicity visualization
      */
     render977UnityMultiplicity(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28243,7 +29400,7 @@ class Visualizer {
      * Mode 978: Simple complex visualization
      */
     render978SimpleComplex(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28276,7 +29433,7 @@ class Visualizer {
      * Mode 979: Elementary composite visualization
      */
     render979ElementaryComposite(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28309,7 +29466,7 @@ class Visualizer {
      * Mode 980: Atomic molecular visualization
      */
     render980AtomicMolecular(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28342,7 +29499,7 @@ class Visualizer {
      * Mode 981: Fundamental derived visualization
      */
     render981FundamentalDerived(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28375,7 +29532,7 @@ class Visualizer {
      * Mode 982: Primary secondary visualization
      */
     render982PrimarySecondary(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28410,7 +29567,7 @@ class Visualizer {
      * Mode 983: Essential accidental visualization
      */
     render983EssentialAccidental(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28445,7 +29602,7 @@ class Visualizer {
      * Mode 984: Necessary contingent visualization
      */
     render984NecessaryContingent(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28480,7 +29637,7 @@ class Visualizer {
      * Mode 985: A priori a posteriori visualization
      */
     render985APrioriAPosteriori(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28515,7 +29672,7 @@ class Visualizer {
      * Mode 986: Analytic synthetic visualization
      */
     render986AnalyticSynthetic(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28550,7 +29707,7 @@ class Visualizer {
      * Mode 987: Deductive inductive visualization
      */
     render987DeductiveInductive(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28585,7 +29742,7 @@ class Visualizer {
      * Mode 988: Logical empirical visualization
      */
     render988LogicalEmpirical(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28620,7 +29777,7 @@ class Visualizer {
      * Mode 989: Rational experiential visualization
      */
     render989RationalExperiential(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28653,7 +29810,7 @@ class Visualizer {
      * Mode 990: Abstract concrete visualization
      */
     render990AbstractConcrete(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28688,7 +29845,7 @@ class Visualizer {
      * Mode 991: Theoretical practical visualization
      */
     render991TheoreticalPractical(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28721,7 +29878,7 @@ class Visualizer {
      * Mode 992: Ideal real visualization
      */
     render992IdealReal(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28756,7 +29913,7 @@ class Visualizer {
      * Mode 993: Conceptual actual visualization
      */
     render993ConceptualActual(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28791,7 +29948,7 @@ class Visualizer {
      * Mode 994: Possible necessary visualization
      */
     render994PossibleNecessary(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28826,7 +29983,7 @@ class Visualizer {
      * Mode 995: Potential actual visualization
      */
     render995PotentialActual(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28859,7 +30016,7 @@ class Visualizer {
      * Mode 996: Virtual real visualization
      */
     render996VirtualReal(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28894,7 +30051,7 @@ class Visualizer {
      * Mode 997: Simulated genuine visualization
      */
     render997SimulatedGenuine(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28929,7 +30086,7 @@ class Visualizer {
      * Mode 998: Artificial natural visualization
      */
     render998ArtificialNatural(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28962,7 +30119,7 @@ class Visualizer {
      * Mode 999: Synthetic organic visualization
      */
     render999SyntheticOrganic(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -28997,7 +30154,7 @@ class Visualizer {
      * Mode 1000: Mechanical living visualization
      */
     render1000MechanicalLiving(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
@@ -29032,7 +30189,7 @@ class Visualizer {
      * Retro cassette tape with spinning reels and VU meters
      */
     render1001CassetteTapeDeck(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 10;
@@ -29128,7 +30285,7 @@ class Visualizer {
      * Chunky 8-bit style bars with retro arcade colors
      */
     render1002ArcadePixelBars(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const pixelSize = params.pixelSize !== undefined ? params.pixelSize : 8;
         const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 15;
@@ -29185,7 +30342,7 @@ class Visualizer {
      * Classic green oscilloscope with glowing vector lines
      */
     render1003VectorOscilloscope(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity ?? 1;
         const speed = params.speed ?? 1;
         const lineThickness = params.lineThickness ?? 3;
@@ -29283,7 +30440,7 @@ class Visualizer {
      * Old-school LED spectrum analyzer with discrete LED blocks
      */
     render1004LEDSpectrumGrid(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const ledSize = params.ledSize !== undefined ? params.ledSize : 8;
         const ledGap = params.ledGap !== undefined ? params.ledGap : 2;
@@ -29374,7 +30531,7 @@ class Visualizer {
      * Dna Helix visualization with configurable parameters
      */
     render107DnaHelix(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29405,7 +30562,7 @@ class Visualizer {
      * Fractal Bloom visualization with configurable parameters
      */
     render108FractalBloom(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29436,7 +30593,7 @@ class Visualizer {
      * Circuit Board visualization with configurable parameters
      */
     render109CircuitBoard(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29467,7 +30624,7 @@ class Visualizer {
      * Quantum Field visualization with configurable parameters
      */
     render110QuantumField(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29498,7 +30655,7 @@ class Visualizer {
      * Origami Unfold visualization with configurable parameters
      */
     render111OrigamiUnfold(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29529,7 +30686,7 @@ class Visualizer {
      * Galaxy Spiral visualization with configurable parameters
      */
     render112GalaxySpiral(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29560,7 +30717,7 @@ class Visualizer {
      * Rubber Bands visualization with configurable parameters
      */
     render113RubberBands(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29591,7 +30748,7 @@ class Visualizer {
      * Ink Diffusion visualization with configurable parameters
      */
     render114InkDiffusion(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29622,7 +30779,7 @@ class Visualizer {
      * Geometric Kaleidoscope visualization with configurable parameters
      */
     render115GeometricKaleidoscope(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29653,7 +30810,7 @@ class Visualizer {
      * Waterline Oscilloscope visualization with configurable parameters
      */
     render157WaterlineOscilloscope(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29684,7 +30841,7 @@ class Visualizer {
      * Ink Splatter Scope visualization with configurable parameters
      */
     render174InkSplatterScope(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29715,7 +30872,7 @@ class Visualizer {
      * Meteor Net visualization with configurable parameters
      */
     render201Meteornet(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29746,7 +30903,7 @@ class Visualizer {
      * Deep Space Garden Hose visualization with configurable parameters
      */
     render202DeepSpaceGardenHose(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29777,7 +30934,7 @@ class Visualizer {
      * Horizon Monoliths visualization with configurable parameters
      */
     render203HorizonMonoliths(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29808,7 +30965,7 @@ class Visualizer {
      * Gravity Slingshot Trails visualization with configurable parameters
      */
     render204GravitySlingshotTrails(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29839,7 +30996,7 @@ class Visualizer {
      * Solar Flare Notches visualization with configurable parameters
      */
     render205SolarFlareNotches(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29870,7 +31027,7 @@ class Visualizer {
      * Tesseract Window visualization with configurable parameters
      */
     render206TesseractWindow(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29901,7 +31058,7 @@ class Visualizer {
      * Interstellar Postcards visualization with configurable parameters
      */
     render207InterstellarPostcards(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29932,7 +31089,7 @@ class Visualizer {
      * Cosmic Braille visualization with configurable parameters
      */
     render208CosmicBraille(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29963,7 +31120,7 @@ class Visualizer {
      * Stellar Harpoon visualization with configurable parameters
      */
     render209StellarHarpoon(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -29994,7 +31151,7 @@ class Visualizer {
      * Galaxy Ticker Tape visualization with configurable parameters
      */
     render210GalaxyTickerTape(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30025,7 +31182,7 @@ class Visualizer {
      * Antimatter Chess visualization with configurable parameters
      */
     render211AntimatterChess(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30056,7 +31213,7 @@ class Visualizer {
      * Star Nursery Conveyor visualization with configurable parameters
      */
     render212StarNurseryConveyor(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30087,7 +31244,7 @@ class Visualizer {
      * Magnetar Lines visualization with configurable parameters
      */
     render213MagnetarLines(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30118,7 +31275,7 @@ class Visualizer {
      * Zero Kelvin Diamonds visualization with configurable parameters
      */
     render214ZeroKelvinDiamonds(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30149,7 +31306,7 @@ class Visualizer {
      * Orbital Time Garden visualization with configurable parameters
      */
     render215OrbitalTimeGarden(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30180,7 +31337,7 @@ class Visualizer {
      * Subspace Ribbon Printer visualization with configurable parameters
      */
     render216SubspaceRibbonPrinter(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30211,7 +31368,7 @@ class Visualizer {
      * Dark Matter Drizzle visualization with configurable parameters
      */
     render217DarkMatterDrizzle(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30242,7 +31399,7 @@ class Visualizer {
      * Meteor Choir Cones visualization with configurable parameters
      */
     render218MeteorChoirCones(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30273,7 +31430,7 @@ class Visualizer {
      * Folded Galaxy Map visualization with configurable parameters
      */
     render219FoldedGalaxyMap(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30304,7 +31461,7 @@ class Visualizer {
      * Ion Thruster Plume visualization with configurable parameters
      */
     render220IonThrusterPlume(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30335,7 +31492,7 @@ class Visualizer {
      * Cosmic Dominoes visualization with configurable parameters
      */
     render221CosmicDominoes(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30366,7 +31523,7 @@ class Visualizer {
      * Spacesuit Hud visualization with configurable parameters
      */
     render222SpacesuitHud(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30397,7 +31554,7 @@ class Visualizer {
      * Pulsar Barcode Beam visualization with configurable parameters
      */
     render223PulsarBarcodeBeam(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30428,7 +31585,7 @@ class Visualizer {
      * Astro Terrarium visualization with configurable parameters
      */
     render224AstroTerrarium(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30459,7 +31616,7 @@ class Visualizer {
      * Micrometeor Spark Curtain visualization with configurable parameters
      */
     render225MicrometeorSparkCurtain(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30490,7 +31647,7 @@ class Visualizer {
      * Quantum Lattice visualization with configurable parameters
      */
     render276QuantumLattice(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30521,7 +31678,7 @@ class Visualizer {
      * Prism Rays visualization with configurable parameters
      */
     render277PrismRays(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30552,7 +31709,7 @@ class Visualizer {
      * Liquid Nitrogen visualization with freezing and shattering effects
      */
     render278LiquidNitrogen(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const freezeIntensity = params.freezeIntensity || 1;
         const shatterAmount = params.shatterAmount || 1.5;
         const crystallization = params.crystallization || 5;
@@ -30685,7 +31842,7 @@ class Visualizer {
      * Silk Road Caravan visualization with configurable parameters
      */
     render279SilkRoadCaravan(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30716,7 +31873,7 @@ class Visualizer {
      * Steampunk Gears visualization with configurable parameters
      */
     render280SteampunkGears(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30747,7 +31904,7 @@ class Visualizer {
      * Dragon Scales visualization with configurable parameters
      */
     render281DragonScales(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30778,7 +31935,7 @@ class Visualizer {
      * Time Dilation Grid visualization with configurable parameters
      */
     render282TimeDilationGrid(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30809,7 +31966,7 @@ class Visualizer {
      * Fiber Bundle visualization with configurable parameters
      */
     render283FiberBundle(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30840,7 +31997,7 @@ class Visualizer {
      * Moth Wing Shimmer visualization with configurable parameters
      */
     render284MothWingShimmer(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30871,7 +32028,7 @@ class Visualizer {
      * Cathedral Rose visualization with configurable parameters
      */
     render285CathedralRose(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30902,7 +32059,7 @@ class Visualizer {
      * Neon Veins Pulse visualization with configurable parameters
      */
     render286NeonVeinsPulse(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30933,7 +32090,7 @@ class Visualizer {
      * Glacial Crack visualization with configurable parameters
      */
     render287GlacialCrack(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30964,7 +32121,7 @@ class Visualizer {
      * Quantum Dots visualization with configurable parameters
      */
     render288QuantumDots(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -30995,7 +32152,7 @@ class Visualizer {
      * Origami Crane Flight visualization with configurable parameters
      */
     render289OrigamiCraneFlight(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31026,7 +32183,7 @@ class Visualizer {
      * Magma Chamber visualization with configurable parameters
      */
     render290MagmaChamber(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31057,7 +32214,7 @@ class Visualizer {
      * Spider Web Dew visualization with configurable parameters
      */
     render291SpiderWebDew(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31088,7 +32245,7 @@ class Visualizer {
      * Nebula Birth visualization with configurable parameters
      */
     render292NebulaBirth(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31119,7 +32276,7 @@ class Visualizer {
      * Circuit Board Live visualization with configurable parameters
      */
     render293CircuitBoardLive(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31150,7 +32307,7 @@ class Visualizer {
      * Bioluminescent Tide visualization with configurable parameters
      */
     render294BioluminescentTide(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31181,7 +32338,7 @@ class Visualizer {
      * Tesseract Projection visualization with configurable parameters
      */
     render295TesseractProjection(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31212,7 +32369,7 @@ class Visualizer {
      * Frost Crystal Growth visualization with configurable parameters
      */
     render296FrostCrystalGrowth(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31243,7 +32400,7 @@ class Visualizer {
      * Sound Wave Interference visualization with configurable parameters
      */
     render297SoundWaveInterference(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31274,7 +32431,7 @@ class Visualizer {
      * Holographic Fracture visualization with configurable parameters
      */
     render298HolographicFracture(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31305,7 +32462,7 @@ class Visualizer {
      * Plasma Ball Arc visualization with configurable parameters
      */
     render299PlasmaBallArc(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31336,7 +32493,7 @@ class Visualizer {
      * Eternal Flame Dance visualization with configurable parameters
      */
     render300EternalFlameDance(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31367,7 +32524,7 @@ class Visualizer {
      * Water Lily Reflection visualization with configurable parameters
      */
     render400WaterLilyReflection(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31398,7 +32555,7 @@ class Visualizer {
      * Atom Model visualization with configurable parameters
      */
     render401AtomModel(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31429,7 +32586,7 @@ class Visualizer {
      * Double Helix visualization with configurable parameters
      */
     render402DoubleHelix(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31460,7 +32617,7 @@ class Visualizer {
      * Magnetic Field visualization with configurable parameters
      */
     render403MagneticField(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31491,7 +32648,7 @@ class Visualizer {
      * Wave Interference visualization with configurable parameters
      */
     render404WaveInterference(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31522,7 +32679,7 @@ class Visualizer {
      * Crystal Lattice visualization with configurable parameters
      */
     render406CrystalLattice(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31553,7 +32710,7 @@ class Visualizer {
      * Electromagnetic Wave visualization with configurable parameters
      */
     render407ElectromagneticWave(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31584,7 +32741,7 @@ class Visualizer {
      * Quantum Tunneling visualization with configurable parameters
      */
     render408QuantumTunneling(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31615,7 +32772,7 @@ class Visualizer {
      * Fission Reaction visualization with configurable parameters
      */
     render409FissionReaction(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31646,7 +32803,7 @@ class Visualizer {
      * Doppler Effect visualization with configurable parameters
      */
     render410DopplerEffect(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31677,7 +32834,7 @@ class Visualizer {
      * Gravity Well visualization with configurable parameters
      */
     render411GravityWell(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31708,7 +32865,7 @@ class Visualizer {
      * Prism Spectrum visualization with configurable parameters
      */
     render412PrismSpectrum(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31739,7 +32896,7 @@ class Visualizer {
      * Molecular Bonds visualization with configurable parameters
      */
     render413MolecularBonds(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31770,7 +32927,7 @@ class Visualizer {
      * Standing Wave visualization with configurable parameters
      */
     render414StandingWave(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31801,7 +32958,7 @@ class Visualizer {
      * Brownian Motion visualization with configurable parameters
      */
     render415BrownianMotion(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31832,7 +32989,7 @@ class Visualizer {
      * Tesla Coil visualization with configurable parameters
      */
     render416TeslaCoil(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31863,7 +33020,7 @@ class Visualizer {
      * Phase Transition visualization with configurable parameters
      */
     render417PhaseTransition(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31894,7 +33051,7 @@ class Visualizer {
      * Superconductor visualization with configurable parameters
      */
     render418Superconductor(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31925,7 +33082,7 @@ class Visualizer {
      * Neuron Firing visualization with configurable parameters
      */
     render419NeuronFiring(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31956,7 +33113,7 @@ class Visualizer {
      * Resonance Modes visualization with configurable parameters
      */
     render420ResonanceModes(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -31987,7 +33144,7 @@ class Visualizer {
      * Fractal Diffusion visualization with configurable parameters
      */
     render421FractalDiffusion(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32018,7 +33175,7 @@ class Visualizer {
      * Plasma Ball visualization with configurable parameters
      */
     render422PlasmaBall(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32049,7 +33206,7 @@ class Visualizer {
      * Coriolis Effect visualization with configurable parameters
      */
     render423CoriolisEffect(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32080,7 +33237,7 @@ class Visualizer {
      * Photoelectric Effect visualization with configurable parameters
      */
     render424PhotoelectricEffect(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32111,7 +33268,7 @@ class Visualizer {
      * Lorenz Attractor visualization with configurable parameters
      */
     render425LorenzAttractor(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32142,7 +33299,7 @@ class Visualizer {
      * Spin Precession visualization with configurable parameters
      */
     render426SpinPrecession(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32173,7 +33330,7 @@ class Visualizer {
      * Compton Scattering visualization with configurable parameters
      */
     render427ComptonScattering(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32204,7 +33361,7 @@ class Visualizer {
      * Ferrofluid visualization with configurable parameters
      */
     render428Ferrofluid(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32235,7 +33392,7 @@ class Visualizer {
      * Sonoluminescence visualization with configurable parameters
      */
     render429Sonoluminescence(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32266,7 +33423,7 @@ class Visualizer {
      * Cherenkov Radiation visualization with configurable parameters
      */
     render430CherenkovRadiation(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32297,7 +33454,7 @@ class Visualizer {
      * Hall Effect visualization with configurable parameters
      */
     render431HallEffect(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32328,7 +33485,7 @@ class Visualizer {
      * Cymatics visualization with configurable parameters
      */
     render432Cymatics(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32359,7 +33516,7 @@ class Visualizer {
      * Klein Bottle visualization with configurable parameters
      */
     render433KleinBottle(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32390,7 +33547,7 @@ class Visualizer {
      * Raman Scattering visualization with configurable parameters
      */
     render434RamanScattering(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32421,7 +33578,7 @@ class Visualizer {
      * Vortex Shedding visualization with configurable parameters
      */
     render435VortexShedding(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32452,7 +33609,7 @@ class Visualizer {
      * Polarization visualization with configurable parameters
      */
     render436Polarization(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32483,7 +33640,7 @@ class Visualizer {
      * Higgs Field visualization with configurable parameters
      */
     render437HiggsField(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32514,7 +33671,7 @@ class Visualizer {
      * Bose Einstein visualization with configurable parameters
      */
     render438BoseEinstein(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32545,7 +33702,7 @@ class Visualizer {
      * Schrodinger Cat visualization with configurable parameters
      */
     render439SchrodingerCat(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32576,7 +33733,7 @@ class Visualizer {
      * String Vibration visualization with configurable parameters
      */
     render440StringVibration(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32607,7 +33764,7 @@ class Visualizer {
      * Electron Cloud visualization with configurable parameters
      */
     render441ElectronCloud(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32638,7 +33795,7 @@ class Visualizer {
      * Thermoelectric visualization with configurable parameters
      */
     render442Thermoelectric(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32669,7 +33826,7 @@ class Visualizer {
      * Photon Entanglement visualization with configurable parameters
      */
     render443PhotonEntanglement(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32700,7 +33857,7 @@ class Visualizer {
      * Superfluidity visualization with configurable parameters
      */
     render444Superfluidity(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32731,7 +33888,7 @@ class Visualizer {
      * Piezoelectric visualization with configurable parameters
      */
     render445Piezoelectric(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32762,7 +33919,7 @@ class Visualizer {
      * Zeeman Effect visualization with configurable parameters
      */
     render446ZeemanEffect(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32793,7 +33950,7 @@ class Visualizer {
      * Cyclotron Motion visualization with configurable parameters
      */
     render447CyclotronMotion(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32824,7 +33981,7 @@ class Visualizer {
      * Fusion Reactor visualization with configurable parameters
      */
     render448FusionReactor(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32855,7 +34012,7 @@ class Visualizer {
      * Antimatter visualization with configurable parameters
      */
     render449Antimatter(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32886,7 +34043,7 @@ class Visualizer {
      * Hawking Radiation visualization with configurable parameters
      */
     render450HawkingRadiation(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32917,7 +34074,7 @@ class Visualizer {
      * Heisenberg Uncertainty visualization with configurable parameters
      */
     render451HeisenbergUncertainty(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32948,7 +34105,7 @@ class Visualizer {
      * Laser Cavity visualization with configurable parameters
      */
     render453LaserCavity(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -32979,7 +34136,7 @@ class Visualizer {
      * Dielectric Breakdown visualization with configurable parameters
      */
     render454DielectricBreakdown(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33010,7 +34167,7 @@ class Visualizer {
      * Casimir Effect visualization with configurable parameters
      */
     render455CasimirEffect(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33041,7 +34198,7 @@ class Visualizer {
      * Sonochemistry visualization with configurable parameters
      */
     render456Sonochemistry(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33072,7 +34229,7 @@ class Visualizer {
      * Phonon Propagation visualization with configurable parameters
      */
     render457PhononPropagation(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33103,7 +34260,7 @@ class Visualizer {
      * Pair Production visualization with configurable parameters
      */
     render458PairProduction(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33134,7 +34291,7 @@ class Visualizer {
      * Stefan Boltzmann visualization with configurable parameters
      */
     render459StefanBoltzmann(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33165,7 +34322,7 @@ class Visualizer {
      * Eddy Currents visualization with configurable parameters
      */
     render460EddyCurrents(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33196,7 +34353,7 @@ class Visualizer {
      * Wavefunction Collapse visualization with configurable parameters
      */
     render461WavefunctionCollapse(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33227,7 +34384,7 @@ class Visualizer {
      * Qed Feynman visualization with configurable parameters
      */
     render462QedFeynman(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33258,7 +34415,7 @@ class Visualizer {
      * Holography visualization with configurable parameters
      */
     render463Holography(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33289,7 +34446,7 @@ class Visualizer {
      * Metamaterial visualization with configurable parameters
      */
     render464Metamaterial(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33320,7 +34477,7 @@ class Visualizer {
      * Photodiode visualization with configurable parameters
      */
     render465Photodiode(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33351,7 +34508,7 @@ class Visualizer {
      * Bremsstrahlung visualization with configurable parameters
      */
     render466Bremsstrahlung(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33382,7 +34539,7 @@ class Visualizer {
      * Optogenetics visualization with configurable parameters
      */
     render467Optogenetics(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33413,7 +34570,7 @@ class Visualizer {
      * Topological Insulator visualization with configurable parameters
      */
     render468TopologicalInsulator(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33444,7 +34601,7 @@ class Visualizer {
      * Nernst Equation visualization with configurable parameters
      */
     render469NernstEquation(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33475,7 +34632,7 @@ class Visualizer {
      * Mri Precession visualization with configurable parameters
      */
     render470MriPrecession(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33506,7 +34663,7 @@ class Visualizer {
      * Josephson Junction visualization with configurable parameters
      */
     render471JosephsonJunction(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33537,7 +34694,7 @@ class Visualizer {
      * Liquid Crystal visualization with configurable parameters
      */
     render472LiquidCrystal(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33568,7 +34725,7 @@ class Visualizer {
      * Rydberg Atoms visualization with configurable parameters
      */
     render473RydbergAtoms(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33599,7 +34756,7 @@ class Visualizer {
      * Cavity Qed visualization with configurable parameters
      */
     render474CavityQed(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33630,7 +34787,7 @@ class Visualizer {
      * Quantum Dots visualization with configurable parameters
      */
     render475QuantumDots(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33661,7 +34818,7 @@ class Visualizer {
      * Soliton Wave visualization with configurable parameters
      */
     render476SolitonWave(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33692,7 +34849,7 @@ class Visualizer {
      * Acoustic Levitation visualization with configurable parameters
      */
     render477AcousticLevitation(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33723,7 +34880,7 @@ class Visualizer {
      * Mosfet Channel visualization with configurable parameters
      */
     render478MosfetChannel(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33754,7 +34911,7 @@ class Visualizer {
      * Spintronics visualization with configurable parameters
      */
     render479Spintronics(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33785,7 +34942,7 @@ class Visualizer {
      * Electrochemistry visualization with configurable parameters
      */
     render480Electrochemistry(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33816,7 +34973,7 @@ class Visualizer {
      * Langmuir Wave visualization with configurable parameters
      */
     render481LangmuirWave(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33847,7 +35004,7 @@ class Visualizer {
      * Bloch Sphere visualization with configurable parameters
      */
     render482BlochSphere(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33878,7 +35035,7 @@ class Visualizer {
      * Curie Temperature visualization with configurable parameters
      */
     render483CurieTemperature(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33909,7 +35066,7 @@ class Visualizer {
      * Dyson Sphere visualization with configurable parameters
      */
     render484DysonSphere(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33940,7 +35097,7 @@ class Visualizer {
      * Graphene Lattice visualization with configurable parameters
      */
     render485GrapheneLattice(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -33971,7 +35128,7 @@ class Visualizer {
      * Memristor visualization with configurable parameters
      */
     render486Memristor(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34002,7 +35159,7 @@ class Visualizer {
      * Quantum Hall visualization with configurable parameters
      */
     render487QuantumHall(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34033,7 +35190,7 @@ class Visualizer {
      * Optomechanics visualization with configurable parameters
      */
     render488Optomechanics(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34064,7 +35221,7 @@ class Visualizer {
      * Exciton visualization with configurable parameters
      */
     render489Exciton(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34095,7 +35252,7 @@ class Visualizer {
      * Photonic Crystal visualization with configurable parameters
      */
     render490PhotonicCrystal(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34126,7 +35283,7 @@ class Visualizer {
      * Skyrmion visualization with configurable parameters
      */
     render491Skyrmion(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34157,7 +35314,7 @@ class Visualizer {
      * Mott Insulator visualization with configurable parameters
      */
     render492MottInsulator(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34188,7 +35345,7 @@ class Visualizer {
      * Squeezing visualization with configurable parameters
      */
     render493Squeezing(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34219,7 +35376,7 @@ class Visualizer {
      * Andreev Reflection visualization with configurable parameters
      */
     render494AndreevReflection(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34250,7 +35407,7 @@ class Visualizer {
      * Casimir Polder visualization with configurable parameters
      */
     render495CasimirPolder(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34281,7 +35438,7 @@ class Visualizer {
      * Fano Resonance visualization with configurable parameters
      */
     render496FanoResonance(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34312,7 +35469,7 @@ class Visualizer {
      * Quantum Zeno visualization with configurable parameters
      */
     render497QuantumZeno(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34343,7 +35500,7 @@ class Visualizer {
      * Rabi Oscillation visualization with configurable parameters
      */
     render498RabiOscillation(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34374,7 +35531,7 @@ class Visualizer {
      * Aharonov Bohm visualization with configurable parameters
      */
     render499AharonovBohm(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34405,7 +35562,7 @@ class Visualizer {
      * Berry Phase visualization with configurable parameters
      */
     render500BerryPhase(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34436,7 +35593,7 @@ class Visualizer {
      * Impressionist visualization with configurable parameters
      */
     render501Impressionist(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34467,7 +35624,7 @@ class Visualizer {
      * Cubist visualization with configurable parameters
      */
     render502Cubist(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34498,7 +35655,7 @@ class Visualizer {
      * Surreal visualization with configurable parameters
      */
     render503Surreal(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34529,7 +35686,7 @@ class Visualizer {
      * Abstract Expressionist visualization with configurable parameters
      */
     render504AbstractExpressionist(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34560,7 +35717,7 @@ class Visualizer {
      * Pop Art visualization with configurable parameters
      */
     render505PopArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34591,7 +35748,7 @@ class Visualizer {
      * Minimalist visualization with configurable parameters
      */
     render506Minimalist(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34622,7 +35779,7 @@ class Visualizer {
      * Pointillist visualization with configurable parameters
      */
     render507Pointillist(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34653,7 +35810,7 @@ class Visualizer {
      * Art Deco visualization with configurable parameters
      */
     render508ArtDeco(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34684,7 +35841,7 @@ class Visualizer {
      * Art Nouveau visualization with configurable parameters
      */
     render509ArtNouveau(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34715,7 +35872,7 @@ class Visualizer {
      * Bauhaus visualization with configurable parameters
      */
     render510Bauhaus(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34746,7 +35903,7 @@ class Visualizer {
      * Futurist visualization with configurable parameters
      */
     render511Futurist(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34777,7 +35934,7 @@ class Visualizer {
      * Dadaist visualization with configurable parameters
      */
     render512Dadaist(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34808,7 +35965,7 @@ class Visualizer {
      * Expressionist visualization with configurable parameters
      */
     render513Expressionist(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34839,7 +35996,7 @@ class Visualizer {
      * Fauvism visualization with configurable parameters
      */
     render514Fauvism(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34870,7 +36027,7 @@ class Visualizer {
      * Constructivist visualization with configurable parameters
      */
     render515Constructivist(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34901,7 +36058,7 @@ class Visualizer {
      * Suprematist visualization with configurable parameters
      */
     render516Suprematist(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34932,7 +36089,7 @@ class Visualizer {
      * Vorticism visualization with configurable parameters
      */
     render517Vorticism(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34963,7 +36120,7 @@ class Visualizer {
      * Orphism visualization with configurable parameters
      */
     render518Orphism(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -34994,7 +36151,7 @@ class Visualizer {
      * Rayonism visualization with configurable parameters
      */
     render519Rayonism(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35025,7 +36182,7 @@ class Visualizer {
      * Synchromism visualization with configurable parameters
      */
     render520Synchromism(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35056,7 +36213,7 @@ class Visualizer {
      * Precisionism visualization with configurable parameters
      */
     render521Precisionism(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35087,7 +36244,7 @@ class Visualizer {
      * Regionalism visualization with configurable parameters
      */
     render522Regionalism(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35118,7 +36275,7 @@ class Visualizer {
      * Social Realism visualization with configurable parameters
      */
     render523SocialRealism(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35149,7 +36306,7 @@ class Visualizer {
      * Neo Plasticism visualization with configurable parameters
      */
     render524NeoPlasticism(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35180,7 +36337,7 @@ class Visualizer {
      * De Stijl visualization with configurable parameters
      */
     render525DeStijl(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35211,7 +36368,7 @@ class Visualizer {
      * Color Field visualization with configurable parameters
      */
     render526ColorField(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35242,7 +36399,7 @@ class Visualizer {
      * Hard Edge visualization with configurable parameters
      */
     render527HardEdge(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35273,7 +36430,7 @@ class Visualizer {
      * Lyrical Abstraction visualization with configurable parameters
      */
     render528LyricalAbstraction(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35304,7 +36461,7 @@ class Visualizer {
      * Tachisme visualization with configurable parameters
      */
     render529Tachisme(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35335,7 +36492,7 @@ class Visualizer {
      * Action Painting visualization with configurable parameters
      */
     render530ActionPainting(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35366,7 +36523,7 @@ class Visualizer {
      * Stain Painting visualization with configurable parameters
      */
     render531StainPainting(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35397,7 +36554,7 @@ class Visualizer {
      * Shaped Canvas visualization with configurable parameters
      */
     render532ShapedCanvas(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35428,7 +36585,7 @@ class Visualizer {
      * Monochrome visualization with configurable parameters
      */
     render533Monochrome(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35459,7 +36616,7 @@ class Visualizer {
      * Kinetic Art visualization with configurable parameters
      */
     render534KineticArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35490,7 +36647,7 @@ class Visualizer {
      * Op Art visualization with configurable parameters
      */
     render535OpArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35521,7 +36678,7 @@ class Visualizer {
      * Light Art visualization with configurable parameters
      */
     render536LightArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35552,7 +36709,7 @@ class Visualizer {
      * Land Art visualization with configurable parameters
      */
     render537LandArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35583,7 +36740,7 @@ class Visualizer {
      * Earth Art visualization with configurable parameters
      */
     render538EarthArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35614,7 +36771,7 @@ class Visualizer {
      * Environmental Art visualization with configurable parameters
      */
     render539EnvironmentalArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35645,7 +36802,7 @@ class Visualizer {
      * Installation Art visualization with configurable parameters
      */
     render540InstallationArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35676,7 +36833,7 @@ class Visualizer {
      * Video Art visualization with configurable parameters
      */
     render541VideoArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35707,7 +36864,7 @@ class Visualizer {
      * Digital Art visualization with configurable parameters
      */
     render542DigitalArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35738,7 +36895,7 @@ class Visualizer {
      * Glitch Art visualization with configurable parameters
      */
     render543GlitchArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35769,7 +36926,7 @@ class Visualizer {
      * Pixel Art visualization with configurable parameters
      */
     render544PixelArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35800,7 +36957,7 @@ class Visualizer {
      * Ascii Art visualization with configurable parameters
      */
     render545AsciiArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35831,7 +36988,7 @@ class Visualizer {
      * Vector Art visualization with configurable parameters
      */
     render546VectorArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35862,7 +37019,7 @@ class Visualizer {
      * Fractal Art visualization with configurable parameters
      */
     render547FractalArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35893,7 +37050,7 @@ class Visualizer {
      * Algorithmic Art visualization with configurable parameters
      */
     render548AlgorithmicArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35924,7 +37081,7 @@ class Visualizer {
      * Generative Art visualization with configurable parameters
      */
     render549GenerativeArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35955,7 +37112,7 @@ class Visualizer {
      * Data Art visualization with configurable parameters
      */
     render550DataArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -35986,7 +37143,7 @@ class Visualizer {
      * Bio Art visualization with configurable parameters
      */
     render551BioArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36017,7 +37174,7 @@ class Visualizer {
      * Net Art visualization with configurable parameters
      */
     render552NetArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36048,7 +37205,7 @@ class Visualizer {
      * Software Art visualization with configurable parameters
      */
     render553SoftwareArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36079,7 +37236,7 @@ class Visualizer {
      * Robotic Art visualization with configurable parameters
      */
     render554RoboticArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36110,7 +37267,7 @@ class Visualizer {
      * Interactive Art visualization with configurable parameters
      */
     render555InteractiveArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36141,7 +37298,7 @@ class Visualizer {
      * Projection Mapping visualization with configurable parameters
      */
     render556ProjectionMapping(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36172,7 +37329,7 @@ class Visualizer {
      * Holographic Art visualization with configurable parameters
      */
     render557HolographicArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36203,7 +37360,7 @@ class Visualizer {
      * Augmented Reality Art visualization with configurable parameters
      */
     render558AugmentedRealityArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36234,7 +37391,7 @@ class Visualizer {
      * Vr Art visualization with configurable parameters
      */
     render559VrArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36265,7 +37422,7 @@ class Visualizer {
      * Procedural Art visualization with configurable parameters
      */
     render560ProceduralArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36296,7 +37453,7 @@ class Visualizer {
      * Parametric Art visualization with configurable parameters
      */
     render561ParametricArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36327,7 +37484,7 @@ class Visualizer {
      * Mathematical Art visualization with configurable parameters
      */
     render562MathematicalArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36358,7 +37515,7 @@ class Visualizer {
      * Geometric Art visualization with configurable parameters
      */
     render563GeometricArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36389,7 +37546,7 @@ class Visualizer {
      * Tessellation Art visualization with configurable parameters
      */
     render564TessellationArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36420,7 +37577,7 @@ class Visualizer {
      * Symmetry Art visualization with configurable parameters
      */
     render565SymmetryArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36451,7 +37608,7 @@ class Visualizer {
      * Kaleidoscope Art visualization with configurable parameters
      */
     render566KaleidoscopeArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36482,7 +37639,7 @@ class Visualizer {
      * Mandala Art visualization with configurable parameters
      */
     render567MandalaArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36513,7 +37670,7 @@ class Visualizer {
      * Zentangle Art visualization with configurable parameters
      */
     render568ZentangleArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36544,7 +37701,7 @@ class Visualizer {
      * Doodle Art visualization with configurable parameters
      */
     render569DoodleArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36575,7 +37732,7 @@ class Visualizer {
      * Street Art visualization with configurable parameters
      */
     render570StreetArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36606,7 +37763,7 @@ class Visualizer {
      * Graffiti Art visualization with configurable parameters
      */
     render571GraffitiArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36637,7 +37794,7 @@ class Visualizer {
      * Mural Art visualization with configurable parameters
      */
     render572MuralArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36668,7 +37825,7 @@ class Visualizer {
      * Stencil Art visualization with configurable parameters
      */
     render573StencilArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36699,7 +37856,7 @@ class Visualizer {
      * Wheat Paste Art visualization with configurable parameters
      */
     render574WheatPasteArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36730,7 +37887,7 @@ class Visualizer {
      * Spray Paint Art visualization with configurable parameters
      */
     render575SprayPaintArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36761,7 +37918,7 @@ class Visualizer {
      * Mosaic Art visualization with configurable parameters
      */
     render576MosaicArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36792,7 +37949,7 @@ class Visualizer {
      * Collage Art visualization with configurable parameters
      */
     render577CollageArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36823,7 +37980,7 @@ class Visualizer {
      * Mixed Media Art visualization with configurable parameters
      */
     render578MixedMediaArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36854,7 +38011,7 @@ class Visualizer {
      * Assemblage Art visualization with configurable parameters
      */
     render579AssemblageArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36885,7 +38042,7 @@ class Visualizer {
      * Found Object Art visualization with configurable parameters
      */
     render580FoundObjectArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36916,7 +38073,7 @@ class Visualizer {
      * Readymade Art visualization with configurable parameters
      */
     render581ReadymadeArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36947,7 +38104,7 @@ class Visualizer {
      * Appropriation Art visualization with configurable parameters
      */
     render582AppropriationArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -36978,7 +38135,7 @@ class Visualizer {
      * Sampling Art visualization with configurable parameters
      */
     render583SamplingArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37009,7 +38166,7 @@ class Visualizer {
      * Remix Art visualization with configurable parameters
      */
     render584RemixArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37040,7 +38197,7 @@ class Visualizer {
      * Mashup Art visualization with configurable parameters
      */
     render585MashupArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37071,7 +38228,7 @@ class Visualizer {
      * Photomontage visualization with configurable parameters
      */
     render586Photomontage(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37102,7 +38259,7 @@ class Visualizer {
      * Cut Up Technique visualization with configurable parameters
      */
     render587CutUpTechnique(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37133,7 +38290,7 @@ class Visualizer {
      * Exquisite Corpse visualization with configurable parameters
      */
     render588ExquisiteCorpse(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37164,7 +38321,7 @@ class Visualizer {
      * Automatic Drawing visualization with configurable parameters
      */
     render589AutomaticDrawing(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37195,7 +38352,7 @@ class Visualizer {
      * Chance Art visualization with configurable parameters
      */
     render590ChanceArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37226,7 +38383,7 @@ class Visualizer {
      * Indeterminacy Art visualization with configurable parameters
      */
     render591IndeterminacyArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37257,7 +38414,7 @@ class Visualizer {
      * Aleatory Art visualization with configurable parameters
      */
     render592AleatoryArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37288,7 +38445,7 @@ class Visualizer {
      * Stochastic Art visualization with configurable parameters
      */
     render593StochasticArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37319,7 +38476,7 @@ class Visualizer {
      * Entropy Art visualization with configurable parameters
      */
     render594EntropyArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37350,7 +38507,7 @@ class Visualizer {
      * Chaos Art visualization with configurable parameters
      */
     render595ChaosArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37381,7 +38538,7 @@ class Visualizer {
      * Complexity Art visualization with configurable parameters
      */
     render596ComplexityArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37412,7 +38569,7 @@ class Visualizer {
      * Emergence Art visualization with configurable parameters
      */
     render597EmergenceArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37443,7 +38600,7 @@ class Visualizer {
      * Self Organization Art visualization with configurable parameters
      */
     render598SelfOrganizationArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37474,7 +38631,7 @@ class Visualizer {
      * Flocking Art visualization with configurable parameters
      */
     render600FlockingArt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37505,7 +38662,7 @@ class Visualizer {
      * Nebula visualization with configurable parameters
      */
     render601Nebula(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37536,7 +38693,7 @@ class Visualizer {
      * Galaxy Spiral visualization with configurable parameters
      */
     render602GalaxySpiral(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37567,7 +38724,7 @@ class Visualizer {
      * Black Hole visualization with configurable parameters
      */
     render603BlackHole(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37598,7 +38755,7 @@ class Visualizer {
      * Pulsar visualization with configurable parameters
      */
     render604Pulsar(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37629,7 +38786,7 @@ class Visualizer {
      * Quasar visualization with configurable parameters
      */
     render605Quasar(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37660,7 +38817,7 @@ class Visualizer {
      * Supernova visualization with configurable parameters
      */
     render606Supernova(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37691,7 +38848,7 @@ class Visualizer {
      * Star Cluster visualization with configurable parameters
      */
     render607StarCluster(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37722,7 +38879,7 @@ class Visualizer {
      * Asteroid Belt visualization with configurable parameters
      */
     render608AsteroidBelt(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37753,7 +38910,7 @@ class Visualizer {
      * Comet Tail visualization with configurable parameters
      */
     render609CometTail(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37784,7 +38941,7 @@ class Visualizer {
      * Meteor Shower visualization with configurable parameters
      */
     render610MeteorShower(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37815,7 +38972,7 @@ class Visualizer {
      * Planetary Rings visualization with configurable parameters
      */
     render611PlanetaryRings(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37846,7 +39003,7 @@ class Visualizer {
      * Solar Flare visualization with configurable parameters
      */
     render612SolarFlare(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37877,7 +39034,7 @@ class Visualizer {
      * Coronal Mass Ejection visualization with configurable parameters
      */
     render613CoronalMassEjection(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37908,7 +39065,7 @@ class Visualizer {
      * Cosmic Ray visualization with configurable parameters
      */
     render614CosmicRay(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37939,7 +39096,7 @@ class Visualizer {
      * Gamma Ray Burst visualization with configurable parameters
      */
     render615GammaRayBurst(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -37970,7 +39127,7 @@ class Visualizer {
      * Gravitational Lens visualization with configurable parameters
      */
     render616GravitationalLens(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38001,7 +39158,7 @@ class Visualizer {
      * Dark Matter Halo visualization with configurable parameters
      */
     render617DarkMatterHalo(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38032,7 +39189,7 @@ class Visualizer {
      * Cosmic Web visualization with configurable parameters
      */
     render618CosmicWeb(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38063,7 +39220,7 @@ class Visualizer {
      * Void visualization with configurable parameters
      */
     render619Void(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38094,7 +39251,7 @@ class Visualizer {
      * Filament Structure visualization with configurable parameters
      */
     render620FilamentStructure(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38125,7 +39282,7 @@ class Visualizer {
      * Hubble Deep Field visualization with configurable parameters
      */
     render621HubbleDeepField(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38156,7 +39313,7 @@ class Visualizer {
      * Galaxy Collision visualization with configurable parameters
      */
     render622GalaxyCollision(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38187,7 +39344,7 @@ class Visualizer {
      * Tidal Tail visualization with configurable parameters
      */
     render623TidalTail(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38218,7 +39375,7 @@ class Visualizer {
      * Starburst Galaxy visualization with configurable parameters
      */
     render624StarburstGalaxy(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38249,7 +39406,7 @@ class Visualizer {
      * Active Galactic Nucleus visualization with configurable parameters
      */
     render625ActiveGalacticNucleus(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38280,7 +39437,7 @@ class Visualizer {
      * Blazar visualization with configurable parameters
      */
     render626Blazar(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38311,7 +39468,7 @@ class Visualizer {
      * Seyfert Galaxy visualization with configurable parameters
      */
     render627SeyfertGalaxy(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38342,7 +39499,7 @@ class Visualizer {
      * Radio Galaxy visualization with configurable parameters
      */
     render628RadioGalaxy(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38373,7 +39530,7 @@ class Visualizer {
      * Elliptical Galaxy visualization with configurable parameters
      */
     render629EllipticalGalaxy(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38404,7 +39561,7 @@ class Visualizer {
      * Irregular Galaxy visualization with configurable parameters
      */
     render630IrregularGalaxy(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38435,7 +39592,7 @@ class Visualizer {
      * Dwarf Galaxy visualization with configurable parameters
      */
     render631DwarfGalaxy(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38466,7 +39623,7 @@ class Visualizer {
      * Globular Cluster visualization with configurable parameters
      */
     render632GlobularCluster(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38497,7 +39654,7 @@ class Visualizer {
      * Open Cluster visualization with configurable parameters
      */
     render633OpenCluster(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38528,7 +39685,7 @@ class Visualizer {
      * Protoplanetary Disk visualization with configurable parameters
      */
     render634ProtoplanetaryDisk(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38559,7 +39716,7 @@ class Visualizer {
      * Accretion Disk visualization with configurable parameters
      */
     render635AccretionDisk(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38590,7 +39747,7 @@ class Visualizer {
      * Jets From Black Hole visualization with configurable parameters
      */
     render636JetsFromBlackHole(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38621,7 +39778,7 @@ class Visualizer {
      * Event Horizon visualization with configurable parameters
      */
     render637EventHorizon(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38652,7 +39809,7 @@ class Visualizer {
      * Photon Sphere visualization with configurable parameters
      */
     render638PhotonSphere(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38683,7 +39840,7 @@ class Visualizer {
      * Ergosphere visualization with configurable parameters
      */
     render639Ergosphere(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38714,7 +39871,7 @@ class Visualizer {
      * Singularity visualization with configurable parameters
      */
     render640Singularity(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38745,7 +39902,7 @@ class Visualizer {
      * Wormhole visualization with configurable parameters
      */
     render641Wormhole(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38776,7 +39933,7 @@ class Visualizer {
      * White Hole visualization with configurable parameters
      */
     render642WhiteHole(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38807,7 +39964,7 @@ class Visualizer {
      * Naked Singularity visualization with configurable parameters
      */
     render643NakedSingularity(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38838,7 +39995,7 @@ class Visualizer {
      * Hawking Radiation visualization with configurable parameters
      */
     render644HawkingRadiation(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38869,7 +40026,7 @@ class Visualizer {
      * Information Paradox visualization with configurable parameters
      */
     render645InformationParadox(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38900,7 +40057,7 @@ class Visualizer {
      * Multiverse Bubble visualization with configurable parameters - particle-based
      */
     render646MultiverseBubble(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -38981,7 +40138,7 @@ class Visualizer {
      * Parallel Universe visualization with configurable parameters
      */
     render647ParallelUniverse(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39012,7 +40169,7 @@ class Visualizer {
      * Brane Collision visualization with configurable parameters
      */
     render648BraneCollision(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39043,7 +40200,7 @@ class Visualizer {
      * Extra Dimensions visualization with configurable parameters
      */
     render649ExtraDimensions(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39074,7 +40231,7 @@ class Visualizer {
      * Calabi Yau Manifold visualization with configurable parameters
      */
     render650CalabiYauManifold(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39105,7 +40262,7 @@ class Visualizer {
      * String Theory Vibration visualization with configurable parameters
      */
     render651StringTheoryVibration(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39136,7 +40293,7 @@ class Visualizer {
      * Quantum Foam visualization with configurable parameters
      */
     render652QuantumFoam(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39167,7 +40324,7 @@ class Visualizer {
      * Planck Scale visualization with configurable parameters
      */
     render653PlanckScale(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39198,7 +40355,7 @@ class Visualizer {
      * Big Bang visualization with configurable parameters
      */
     render654BigBang(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39229,7 +40386,7 @@ class Visualizer {
      * Cosmic Microwave Background visualization with configurable parameters
      */
     render655CosmicMicrowaveBackground(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39260,7 +40417,7 @@ class Visualizer {
      * Inflation Field visualization with configurable parameters
      */
     render656InflationField(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39291,7 +40448,7 @@ class Visualizer {
      * Density Fluctuations visualization with configurable parameters
      */
     render657DensityFluctuations(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39322,7 +40479,7 @@ class Visualizer {
      * Baryon Acoustic Oscillations visualization with configurable parameters
      */
     render658BaryonAcousticOscillations(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39353,7 +40510,7 @@ class Visualizer {
      * Dark Energy visualization with configurable parameters
      */
     render659DarkEnergy(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39384,7 +40541,7 @@ class Visualizer {
      * Cosmological Constant visualization with configurable parameters
      */
     render660CosmologicalConstant(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39415,7 +40572,7 @@ class Visualizer {
      * Quintessence Field visualization with configurable parameters
      */
     render661QuintessenceField(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39446,7 +40603,7 @@ class Visualizer {
      * Heat Death visualization with configurable parameters
      */
     render662HeatDeath(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39477,7 +40634,7 @@ class Visualizer {
      * Big Rip visualization with configurable parameters
      */
     render663BigRip(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39508,7 +40665,7 @@ class Visualizer {
      * Big Crunch visualization with configurable parameters
      */
     render664BigCrunch(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39539,7 +40696,7 @@ class Visualizer {
      * Big Bounce visualization with configurable parameters
      */
     render665BigBounce(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39570,7 +40727,7 @@ class Visualizer {
      * Cyclic Universe visualization with configurable parameters
      */
     render666CyclicUniverse(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39601,7 +40758,7 @@ class Visualizer {
      * Conformal Cyclic Cosmology visualization with configurable parameters
      */
     render667ConformalCyclicCosmology(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39632,7 +40789,7 @@ class Visualizer {
      * Eternal Inflation visualization with configurable parameters
      */
     render668EternalInflation(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39663,7 +40820,7 @@ class Visualizer {
      * Landscape Multiverse visualization with configurable parameters
      */
     render669LandscapeMultiverse(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39694,7 +40851,7 @@ class Visualizer {
      * Quantum Decoherence visualization with configurable parameters
      */
     render670QuantumDecoherence(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39725,7 +40882,7 @@ class Visualizer {
      * Many Worlds visualization with configurable parameters
      */
     render671ManyWorlds(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39756,7 +40913,7 @@ class Visualizer {
      * Pilot Wave visualization with configurable parameters
      */
     render672PilotWave(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39787,7 +40944,7 @@ class Visualizer {
      * Spontaneous Collapse visualization with configurable parameters
      */
     render673SpontaneousCollapse(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39818,7 +40975,7 @@ class Visualizer {
      * Transactional Interpretation visualization with configurable parameters
      */
     render674TransactionalInterpretation(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39849,7 +41006,7 @@ class Visualizer {
      * Relational Quantum Mechanics visualization with configurable parameters
      */
     render675RelationalQuantumMechanics(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39880,7 +41037,7 @@ class Visualizer {
      * Quantum Bayesianism visualization with configurable parameters
      */
     render676QuantumBayesianism(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39911,7 +41068,7 @@ class Visualizer {
      * Consistent Histories visualization with configurable parameters
      */
     render677ConsistentHistories(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39942,7 +41099,7 @@ class Visualizer {
      * Bohemian Mechanics visualization with configurable parameters
      */
     render678BohemianMechanics(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -39973,7 +41130,7 @@ class Visualizer {
      * Stochastic Mechanics visualization with configurable parameters
      */
     render679StochasticMechanics(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40004,7 +41161,7 @@ class Visualizer {
      * Quantum Darwinism visualization with configurable parameters
      */
     render680QuantumDarwinism(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40035,7 +41192,7 @@ class Visualizer {
      * Einselection visualization with configurable parameters
      */
     render681Einselection(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40066,7 +41223,7 @@ class Visualizer {
      * Pointer States visualization with configurable parameters
      */
     render682PointerStates(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40097,7 +41254,7 @@ class Visualizer {
      * Branching Spacetime visualization with configurable parameters
      */
     render683BranchingSpacetime(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40128,7 +41285,7 @@ class Visualizer {
      * Worldline visualization with configurable parameters
      */
     render684Worldline(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40159,7 +41316,7 @@ class Visualizer {
      * Light Cone visualization with configurable parameters
      */
     render685LightCone(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40190,7 +41347,7 @@ class Visualizer {
      * Cauchy Surface visualization with configurable parameters
      */
     render686CauchySurface(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40221,7 +41378,7 @@ class Visualizer {
      * Spacelike Hypersurface visualization with configurable parameters
      */
     render687SpacelikeHypersurface(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40252,7 +41409,7 @@ class Visualizer {
      * Timelike Curve visualization with configurable parameters
      */
     render688TimelikeCurve(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40283,7 +41440,7 @@ class Visualizer {
      * Closed Timelike Curve visualization with configurable parameters
      */
     render689ClosedTimelikeCurve(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40314,7 +41471,7 @@ class Visualizer {
      * Chronology Protection visualization with configurable parameters
      */
     render690ChronologyProtection(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40345,7 +41502,7 @@ class Visualizer {
      * Novikov Self Consistency visualization with configurable parameters
      */
     render691NovikovSelfConsistency(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40376,7 +41533,7 @@ class Visualizer {
      * Grandfather Paradox visualization with configurable parameters
      */
     render692GrandfatherParadox(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40407,7 +41564,7 @@ class Visualizer {
      * Bootstrap Paradox visualization with configurable parameters
      */
     render693BootstrapParadox(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40438,7 +41595,7 @@ class Visualizer {
      * Predestination Paradox visualization with configurable parameters
      */
     render694PredestinationParadox(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40469,7 +41626,7 @@ class Visualizer {
      * Causal Loop visualization with configurable parameters
      */
     render695CausalLoop(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40500,7 +41657,7 @@ class Visualizer {
      * Retrocausality visualization with configurable parameters
      */
     render696Retrocausality(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40531,7 +41688,7 @@ class Visualizer {
      * Advanced Wave visualization with configurable parameters
      */
     render697AdvancedWave(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40562,7 +41719,7 @@ class Visualizer {
      * Wheeler Feynman Absorber visualization with configurable parameters
      */
     render698WheelerFeynmanAbsorber(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40593,7 +41750,7 @@ class Visualizer {
      * Transactional Interpretation visualization with configurable parameters
      */
     render699TransactionalInterpretation(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -40624,7 +41781,7 @@ class Visualizer {
      * Two State Vector visualization with configurable parameters
      */
     render700TwoStateVector(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = Math.floor(params.complexity || 5);
@@ -43677,7 +44834,7 @@ class Visualizer {
      * Geese flying in V-shaped formation
      */
     render1005VFormationMigration(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const birdCount = params.birdCount || 25;
         const wingSpan = params.wingSpan || 15;
         const formationSpread = params.formationSpread || 40;
@@ -43798,7 +44955,7 @@ class Visualizer {
      * Seagulls diving down and swooping back up
      */
     render1006DivingSeagulls(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const birdCount = params.birdCount || 20;
         const wingSpan = params.wingSpan || 17;
         const diveSpeed = params.diveSpeed || 2.5;
@@ -43908,7 +45065,7 @@ class Visualizer {
      * Small birds that scatter explosively on bass, then regroup
      */
     render1007SparrowScatter(magnitudes) {
-        const params = this.settings.parameters || {};
+        const params = this.settings.modeParameters || {};
         const birdCount = params.birdCount || 50;
         const wingSpan = params.wingSpan || 8;
         const scatterRadius = params.scatterRadius || 120;

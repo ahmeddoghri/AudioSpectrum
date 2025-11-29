@@ -1802,4 +1802,80 @@ class AudioSpectrumApp {
 // Initialize app when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
     window.app = new AudioSpectrumApp();
+
+    // Create floating particles in hero section
+    createHeroParticles();
+});
+
+/**
+ * Create floating light particles in hero section
+ */
+function createHeroParticles() {
+    const hero = document.querySelector('.hero');
+    if (!hero) return;
+
+    const particleCount = 20;
+
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+
+        // Random position
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.bottom = '0';
+
+        // Random animation delay
+        particle.style.animationDelay = Math.random() * 15 + 's';
+
+        // Random animation duration
+        particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+
+        // Random size
+        const size = 2 + Math.random() * 4;
+        particle.style.width = size + 'px';
+        particle.style.height = size + 'px';
+
+        // Random color variation
+        const colors = [
+            'radial-gradient(circle, rgba(255, 106, 223, 0.8), transparent)',
+            'radial-gradient(circle, rgba(127, 125, 255, 0.8), transparent)',
+            'radial-gradient(circle, rgba(255, 183, 102, 0.8), transparent)'
+        ];
+        particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+        hero.appendChild(particle);
+    }
+}
+
+/**
+ * Setup scroll-triggered animations
+ */
+function setupScrollAnimations() {
+    const sections = document.querySelectorAll('.section');
+
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    sections.forEach(section => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(30px)';
+        section.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+        observer.observe(section);
+    });
+}
+
+// Initialize scroll animations
+document.addEventListener('DOMContentLoaded', () => {
+    setupScrollAnimations();
 });

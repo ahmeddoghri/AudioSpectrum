@@ -9,6 +9,11 @@ class Visualizer {
         this.ctx = canvas.getContext('2d');
         this.settings = { ...DEFAULT_SETTINGS, ...settings };
 
+        // Map parameters to modeParameters for consistency
+        if (settings.parameters) {
+            this.settings.modeParameters = settings.parameters;
+        }
+
         this.centerX = canvas.width / 2;
         this.centerY = canvas.height / 2;
 
@@ -4117,6 +4122,8 @@ class Visualizer {
             }
         }
 
+        this.ctx.closePath();
+
         const color = this.getColor(0, 1);
         this.ctx.strokeStyle = color;
         this.ctx.shadowColor = color;
@@ -4368,15 +4375,26 @@ class Visualizer {
         const barRounding = params.barRounding || 0;
 
         const numBars = magnitudes.length;
-        const totalWidth = numBars * (barWidth + barSpacing);
-        const startX = (this.canvas.width - totalWidth) / 2;
-        const baseY = this.canvas.height * 0.8;
 
-        this.ctx.shadowBlur = 10;
+        // Calculate if we need to scale bars to fit canvas width
+        const requestedWidth = numBars * (barWidth + barSpacing);
+        const availableWidth = this.canvas.width * 0.95; // Use 95% of canvas width
+        const widthScale = Math.min(1, availableWidth / requestedWidth);
+
+        const scaledBarWidth = barWidth * widthScale;
+        const scaledBarSpacing = barSpacing * widthScale;
+        const totalWidth = numBars * (scaledBarWidth + scaledBarSpacing);
+        const startX = (this.canvas.width - totalWidth) / 2;
+        const baseY = this.canvas.height * 0.95; // Use more vertical space
+        const maxBarHeight = this.canvas.height * 0.85; // Bars can use up to 85% of height
+
+        this.ctx.shadowBlur = 10 * this.scaleFactor;
 
         for (let i = 0; i < numBars; i++) {
-            const barHeight = magnitudes[i] * this.canvas.height * 0.65;
-            const x = startX + i * (barWidth + barSpacing);
+            // Boost magnitude for better visibility (min 30% height, max 100% height)
+            const boostedMagnitude = 0.3 + (magnitudes[i] * 0.7);
+            const barHeight = boostedMagnitude * maxBarHeight;
+            const x = startX + i * (scaledBarWidth + scaledBarSpacing);
             const y = baseY - barHeight;
 
             const color = this.getColor(i, numBars);
@@ -4384,9 +4402,9 @@ class Visualizer {
             this.ctx.fillStyle = color;
 
             if (barRounding > 0) {
-                this.roundedRect(x, y, barWidth, barHeight, barRounding);
+                this.roundedRect(x, y, scaledBarWidth, barHeight, barRounding * widthScale);
             } else {
-                this.ctx.fillRect(x, y, barWidth, barHeight);
+                this.ctx.fillRect(x, y, scaledBarWidth, barHeight);
             }
         }
 
@@ -4403,24 +4421,36 @@ class Visualizer {
         const mirrorGap = params.mirrorGap || 20;
 
         const numBars = magnitudes.length;
-        const totalWidth = numBars * (barWidth + barSpacing);
+
+        // Calculate if we need to scale bars to fit canvas width
+        const requestedWidth = numBars * (barWidth + barSpacing);
+        const availableWidth = this.canvas.width * 0.95; // Use 95% of canvas width
+        const widthScale = Math.min(1, availableWidth / requestedWidth);
+
+        const scaledBarWidth = barWidth * widthScale;
+        const scaledBarSpacing = barSpacing * widthScale;
+        const scaledMirrorGap = mirrorGap * this.scaleFactor;
+        const totalWidth = numBars * (scaledBarWidth + scaledBarSpacing);
         const startX = (this.canvas.width - totalWidth) / 2;
         const centerY = this.canvas.height / 2;
+        const maxBarHeight = this.canvas.height * 0.45; // Each half can use up to 45% of height
 
-        this.ctx.shadowBlur = 10;
+        this.ctx.shadowBlur = 10 * this.scaleFactor;
 
         for (let i = 0; i < numBars; i++) {
-            const barHeight = magnitudes[i] * this.canvas.height * 0.35;
-            const x = startX + i * (barWidth + barSpacing);
+            // Boost magnitude for better visibility (min 30% height, max 100% height)
+            const boostedMagnitude = 0.3 + (magnitudes[i] * 0.7);
+            const barHeight = boostedMagnitude * maxBarHeight;
+            const x = startX + i * (scaledBarWidth + scaledBarSpacing);
 
             const color = this.getColor(i, numBars);
             this.ctx.shadowColor = color;
             this.ctx.fillStyle = color;
 
             // Top bars
-            this.ctx.fillRect(x, centerY - barHeight - mirrorGap / 2, barWidth, barHeight);
+            this.ctx.fillRect(x, centerY - barHeight - scaledMirrorGap / 2, scaledBarWidth, barHeight);
             // Bottom bars (mirrored)
-            this.ctx.fillRect(x, centerY + mirrorGap / 2, barWidth, barHeight);
+            this.ctx.fillRect(x, centerY + scaledMirrorGap / 2, scaledBarWidth, barHeight);
         }
 
         this.ctx.shadowBlur = 0;
@@ -4848,22 +4878,31 @@ class Visualizer {
         const lineSpacing = params.lineSpacing || 5;
 
         const numBars = magnitudes.length;
-        const startY = (this.canvas.height - (lineCount * lineSpacing)) / 2;
 
-        this.ctx.shadowBlur = 10;
+        // Scale line spacing to fill the canvas height (stretch or compress as needed)
+        const availableHeight = this.canvas.height * 0.95; // Use 95% of canvas height
+        const scaledLineSpacing = availableHeight / lineCount;
+        const scaledLineThickness = Math.max(1, lineThickness * this.scaleFactor);
+        const totalHeight = lineCount * scaledLineSpacing;
+        const startY = (this.canvas.height - totalHeight) / 2;
+        const maxLineWidth = this.canvas.width * 0.95; // Use up to 95% of canvas width
+
+        this.ctx.shadowBlur = 10 * this.scaleFactor;
 
         for (let i = 0; i < lineCount; i++) {
-            const y = startY + i * lineSpacing;
+            const y = startY + i * scaledLineSpacing;
             const magIndex = Math.floor((i / lineCount) * numBars);
             const magnitude = magnitudes[magIndex % numBars];
 
-            const lineWidth = magnitude * this.canvas.width * 0.8;
+            // Boost magnitude for better visibility (min 40% width, max 95% width)
+            const boostedMagnitude = 0.4 + (magnitude * 0.55);
+            const lineWidth = boostedMagnitude * maxLineWidth;
             const x = (this.canvas.width - lineWidth) / 2;
 
             const color = this.getColor(i, lineCount);
             this.ctx.shadowColor = color;
             this.ctx.strokeStyle = color;
-            this.ctx.lineWidth = lineThickness;
+            this.ctx.lineWidth = scaledLineThickness;
             this.ctx.lineCap = 'round';
 
             this.ctx.beginPath();
@@ -6817,42 +6856,54 @@ class Visualizer {
         this.ctx.translate(this.centerX, this.centerY);
         this.ctx.rotate(time);
 
-        // Main disc body (white/cream)
+        // Main disc body - realistic black vinyl with subtle shine
+        const vinylGradient = this.ctx.createRadialGradient(
+            -discRadius * 0.3, -discRadius * 0.3, 0,
+            0, 0, discRadius
+        );
+        vinylGradient.addColorStop(0, 'rgba(40, 40, 40, 0.98)');  // Slight highlight
+        vinylGradient.addColorStop(0.3, 'rgba(20, 20, 20, 0.98)');
+        vinylGradient.addColorStop(1, 'rgba(10, 10, 10, 0.98)');   // Deep black edges
+
         this.ctx.beginPath();
         this.ctx.arc(0, 0, discRadius, 0, Math.PI * 2);
-        this.ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+        this.ctx.fillStyle = vinylGradient;
         this.ctx.fill();
-        this.ctx.strokeStyle = 'rgba(200, 200, 200, 0.5)';
+        this.ctx.strokeStyle = 'rgba(30, 30, 30, 0.8)';
         this.ctx.lineWidth = 2 * this.scaleFactor;
         this.ctx.stroke();
 
-        // Center label (darker circle)
+        // Center label (darker circle) - realistic label area
         const labelRadius = discRadius * 0.35;
-        const gradient = this.ctx.createRadialGradient(0, 0, 0, 0, 0, labelRadius);
-        gradient.addColorStop(0, 'rgba(100, 100, 100, 0.6)');
-        gradient.addColorStop(0.7, 'rgba(150, 150, 150, 0.4)');
-        gradient.addColorStop(1, 'rgba(180, 180, 180, 0.2)');
+        const labelGradient = this.ctx.createRadialGradient(0, 0, 0, 0, 0, labelRadius);
+        labelGradient.addColorStop(0, 'rgba(45, 45, 45, 0.9)');
+        labelGradient.addColorStop(0.7, 'rgba(30, 30, 30, 0.9)');
+        labelGradient.addColorStop(1, 'rgba(20, 20, 20, 0.9)');
 
         this.ctx.beginPath();
         this.ctx.arc(0, 0, labelRadius, 0, Math.PI * 2);
-        this.ctx.fillStyle = gradient;
+        this.ctx.fillStyle = labelGradient;
         this.ctx.fill();
 
-        // Center hole
+        // Center hole - realistic spindle hole
+        const holeGradient = this.ctx.createRadialGradient(0, 0, 0, 0, 0, discRadius * 0.08);
+        holeGradient.addColorStop(0, 'rgba(5, 5, 5, 1)');
+        holeGradient.addColorStop(1, 'rgba(15, 15, 15, 1)');
+
         this.ctx.beginPath();
         this.ctx.arc(0, 0, discRadius * 0.08, 0, Math.PI * 2);
-        this.ctx.fillStyle = 'rgba(80, 80, 80, 0.8)';
+        this.ctx.fillStyle = holeGradient;
         this.ctx.fill();
-        this.ctx.strokeStyle = 'rgba(60, 60, 60, 0.9)';
+        this.ctx.strokeStyle = 'rgba(25, 25, 25, 0.9)';
         this.ctx.lineWidth = 1 * this.scaleFactor;
         this.ctx.stroke();
 
-        // Grooves (concentric circles)
+        // Grooves (concentric circles) - subtle black grooves like real vinyl
         for (let i = 0; i < grooveCount; i++) {
             const grooveRadius = labelRadius + (discRadius - labelRadius) * ((i + 1) / (grooveCount + 1));
             this.ctx.beginPath();
             this.ctx.arc(0, 0, grooveRadius, 0, Math.PI * 2);
-            this.ctx.strokeStyle = `rgba(120, 120, 120, ${0.3 - i * 0.03})`;
+            this.ctx.strokeStyle = `rgba(15, 15, 15, ${0.4 - i * 0.04})`;
             this.ctx.lineWidth = 1.5 * this.scaleFactor;
             this.ctx.stroke();
         }
@@ -6877,10 +6928,11 @@ class Visualizer {
 
             const barHeight = magnitude * maxBarHeight;
 
-            // Draw bar
+            // Draw bar with dynamic color
+            const barColor = this.getColor(i, barCount);
             this.ctx.beginPath();
             this.ctx.rect(x - barWidth / 2, this.centerY - barHeight / 2, barWidth, barHeight);
-            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            this.ctx.fillStyle = barColor.replace('rgb', 'rgba').replace(')', ', 0.9)');
             this.ctx.fill();
         }
 
@@ -6895,20 +6947,22 @@ class Visualizer {
 
             const barHeight = magnitude * maxBarHeight;
 
-            // Draw bar
+            // Draw bar with dynamic color
+            const barColor = this.getColor(barCount + i, barCount * 2);
             this.ctx.beginPath();
             this.ctx.rect(x - barWidth / 2, this.centerY - barHeight / 2, barWidth, barHeight);
-            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            this.ctx.fillStyle = barColor.replace('rgb', 'rgba').replace(')', ', 0.9)');
             this.ctx.fill();
         }
 
-        // Draw base lines
+        // Draw base lines with dynamic color
+        const lineColor = this.getColor(0, 1);
         this.ctx.beginPath();
         this.ctx.moveTo(leftStartX, this.centerY);
         this.ctx.lineTo(this.centerX - lineHalfWidth, this.centerY);
         this.ctx.moveTo(rightStartX, this.centerY);
         this.ctx.lineTo(this.centerX + lineHalfWidth, this.centerY);
-        this.ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+        this.ctx.strokeStyle = lineColor.replace('rgb', 'rgba').replace(')', ', 0.6)');
         this.ctx.lineWidth = 2 * this.scaleFactor;
         this.ctx.stroke();
 
@@ -6927,7 +6981,8 @@ class Visualizer {
             this.ctx.translate(x, y);
             this.ctx.rotate(time * 2 + i);
 
-            // Draw star shape
+            // Draw star shape with dynamic color
+            const sparkleColor = this.getColor(i, sparkleCount);
             this.ctx.beginPath();
             for (let j = 0; j < 4; j++) {
                 const armAngle = (j / 4) * Math.PI * 2;
@@ -6937,7 +6992,7 @@ class Visualizer {
                 else this.ctx.lineTo(armX, armY);
             }
             this.ctx.closePath();
-            this.ctx.fillStyle = `rgba(255, 255, 255, ${0.6 + twinkle * 0.4})`;
+            this.ctx.fillStyle = sparkleColor.replace('rgb', 'rgba').replace(')', `, ${0.6 + twinkle * 0.4})`);
             this.ctx.fill();
 
             this.ctx.restore();
@@ -11223,10 +11278,28 @@ class Visualizer {
         const rightPower = magnitudes.slice(midpoint).reduce((a, b) => a + b, 0) / (magnitudes.length - midpoint);
         const windDirection = (rightPower - leftPower) * 5;
 
-        // Initialize pixel storm
-        if (!this.pixelStorm) this.pixelStorm = [];
+        // Draw background with fade effect for trails
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Spawn pixels
+        // Initialize pixel storm
+        if (!this.pixelStorm) {
+            this.pixelStorm = [];
+            // Initially populate the entire screen with pixels
+            const initialPixels = 200;
+            for (let i = 0; i < initialPixels; i++) {
+                this.pixelStorm.push({
+                    x: Math.random() * this.canvas.width,
+                    y: Math.random() * this.canvas.height,
+                    vx: windDirection + (Math.random() - 0.5) * 3,
+                    vy: 3 + avgMagnitude * 5,
+                    colorIndex: Math.floor(Math.random() * magnitudes.length),
+                    life: Math.random()
+                });
+            }
+        }
+
+        // Spawn pixels from top
         if (this.frameCounter % 2 === 0) {
             const numPixels = Math.floor(avgMagnitude * 30 + 10);
             for (let i = 0; i < numPixels; i++) {
@@ -12705,14 +12778,18 @@ class Visualizer {
             this.crtFlicker = 0;
         }
 
-        // Fade background
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        // CRT phosphor background - dark with slight green tint (classic monochrome CRT)
+        this.ctx.fillStyle = 'rgba(5, 12, 8, 0.4)';
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Draw waveform - use color scheme
-        const waveformColorIndex = Math.floor(magnitudes.length / 2);
-        this.ctx.strokeStyle = this.getColor(waveformColorIndex, magnitudes.length);
-        this.ctx.lineWidth = 3;
+        // Draw phosphor glow effect for waveform
+        const waveformColor = 'rgb(0, 255, 100)'; // Bright phosphor green
+        this.ctx.shadowBlur = 15 * this.scaleFactor;
+        this.ctx.shadowColor = waveformColor;
+        this.ctx.strokeStyle = waveformColor;
+        this.ctx.lineWidth = 2 * this.scaleFactor;
+        this.ctx.lineCap = 'round';
+        this.ctx.lineJoin = 'round';
         this.ctx.beginPath();
 
         for (let i = 0; i < magnitudes.length; i++) {
@@ -12727,9 +12804,26 @@ class Visualizer {
         }
         this.ctx.stroke();
 
-        // Scanlines
-        for (let y = 0; y < this.canvas.height; y += 4) {
-            this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+        // Draw second pass with brighter core
+        this.ctx.shadowBlur = 5 * this.scaleFactor;
+        this.ctx.strokeStyle = 'rgb(200, 255, 220)';
+        this.ctx.lineWidth = 1 * this.scaleFactor;
+        this.ctx.beginPath();
+        for (let i = 0; i < magnitudes.length; i++) {
+            const x = (i / magnitudes.length) * this.canvas.width;
+            const y = this.canvas.height / 2 + (magnitudes[i] - 0.5) * this.canvas.height * 0.6;
+            if (i === 0) {
+                this.ctx.moveTo(x, y);
+            } else {
+                this.ctx.lineTo(x, y);
+            }
+        }
+        this.ctx.stroke();
+        this.ctx.shadowBlur = 0;
+
+        // Scanlines (horizontal)
+        for (let y = 0; y < this.canvas.height; y += 3) {
+            this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
             this.ctx.lineWidth = 1;
             this.ctx.beginPath();
             this.ctx.moveTo(0, y);
@@ -12737,24 +12831,32 @@ class Visualizer {
             this.ctx.stroke();
         }
 
-        // Static/noise increases with treble
-        if (treble > 0.3) {
-            const noiseIntensity = Math.floor(treble * 50);
-            for (let i = 0; i < noiseIntensity; i++) {
-                const x = Math.random() * this.canvas.width;
-                const y = Math.random() * this.canvas.height;
-                const brightness = Math.floor(Math.random() * 155) + 100;
-                this.ctx.fillStyle = `rgb(${brightness}, ${brightness}, ${brightness})`;
-                this.ctx.fillRect(x, y, 1, 1);
-            }
+        // Phosphor static/noise with green tint
+        const noiseIntensity = Math.floor(20 + treble * 30);
+        for (let i = 0; i < noiseIntensity; i++) {
+            const x = Math.random() * this.canvas.width;
+            const y = Math.random() * this.canvas.height;
+            const brightness = Math.floor(Math.random() * 100) + 100;
+            this.ctx.fillStyle = `rgba(0, ${brightness}, ${Math.floor(brightness * 0.6)}, 0.3)`;
+            this.ctx.fillRect(x, y, 1, 1);
         }
 
-        // CRT flicker
+        // CRT flicker with green tint
         this.crtFlicker = (this.crtFlicker + treble * 10) % 20;
         if (this.crtFlicker > 18) {
-            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+            this.ctx.fillStyle = 'rgba(0, 255, 100, 0.05)';
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         }
+
+        // Vignette effect to simulate CRT curvature/edge darkening
+        const gradient = this.ctx.createRadialGradient(
+            this.canvas.width / 2, this.canvas.height / 2, 0,
+            this.canvas.width / 2, this.canvas.height / 2, Math.max(this.canvas.width, this.canvas.height) * 0.7
+        );
+        gradient.addColorStop(0, 'rgba(0, 0, 0, 0)');
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0.6)');
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
     /**
@@ -13433,17 +13535,32 @@ class Visualizer {
         const particleSize = (this.settings.particleSwarmParticleSize || 2) * this.scaleFactor;
         const trailOpacity = this.settings.particleSwarmTrailOpacity || 0.05;
 
-        if (!this.particleSwarmArray) this.particleSwarmArray = [];
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
+
+        // Initialize particle array - spawn all particles immediately for instant preview
+        if (!this.particleSwarmArray) {
+            this.particleSwarmArray = [];
+            // Spawn all particles at once for immediate visibility in preview
+            for (let i = 0; i < particleCount; i++) {
+                const angle = Math.random() * 2 * Math.PI;
+                const distance = Math.random() * formationRadius * 1.5;
+                this.particleSwarmArray.push({
+                    x: centerX + Math.cos(angle) * distance,
+                    y: centerY + Math.sin(angle) * distance,
+                    vx: 0,
+                    vy: 0,
+                    trail: [],
+                    colorIndex: Math.floor(Math.random() * magnitudes.length)
+                });
+            }
+        }
 
         // Fade background (controlled by trailOpacity parameter)
         this.ctx.fillStyle = `rgba(0, 0, 0, ${trailOpacity})`;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        const centerX = this.canvas.width / 2;
-        const centerY = this.canvas.height / 2;
-
-        // Spawn particles (controlled by particleCount and spawnRate parameters)
-        // Scale factor ensures consistent appearance in preview and final video
+        // Spawn additional particles gradually if count increased (controlled by particleCount and spawnRate parameters)
         if (this.particleSwarmArray.length < particleCount) {
             for (let i = 0; i < spawnRate; i++) {
                 const angle = Math.random() * 2 * Math.PI;
@@ -32281,7 +32398,7 @@ class Visualizer {
         const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
-        const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 10;
+        const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 15;
 
         // Use Step 4 settings
         const barCount = this.settings.barCount || 72;
@@ -32292,81 +32409,195 @@ class Visualizer {
 
         this.frameCounter = (this.frameCounter || 0) + speed * 2;
 
-        // Cassette body
-        const tapeWidth = Math.min(400, this.canvas.width * 0.6) * (0.8 + innerRadius / 500);
-        const tapeHeight = tapeWidth * 0.4;
+        // Cassette body dimensions
+        const tapeWidth = Math.min(500, this.canvas.width * 0.7) * (0.8 + innerRadius / 500);
+        const tapeHeight = tapeWidth * 0.45;
         const tapeX = this.centerX - tapeWidth / 2;
         const tapeY = this.centerY - tapeHeight / 2;
+        const cornerRadius = 8;
 
-        // Draw cassette shell
-        this.ctx.fillStyle = '#2a2a2a';
-        this.ctx.fillRect(tapeX, tapeY, tapeWidth, tapeHeight);
+        // Get dynamic colors
+        const shellColor = this.getColor(0, 3);
+        const labelColor = this.getColor(1, 3);
+        const accentColor = this.getColor(2, 3);
 
-        // Cassette label area
-        this.ctx.fillStyle = '#f0f0f0';
-        this.ctx.fillRect(tapeX + 20, tapeY + 20, tapeWidth - 40, tapeHeight * 0.4);
+        // Draw cassette shell with rounded corners
+        this.ctx.fillStyle = shellColor.replace('rgb', 'rgba').replace(')', ', 0.95)');
+        this.ctx.strokeStyle = shellColor.replace('rgb', 'rgba').replace(')', ', 1)');
+        this.ctx.lineWidth = 3;
+        this.ctx.beginPath();
+        this.ctx.roundRect(tapeX, tapeY, tapeWidth, tapeHeight, cornerRadius);
+        this.ctx.fill();
+        this.ctx.stroke();
 
-        // Enable glow
+        // Cassette label area (top section)
+        this.ctx.fillStyle = labelColor.replace('rgb', 'rgba').replace(')', ', 0.9)');
+        this.ctx.fillRect(tapeX + 20, tapeY + 15, tapeWidth - 40, tapeHeight * 0.35);
+
+        // Window for seeing tape (transparent area)
+        const windowY = tapeY + tapeHeight * 0.55;
+        const windowHeight = tapeHeight * 0.35;
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        this.ctx.fillRect(tapeX + 30, windowY, tapeWidth - 60, windowHeight);
+
+        // Draw screws in corners
+        const screwRadius = 4;
+        this.ctx.fillStyle = accentColor.replace('rgb', 'rgba').replace(')', ', 0.7)');
+        const screwPositions = [
+            [tapeX + 15, tapeY + 15],
+            [tapeX + tapeWidth - 15, tapeY + 15],
+            [tapeX + 15, tapeY + tapeHeight - 15],
+            [tapeX + tapeWidth - 15, tapeY + tapeHeight - 15]
+        ];
+        screwPositions.forEach(([x, y]) => {
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, screwRadius, 0, Math.PI * 2);
+            this.ctx.fill();
+            // Screw slot
+            this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+            this.ctx.lineWidth = 1.5;
+            this.ctx.beginPath();
+            this.ctx.moveTo(x - 3, y);
+            this.ctx.lineTo(x + 3, y);
+            this.ctx.stroke();
+        });
+
+        // Enable glow for animated parts
         this.ctx.shadowBlur = glowIntensity;
 
         // Draw spinning reels
-        const reelRadius = tapeHeight * 0.2;
+        const reelRadius = tapeHeight * 0.15;
         const reel1X = tapeX + tapeWidth * 0.3;
         const reel2X = tapeX + tapeWidth * 0.7;
-        const reelY = tapeY + tapeHeight * 0.7;
+        const reelY = windowY + windowHeight / 2;
 
         // Reel rotation based on audio
-        const rotation = this.frameCounter * 0.1 * (1 + energy);
+        const rotation = this.frameCounter * 0.08 * (1 + energy * 0.5);
 
-        for (let reelX of [reel1X, reel2X]) {
-            // Reel circle
-            const color = this.getColor(reelX > this.centerX ? 0 : barCount / 2, barCount);
+        // Draw tape connecting reels
+        this.ctx.shadowBlur = 0;
+        this.ctx.fillStyle = 'rgba(100, 70, 50, 0.6)';
+        const tapeThickness = 6;
+        this.ctx.fillRect(reel1X + reelRadius, reelY - tapeThickness / 2,
+                         reel2X - reel1X - reelRadius * 2, tapeThickness);
+
+        this.ctx.shadowBlur = glowIntensity;
+
+        // Draw each reel
+        for (let idx = 0; idx < 2; idx++) {
+            const reelX = idx === 0 ? reel1X : reel2X;
+            const color = this.getColor(idx * barCount / 2, barCount);
+
             this.ctx.shadowColor = color;
-            this.ctx.strokeStyle = color;
-            this.ctx.fillStyle = '#1a1a1a';
-            this.ctx.lineWidth = 3;
 
+            // Outer reel hub
+            this.ctx.strokeStyle = color;
+            this.ctx.fillStyle = color.replace('rgb', 'rgba').replace(')', ', 0.3)');
+            this.ctx.lineWidth = 4;
             this.ctx.beginPath();
             this.ctx.arc(reelX, reelY, reelRadius, 0, Math.PI * 2);
             this.ctx.fill();
             this.ctx.stroke();
 
+            // Inner hub (darker)
+            this.ctx.fillStyle = color.replace('rgb', 'rgba').replace(')', ', 0.7)');
+            this.ctx.beginPath();
+            this.ctx.arc(reelX, reelY, reelRadius * 0.4, 0, Math.PI * 2);
+            this.ctx.fill();
+
             // Spinning spokes
             const numSpokes = 6;
+            this.ctx.lineWidth = 2.5;
             for (let i = 0; i < numSpokes; i++) {
                 const angle = rotation + (i / numSpokes) * Math.PI * 2;
-                const x1 = reelX + Math.cos(angle) * reelRadius * 0.3;
-                const y1 = reelY + Math.sin(angle) * reelRadius * 0.3;
-                const x2 = reelX + Math.cos(angle) * reelRadius * 0.9;
-                const y2 = reelY + Math.sin(angle) * reelRadius * 0.9;
+                const x1 = reelX + Math.cos(angle) * reelRadius * 0.4;
+                const y1 = reelY + Math.sin(angle) * reelRadius * 0.4;
+                const x2 = reelX + Math.cos(angle) * reelRadius * 0.85;
+                const y2 = reelY + Math.sin(angle) * reelRadius * 0.85;
 
                 this.ctx.beginPath();
                 this.ctx.moveTo(x1, y1);
                 this.ctx.lineTo(x2, y2);
                 this.ctx.stroke();
             }
+
+            // Tape wound on reel (varies with audio)
+            const tapeAmount = 0.5 + (idx === 0 ? energy : bass) * 0.3;
+            this.ctx.fillStyle = 'rgba(100, 70, 50, 0.5)';
+            this.ctx.beginPath();
+            this.ctx.arc(reelX, reelY, reelRadius * 0.6 * tapeAmount, 0, Math.PI * 2);
+            this.ctx.fill();
         }
 
-        // VU meter bars at top
+        // VU meters (segmented bars with better design)
         const vuBarWidth = tapeWidth * 0.35;
-        const vuBarHeight = 15;
-        const vuY = tapeY + 35;
+        const vuBarHeight = 20;
+        const vuY = tapeY + 25;
+        const numSegments = 12;
+        const segmentWidth = (vuBarWidth / numSegments) - 2;
 
         // Left VU meter
         const leftLevel = magnitudes.slice(0, magnitudes.length / 2).reduce((a, b) => a + b, 0) / (magnitudes.length / 2) * intensity;
+        const leftSegments = Math.floor(leftLevel * numSegments);
         const leftColor = this.getColor(0, barCount);
-        this.ctx.shadowColor = leftColor;
-        this.ctx.fillStyle = leftColor;
-        this.ctx.fillRect(tapeX + 30, vuY, vuBarWidth * leftLevel, vuBarHeight);
+
+        for (let i = 0; i < numSegments; i++) {
+            if (i < leftSegments) {
+                // Color segments based on level (green->yellow->red)
+                let segColor = leftColor;
+                if (i > numSegments * 0.75) {
+                    segColor = 'rgb(255, 50, 50)'; // Red for peaks
+                } else if (i > numSegments * 0.5) {
+                    segColor = 'rgb(255, 200, 50)'; // Yellow for mid
+                }
+
+                this.ctx.shadowColor = segColor;
+                this.ctx.fillStyle = segColor;
+                this.ctx.fillRect(tapeX + 30 + i * (segmentWidth + 2), vuY, segmentWidth, vuBarHeight);
+            } else {
+                // Inactive segments (dimmed)
+                this.ctx.shadowBlur = 0;
+                this.ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+                this.ctx.fillRect(tapeX + 30 + i * (segmentWidth + 2), vuY, segmentWidth, vuBarHeight);
+                this.ctx.shadowBlur = glowIntensity;
+            }
+        }
 
         // Right VU meter
         const rightLevel = magnitudes.slice(magnitudes.length / 2).reduce((a, b) => a + b, 0) / (magnitudes.length / 2) * intensity;
+        const rightSegments = Math.floor(rightLevel * numSegments);
         const rightColor = this.getColor(barCount / 2, barCount);
-        this.ctx.shadowColor = rightColor;
-        this.ctx.fillStyle = rightColor;
-        this.ctx.fillRect(tapeX + tapeWidth - 30 - vuBarWidth, vuY, vuBarWidth * rightLevel, vuBarHeight);
+
+        for (let i = 0; i < numSegments; i++) {
+            if (i < rightSegments) {
+                // Color segments based on level
+                let segColor = rightColor;
+                if (i > numSegments * 0.75) {
+                    segColor = 'rgb(255, 50, 50)';
+                } else if (i > numSegments * 0.5) {
+                    segColor = 'rgb(255, 200, 50)';
+                }
+
+                this.ctx.shadowColor = segColor;
+                this.ctx.fillStyle = segColor;
+                this.ctx.fillRect(tapeX + tapeWidth - 30 - vuBarWidth + i * (segmentWidth + 2), vuY, segmentWidth, vuBarHeight);
+            } else {
+                this.ctx.shadowBlur = 0;
+                this.ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+                this.ctx.fillRect(tapeX + tapeWidth - 30 - vuBarWidth + i * (segmentWidth + 2), vuY, segmentWidth, vuBarHeight);
+                this.ctx.shadowBlur = glowIntensity;
+            }
+        }
+
+        // Add L/R labels
+        this.ctx.shadowBlur = 0;
+        this.ctx.fillStyle = accentColor;
+        this.ctx.font = `bold ${Math.max(10, vuBarHeight * 0.7)}px Arial`;
+        this.ctx.fillText('L', tapeX + 12, vuY + vuBarHeight - 5);
+        this.ctx.fillText('R', tapeX + tapeWidth - 22, vuY + vuBarHeight - 5);
 
         this.ctx.shadowBlur = 0;
+        this.ctx.globalAlpha = 1;
     }
 
     /**
@@ -32438,20 +32669,30 @@ class Visualizer {
         const glowIntensity = params.glowIntensity ?? 20;
 
         // Use Step 4 settings
-        const barCount = this.settings.barCount || 72;
+        const barCount = this.settings.numBars || 72;
+        const smoothing = this.settings.smoothing ?? 0.85;
+        const barWidthMultiplier = this.settings.barWidthMultiplier ?? 1;
         const time = (this.frameCounter || 0) * 0.02 * speed;
 
-        // Classic oscilloscope green
+        // Get primary color from color scheme (Step 4)
+        const primaryColor = this.getColor(0, 1);
+        const rgb = primaryColor.match(/\d+/g).map(Number);
         const beamAlpha = Math.min(1, 0.55 + intensity * 0.4);
-        const scopeColor = `rgba(0, 255, 0, ${beamAlpha})`;
+        const scopeColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${beamAlpha})`;
 
-        // CRT screen background
+        // CRT screen background with phosphor persistence using background color (Step 4)
+        const bgStyle = BACKGROUND_STYLES[this.settings.background] || BACKGROUND_STYLES['transparent'];
+        const bgRgb = bgStyle.color;
         const phosphorFade = Math.min(0.35, 0.18 + speed * 0.06);
-        this.ctx.fillStyle = `rgba(0, 20, 0, ${phosphorFade})`;
+        // Darken the background color and blend with primary color for phosphor effect
+        const phosphorR = Math.floor(bgRgb[0] * 0.3 + rgb[0] * 0.1);
+        const phosphorG = Math.floor(bgRgb[1] * 0.3 + rgb[1] * 0.1);
+        const phosphorB = Math.floor(bgRgb[2] * 0.3 + rgb[2] * 0.1);
+        this.ctx.fillStyle = `rgba(${phosphorR}, ${phosphorG}, ${phosphorB}, ${phosphorFade})`;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Draw grid (like oscilloscope)
-        this.ctx.strokeStyle = `rgba(0, 255, 0, ${0.05 + intensity * 0.05})`;
+        // Draw grid (like oscilloscope) using primary color
+        this.ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${0.05 + intensity * 0.05})`;
         this.ctx.lineWidth = Math.max(0.5, lineThickness * 0.2);
         const gridSpacing = Math.max(35, Math.min(70, this.canvas.width / Math.max(6, barCount / 12)));
 
@@ -32468,9 +32709,19 @@ class Visualizer {
             this.ctx.stroke();
         }
 
+        // Apply smoothing to magnitudes (Step 4)
+        const smoothedMagnitudes = new Float32Array(magnitudes.length);
+        for (let i = 0; i < magnitudes.length; i++) {
+            if (i === 0) {
+                smoothedMagnitudes[i] = magnitudes[i];
+            } else {
+                smoothedMagnitudes[i] = magnitudes[i] * (1 - smoothing) + smoothedMagnitudes[i - 1] * smoothing;
+            }
+        }
+
         // Draw waveform
         this.ctx.strokeStyle = scopeColor;
-        this.ctx.lineWidth = lineThickness;
+        this.ctx.lineWidth = lineThickness * barWidthMultiplier; // Apply barWidthMultiplier (Step 4)
         this.ctx.shadowBlur = glowIntensity;
         this.ctx.shadowColor = scopeColor;
         this.ctx.lineCap = 'round';
@@ -32483,7 +32734,7 @@ class Visualizer {
         this.ctx.beginPath();
         for (let i = 0; i < numPoints; i++) {
             const magIdx = Math.floor(((i + sweepOffset) % numPoints) * (magnitudes.length / numPoints));
-            const magnitude = (magnitudes[magIdx] || 0) * intensity;
+            const magnitude = (smoothedMagnitudes[magIdx] || 0) * intensity;
 
             const x = i * xStep;
             const jitter = Math.sin(time + i * 0.35) * 6 * speed;
@@ -32497,13 +32748,22 @@ class Visualizer {
         }
         this.ctx.stroke();
 
-        // Add second trace for dual-trace effect
-        this.ctx.strokeStyle = 'rgba(0, 255, 0, 0.5)';
+        // Add second trace for dual-trace effect using gradient colors if enabled
+        if (this.settings.gradient) {
+            const secondaryColor = this.getColor(1, 2);
+            const rgb2 = secondaryColor.match(/\d+/g).map(Number);
+            this.ctx.strokeStyle = `rgba(${rgb2[0]}, ${rgb2[1]}, ${rgb2[2]}, 0.5)`;
+            this.ctx.shadowColor = secondaryColor;
+        } else {
+            this.ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.5)`;
+            this.ctx.shadowColor = scopeColor;
+        }
         this.ctx.shadowBlur = glowIntensity * 0.5;
+        this.ctx.lineWidth = lineThickness * barWidthMultiplier * 0.8; // Slightly thinner for second trace
         this.ctx.beginPath();
         for (let i = 0; i < numPoints; i++) {
             const magIdx = Math.floor(((i + sweepOffset * 0.6) % numPoints) * (magnitudes.length / numPoints));
-            const magnitude = (magnitudes[magIdx] || 0) * intensity * 0.6;
+            const magnitude = (smoothedMagnitudes[magIdx] || 0) * intensity * 0.6;
 
             const x = i * xStep;
             const y = this.centerY - (magnitude - 0.25) * this.canvas.height * 0.4 + Math.cos(time * 1.3 + i * 0.25) * 4 * speed;
@@ -32518,7 +32778,7 @@ class Visualizer {
 
         // Sweeping beam accent to make speed parameter immediately visible
         const sweepX = (this.canvas.width + (time * this.canvas.width * 0.15)) % this.canvas.width;
-        this.ctx.fillStyle = `rgba(0, 255, 0, ${0.05 + speed * 0.08})`;
+        this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${0.05 + speed * 0.08})`;
         this.ctx.fillRect(sweepX, 0, Math.max(2, lineThickness), this.canvas.height);
 
         this.ctx.shadowBlur = 0;
@@ -42895,10 +43155,10 @@ class Visualizer {
         const numColumns = Math.max(3, Math.min(12, complexity + 3));
 
         // Particle properties (configurable via parameters)
-        const particleSize = params.particleSize || 4; // Size of each square particle
-        const particleSpacing = params.particleSpacing || 5; // Space between particles
-        const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 15;
-        const barWidth = 40; // Width of the bar
+        const particleSize = params.particleSize || 6; // Size of each square particle
+        const particleSpacing = params.particleSpacing || 3; // Space between particles
+        const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 25;
+        const barWidth = 50; // Width of the bar
 
         // Animation time for floating effect
         const time = Date.now() * 0.001 * speed;
@@ -42931,7 +43191,7 @@ class Visualizer {
                     const driftOffset = Math.cos(time * 0.7 + i + py * 0.2) * 2;
 
                     // Vary particle opacity based on position (fade towards top)
-                    const opacityFactor = 0.6 + (py / numParticlesVertical) * 0.4;
+                    const opacityFactor = 0.8 + (py / numParticlesVertical) * 0.2;
 
                     // Extract RGB from color string
                     const rgb = color.match(/\d+/g);
@@ -42947,7 +43207,7 @@ class Visualizer {
 
                     // Add bright core to some particles for extra glow
                     if ((px + py) % 3 === 0) {
-                        this.ctx.fillStyle = `rgba(255, 255, 255, ${opacityFactor * 0.3})`;
+                        this.ctx.fillStyle = `rgba(255, 255, 255, ${opacityFactor * 0.5})`;
                         this.ctx.fillRect(
                             particleX + driftOffset + particleSize/4,
                             particleY + floatOffset + particleSize/4,
@@ -47466,7 +47726,7 @@ class Visualizer {
         magnitudes.forEach((magnitude, i) => {
             if (magnitude > 0.3 && Math.random() < magnitude * 0.5) {
                 const angle = (i / magnitudes.length) * Math.PI * 2;
-                const speed = (magnitude * 3 + 1) * this.scaleFactor;
+                const speed = (magnitude * 6 + 2) * this.scaleFactor;
                 this.decayParticles.push({
                     x: this.centerX,
                     y: this.centerY,
@@ -47474,7 +47734,7 @@ class Visualizer {
                     vy: Math.sin(angle) * speed,
                     life: 1.0,
                     decay: 0.015 + Math.random() * 0.01,
-                    size: (magnitude * 8 + 4) * this.scaleFactor,
+                    size: (magnitude * 16 + 8) * this.scaleFactor,
                     colorIndex: i
                 });
             }
@@ -47482,7 +47742,7 @@ class Visualizer {
 
         // Draw nucleus glow
         const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
-        const glowSize = (avgMagnitude * 30 + 20) * this.scaleFactor;
+        const glowSize = (avgMagnitude * 60 + 40) * this.scaleFactor;
         const gradient = this.ctx.createRadialGradient(
             this.centerX, this.centerY, 0,
             this.centerX, this.centerY, glowSize
@@ -47811,7 +48071,15 @@ class Visualizer {
 
         // Motion trail
         if (trailLength > 0) {
-            this.ctx.fillStyle = `rgba(135, 206, 235, ${trailLength})`;
+            const bgStyle = BACKGROUND_STYLES[this.settings.background];
+            const color = bgStyle.color;
+
+            if (this.settings.background === 'transparent') {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.ctx.fillStyle = `rgba(0, 0, 0, ${trailLength * 0.3})`;
+            } else {
+                this.ctx.fillStyle = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${trailLength})`;
+            }
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         } else {
             this.drawBackground();
@@ -47896,8 +48164,8 @@ class Visualizer {
     render1007SparrowScatter(magnitudes) {
         const params = this.settings.modeParameters || {};
         const birdCount = params.birdCount || 50;
-        const wingSpan = params.wingSpan || 8;
-        const scatterRadius = params.scatterRadius || 120;
+        const wingSpan = (params.wingSpan || 8) * this.scaleFactor;
+        const scatterRadius = (params.scatterRadius || 120) * this.scaleFactor;
         const bassThreshold = params.bassThreshold || 0.4;
         const trailLength = params.trailLength !== undefined ? params.trailLength : 0.1;
 

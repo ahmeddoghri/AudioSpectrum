@@ -9317,9 +9317,9 @@ const VISUALIZATION_MODES = {
             intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             complexity: { min: 1, max: 10, default: 5, label: 'Complexity' },
-            particleSize: { min: 2, max: 8, default: 4, label: 'Particle Size' },
-            particleSpacing: { min: 3, max: 10, default: 5, label: 'Particle Spacing' },
-            glowIntensity: { min: 0, max: 30, default: 15, label: 'Glow Intensity' }
+            particleSize: { min: 2, max: 8, default: 6, label: 'Particle Size' },
+            particleSpacing: { min: 3, max: 10, default: 3, label: 'Particle Spacing' },
+            glowIntensity: { min: 0, max: 30, default: 25, label: 'Glow Intensity' }
         }
     },
     mode_647_parallel_universe: {

@@ -341,6 +341,12 @@ class Visualizer {
             case 'clouds':
                 this.renderClouds(magnitudes);
                 break;
+            case 'aurora_borealis':
+                this.renderAuroraBorealis(magnitudes);
+                break;
+            case 'fireflies':
+                this.renderFireflies(magnitudes);
+                break;
 
             // Retro & Vintage
             case 'neon_rain':
@@ -395,6 +401,12 @@ class Visualizer {
                 break;
             case 'gradient_waveform_circle':
                 this.renderGradientWaveformCircle(magnitudes);
+                break;
+            case 'plasma_vortex':
+                this.renderPlasmaVortex(magnitudes);
+                break;
+            case 'bubble_stream':
+                this.renderBubbleStream(magnitudes);
                 break;
             case 'minimal_audio_ring':
                 this.renderMinimalAudioRing(magnitudes);
@@ -456,6 +468,30 @@ class Visualizer {
             case 'seismic_waves':
                 this.renderSeismicWaves(magnitudes);
                 break;
+            case 'particle_accelerator':
+                this.renderParticleAccelerator(magnitudes);
+                break;
+            case 'neural_network':
+                this.renderNeuralNetwork(magnitudes);
+                break;
+            case 'quantum_entanglement':
+                this.renderQuantumEntanglement(magnitudes);
+                break;
+            case 'crystal_lattice':
+                this.renderCrystalLattice(magnitudes);
+                break;
+            case 'bioluminescence_wave':
+                this.renderBioluminescenceWave(magnitudes);
+                break;
+            case 'electromagnetic_spectrum':
+                this.renderElectromagneticSpectrum(magnitudes);
+                break;
+            case 'solar_corona':
+                this.renderSolarCorona(magnitudes);
+                break;
+            case 'cytoplasm_flow':
+                this.renderCytoplasmFlow(magnitudes);
+                break;
 
             // Tech & Futuristic
             case 'tunnel_vision':
@@ -489,6 +525,21 @@ class Visualizer {
                 break;
             case 'rainbow_prism':
                 this.renderRainbowPrism(magnitudes);
+                break;
+            case 'voltage_surge':
+                this.renderVoltageSurge(magnitudes);
+                break;
+            case 'particle_accelerator':
+                this.renderParticleAccelerator(magnitudes);
+                break;
+            case 'supernova_burst':
+                this.renderSupernovaBurst(magnitudes);
+                break;
+            case 'electric_web':
+                this.renderElectricWeb(magnitudes);
+                break;
+            case 'kinetic_shockwave':
+                this.renderKineticShockwave(magnitudes);
                 break;
 
             // Extended Modes (51-60)
@@ -3198,6 +3249,24 @@ class Visualizer {
             case 'mode_1004_led_spectrum_grid':
                 this.render1004LEDSpectrumGrid(magnitudes);
                 break;
+            case 'mode_1008_boombox_spectrum':
+                this.render1008BoomboxSpectrum(magnitudes);
+                break;
+            case 'mode_1009_synthwave_grid':
+                this.render1009SynthwaveGrid(magnitudes);
+                break;
+            case 'mode_1012_ocean_waves':
+                this.render1012OceanWaves(magnitudes);
+                break;
+            case 'mode_1016_quantum_flux':
+                this.render1016QuantumFlux(magnitudes);
+                break;
+            case 'mode_1017_photon_streams':
+                this.render1017PhotonStreams(magnitudes);
+                break;
+            case 'mode_1018_magnetic_field':
+                this.render1018MagneticField(magnitudes);
+                break;
             case 'mode_1005_v_formation_migration':
                 this.render1005VFormationMigration(magnitudes);
                 break;
@@ -5219,6 +5288,1038 @@ class Visualizer {
     }
 
     /**
+     * Mode 1010: Aurora Borealis
+     */
+    renderAuroraBorealis(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const waveCount = Math.floor(params.waveCount || 4);
+        const waveHeight = params.waveHeight || 1;
+        const flowSpeed = params.flowSpeed || 0.3;
+        const shimmer = params.shimmer || 0.7;
+        const colorShift = params.colorShift || 0.5;
+        const opacity = params.opacity || 0.7;
+
+        const time = this.frameCounter * 0.01 * flowSpeed;
+
+        this.ctx.shadowBlur = 40;
+
+        // Draw flowing aurora waves
+        for (let w = 0; w < waveCount; w++) {
+            const waveOffset = (w / waveCount) * Math.PI * 2;
+            const baseY = (w / waveCount) * this.canvas.height * 0.6 + this.canvas.height * 0.2;
+
+            // Color shifts for each wave
+            const colorIndex = Math.floor((w / waveCount) * magnitudes.length * colorShift);
+            const magnitude = magnitudes[colorIndex % magnitudes.length];
+            const color = this.getColor(colorIndex, magnitudes.length);
+
+            // Create gradient for aurora effect
+            const gradient = this.ctx.createLinearGradient(0, baseY - 100, 0, baseY + 100);
+            gradient.addColorStop(0, color.replace('rgb', 'rgba').replace(')', ', 0)'));
+            gradient.addColorStop(0.5, color.replace('rgb', 'rgba').replace(')', `, ${opacity * (0.6 + magnitude * 0.4)})`));
+            gradient.addColorStop(1, color.replace('rgb', 'rgba').replace(')', ', 0)'));
+
+            this.ctx.fillStyle = gradient;
+            this.ctx.shadowColor = color;
+
+            // Draw wavy, flowing path
+            this.ctx.beginPath();
+            const numPoints = 100;
+
+            for (let i = 0; i <= numPoints; i++) {
+                const x = (i / numPoints) * this.canvas.width;
+                const magnitudeIndex = Math.floor((i / numPoints) * magnitudes.length);
+                const localMagnitude = magnitudes[magnitudeIndex];
+
+                // Multiple sine waves for organic flow
+                const wave1 = Math.sin(time * 2 + i * 0.1 + waveOffset) * 50 * waveHeight;
+                const wave2 = Math.sin(time * 1.5 - i * 0.05 + waveOffset * 1.3) * 30 * waveHeight;
+                const wave3 = Math.sin(time * 3 + i * 0.15 + waveOffset * 0.7) * 20 * shimmer;
+
+                // Audio reactive wave height
+                const audioWave = localMagnitude * 80 * waveHeight;
+
+                const y = baseY + wave1 + wave2 + wave3 + audioWave;
+
+                if (i === 0) {
+                    this.ctx.moveTo(x, y);
+                } else {
+                    this.ctx.lineTo(x, y);
+                }
+            }
+
+            // Complete the path for filled area
+            this.ctx.lineTo(this.canvas.width, this.canvas.height);
+            this.ctx.lineTo(0, this.canvas.height);
+            this.ctx.closePath();
+            this.ctx.fill();
+
+            // Add shimmer particles
+            const particleCount = Math.floor(20 * shimmer);
+            for (let p = 0; p < particleCount; p++) {
+                const x = (p / particleCount) * this.canvas.width;
+                const magnitudeIndex = Math.floor((p / particleCount) * magnitudes.length);
+                const particleMag = magnitudes[magnitudeIndex];
+
+                const wave1 = Math.sin(time * 2 + p * 0.1 + waveOffset) * 50 * waveHeight;
+                const wave2 = Math.sin(time * 1.5 - p * 0.05 + waveOffset * 1.3) * 30 * waveHeight;
+                const y = baseY + wave1 + wave2;
+
+                const shimmerAlpha = Math.sin(time * 5 + p) * 0.5 + 0.5;
+                const particleSize = (3 + particleMag * 5) * this.scaleFactor;
+
+                this.ctx.globalAlpha = shimmerAlpha * 0.8;
+                const particleGradient = this.ctx.createRadialGradient(x, y, 0, x, y, particleSize);
+                particleGradient.addColorStop(0, color);
+                particleGradient.addColorStop(1, color.replace('rgb', 'rgba').replace(')', ', 0)'));
+                this.ctx.fillStyle = particleGradient;
+
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, particleSize, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+
+        this.ctx.globalAlpha = 1;
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 1011: Fireflies
+     */
+    renderFireflies(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const fireflyCount = Math.floor(params.fireflyCount || 40);
+        const glowSize = params.glowSize || 8;
+        const blinkSpeed = params.blinkSpeed || 1.5;
+        const floatSpeed = params.floatSpeed || 0.5;
+        const glowIntensity = params.glowIntensity || 1;
+        const brightness = params.brightness || 1;
+
+        // Initialize firefly positions if not exists
+        if (!this.fireflyData || this.fireflyData.length !== fireflyCount) {
+            this.fireflyData = [];
+            for (let i = 0; i < fireflyCount; i++) {
+                this.fireflyData.push({
+                    x: Math.random() * this.canvas.width,
+                    y: Math.random() * this.canvas.height,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2,
+                    blinkOffset: Math.random() * Math.PI * 2
+                });
+            }
+        }
+
+        const time = this.frameCounter * 0.01;
+
+        this.ctx.shadowBlur = 20 * glowIntensity;
+
+        for (let i = 0; i < fireflyCount; i++) {
+            const firefly = this.fireflyData[i];
+            const magnitude = magnitudes[i % magnitudes.length];
+
+            // Update position with gentle floating motion
+            const floatX = Math.sin(time * floatSpeed + i * 0.5) * 1.5;
+            const floatY = Math.cos(time * floatSpeed * 0.7 + i * 0.3) * 1.5;
+
+            firefly.x += firefly.vx * floatSpeed + floatX;
+            firefly.y += firefly.vy * floatSpeed + floatY;
+
+            // Wrap around screen edges
+            if (firefly.x < 0) firefly.x = this.canvas.width;
+            if (firefly.x > this.canvas.width) firefly.x = 0;
+            if (firefly.y < 0) firefly.y = this.canvas.height;
+            if (firefly.y > this.canvas.height) firefly.y = 0;
+
+            // Blinking effect with audio reactivity
+            const blinkPhase = Math.sin(time * blinkSpeed + firefly.blinkOffset) * 0.5 + 0.5;
+            const audioBoost = magnitude * 0.5;
+            const alpha = Math.max(0.1, (blinkPhase + audioBoost) * brightness);
+
+            // Size varies with blink and audio
+            const baseSize = glowSize * this.scaleFactor;
+            const size = baseSize * (0.5 + blinkPhase * 0.5 + magnitude * 0.3);
+
+            const color = this.getColor(i, fireflyCount);
+
+            // Create glowing effect
+            const gradient = this.ctx.createRadialGradient(
+                firefly.x, firefly.y, 0,
+                firefly.x, firefly.y, size * 2
+            );
+
+            // Bright center fading to transparent
+            gradient.addColorStop(0, color.replace('rgb', 'rgba').replace(')', `, ${alpha})`));
+            gradient.addColorStop(0.3, color.replace('rgb', 'rgba').replace(')', `, ${alpha * 0.6})`));
+            gradient.addColorStop(0.6, color.replace('rgb', 'rgba').replace(')', `, ${alpha * 0.3})`));
+            gradient.addColorStop(1, color.replace('rgb', 'rgba').replace(')', ', 0)'));
+
+            this.ctx.fillStyle = gradient;
+            this.ctx.shadowColor = color;
+            this.ctx.globalAlpha = glowIntensity;
+
+            // Draw firefly glow
+            this.ctx.beginPath();
+            this.ctx.arc(firefly.x, firefly.y, size * 2, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Draw bright core
+            this.ctx.globalAlpha = alpha * glowIntensity;
+            this.ctx.fillStyle = color;
+            this.ctx.beginPath();
+            this.ctx.arc(firefly.x, firefly.y, size * 0.3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 1012: Voltage Surge
+     */
+    renderVoltageSurge(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const boltCount = Math.floor(params.boltCount || 15);
+        const boltHeight = params.boltHeight || 0.8;
+        const surgeSpeed = params.surgeSpeed || 1.5;
+        const crackleIntensity = params.crackleIntensity || 1;
+        const thickness = params.thickness || 3;
+        const glow = params.glow || 25;
+
+        const time = this.frameCounter * 0.02 * surgeSpeed;
+
+        this.ctx.shadowBlur = glow;
+        this.ctx.lineCap = 'round';
+        this.ctx.lineJoin = 'round';
+
+        for (let i = 0; i < boltCount; i++) {
+            const magnitude = magnitudes[i % magnitudes.length];
+
+            // Skip low magnitude bolts for performance
+            if (magnitude < 0.2) continue;
+
+            const x = ((i + 0.5) / boltCount) * this.canvas.width;
+            const startY = this.canvas.height;
+            const maxHeight = this.canvas.height * boltHeight;
+
+            // Audio-reactive surge height with animation
+            const surgePhase = Math.sin(time + i * 0.5) * 0.5 + 0.5;
+            const targetHeight = maxHeight * (0.3 + magnitude * 0.7 + surgePhase * 0.3);
+
+            const color = this.getColor(i, boltCount);
+            this.ctx.strokeStyle = color;
+            this.ctx.shadowColor = color;
+            this.ctx.lineWidth = (thickness + magnitude * 3) * this.scaleFactor;
+
+            // Draw main vertical bolt with zigzag
+            this.ctx.beginPath();
+            this.ctx.moveTo(x, startY);
+
+            let currentY = startY;
+            let currentX = x;
+            const segments = Math.floor(10 + magnitude * 15);
+
+            for (let s = 0; s < segments; s++) {
+                const segmentHeight = targetHeight / segments;
+                currentY -= segmentHeight;
+
+                // Zigzag effect
+                const zigzag = (Math.random() - 0.5) * 20 * crackleIntensity * this.scaleFactor;
+                currentX += zigzag;
+
+                // Keep within reasonable bounds
+                currentX = Math.max(x - 50 * this.scaleFactor, Math.min(x + 50 * this.scaleFactor, currentX));
+
+                this.ctx.lineTo(currentX, currentY);
+
+                // Add electrical branches
+                if (Math.random() > 0.7 && crackleIntensity > 0) {
+                    const branchLength = 20 + magnitude * 30;
+                    const branchAngle = (Math.random() - 0.5) * Math.PI * 0.5;
+                    const branchEndX = currentX + Math.cos(branchAngle) * branchLength * this.scaleFactor;
+                    const branchEndY = currentY + Math.sin(branchAngle) * branchLength * this.scaleFactor;
+
+                    this.ctx.moveTo(currentX, currentY);
+                    this.ctx.lineTo(branchEndX, branchEndY);
+                    this.ctx.moveTo(currentX, currentY);
+                }
+            }
+
+            this.ctx.stroke();
+
+            // Add bright core at the top
+            if (magnitude > 0.5) {
+                const coreSize = (5 + magnitude * 15) * this.scaleFactor;
+                const gradient = this.ctx.createRadialGradient(currentX, currentY, 0, currentX, currentY, coreSize);
+                gradient.addColorStop(0, color);
+                gradient.addColorStop(0.5, color.replace('rgb', 'rgba').replace(')', ', 0.5)'));
+                gradient.addColorStop(1, color.replace('rgb', 'rgba').replace(')', ', 0)'));
+
+                this.ctx.fillStyle = gradient;
+                this.ctx.globalAlpha = magnitude;
+                this.ctx.beginPath();
+                this.ctx.arc(currentX, currentY, coreSize, 0, Math.PI * 2);
+                this.ctx.fill();
+                this.ctx.globalAlpha = 1;
+            }
+        }
+
+        this.ctx.shadowBlur = 0;
+        this.ctx.lineCap = 'butt';
+        this.ctx.lineJoin = 'miter';
+    }
+
+    /**
+     * Mode 1013: Particle Accelerator
+     */
+    renderParticleAccelerator(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const particleCount = Math.floor(params.particleCount || 80);
+        const orbitRadius = params.orbitRadius || 0.4;
+        const speed = params.speed || 2;
+        const trailLength = params.trailLength || 0.5;
+        const particleSize = params.particleSize || 4;
+        const rings = Math.floor(params.rings || 2);
+
+        // Initialize particle data if needed
+        if (!this.acceleratorParticles || this.acceleratorParticles.length !== particleCount) {
+            this.acceleratorParticles = [];
+            for (let i = 0; i < particleCount; i++) {
+                this.acceleratorParticles.push({
+                    angle: (i / particleCount) * Math.PI * 2,
+                    ring: i % rings,
+                    speed: 0.8 + Math.random() * 0.4
+                });
+            }
+        }
+
+        const time = this.frameCounter * 0.01 * speed;
+
+        // Draw orbital rings
+        this.ctx.strokeStyle = 'rgba(100, 100, 100, 0.2)';
+        this.ctx.lineWidth = 1;
+
+        for (let r = 0; r < rings; r++) {
+            const ringRadius = this.getEffectiveInnerRadius() * orbitRadius * (0.5 + (r / rings) * 0.5);
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, ringRadius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+
+        // Apply trail effect with fade
+        if (trailLength > 0) {
+            this.ctx.fillStyle = `rgba(0, 0, 0, ${0.3 * trailLength})`;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+
+        this.ctx.shadowBlur = 15;
+
+        // Draw particles
+        for (let i = 0; i < particleCount; i++) {
+            const particle = this.acceleratorParticles[i];
+            const magnitude = magnitudes[i % magnitudes.length];
+
+            // Update particle angle
+            particle.angle += 0.02 * particle.speed * speed;
+
+            // Ring-specific radius with audio reactivity
+            const ringFactor = 0.5 + (particle.ring / rings) * 0.5;
+            const baseRadius = this.getEffectiveInnerRadius() * orbitRadius * ringFactor;
+            const radius = baseRadius + magnitude * baseRadius * 0.3;
+
+            // Calculate position
+            const x = this.centerX + Math.cos(particle.angle) * radius;
+            const y = this.centerY + Math.sin(particle.angle) * radius;
+
+            // Size varies with magnitude
+            const size = (particleSize + magnitude * particleSize * 0.5) * this.scaleFactor;
+
+            const color = this.getColor(i, particleCount);
+            this.ctx.shadowColor = color;
+
+            // Draw particle with glow
+            const gradient = this.ctx.createRadialGradient(x, y, 0, x, y, size * 2);
+            gradient.addColorStop(0, color);
+            gradient.addColorStop(0.5, color.replace('rgb', 'rgba').replace(')', ', 0.6)'));
+            gradient.addColorStop(1, color.replace('rgb', 'rgba').replace(')', ', 0)'));
+
+            this.ctx.fillStyle = gradient;
+            this.ctx.globalAlpha = 0.8 + magnitude * 0.2;
+
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size * 2, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Draw bright core
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 1;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size * 0.5, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Add energy streaks on high magnitude
+            if (magnitude > 0.6) {
+                this.ctx.globalAlpha = magnitude * 0.5;
+                const streakLength = 10 * magnitude * this.scaleFactor;
+                const streakAngle = particle.angle + Math.PI / 2;
+
+                this.ctx.strokeStyle = color;
+                this.ctx.lineWidth = 1 * this.scaleFactor;
+                this.ctx.beginPath();
+                this.ctx.moveTo(x, y);
+                this.ctx.lineTo(
+                    x + Math.cos(streakAngle) * streakLength,
+                    y + Math.sin(streakAngle) * streakLength
+                );
+                this.ctx.stroke();
+            }
+        }
+
+        this.ctx.globalAlpha = 1;
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 1014: Quantum Entanglement
+     */
+    renderQuantumEntanglement(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const pairCount = Math.floor(params.pairCount || 12);
+        const separation = params.separation || 0.5;
+        const oscillation = params.oscillation || 1.5;
+        const connectionGlow = params.connectionGlow || 20;
+        const particleSize = params.particleSize || 8;
+        const waveEffect = params.waveEffect || 1;
+
+        // Initialize particle pairs if needed
+        if (!this.entanglementPairs || this.entanglementPairs.length !== pairCount) {
+            this.entanglementPairs = [];
+            for (let i = 0; i < pairCount; i++) {
+                const baseAngle = (i / pairCount) * Math.PI * 2;
+                this.entanglementPairs.push({
+                    angle: baseAngle,
+                    phaseOffset: Math.random() * Math.PI * 2,
+                    orbitSpeed: 0.3 + Math.random() * 0.4
+                });
+            }
+        }
+
+        const time = this.frameCounter * 0.01 * oscillation;
+
+        this.ctx.shadowBlur = connectionGlow;
+
+        // Draw entangled particle pairs
+        for (let i = 0; i < pairCount; i++) {
+            const pair = this.entanglementPairs[i];
+            const magnitude = magnitudes[i % magnitudes.length];
+
+            // Update particle orbit
+            pair.angle += 0.005 * pair.orbitSpeed;
+
+            // Calculate base positions (particles orbit around center)
+            const orbitRadius = this.getEffectiveInnerRadius() * separation;
+            const centerX = this.centerX + Math.cos(pair.angle) * orbitRadius * 0.3;
+            const centerY = this.centerY + Math.sin(pair.angle) * orbitRadius * 0.3;
+
+            // Calculate particle pair positions (separated, oscillating)
+            const oscillationOffset = Math.sin(time + pair.phaseOffset) * orbitRadius * 0.5;
+            const separationAngle = pair.angle + Math.PI / 2;
+
+            const particle1X = centerX + Math.cos(separationAngle) * oscillationOffset;
+            const particle1Y = centerY + Math.sin(separationAngle) * oscillationOffset;
+
+            const particle2X = centerX - Math.cos(separationAngle) * oscillationOffset;
+            const particle2Y = centerY - Math.sin(separationAngle) * oscillationOffset;
+
+            const color = this.getColor(i, pairCount);
+
+            // Draw connection line with wave effect
+            this.ctx.strokeStyle = color;
+            this.ctx.shadowColor = color;
+            this.ctx.lineWidth = (2 + magnitude * 3) * this.scaleFactor;
+
+            if (waveEffect > 0.1) {
+                // Draw wavy connection using bezier curve
+                this.ctx.beginPath();
+                this.ctx.moveTo(particle1X, particle1Y);
+
+                const waveAmplitude = 30 * waveEffect * magnitude * this.scaleFactor;
+                const wavePhase = Math.sin(time * 2 + i) * waveAmplitude;
+                const midX = (particle1X + particle2X) / 2 + Math.cos(separationAngle + Math.PI / 2) * wavePhase;
+                const midY = (particle1Y + particle2Y) / 2 + Math.sin(separationAngle + Math.PI / 2) * wavePhase;
+
+                this.ctx.quadraticCurveTo(midX, midY, particle2X, particle2Y);
+                this.ctx.globalAlpha = 0.6 + magnitude * 0.4;
+                this.ctx.stroke();
+            } else {
+                // Straight connection
+                this.ctx.beginPath();
+                this.ctx.moveTo(particle1X, particle1Y);
+                this.ctx.lineTo(particle2X, particle2Y);
+                this.ctx.globalAlpha = 0.6 + magnitude * 0.4;
+                this.ctx.stroke();
+            }
+
+            // Draw particles
+            const size = (particleSize + magnitude * particleSize * 0.5) * this.scaleFactor;
+
+            // Particle 1
+            this.ctx.globalAlpha = 0.9 + magnitude * 0.1;
+            const gradient1 = this.ctx.createRadialGradient(particle1X, particle1Y, 0, particle1X, particle1Y, size * 2);
+            gradient1.addColorStop(0, color);
+            gradient1.addColorStop(0.5, color.replace('rgb', 'rgba').replace(')', ', 0.6)'));
+            gradient1.addColorStop(1, color.replace('rgb', 'rgba').replace(')', ', 0)'));
+
+            this.ctx.fillStyle = gradient1;
+            this.ctx.beginPath();
+            this.ctx.arc(particle1X, particle1Y, size * 2, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Bright core
+            this.ctx.globalAlpha = 1;
+            this.ctx.fillStyle = color;
+            this.ctx.beginPath();
+            this.ctx.arc(particle1X, particle1Y, size * 0.4, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Particle 2 (entangled twin)
+            this.ctx.globalAlpha = 0.9 + magnitude * 0.1;
+            const gradient2 = this.ctx.createRadialGradient(particle2X, particle2Y, 0, particle2X, particle2Y, size * 2);
+            gradient2.addColorStop(0, color);
+            gradient2.addColorStop(0.5, color.replace('rgb', 'rgba').replace(')', ', 0.6)'));
+            gradient2.addColorStop(1, color.replace('rgb', 'rgba').replace(')', ', 0)'));
+
+            this.ctx.fillStyle = gradient2;
+            this.ctx.beginPath();
+            this.ctx.arc(particle2X, particle2Y, size * 2, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Bright core
+            this.ctx.globalAlpha = 1;
+            this.ctx.fillStyle = color;
+            this.ctx.beginPath();
+            this.ctx.arc(particle2X, particle2Y, size * 0.4, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Add energy pulses traveling along connection on high magnitude
+            if (magnitude > 0.5) {
+                const pulseProgress = (time * 2 + i) % 1;
+                const pulseX = particle1X + (particle2X - particle1X) * pulseProgress;
+                const pulseY = particle1Y + (particle2Y - particle1Y) * pulseProgress;
+                const pulseSize = size * magnitude;
+
+                this.ctx.globalAlpha = (1 - Math.abs(pulseProgress - 0.5) * 2) * magnitude;
+                this.ctx.fillStyle = color;
+                this.ctx.shadowBlur = connectionGlow * 1.5;
+                this.ctx.beginPath();
+                this.ctx.arc(pulseX, pulseY, pulseSize, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+
+        this.ctx.globalAlpha = 1;
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 1015: Crystal Lattice
+     */
+    renderCrystalLattice(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const gridSize = Math.floor(params.gridSize || 6);
+        const latticeSpacing = params.latticeSpacing || 1;
+        const pulseIntensity = params.pulseIntensity || 1;
+        const bondThickness = params.bondThickness || 2;
+        const atomSize = params.atomSize || 6;
+        const rotation = params.rotation || 0.5;
+
+        const time = this.frameCounter * 0.01 * rotation;
+
+        // Calculate lattice dimensions
+        const spacing = (Math.min(this.canvas.width, this.canvas.height) / (gridSize + 2)) * latticeSpacing;
+        const offsetX = (this.canvas.width - (gridSize - 1) * spacing) / 2;
+        const offsetY = (this.canvas.height - (gridSize - 1) * spacing) / 2;
+
+        // Rotation for 3D effect
+        const rotationAngle = time * 0.3;
+
+        this.ctx.shadowBlur = 15;
+
+        // Draw bonds first (so they appear behind atoms)
+        this.ctx.lineWidth = bondThickness * this.scaleFactor;
+
+        for (let x = 0; x < gridSize; x++) {
+            for (let y = 0; y < gridSize; y++) {
+                const index = x * gridSize + y;
+                const magnitude = magnitudes[index % magnitudes.length];
+
+                // Apply 3D rotation to position
+                const baseX = x * spacing;
+                const baseY = y * spacing;
+                const rotX = baseX * Math.cos(rotationAngle) - baseY * Math.sin(rotationAngle);
+                const rotY = baseX * Math.sin(rotationAngle) + baseY * Math.cos(rotationAngle);
+
+                const posX = offsetX + rotX;
+                const posY = offsetY + rotY;
+
+                const color = this.getColor(index, gridSize * gridSize);
+                this.ctx.strokeStyle = color;
+                this.ctx.shadowColor = color;
+
+                // Draw bonds to neighboring atoms
+                // Right neighbor
+                if (x < gridSize - 1) {
+                    const nextX = (x + 1) * spacing;
+                    const nextRotX = nextX * Math.cos(rotationAngle) - baseY * Math.sin(rotationAngle);
+                    const nextRotY = nextX * Math.sin(rotationAngle) + baseY * Math.cos(rotationAngle);
+                    const nextPosX = offsetX + nextRotX;
+                    const nextPosY = offsetY + nextRotY;
+
+                    this.ctx.globalAlpha = 0.4 + magnitude * 0.3;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(posX, posY);
+                    this.ctx.lineTo(nextPosX, nextPosY);
+                    this.ctx.stroke();
+                }
+
+                // Bottom neighbor
+                if (y < gridSize - 1) {
+                    const nextY = (y + 1) * spacing;
+                    const nextRotX = baseX * Math.cos(rotationAngle) - nextY * Math.sin(rotationAngle);
+                    const nextRotY = baseX * Math.sin(rotationAngle) + nextY * Math.cos(rotationAngle);
+                    const nextPosX = offsetX + nextRotX;
+                    const nextPosY = offsetY + nextRotY;
+
+                    this.ctx.globalAlpha = 0.4 + magnitude * 0.3;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(posX, posY);
+                    this.ctx.lineTo(nextPosX, nextPosY);
+                    this.ctx.stroke();
+                }
+
+                // Diagonal bonds for more complex structure
+                if (x < gridSize - 1 && y < gridSize - 1) {
+                    const diagX = (x + 1) * spacing;
+                    const diagY = (y + 1) * spacing;
+                    const diagRotX = diagX * Math.cos(rotationAngle) - diagY * Math.sin(rotationAngle);
+                    const diagRotY = diagX * Math.sin(rotationAngle) + diagY * Math.cos(rotationAngle);
+                    const diagPosX = offsetX + diagRotX;
+                    const diagPosY = offsetY + diagRotY;
+
+                    this.ctx.globalAlpha = 0.2 + magnitude * 0.2;
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(posX, posY);
+                    this.ctx.lineTo(diagPosX, diagPosY);
+                    this.ctx.stroke();
+                }
+            }
+        }
+
+        // Draw atoms (nodes)
+        for (let x = 0; x < gridSize; x++) {
+            for (let y = 0; y < gridSize; y++) {
+                const index = x * gridSize + y;
+                const magnitude = magnitudes[index % magnitudes.length];
+
+                // Apply 3D rotation
+                const baseX = x * spacing;
+                const baseY = y * spacing;
+                const rotX = baseX * Math.cos(rotationAngle) - baseY * Math.sin(rotationAngle);
+                const rotY = baseX * Math.sin(rotationAngle) + baseY * Math.cos(rotationAngle);
+
+                const posX = offsetX + rotX;
+                const posY = offsetY + rotY;
+
+                // Pulsing size based on audio
+                const pulsePhase = Math.sin(time * 3 + x + y) * 0.5 + 0.5;
+                const size = (atomSize + magnitude * atomSize * pulseIntensity + pulsePhase * 2) * this.scaleFactor;
+
+                const color = this.getColor(index, gridSize * gridSize);
+                this.ctx.shadowColor = color;
+
+                // Draw atom glow
+                const gradient = this.ctx.createRadialGradient(posX, posY, 0, posX, posY, size * 2);
+                gradient.addColorStop(0, color);
+                gradient.addColorStop(0.4, color.replace('rgb', 'rgba').replace(')', ', 0.8)'));
+                gradient.addColorStop(1, color.replace('rgb', 'rgba').replace(')', ', 0)'));
+
+                this.ctx.fillStyle = gradient;
+                this.ctx.globalAlpha = 0.8 + magnitude * 0.2;
+                this.ctx.beginPath();
+                this.ctx.arc(posX, posY, size * 2, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                // Draw bright atom core
+                this.ctx.globalAlpha = 1;
+                this.ctx.fillStyle = color;
+                this.ctx.beginPath();
+                this.ctx.arc(posX, posY, size * 0.5, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                // Add energy rings on high magnitude
+                if (magnitude > 0.6 && pulseIntensity > 0.5) {
+                    const ringSize = size * 3 * magnitude;
+                    this.ctx.globalAlpha = (1 - magnitude) * 0.5;
+                    this.ctx.strokeStyle = color;
+                    this.ctx.lineWidth = 2 * this.scaleFactor;
+                    this.ctx.beginPath();
+                    this.ctx.arc(posX, posY, ringSize, 0, Math.PI * 2);
+                    this.ctx.stroke();
+                }
+            }
+        }
+
+        this.ctx.globalAlpha = 1;
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Bioluminescence Wave - Mode 1019
+     */
+    renderBioluminescenceWave(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const waveCount = Math.floor(params.waveCount || 6);
+        const organismDensity = params.organismDensity || 0.8;
+        const glowIntensity = params.glowIntensity || 1.2;
+        const waveSpeed = params.waveSpeed || 1;
+        const particleSize = params.particleSize || 2.5;
+        const trailLength = params.trailLength || 0.7;
+
+        const time = this.frameCounter * 0.02 * waveSpeed;
+        const centerY = this.canvas.height / 2;
+
+        // Fade effect for trails
+        this.ctx.fillStyle = `rgba(0, 0, 0, ${0.3 / trailLength})`;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        this.ctx.shadowBlur = 20 * glowIntensity;
+
+        // Create wave particles
+        const particlesPerWave = Math.floor(50 * organismDensity);
+
+        for (let w = 0; w < waveCount; w++) {
+            const waveOffset = (w / waveCount) * Math.PI * 2;
+            const magnitude = magnitudes[Math.floor((w / waveCount) * magnitudes.length)];
+
+            for (let p = 0; p < particlesPerWave; p++) {
+                const x = (p / particlesPerWave) * this.canvas.width;
+                const wavePhase = (x / this.canvas.width) * Math.PI * 4 + time + waveOffset;
+                const amplitude = (50 + magnitude * 100) * (1 + w * 0.1);
+                const y = centerY + Math.sin(wavePhase) * amplitude + (w - waveCount/2) * 30;
+
+                // Pulsing effect
+                const pulse = Math.sin(time * 2 + p * 0.1) * 0.5 + 0.5;
+                const size = (particleSize + magnitude * particleSize) * this.scaleFactor;
+
+                const color = this.getColor(w * particlesPerWave + p, waveCount * particlesPerWave);
+                this.ctx.shadowColor = color;
+
+                // Draw glowing particle
+                const gradient = this.ctx.createRadialGradient(x, y, 0, x, y, size * 4);
+                gradient.addColorStop(0, color);
+                gradient.addColorStop(0.3, color.replace('rgb', 'rgba').replace(')', `, ${0.6 * glowIntensity})`));
+                gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+                this.ctx.fillStyle = gradient;
+                this.ctx.globalAlpha = 0.7 + magnitude * 0.3 + pulse * 0.2;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size * 4, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+
+        this.ctx.globalAlpha = 1;
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Electromagnetic Spectrum - Mode 1020
+     */
+    renderElectromagneticSpectrum(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const bandCount = Math.floor(params.bandCount || 9);
+        const waveAmplitude = params.waveAmplitude || 1;
+        const frequency = params.frequency || 1.5;
+        const bandWidth = params.bandWidth || 0.7;
+        const opacity = params.opacity || 0.75;
+        const flowSpeed = params.flowSpeed || 1.2;
+
+        const time = this.frameCounter * 0.03 * flowSpeed;
+        const bandHeight = (this.canvas.height / bandCount) * bandWidth;
+        const centerX = this.canvas.width / 2;
+
+        // Clear with slight fade
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        for (let b = 0; b < bandCount; b++) {
+            const y = (b / bandCount) * this.canvas.height + bandHeight / 2;
+            const magnitude = magnitudes[Math.floor((b / bandCount) * magnitudes.length)];
+
+            this.ctx.beginPath();
+
+            // Create flowing wave path
+            for (let x = 0; x <= this.canvas.width; x += 5) {
+                const wavePhase = (x / this.canvas.width) * Math.PI * 6 * frequency + time + b * 0.5;
+                const wave = Math.sin(wavePhase) * waveAmplitude * 30 * (1 + magnitude);
+                const yPos = y + wave;
+
+                if (x === 0) {
+                    this.ctx.moveTo(x, yPos);
+                } else {
+                    this.ctx.lineTo(x, yPos);
+                }
+            }
+
+            // Mirror the wave to create a band
+            for (let x = this.canvas.width; x >= 0; x -= 5) {
+                const wavePhase = (x / this.canvas.width) * Math.PI * 6 * frequency + time + b * 0.5;
+                const wave = Math.sin(wavePhase) * waveAmplitude * 30 * (1 + magnitude);
+                const yPos = y + wave - bandHeight;
+                this.ctx.lineTo(x, yPos);
+            }
+
+            this.ctx.closePath();
+
+            const color = this.getColor(b, bandCount);
+            const gradient = this.ctx.createLinearGradient(0, y - bandHeight/2, 0, y + bandHeight/2);
+            gradient.addColorStop(0, color.replace('rgb', 'rgba').replace(')', ', 0.1)'));
+            gradient.addColorStop(0.5, color.replace('rgb', 'rgba').replace(')', `, ${opacity})`));
+            gradient.addColorStop(1, color.replace('rgb', 'rgba').replace(')', ', 0.1)'));
+
+            this.ctx.fillStyle = gradient;
+            this.ctx.globalAlpha = opacity;
+            this.ctx.fill();
+
+            // Add edge glow
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = 2 * this.scaleFactor;
+            this.ctx.globalAlpha = opacity * 0.8;
+            this.ctx.shadowBlur = 15;
+            this.ctx.shadowColor = color;
+            this.ctx.stroke();
+        }
+
+        this.ctx.globalAlpha = 1;
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Solar Corona - Mode 1021
+     */
+    renderSolarCorona(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const loopCount = Math.floor(params.loopCount || 10);
+        const coreRadius = params.coreRadius || 120;
+        const loopHeight = params.loopHeight || 1.5;
+        const plasmaFlow = params.plasmaFlow || 1.2;
+        const energyIntensity = params.energyIntensity || 1;
+        const turbulence = params.turbulence || 0.6;
+
+        const time = this.frameCounter * 0.02 * plasmaFlow;
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
+
+        // Fade background
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Draw sun core
+        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const coreSize = (coreRadius + avgMagnitude * 40) * this.scaleFactor;
+
+        const coreGradient = this.ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, coreSize);
+        coreGradient.addColorStop(0, `rgba(255, 255, 200, ${energyIntensity})`);
+        coreGradient.addColorStop(0.5, `rgba(255, 220, 100, ${0.8 * energyIntensity})`);
+        coreGradient.addColorStop(1, 'rgba(255, 150, 0, 0)');
+
+        this.ctx.fillStyle = coreGradient;
+        this.ctx.globalAlpha = 1;
+        this.ctx.beginPath();
+        this.ctx.arc(centerX, centerY, coreSize, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        this.ctx.shadowBlur = 30;
+
+        // Draw plasma loops
+        for (let i = 0; i < loopCount; i++) {
+            const magnitude = magnitudes[Math.floor((i / loopCount) * magnitudes.length)];
+            const angle = (i / loopCount) * Math.PI * 2 + time * 0.5;
+            const loopLength = (100 + magnitude * 150) * loopHeight;
+
+            const startX = centerX + Math.cos(angle) * coreRadius * this.scaleFactor;
+            const startY = centerY + Math.sin(angle) * coreRadius * this.scaleFactor;
+
+            const endAngle = angle + Math.PI * 0.3 + Math.sin(time + i) * turbulence;
+            const endX = centerX + Math.cos(endAngle) * coreRadius * this.scaleFactor;
+            const endY = centerY + Math.sin(endAngle) * coreRadius * this.scaleFactor;
+
+            const controlDist = loopLength * this.scaleFactor;
+            const controlAngle = (angle + endAngle) / 2 + Math.PI / 2;
+            const controlX = (startX + endX) / 2 + Math.cos(controlAngle) * controlDist;
+            const controlY = (startY + endY) / 2 + Math.sin(controlAngle) * controlDist;
+
+            const color = this.getColor(i, loopCount);
+            this.ctx.strokeStyle = color;
+            this.ctx.shadowColor = color;
+            this.ctx.lineWidth = (3 + magnitude * 4) * this.scaleFactor * energyIntensity;
+            this.ctx.globalAlpha = 0.6 + magnitude * 0.4;
+
+            // Draw the loop
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+            this.ctx.quadraticCurveTo(controlX, controlY, endX, endY);
+            this.ctx.stroke();
+
+            // Add flowing particles along the loop
+            const particlePos = (time * 2 + i * 0.3) % 1;
+            const t = particlePos;
+            const px = (1-t)*(1-t)*startX + 2*(1-t)*t*controlX + t*t*endX;
+            const py = (1-t)*(1-t)*startY + 2*(1-t)*t*controlY + t*t*endY;
+
+            this.ctx.globalAlpha = 0.9;
+            const particleGradient = this.ctx.createRadialGradient(px, py, 0, px, py, 10 * this.scaleFactor);
+            particleGradient.addColorStop(0, color);
+            particleGradient.addColorStop(1, color.replace('rgb', 'rgba').replace(')', ', 0)'));
+            this.ctx.fillStyle = particleGradient;
+            this.ctx.beginPath();
+            this.ctx.arc(px, py, 10 * this.scaleFactor, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Cytoplasm Flow - Mode 1022
+     */
+    renderCytoplasmFlow(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const organelleCount = Math.floor(params.organelleCount || 18);
+        const flowVelocity = params.flowVelocity || 1;
+        const organelleSize = params.organelleSize || 8;
+        const membraneThickness = params.membraneThickness || 2;
+        const streamCount = Math.floor(params.streamCount || 4);
+        const cellRadius = params.cellRadius || 240;
+
+        const time = this.frameCounter * 0.02 * flowVelocity;
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
+        const scaledRadius = cellRadius * this.scaleFactor;
+
+        // Clear background
+        this.ctx.fillStyle = 'rgba(5, 5, 15, 0.2)';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Draw cell membrane
+        this.ctx.strokeStyle = 'rgba(100, 150, 200, 0.3)';
+        this.ctx.lineWidth = membraneThickness * this.scaleFactor;
+        this.ctx.globalAlpha = 0.5;
+        this.ctx.shadowBlur = 10;
+        this.ctx.shadowColor = 'rgba(100, 150, 200, 0.5)';
+        this.ctx.beginPath();
+
+        // Create organic membrane shape
+        for (let a = 0; a <= Math.PI * 2; a += 0.1) {
+            const wobble = Math.sin(a * 5 + time) * 10 + Math.sin(a * 3 - time * 0.5) * 8;
+            const r = scaledRadius + wobble;
+            const x = centerX + Math.cos(a) * r;
+            const y = centerY + Math.sin(a) * r;
+            if (a === 0) {
+                this.ctx.moveTo(x, y);
+            } else {
+                this.ctx.lineTo(x, y);
+            }
+        }
+        this.ctx.closePath();
+        this.ctx.stroke();
+
+        // Draw cytoplasm flow streams
+        this.ctx.shadowBlur = 15;
+        for (let s = 0; s < streamCount; s++) {
+            const streamAngle = (s / streamCount) * Math.PI * 2 + time * 0.3;
+            const magnitude = magnitudes[Math.floor((s / streamCount) * magnitudes.length)];
+
+            const streamRadius = scaledRadius * 0.7;
+            const color = this.getColor(s, streamCount);
+            this.ctx.strokeStyle = color.replace('rgb', 'rgba').replace(')', ', 0.2)');
+            this.ctx.lineWidth = 2 * this.scaleFactor;
+
+            // Create circular flow path
+            this.ctx.beginPath();
+            for (let a = 0; a <= Math.PI * 2; a += 0.1) {
+                const flow = Math.sin(a * 3 + time * 2) * 20 * magnitude;
+                const r = streamRadius + flow;
+                const offsetAngle = a + streamAngle;
+                const x = centerX + Math.cos(offsetAngle) * r;
+                const y = centerY + Math.sin(offsetAngle) * r;
+                if (a === 0) {
+                    this.ctx.moveTo(x, y);
+                } else {
+                    this.ctx.lineTo(x, y);
+                }
+            }
+            this.ctx.globalAlpha = 0.4;
+            this.ctx.stroke();
+        }
+
+        // Draw organelles
+        for (let i = 0; i < organelleCount; i++) {
+            const magnitude = magnitudes[i % magnitudes.length];
+            const angle = (i / organelleCount) * Math.PI * 2 + time;
+            const orbitRadius = (scaledRadius * 0.6) * (0.5 + (i % 3) * 0.25);
+
+            const x = centerX + Math.cos(angle) * orbitRadius;
+            const y = centerY + Math.sin(angle) * orbitRadius;
+
+            const size = (organelleSize + magnitude * organelleSize * 0.5) * this.scaleFactor;
+            const color = this.getColor(i, organelleCount);
+
+            // Draw organelle with membrane
+            this.ctx.shadowColor = color;
+            this.ctx.shadowBlur = 10;
+
+            // Outer membrane
+            const membraneGradient = this.ctx.createRadialGradient(x, y, size * 0.5, x, y, size);
+            membraneGradient.addColorStop(0, color);
+            membraneGradient.addColorStop(0.7, color.replace('rgb', 'rgba').replace(')', ', 0.6)'));
+            membraneGradient.addColorStop(1, color.replace('rgb', 'rgba').replace(')', ', 0.2)'));
+
+            this.ctx.fillStyle = membraneGradient;
+            this.ctx.globalAlpha = 0.8;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Inner core
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = 0.9 + magnitude * 0.1;
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size * 0.4, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Organelle details (varies by type)
+            if (i % 3 === 0) {
+                // Mitochondria-like cristae
+                this.ctx.strokeStyle = color;
+                this.ctx.lineWidth = 1 * this.scaleFactor;
+                this.ctx.globalAlpha = 0.6;
+                for (let c = 0; c < 3; c++) {
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(x - size * 0.3, y - size * 0.2 + c * size * 0.2);
+                    this.ctx.lineTo(x + size * 0.3, y - size * 0.2 + c * size * 0.2);
+                    this.ctx.stroke();
+                }
+            }
+        }
+
+        this.ctx.globalAlpha = 1;
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
      * Mode 18: Pixel Clouds
      */
     renderPixelClouds(magnitudes) {
@@ -6147,6 +7248,204 @@ class Visualizer {
     }
 
     /**
+     * Mode 991: Plasma Vortex
+     * Swirling plasma-like tendrils with spiraling rotation and energy flow
+     */
+    renderPlasmaVortex(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const vortexRadius = params.vortexRadius || 180;
+        const tendrilCount = Math.floor(params.tendrilCount || 6);
+        const spiralTightness = params.spiralTightness || 1.5;
+        const flowSpeed = params.flowSpeed || 0.8;
+        const energyIntensity = params.energyIntensity || 50;
+
+        const baseRadius = vortexRadius * this.scaleFactor;
+        const time = this.frameCounter * 0.01 * flowSpeed;
+        const energy = energyIntensity * this.scaleFactor;
+
+        // Calculate average magnitude for global pulsing
+        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Draw each plasma tendril
+        for (let t = 0; t < tendrilCount; t++) {
+            const tendrilAngleOffset = (t / tendrilCount) * Math.PI * 2;
+
+            // Get magnitude for this tendril
+            const magnitudeIndex = Math.floor((t / tendrilCount) * magnitudes.length);
+            const magnitude = magnitudes[magnitudeIndex] || 0;
+
+            // Create spiral path points
+            const points = [];
+            const segments = 80;
+
+            for (let i = 0; i < segments; i++) {
+                const progress = i / segments;
+
+                // Spiral outward with audio reactivity
+                const spiralAngle = tendrilAngleOffset + (progress * Math.PI * 4 * spiralTightness) + time;
+                const radius = baseRadius * progress * (1 + magnitude * 0.5);
+
+                // Add wave motion for organic feel
+                const wave = Math.sin(progress * 8 - time * 2) * energy * 0.3;
+                const wobble = Math.cos(progress * 5 + time * 3) * energy * 0.2;
+
+                const x = this.centerX + Math.cos(spiralAngle) * (radius + wave) + wobble;
+                const y = this.centerY + Math.sin(spiralAngle) * (radius + wave) + wobble;
+
+                points.push({ x, y, progress });
+            }
+
+            // Draw tendril with gradient
+            for (let i = 0; i < points.length - 1; i++) {
+                const point = points[i];
+                const nextPoint = points[i + 1];
+
+                // Color based on position along tendril and audio
+                const colorIndex = Math.floor((t + point.progress) * magnitudes.length / tendrilCount) % magnitudes.length;
+                const color = this.getColor(colorIndex, magnitudes.length);
+
+                // Thickness decreases along tendril, pulsing with audio
+                const thickness = (8 - point.progress * 6) * this.scaleFactor * (1 + magnitude * 0.5);
+                const alpha = 0.6 + magnitude * 0.4;
+
+                // Parse RGB color
+                const rgb = this.parseRgbColor(color);
+
+                this.ctx.beginPath();
+                this.ctx.moveTo(point.x, point.y);
+                this.ctx.lineTo(nextPoint.x, nextPoint.y);
+                this.ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+                this.ctx.lineWidth = thickness;
+                this.ctx.lineCap = 'round';
+                this.ctx.shadowBlur = 15 * this.scaleFactor;
+                this.ctx.shadowColor = color;
+                this.ctx.stroke();
+            }
+        }
+
+        // Add central energy core
+        const coreRadius = 15 * this.scaleFactor * (1 + avgMagnitude);
+        const gradient = this.ctx.createRadialGradient(
+            this.centerX, this.centerY, 0,
+            this.centerX, this.centerY, coreRadius
+        );
+
+        const coreColor = this.getColor(0, 1);
+        const coreRgb = this.parseRgbColor(coreColor);
+        gradient.addColorStop(0, `rgba(${coreRgb[0]}, ${coreRgb[1]}, ${coreRgb[2]}, 0.9)`);
+        gradient.addColorStop(1, `rgba(${coreRgb[0]}, ${coreRgb[1]}, ${coreRgb[2]}, 0)`);
+
+        this.ctx.beginPath();
+        this.ctx.arc(this.centerX, this.centerY, coreRadius, 0, Math.PI * 2);
+        this.ctx.fillStyle = gradient;
+        this.ctx.fill();
+
+        this.ctx.shadowBlur = 0;
+        this.ctx.globalAlpha = 1;
+    }
+
+    /**
+     * Mode 990: Bubble Stream
+     * Rising bubbles with audio-reactive sizes and fluid physics simulation
+     */
+    renderBubbleStream(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const bubbleCount = Math.floor(params.bubbleCount || 15);
+        const minBubbleSize = params.minBubbleSize || 20;
+        const maxBubbleSize = params.maxBubbleSize || 80;
+        const riseSpeed = params.riseSpeed || 1.5;
+        const wobbleIntensity = params.wobbleIntensity || 0.8;
+
+        // Initialize bubbles array if needed
+        if (!this.bubbles || this.bubbles.length !== bubbleCount) {
+            this.bubbles = [];
+            for (let i = 0; i < bubbleCount; i++) {
+                this.bubbles.push({
+                    x: this.centerX + (Math.random() - 0.5) * this.maxRadius * 1.5,
+                    y: this.centerY + this.maxRadius + Math.random() * 100,
+                    baseSize: minBubbleSize + Math.random() * (maxBubbleSize - minBubbleSize),
+                    phase: Math.random() * Math.PI * 2,
+                    wobblePhase: Math.random() * Math.PI * 2,
+                    frequencyIndex: Math.floor(Math.random() * magnitudes.length)
+                });
+            }
+        }
+
+        const time = this.frameCounter * 0.02;
+
+        // Update and draw each bubble
+        for (let i = 0; i < this.bubbles.length; i++) {
+            const bubble = this.bubbles[i];
+            const magnitude = magnitudes[bubble.frequencyIndex] || 0;
+
+            // Update position
+            bubble.y -= riseSpeed * this.scaleFactor * (0.5 + magnitude * 0.5);
+
+            // Wobble horizontally
+            const wobble = Math.sin(time * 2 + bubble.wobblePhase) * wobbleIntensity * this.scaleFactor * 30;
+            const displayX = bubble.x + wobble;
+
+            // Reset bubble if it goes off top
+            if (bubble.y < this.centerY - this.maxRadius - 100) {
+                bubble.y = this.centerY + this.maxRadius + 50;
+                bubble.x = this.centerX + (Math.random() - 0.5) * this.maxRadius * 1.5;
+                bubble.frequencyIndex = Math.floor(Math.random() * magnitudes.length);
+            }
+
+            // Bubble size reactive to audio
+            const bubbleSize = (bubble.baseSize + magnitude * 30) * this.scaleFactor;
+
+            // Draw bubble with gradient and highlights
+            const gradient = this.ctx.createRadialGradient(
+                displayX - bubbleSize * 0.3, bubble.y - bubbleSize * 0.3, bubbleSize * 0.1,
+                displayX, bubble.y, bubbleSize
+            );
+
+            // Color based on frequency
+            const color = this.getColor(bubble.frequencyIndex, magnitudes.length);
+            const rgb = this.parseRgbColor(color);
+
+            gradient.addColorStop(0, `rgba(255, 255, 255, 0.4)`);
+            gradient.addColorStop(0.4, `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.3)`);
+            gradient.addColorStop(1, `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.6)`);
+
+            // Main bubble
+            this.ctx.beginPath();
+            this.ctx.arc(displayX, bubble.y, bubbleSize, 0, Math.PI * 2);
+            this.ctx.fillStyle = gradient;
+            this.ctx.fill();
+
+            // Bubble outline
+            this.ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.7)`;
+            this.ctx.lineWidth = 2 * this.scaleFactor;
+            this.ctx.stroke();
+
+            // Highlight
+            const highlightSize = bubbleSize * 0.35;
+            const highlightGradient = this.ctx.createRadialGradient(
+                displayX - bubbleSize * 0.35, bubble.y - bubbleSize * 0.35, 0,
+                displayX - bubbleSize * 0.35, bubble.y - bubbleSize * 0.35, highlightSize
+            );
+            highlightGradient.addColorStop(0, 'rgba(255, 255, 255, 0.8)');
+            highlightGradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+            this.ctx.beginPath();
+            this.ctx.arc(displayX - bubbleSize * 0.35, bubble.y - bubbleSize * 0.35, highlightSize, 0, Math.PI * 2);
+            this.ctx.fillStyle = highlightGradient;
+            this.ctx.fill();
+
+            // Secondary smaller highlight
+            const smallHighlightSize = bubbleSize * 0.15;
+            this.ctx.beginPath();
+            this.ctx.arc(displayX + bubbleSize * 0.3, bubble.y + bubbleSize * 0.25, smallHighlightSize, 0, Math.PI * 2);
+            this.ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+    }
+
+    /**
      * Mode 992: Minimal Audio Ring
      * Clean white circular ring with subtle audio-reactive edge
      */
@@ -6975,6 +8274,301 @@ class Visualizer {
     }
 
     /**
+     * Mode 989: Particle Accelerator
+     * Particles racing around a circular accelerator ring with collision effects
+     */
+    renderParticleAccelerator(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const ringRadius = params.ringRadius || 200;
+        const particleCount = Math.floor(params.particleCount || 24);
+        const particleSpeed = params.particleSpeed || 1.5;
+        const collisionEnergy = params.collisionEnergy || 50;
+        const beamIntensity = params.beamIntensity || 1;
+
+        const radius = ringRadius * this.scaleFactor;
+        const time = this.frameCounter * 0.02 * particleSpeed;
+
+        // Initialize particles if needed
+        if (!this.acceleratorParticles || this.acceleratorParticles.length !== particleCount) {
+            this.acceleratorParticles = [];
+            for (let i = 0; i < particleCount; i++) {
+                this.acceleratorParticles.push({
+                    angle: (i / particleCount) * Math.PI * 2,
+                    speed: 0.02 + (i % 2) * 0.01,
+                    direction: i % 2 === 0 ? 1 : -1,
+                    energy: 0
+                });
+            }
+        }
+
+        // Calculate average magnitude for collision detection
+        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Draw accelerator ring
+        this.ctx.strokeStyle = this.getColor(0, 1);
+        this.ctx.lineWidth = 3 * this.scaleFactor;
+        this.ctx.shadowBlur = 15 * this.scaleFactor;
+        this.ctx.shadowColor = this.getColor(0, 1);
+        this.ctx.globalAlpha = 0.6;
+
+        this.ctx.beginPath();
+        this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+        this.ctx.stroke();
+
+        // Draw magnetic field lines
+        const fieldLines = 8;
+        this.ctx.globalAlpha = 0.3;
+        this.ctx.lineWidth = 1 * this.scaleFactor;
+        for (let i = 0; i < fieldLines; i++) {
+            const angle = (i / fieldLines) * Math.PI * 2;
+            const x1 = this.centerX + Math.cos(angle) * (radius - 30 * this.scaleFactor);
+            const y1 = this.centerY + Math.sin(angle) * (radius - 30 * this.scaleFactor);
+            const x2 = this.centerX + Math.cos(angle) * (radius + 30 * this.scaleFactor);
+            const y2 = this.centerY + Math.sin(angle) * (radius + 30 * this.scaleFactor);
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(x1, y1);
+            this.ctx.lineTo(x2, y2);
+            this.ctx.stroke();
+        }
+
+        this.ctx.globalAlpha = 1;
+
+        // Update and draw particles
+        for (let i = 0; i < this.acceleratorParticles.length; i++) {
+            const particle = this.acceleratorParticles[i];
+
+            // Update particle position
+            particle.angle += particle.speed * particle.direction * particleSpeed;
+            particle.energy = magnitudes[i % magnitudes.length] || 0;
+
+            const x = this.centerX + Math.cos(particle.angle) * radius;
+            const y = this.centerY + Math.sin(particle.angle) * radius;
+
+            // Draw particle trail
+            const trailLength = 15;
+            for (let t = 0; t < trailLength; t++) {
+                const trailAngle = particle.angle - (t * 0.05 * particle.direction);
+                const tx = this.centerX + Math.cos(trailAngle) * radius;
+                const ty = this.centerY + Math.sin(trailAngle) * radius;
+
+                const trailAlpha = (1 - t / trailLength) * 0.5;
+                const color = this.getColor(i, particleCount);
+                const rgb = this.parseRgbColor(color);
+
+                this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${trailAlpha})`;
+                const size = (3 - t * 0.15) * this.scaleFactor;
+                this.ctx.fillRect(tx - size / 2, ty - size / 2, size, size);
+            }
+
+            // Draw particle
+            const particleSize = (5 + particle.energy * 8) * this.scaleFactor * beamIntensity;
+            const color = this.getColor(i, particleCount);
+
+            this.ctx.shadowBlur = 20 * this.scaleFactor;
+            this.ctx.shadowColor = color;
+            this.ctx.fillStyle = color;
+
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, particleSize, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Check for collisions with opposite-direction particles
+            for (let j = i + 1; j < this.acceleratorParticles.length; j++) {
+                const other = this.acceleratorParticles[j];
+                if (particle.direction !== other.direction) {
+                    const angleDiff = Math.abs(particle.angle - other.angle);
+                    const normalizedDiff = Math.min(angleDiff, Math.PI * 2 - angleDiff);
+
+                    // Collision detected
+                    if (normalizedDiff < 0.2 && avgMagnitude > 0.5) {
+                        const ox = this.centerX + Math.cos(other.angle) * radius;
+                        const oy = this.centerY + Math.sin(other.angle) * radius;
+                        const mx = (x + ox) / 2;
+                        const my = (y + oy) / 2;
+
+                        // Draw collision burst
+                        const burstParticles = 12;
+                        for (let b = 0; b < burstParticles; b++) {
+                            const burstAngle = (b / burstParticles) * Math.PI * 2;
+                            const burstDist = collisionEnergy * this.scaleFactor * avgMagnitude;
+                            const bx = mx + Math.cos(burstAngle) * burstDist;
+                            const by = my + Math.sin(burstAngle) * burstDist;
+
+                            const burstColor = this.getColor(b, burstParticles);
+                            const burstRgb = this.parseRgbColor(burstColor);
+
+                            this.ctx.beginPath();
+                            this.ctx.moveTo(mx, my);
+                            this.ctx.lineTo(bx, by);
+                            this.ctx.strokeStyle = `rgba(${burstRgb[0]}, ${burstRgb[1]}, ${burstRgb[2]}, 0.8)`;
+                            this.ctx.lineWidth = 2 * this.scaleFactor;
+                            this.ctx.shadowBlur = 10 * this.scaleFactor;
+                            this.ctx.stroke();
+                        }
+                    }
+                }
+            }
+        }
+
+        this.ctx.shadowBlur = 0;
+        this.ctx.globalAlpha = 1;
+    }
+
+    /**
+     * Mode 988: Neural Network
+     * Interconnected neurons firing with synaptic pulses based on audio
+     */
+    renderNeuralNetwork(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const neuronCount = Math.floor(params.neuronCount || 16);
+        const connectionDensity = params.connectionDensity || 0.6;
+        const fireRate = params.fireRate || 1.5;
+        const pulseSpeed = params.pulseSpeed || 1.2;
+        const neuronSize = params.neuronSize || 15;
+
+        const time = this.frameCounter * 0.02;
+
+        // Initialize neurons if needed
+        if (!this.neurons || this.neurons.length !== neuronCount) {
+            this.neurons = [];
+            this.synapses = [];
+
+            // Create neurons in a distributed pattern
+            for (let i = 0; i < neuronCount; i++) {
+                const angle = (i / neuronCount) * Math.PI * 2;
+                const distance = (0.3 + Math.random() * 0.5) * this.maxRadius;
+                const x = this.centerX + Math.cos(angle) * distance;
+                const y = this.centerY + Math.sin(angle) * distance;
+
+                this.neurons.push({
+                    x: x,
+                    y: y,
+                    activation: 0,
+                    frequencyIndex: i % magnitudes.length,
+                    lastFireTime: 0
+                });
+            }
+
+            // Create synaptic connections
+            for (let i = 0; i < this.neurons.length; i++) {
+                for (let j = i + 1; j < this.neurons.length; j++) {
+                    if (Math.random() < connectionDensity) {
+                        this.synapses.push({
+                            from: i,
+                            to: j,
+                            pulses: []
+                        });
+                    }
+                }
+            }
+        }
+
+        // Update neuron activations based on audio
+        for (let i = 0; i < this.neurons.length; i++) {
+            const neuron = this.neurons[i];
+            const magnitude = magnitudes[neuron.frequencyIndex] || 0;
+
+            // Fire when magnitude crosses threshold
+            if (magnitude > 0.5 && time - neuron.lastFireTime > (1 / fireRate)) {
+                neuron.activation = 1;
+                neuron.lastFireTime = time;
+
+                // Create pulses along synapses
+                for (const synapse of this.synapses) {
+                    if (synapse.from === i || synapse.to === i) {
+                        synapse.pulses.push({
+                            progress: 0,
+                            direction: synapse.from === i ? 1 : -1,
+                            strength: magnitude
+                        });
+                    }
+                }
+            }
+
+            // Decay activation
+            neuron.activation *= 0.92;
+        }
+
+        // Draw synapses
+        this.ctx.lineWidth = 2 * this.scaleFactor;
+        this.ctx.globalAlpha = 0.3;
+
+        for (const synapse of this.synapses) {
+            const n1 = this.neurons[synapse.from];
+            const n2 = this.neurons[synapse.to];
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(n1.x, n1.y);
+            this.ctx.lineTo(n2.x, n2.y);
+            this.ctx.strokeStyle = this.getColor(synapse.from, this.neurons.length);
+            this.ctx.stroke();
+        }
+
+        this.ctx.globalAlpha = 1;
+
+        // Draw and update pulses
+        for (const synapse of this.synapses) {
+            const n1 = this.neurons[synapse.from];
+            const n2 = this.neurons[synapse.to];
+
+            // Update pulses
+            synapse.pulses = synapse.pulses.filter(pulse => {
+                pulse.progress += 0.02 * pulseSpeed;
+                return pulse.progress < 1;
+            });
+
+            // Draw pulses
+            for (const pulse of synapse.pulses) {
+                const x = n1.x + (n2.x - n1.x) * pulse.progress;
+                const y = n1.y + (n2.y - n1.y) * pulse.progress;
+
+                const color = this.getColor(synapse.from, this.neurons.length);
+                const rgb = this.parseRgbColor(color);
+
+                this.ctx.shadowBlur = 15 * this.scaleFactor;
+                this.ctx.shadowColor = color;
+                this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${pulse.strength})`;
+
+                const size = 4 * this.scaleFactor * pulse.strength;
+                this.ctx.beginPath();
+                this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+
+        // Draw neurons
+        for (let i = 0; i < this.neurons.length; i++) {
+            const neuron = this.neurons[i];
+            const color = this.getColor(i, this.neurons.length);
+            const rgb = this.parseRgbColor(color);
+
+            // Neuron body
+            const size = (neuronSize + neuron.activation * 10) * this.scaleFactor;
+            const alpha = 0.6 + neuron.activation * 0.4;
+
+            this.ctx.shadowBlur = 20 * this.scaleFactor * neuron.activation;
+            this.ctx.shadowColor = color;
+            this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+
+            this.ctx.beginPath();
+            this.ctx.arc(neuron.x, neuron.y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Neuron core
+            if (neuron.activation > 0.1) {
+                this.ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                this.ctx.beginPath();
+                this.ctx.arc(neuron.x, neuron.y, size * 0.4, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+
+        this.ctx.shadowBlur = 0;
+        this.ctx.globalAlpha = 1;
+    }
+
+    /**
      * Mode 36: Tunnel Vision
      */
     renderTunnelVision(magnitudes) {
@@ -7446,6 +9040,388 @@ class Visualizer {
 
         this.ctx.globalAlpha = 1;
         this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 987: Supernova Burst
+     * Explosive stellar energy with radiating particles and shockwaves
+     */
+    renderSupernovaBurst(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const burstIntensity = params.burstIntensity || 1.5;
+        const particleDensity = Math.floor(params.particleDensity || 80);
+        const expansionSpeed = params.expansionSpeed || 2.5;
+        const shockwaveCount = Math.floor(params.shockwaveCount || 4);
+        const coreSize = params.coreSize || 40;
+        const energyDecay = params.energyDecay || 0.95;
+
+        const time = this.frameCounter * 0.02;
+        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const peakMagnitude = Math.max(...magnitudes);
+
+        // Initialize burst particles if needed
+        if (!this.burstParticles || this.frameCounter % 60 === 0 || peakMagnitude > 0.8) {
+            this.burstParticles = this.burstParticles || [];
+
+            // Add new particles when there's energy
+            if (peakMagnitude > 0.3) {
+                for (let i = 0; i < particleDensity * burstIntensity * peakMagnitude; i++) {
+                    const angle = Math.random() * Math.PI * 2;
+                    const speed = (2 + Math.random() * 3) * expansionSpeed;
+
+                    this.burstParticles.push({
+                        x: this.centerX,
+                        y: this.centerY,
+                        vx: Math.cos(angle) * speed,
+                        vy: Math.sin(angle) * speed,
+                        life: 1,
+                        size: 2 + Math.random() * 4,
+                        color: Math.floor(Math.random() * magnitudes.length),
+                        energy: peakMagnitude
+                    });
+                }
+            }
+        }
+
+        // Update and draw particles
+        this.burstParticles = this.burstParticles.filter(p => p.life > 0);
+
+        for (const particle of this.burstParticles) {
+            // Update particle
+            particle.x += particle.vx * this.scaleFactor;
+            particle.y += particle.vy * this.scaleFactor;
+            particle.life *= energyDecay;
+            particle.vx *= 0.99; // Slight drag
+            particle.vy *= 0.99;
+
+            // Draw particle trail
+            const color = this.getColor(particle.color, magnitudes.length);
+            const rgb = this.parseRgbColor(color);
+            const alpha = particle.life * particle.energy;
+
+            this.ctx.shadowBlur = 15 * this.scaleFactor * particle.life;
+            this.ctx.shadowColor = color;
+            this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+
+            const size = particle.size * this.scaleFactor * particle.life * burstIntensity;
+            this.ctx.beginPath();
+            this.ctx.arc(particle.x, particle.y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        // Draw shockwave rings
+        for (let i = 0; i < shockwaveCount; i++) {
+            const waveTime = (time * expansionSpeed + i * 0.5) % 4;
+            const radius = waveTime * this.maxRadius * 0.5;
+            const alpha = Math.max(0, 1 - waveTime / 4) * avgMagnitude;
+
+            if (alpha > 0) {
+                const colorIndex = Math.floor((i / shockwaveCount) * magnitudes.length);
+                const color = this.getColor(colorIndex, magnitudes.length);
+                const rgb = this.parseRgbColor(color);
+
+                this.ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+                this.ctx.lineWidth = (6 - waveTime) * this.scaleFactor;
+                this.ctx.shadowBlur = 20 * this.scaleFactor;
+                this.ctx.shadowColor = color;
+
+                this.ctx.beginPath();
+                this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+                this.ctx.stroke();
+            }
+        }
+
+        // Draw pulsing core
+        const corePulse = 0.8 + Math.sin(time * 5) * 0.2;
+        const coreRadius = (coreSize + avgMagnitude * 40) * this.scaleFactor * corePulse;
+
+        const gradient = this.ctx.createRadialGradient(
+            this.centerX, this.centerY, 0,
+            this.centerX, this.centerY, coreRadius
+        );
+
+        const coreColor = this.getColor(0, 1);
+        const coreRgb = this.parseRgbColor(coreColor);
+        gradient.addColorStop(0, `rgba(255, 255, 255, ${avgMagnitude})`);
+        gradient.addColorStop(0.3, `rgba(${coreRgb[0]}, ${coreRgb[1]}, ${coreRgb[2]}, ${avgMagnitude * 0.8})`);
+        gradient.addColorStop(1, `rgba(${coreRgb[0]}, ${coreRgb[1]}, ${coreRgb[2]}, 0)`);
+
+        this.ctx.shadowBlur = 40 * this.scaleFactor;
+        this.ctx.shadowColor = coreColor;
+        this.ctx.fillStyle = gradient;
+        this.ctx.beginPath();
+        this.ctx.arc(this.centerX, this.centerY, coreRadius, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        this.ctx.shadowBlur = 0;
+        this.ctx.globalAlpha = 1;
+    }
+
+    /**
+     * Mode 986: Electric Web
+     * Tesla coil network with arcing electricity connecting reactive nodes
+     */
+    renderElectricWeb(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const nodeCount = Math.floor(params.nodeCount || 12);
+        const arcThreshold = params.arcThreshold || 0.4;
+        const arcIntensity = params.arcIntensity || 1.5;
+        const pulseSpeed = params.pulseSpeed || 1.5;
+        const nodeSize = params.nodeSize || 12;
+        const webDensity = params.webDensity || 0.6;
+
+        const time = this.frameCounter * 0.02 * pulseSpeed;
+
+        // Initialize nodes if needed
+        if (!this.webNodes || this.webNodes.length !== nodeCount) {
+            this.webNodes = [];
+            for (let i = 0; i < nodeCount; i++) {
+                const angle = (i / nodeCount) * Math.PI * 2;
+                const radius = (0.5 + Math.random() * 0.3) * this.maxRadius;
+
+                this.webNodes.push({
+                    x: this.centerX + Math.cos(angle) * radius,
+                    y: this.centerY + Math.sin(angle) * radius,
+                    baseX: this.centerX + Math.cos(angle) * radius,
+                    baseY: this.centerY + Math.sin(angle) * radius,
+                    charge: 0,
+                    frequencyIndex: i % magnitudes.length
+                });
+            }
+        }
+
+        // Update node charges and positions
+        for (let i = 0; i < this.webNodes.length; i++) {
+            const node = this.webNodes[i];
+            const magnitude = magnitudes[node.frequencyIndex] || 0;
+
+            node.charge = magnitude;
+
+            // Slight wobble based on energy
+            const wobble = magnitude * 15 * this.scaleFactor;
+            node.x = node.baseX + Math.sin(time + i) * wobble;
+            node.y = node.baseY + Math.cos(time * 1.3 + i) * wobble;
+        }
+
+        // Draw arcs between nodes
+        for (let i = 0; i < this.webNodes.length; i++) {
+            for (let j = i + 1; j < this.webNodes.length; j++) {
+                // Draw arcs based on connection density and charge
+                if (Math.random() > (1 - webDensity)) {
+                    const node1 = this.webNodes[i];
+                    const node2 = this.webNodes[j];
+                    const combinedCharge = (node1.charge + node2.charge) / 2;
+
+                    if (combinedCharge > arcThreshold) {
+                        // Generate jagged electric arc
+                        const segments = 8;
+                        const points = [{x: node1.x, y: node1.y}];
+
+                        for (let s = 1; s < segments; s++) {
+                            const t = s / segments;
+                            const baseX = node1.x + (node2.x - node1.x) * t;
+                            const baseY = node1.y + (node2.y - node1.y) * t;
+
+                            // Add electric jitter
+                            const jitter = (30 + combinedCharge * 40) * this.scaleFactor * arcIntensity;
+                            const offsetX = (Math.random() - 0.5) * jitter;
+                            const offsetY = (Math.random() - 0.5) * jitter;
+
+                            points.push({
+                                x: baseX + offsetX,
+                                y: baseY + offsetY
+                            });
+                        }
+                        points.push({x: node2.x, y: node2.y});
+
+                        // Draw the arc
+                        const color = this.getColor(i, this.webNodes.length);
+                        const rgb = this.parseRgbColor(color);
+                        const alpha = 0.5 + combinedCharge * 0.5;
+
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(points[0].x, points[0].y);
+                        for (let p = 1; p < points.length; p++) {
+                            this.ctx.lineTo(points[p].x, points[p].y);
+                        }
+
+                        this.ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+                        this.ctx.lineWidth = (1 + combinedCharge * 3) * this.scaleFactor;
+                        this.ctx.shadowBlur = 15 * this.scaleFactor * combinedCharge;
+                        this.ctx.shadowColor = color;
+                        this.ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        // Draw nodes
+        for (let i = 0; i < this.webNodes.length; i++) {
+            const node = this.webNodes[i];
+            const color = this.getColor(i, this.webNodes.length);
+            const rgb = this.parseRgbColor(color);
+
+            const size = (nodeSize + node.charge * 15) * this.scaleFactor;
+            const pulse = 0.8 + Math.sin(time * 3 + i) * 0.2;
+
+            // Outer glow
+            const gradient = this.ctx.createRadialGradient(
+                node.x, node.y, 0,
+                node.x, node.y, size * 1.5
+            );
+            gradient.addColorStop(0, `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${node.charge})`);
+            gradient.addColorStop(1, `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0)`);
+
+            this.ctx.fillStyle = gradient;
+            this.ctx.beginPath();
+            this.ctx.arc(node.x, node.y, size * 1.5, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Core
+            this.ctx.shadowBlur = 20 * this.scaleFactor * node.charge;
+            this.ctx.shadowColor = color;
+            this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0.9)`;
+            this.ctx.beginPath();
+            this.ctx.arc(node.x, node.y, size * pulse, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Bright center
+            if (node.charge > 0.5) {
+                this.ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                this.ctx.beginPath();
+                this.ctx.arc(node.x, node.y, size * 0.4, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+
+        this.ctx.shadowBlur = 0;
+        this.ctx.globalAlpha = 1;
+    }
+
+    /**
+     * Mode 985: Kinetic Shockwave
+     * Powerful circular shockwaves with space distortion and energy ripples
+     */
+    renderKineticShockwave(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const waveCount = Math.floor(params.waveCount || 6);
+        const waveSpeed = params.waveSpeed || 2;
+        const distortionAmount = params.distortionAmount || 20;
+        const impactForce = params.impactForce || 1.5;
+        const waveThickness = params.waveThickness || 6;
+        const particleTrail = Math.floor(params.particleTrail || 20);
+
+        const time = this.frameCounter * 0.02;
+        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const peakMagnitude = Math.max(...magnitudes);
+
+        // Initialize shockwaves array
+        if (!this.shockwaves) {
+            this.shockwaves = [];
+        }
+
+        // Create new shockwave on strong beats
+        if (peakMagnitude > 0.6 && this.frameCounter % Math.max(10, 40 - peakMagnitude * 30) === 0) {
+            this.shockwaves.push({
+                radius: 0,
+                strength: peakMagnitude * impactForce,
+                life: 1,
+                startTime: time,
+                particleAngles: Array.from({length: particleTrail}, () => Math.random() * Math.PI * 2)
+            });
+        }
+
+        // Limit number of active shockwaves
+        if (this.shockwaves.length > waveCount) {
+            this.shockwaves = this.shockwaves.slice(-waveCount);
+        }
+
+        // Update and draw shockwaves
+        this.shockwaves = this.shockwaves.filter(wave => wave.life > 0);
+
+        for (let w = 0; w < this.shockwaves.length; w++) {
+            const wave = this.shockwaves[w];
+
+            // Update wave
+            wave.radius += waveSpeed * this.scaleFactor * 5 * wave.strength;
+            wave.life -= 0.01 / wave.strength;
+
+            const alpha = wave.life * wave.strength;
+
+            if (alpha > 0 && wave.radius < this.maxRadius * 2) {
+                // Draw distortion effect (multiple rings)
+                const distortionRings = 3;
+                for (let d = 0; d < distortionRings; d++) {
+                    const distOffset = (d - 1) * distortionAmount * this.scaleFactor * wave.strength;
+                    const distRadius = wave.radius + distOffset;
+
+                    if (distRadius > 0) {
+                        const colorIndex = Math.floor((w / waveCount) * magnitudes.length);
+                        const color = this.getColor(colorIndex, magnitudes.length);
+                        const rgb = this.parseRgbColor(color);
+                        const distAlpha = alpha * (0.3 + (1 - d / distortionRings) * 0.7);
+
+                        this.ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${distAlpha})`;
+                        this.ctx.lineWidth = waveThickness * this.scaleFactor * (1 + wave.strength);
+                        this.ctx.shadowBlur = 25 * this.scaleFactor * wave.strength;
+                        this.ctx.shadowColor = color;
+
+                        this.ctx.beginPath();
+                        this.ctx.arc(this.centerX, this.centerY, distRadius, 0, Math.PI * 2);
+                        this.ctx.stroke();
+                    }
+                }
+
+                // Draw particle trail around the wave
+                if (particleTrail > 0) {
+                    for (let p = 0; p < wave.particleAngles.length; p++) {
+                        const angle = wave.particleAngles[p];
+                        const x = this.centerX + Math.cos(angle) * wave.radius;
+                        const y = this.centerY + Math.sin(angle) * wave.radius;
+
+                        const colorIndex = Math.floor((p / wave.particleAngles.length) * magnitudes.length);
+                        const color = this.getColor(colorIndex, magnitudes.length);
+                        const rgb = this.parseRgbColor(color);
+
+                        this.ctx.shadowBlur = 10 * this.scaleFactor;
+                        this.ctx.shadowColor = color;
+                        this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+
+                        const size = (3 + wave.strength * 5) * this.scaleFactor;
+                        this.ctx.beginPath();
+                        this.ctx.arc(x, y, size, 0, Math.PI * 2);
+                        this.ctx.fill();
+                    }
+                }
+            }
+        }
+
+        // Draw impact center
+        const centerPulse = avgMagnitude;
+        if (centerPulse > 0.1) {
+            const centerRadius = 20 * this.scaleFactor * centerPulse * impactForce;
+
+            const gradient = this.ctx.createRadialGradient(
+                this.centerX, this.centerY, 0,
+                this.centerX, this.centerY, centerRadius
+            );
+
+            const centerColor = this.getColor(0, 1);
+            const centerRgb = this.parseRgbColor(centerColor);
+            gradient.addColorStop(0, `rgba(255, 255, 255, ${centerPulse})`);
+            gradient.addColorStop(0.5, `rgba(${centerRgb[0]}, ${centerRgb[1]}, ${centerRgb[2]}, ${centerPulse * 0.6})`);
+            gradient.addColorStop(1, `rgba(${centerRgb[0]}, ${centerRgb[1]}, ${centerRgb[2]}, 0)`);
+
+            this.ctx.shadowBlur = 30 * this.scaleFactor;
+            this.ctx.shadowColor = centerColor;
+            this.ctx.fillStyle = gradient;
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, centerRadius, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.shadowBlur = 0;
+        this.ctx.globalAlpha = 1;
     }
 
     /**
@@ -25760,41 +27736,154 @@ class Visualizer {
 
     /**
      * Mode 874: Goddess Energy
-     * Mode 874: Goddess energy visualization
+     * Flowing ethereal energy with graceful ribbons and divine aura
      */
     render874GoddessEnergy(magnitudes) {
         const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const flowSpeed = params.flowSpeed !== undefined ? params.flowSpeed : 1.2;
+        const ribbonCount = params.ribbonCount !== undefined ? params.ribbonCount : 6;
+        const auraSize = params.auraSize !== undefined ? params.auraSize : 1;
+        const gracefulness = params.gracefulness !== undefined ? params.gracefulness : 1;
+        const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 30;
 
+        // Use Step 4 settings
+        const barCount = this.settings.barCount || 72;
+        const innerRadius = this.getEffectiveInnerRadius();
+
+        // Initialize animation time
+        this.frameCounter = (this.frameCounter || 0) + flowSpeed * 0.3;
+
+        // Calculate energy
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
-        this.frameCounter = (this.frameCounter || 0) + speed;        // Ring-based pattern
-        const numRings = Math.floor(5 * complexity / 5);
+        // Ethereal gradient background (dark with soft glow)
+        const gradient = this.ctx.createRadialGradient(
+            this.centerX, this.centerY, 0,
+            this.centerX, this.centerY, this.maxRadius
+        );
+        gradient.addColorStop(0, '#0a0015');
+        gradient.addColorStop(0.5, '#1a0033');
+        gradient.addColorStop(1, '#000000');
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        for (let ring = 0; ring < numRings; ring++) {
-            const radius = (50 + ring * 60) * (this.canvas.width / 800);
-            const numPoints = 6 + ring * 4;
+        // Divine aura (central glow that pulses with energy)
+        const auraPulse = (Math.sin(this.frameCounter * 0.1) + 1) / 2;
+        const auraRadius = (innerRadius * 0.5 + energy * innerRadius * 0.5) * auraSize;
 
-            for (let i = 0; i < numPoints; i++) {
-                const angle = (i / numPoints) * 2 * Math.PI;
-                const magIdx = (ring * 10 + i) % magnitudes.length;
-                const mag = magnitudes[magIdx] * intensity;
-                const x = this.centerX + Math.cos(angle) * radius;
-                const y = this.centerY + Math.sin(angle) * radius;
-                const hue = ((ring * 36) % 180) * 2; // Convert 0-180 to 0-360
-                const brightness = Math.min(100, (58.8 + mag * 41.2)); // (150 + mag * 105) / 255 * 100
-                const color = this.hsvToRgb(hue, 100, brightness);
+        this.ctx.shadowBlur = glowIntensity * 1.5;
+        for (let i = 0; i < 4; i++) {
+            const layerRadius = auraRadius + i * 20 * auraSize;
+            const layerAlpha = (0.15 - i * 0.03) * (0.7 + auraPulse * 0.3);
 
-                this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+            const auraColor = this.getColor(Math.floor(barCount / 4 + i * 10), barCount);
+            this.ctx.fillStyle = auraColor;
+            this.ctx.shadowColor = auraColor;
+            this.ctx.globalAlpha = layerAlpha;
+
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, layerRadius, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        // Flowing energy ribbons
+        this.ctx.shadowBlur = glowIntensity;
+
+        for (let r = 0; r < ribbonCount; r++) {
+            const ribbonProgress = r / ribbonCount;
+            const ribbonAngleOffset = ribbonProgress * Math.PI * 2;
+
+            // Get magnitude for this ribbon
+            const magIdx = Math.floor(ribbonProgress * magnitudes.length);
+            const magnitude = magnitudes[magIdx] * intensity;
+
+            // Ribbon color from scheme
+            const color = this.getColor(Math.floor(r * (barCount / ribbonCount)), barCount);
+            this.ctx.strokeStyle = color;
+            this.ctx.shadowColor = color;
+            this.ctx.lineWidth = 2 + magnitude * 4;
+            this.ctx.globalAlpha = 0.6 + magnitude * 0.3;
+
+            // Draw flowing ribbon with graceful curves
+            this.ctx.beginPath();
+
+            const numPoints = 50;
+            for (let p = 0; p < numPoints; p++) {
+                const t = p / numPoints;
+
+                // Spiral outward with graceful flow
+                const angle = ribbonAngleOffset + t * Math.PI * 4 * gracefulness + this.frameCounter * 0.05;
+                const radius = innerRadius * 0.3 + t * this.maxRadius * 0.7;
+
+                // Add flowing wave motion
+                const wave1 = Math.sin(this.frameCounter * 0.1 + r + t * 3) * 20 * gracefulness;
+                const wave2 = Math.cos(this.frameCounter * 0.15 + r * 2 + t * 4) * 15 * gracefulness;
+
+                // Audio-reactive amplitude
+                const audioWave = magnitude * 30;
+
+                const x = this.centerX + Math.cos(angle) * (radius + wave1 + audioWave);
+                const y = this.centerY + Math.sin(angle) * (radius + wave2 + audioWave);
+
+                if (p === 0) {
+                    this.ctx.moveTo(x, y);
+                } else {
+                    this.ctx.lineTo(x, y);
+                }
+            }
+
+            this.ctx.stroke();
+
+            // Add flowing particles along the ribbons
+            const particleCount = 3 + Math.floor(magnitude * 5);
+            for (let i = 0; i < particleCount; i++) {
+                const t = ((this.frameCounter * 0.02 + r * 0.2 + i * 0.15) % 1);
+
+                const angle = ribbonAngleOffset + t * Math.PI * 4 * gracefulness + this.frameCounter * 0.05;
+                const radius = innerRadius * 0.3 + t * this.maxRadius * 0.7;
+
+                const wave1 = Math.sin(this.frameCounter * 0.1 + r + t * 3) * 20 * gracefulness;
+                const wave2 = Math.cos(this.frameCounter * 0.15 + r * 2 + t * 4) * 15 * gracefulness;
+                const audioWave = magnitude * 30;
+
+                const px = this.centerX + Math.cos(angle) * (radius + wave1 + audioWave);
+                const py = this.centerY + Math.sin(angle) * (radius + wave2 + audioWave);
+
+                // Particle with glow
+                const particleSize = 3 + magnitude * 5;
+                this.ctx.fillStyle = color;
+                this.ctx.shadowBlur = glowIntensity * 0.8;
+                this.ctx.globalAlpha = 0.8;
+
                 this.ctx.beginPath();
-                this.ctx.arc(x, y, (5 + mag * 10) * intensity, 0, 2 * Math.PI);
+                this.ctx.arc(px, py, particleSize, 0, Math.PI * 2);
                 this.ctx.fill();
             }
         }
+
+        // Central goddess core (bright pulsing center)
+        const coreSize = 15 + energy * 20;
+        const corePulse = (Math.sin(this.frameCounter * 0.15) + 1) / 2;
+
+        this.ctx.shadowBlur = glowIntensity * 2;
+        for (let i = 0; i < 3; i++) {
+            const layerSize = coreSize + i * 8;
+            const coreColor = this.getColor(Math.floor(barCount / 2), barCount);
+
+            this.ctx.fillStyle = coreColor;
+            this.ctx.shadowColor = coreColor;
+            this.ctx.globalAlpha = (0.8 - i * 0.2) * (0.6 + corePulse * 0.4);
+
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, layerSize, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+        this.ctx.shadowBlur = 0;
     }
 
     /**
@@ -30500,6 +32589,746 @@ class Visualizer {
             }
         }
 
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 1008: Boombox Spectrum
+     * Classic 80s boombox with dual speakers and spectrum display
+     */
+    render1008BoomboxSpectrum(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const intensity = params.intensity || 1;
+        const speakerSize = params.speakerSize !== undefined ? params.speakerSize : 1;
+        const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 15;
+        const bassResponse = params.bassResponse !== undefined ? params.bassResponse : 1;
+
+        // Use Step 4 settings
+        const barCount = this.settings.barCount || 72;
+        const innerRadius = this.getEffectiveInnerRadius();
+
+        // Calculate frequency ranges
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Background
+        this.ctx.fillStyle = '#1a1a1a';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Boombox dimensions
+        const boomboxWidth = Math.min(600, this.canvas.width * 0.85);
+        const boomboxHeight = boomboxWidth * 0.5;
+        const boomboxX = this.centerX - boomboxWidth / 2;
+        const boomboxY = this.centerY - boomboxHeight / 2;
+
+        // Main boombox body
+        this.ctx.fillStyle = '#2a2a2a';
+        this.ctx.fillRect(boomboxX, boomboxY, boomboxWidth, boomboxHeight);
+        this.ctx.strokeStyle = '#444';
+        this.ctx.lineWidth = 3;
+        this.ctx.strokeRect(boomboxX, boomboxY, boomboxWidth, boomboxHeight);
+
+        // Left speaker
+        const speakerRadius = (boomboxHeight * 0.35) * speakerSize;
+        const leftSpeakerX = boomboxX + boomboxWidth * 0.2;
+        const speakerY = this.centerY;
+
+        // Speaker cone with bass response
+        const bassScale = 1 + (bass * bassResponse * 0.3);
+        this.ctx.fillStyle = '#0a0a0a';
+        this.ctx.beginPath();
+        this.ctx.arc(leftSpeakerX, speakerY, speakerRadius * bassScale, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Speaker rings
+        const leftColor = this.getColor(0, barCount);
+        this.ctx.strokeStyle = leftColor;
+        this.ctx.shadowBlur = glowIntensity * bass;
+        this.ctx.shadowColor = leftColor;
+        this.ctx.lineWidth = 2;
+        for (let i = 0; i < 3; i++) {
+            this.ctx.beginPath();
+            this.ctx.arc(leftSpeakerX, speakerY, speakerRadius * 0.3 + i * 15, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+
+        // Right speaker
+        const rightSpeakerX = boomboxX + boomboxWidth * 0.8;
+        this.ctx.fillStyle = '#0a0a0a';
+        this.ctx.beginPath();
+        this.ctx.arc(rightSpeakerX, speakerY, speakerRadius * bassScale, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        const rightColor = this.getColor(barCount / 2, barCount);
+        this.ctx.strokeStyle = rightColor;
+        this.ctx.shadowColor = rightColor;
+        for (let i = 0; i < 3; i++) {
+            this.ctx.beginPath();
+            this.ctx.arc(rightSpeakerX, speakerY, speakerRadius * 0.3 + i * 15, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+
+        // Center spectrum display
+        const displayWidth = boomboxWidth * 0.25;
+        const displayHeight = boomboxHeight * 0.5;
+        const displayX = this.centerX - displayWidth / 2;
+        const displayY = this.centerY - displayHeight / 2;
+
+        // Display background
+        this.ctx.fillStyle = '#000';
+        this.ctx.fillRect(displayX, displayY, displayWidth, displayHeight);
+
+        // Spectrum bars
+        this.ctx.shadowBlur = glowIntensity;
+        const numBars = Math.min(16, Math.floor(displayWidth / 8));
+        const barWidth = displayWidth / numBars;
+
+        for (let i = 0; i < numBars; i++) {
+            const magIdx = Math.floor((i * magnitudes.length) / numBars);
+            const magnitude = magnitudes[magIdx] * intensity;
+            const barHeight = magnitude * displayHeight * 0.9;
+
+            const color = this.getColor(i * (barCount / numBars), barCount);
+            this.ctx.fillStyle = color;
+            this.ctx.shadowColor = color;
+
+            const x = displayX + i * barWidth + barWidth * 0.1;
+            const y = displayY + displayHeight - barHeight - displayHeight * 0.05;
+            this.ctx.fillRect(x, y, barWidth * 0.8, barHeight);
+        }
+
+        // Volume indicators (knobs)
+        const knobRadius = 12;
+        const knobY = boomboxY + boomboxHeight * 0.15;
+
+        // Left volume knob
+        const leftKnobX = boomboxX + boomboxWidth * 0.35;
+        this.ctx.fillStyle = '#333';
+        this.ctx.shadowBlur = 0;
+        this.ctx.beginPath();
+        this.ctx.arc(leftKnobX, knobY, knobRadius, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Right volume knob
+        const rightKnobX = boomboxX + boomboxWidth * 0.65;
+        this.ctx.beginPath();
+        this.ctx.arc(rightKnobX, knobY, knobRadius, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 1009: Synthwave Grid
+     * Classic 1980s synthwave perspective grid with neon sun
+     */
+    render1009SynthwaveGrid(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const gridLines = params.gridLines !== undefined ? params.gridLines : 16;
+        const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 20;
+
+        // Use Step 4 settings
+        const barCount = this.settings.barCount || 72;
+
+        // Initialize animation time
+        this.frameCounter = (this.frameCounter || 0) + speed;
+
+        // Calculate average energy
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Sky gradient (dark purple to pink)
+        const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height * 0.6);
+        gradient.addColorStop(0, '#0a0015');
+        gradient.addColorStop(0.5, '#1a0033');
+        gradient.addColorStop(1, '#330066');
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Sun position and size
+        const sunY = this.canvas.height * 0.3;
+        const sunRadius = Math.min(100, this.canvas.width * 0.15) * (1 + energy * intensity * 0.3);
+
+        // Draw sun with glow
+        this.ctx.shadowBlur = glowIntensity * 2;
+        const sunColor = this.getColor(barCount / 4, barCount);
+        this.ctx.shadowColor = sunColor;
+
+        // Sun gradient
+        const sunGradient = this.ctx.createRadialGradient(
+            this.centerX, sunY, sunRadius * 0.3,
+            this.centerX, sunY, sunRadius
+        );
+        sunGradient.addColorStop(0, '#ffff00');
+        sunGradient.addColorStop(0.5, '#ff00ff');
+        sunGradient.addColorStop(1, '#ff0080');
+
+        this.ctx.fillStyle = sunGradient;
+        this.ctx.beginPath();
+        this.ctx.arc(this.centerX, sunY, sunRadius, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Sun stripes (retro effect)
+        this.ctx.shadowBlur = 0;
+        this.ctx.fillStyle = '#0a0015';
+        for (let i = 0; i < 8; i++) {
+            const y = sunY - sunRadius + (i * sunRadius * 2 / 7);
+            this.ctx.fillRect(this.centerX - sunRadius, y, sunRadius * 2, sunRadius * 0.08);
+        }
+
+        // Grid perspective
+        const horizonY = this.canvas.height * 0.55;
+        const gridStartY = horizonY;
+        const gridEndY = this.canvas.height;
+        const gridHeight = gridEndY - gridStartY;
+
+        // Enable glow for grid
+        this.ctx.shadowBlur = glowIntensity;
+        const gridColor = this.getColor(barCount * 0.75, barCount);
+        this.ctx.strokeStyle = gridColor;
+        this.ctx.shadowColor = gridColor;
+        this.ctx.lineWidth = 2;
+
+        // Horizontal grid lines with perspective
+        const numHorizontalLines = gridLines;
+        const offset = (this.frameCounter * speed * 2) % (gridHeight / numHorizontalLines);
+
+        for (let i = 0; i < numHorizontalLines + 2; i++) {
+            const progress = (i * gridHeight / numHorizontalLines + offset) / gridHeight;
+            const y = gridStartY + i * gridHeight / numHorizontalLines - offset;
+
+            if (y < gridStartY || y > gridEndY) continue;
+
+            // Get magnitude for this line
+            const magIdx = Math.floor((i / numHorizontalLines) * magnitudes.length);
+            const magnitude = magnitudes[magIdx % magnitudes.length] * intensity;
+
+            // Perspective width
+            const width = this.canvas.width * (0.1 + progress * 0.9);
+            const x1 = this.centerX - width / 2;
+            const x2 = this.centerX + width / 2;
+
+            // Line y-position can wave based on magnitude
+            const yWave = y + Math.sin(this.frameCounter * 0.05 + i) * magnitude * 10;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(x1, yWave);
+            this.ctx.lineTo(x2, yWave);
+            this.ctx.stroke();
+        }
+
+        // Vertical grid lines
+        const numVerticalLines = Math.floor(gridLines * 1.5);
+        for (let i = 0; i <= numVerticalLines; i++) {
+            const progress = i / numVerticalLines;
+            const xTop = this.centerX + (progress - 0.5) * this.canvas.width * 0.2;
+            const xBottom = this.centerX + (progress - 0.5) * this.canvas.width * 1.8;
+
+            // Get magnitude for this vertical line
+            const magIdx = Math.floor(progress * magnitudes.length);
+            const magnitude = magnitudes[magIdx] * intensity;
+
+            // Line can pulse with magnitude
+            const alpha = 0.5 + magnitude * 0.5;
+            this.ctx.strokeStyle = gridColor.replace('rgb', 'rgba').replace(')', `, ${alpha})`);
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(xTop, gridStartY);
+            this.ctx.lineTo(xBottom, gridEndY);
+            this.ctx.stroke();
+        }
+
+        // Horizon glow line
+        this.ctx.shadowBlur = glowIntensity * 3;
+        this.ctx.strokeStyle = '#ff00ff';
+        this.ctx.shadowColor = '#ff00ff';
+        this.ctx.lineWidth = 3;
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, horizonY);
+        this.ctx.lineTo(this.canvas.width, horizonY);
+        this.ctx.stroke();
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 1012: Ocean Waves
+     * Realistic ocean waves with foam particles and audio-reactive swells
+     */
+    render1012OceanWaves(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const intensity = params.intensity || 1;
+        const waveHeight = params.waveHeight !== undefined ? params.waveHeight : 1;
+        const waveSpeed = params.waveSpeed !== undefined ? params.waveSpeed : 0.5;
+        const foamDensity = params.foamDensity !== undefined ? params.foamDensity : 0.5;
+        const waveCount = params.waveCount !== undefined ? params.waveCount : 4;
+        const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 10;
+
+        // Use Step 4 settings
+        const barCount = this.settings.barCount || 72;
+
+        // Initialize animation time and wave particles
+        this.frameCounter = (this.frameCounter || 0) + waveSpeed;
+
+        if (!this.oceanFoamParticles) {
+            this.oceanFoamParticles = [];
+        }
+
+        // Calculate frequency energies
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
+        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Ocean gradient background (deep blue to lighter blue)
+        const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+        gradient.addColorStop(0, '#001a33');
+        gradient.addColorStop(0.5, '#003d66');
+        gradient.addColorStop(1, '#006699');
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Draw waves from back to front
+        const horizonY = this.canvas.height * 0.4;
+
+        for (let w = waveCount - 1; w >= 0; w--) {
+            const waveProgress = w / waveCount;
+            const baseY = horizonY + waveProgress * (this.canvas.height - horizonY);
+            const wavePhase = this.frameCounter * 0.02 + w * 0.3;
+
+            // Wave color from color scheme
+            const color = this.getColor(Math.floor(w * (barCount / waveCount)), barCount);
+
+            // Enable glow for wave crests
+            this.ctx.shadowBlur = glowIntensity * (0.5 + energy * 0.5);
+            this.ctx.shadowColor = color;
+
+            // Draw the wave
+            this.ctx.beginPath();
+            this.ctx.fillStyle = color;
+
+            const numPoints = 100;
+            for (let i = 0; i <= numPoints; i++) {
+                const x = (i / numPoints) * this.canvas.width;
+
+                // Get magnitude for this point
+                const magIdx = Math.floor((i / numPoints) * magnitudes.length);
+                const magnitude = magnitudes[magIdx] * intensity;
+
+                // Multiple sine waves for realistic ocean movement
+                const wave1 = Math.sin(wavePhase + i * 0.05) * 20;
+                const wave2 = Math.sin(wavePhase * 1.3 + i * 0.03) * 15;
+                const wave3 = Math.sin(wavePhase * 0.7 + i * 0.08) * 10;
+
+                // Audio-reactive wave height
+                const audioWave = magnitude * 50 * waveHeight * (1 + bass);
+
+                const y = baseY + wave1 + wave2 + wave3 + audioWave;
+
+                if (i === 0) {
+                    this.ctx.moveTo(x, y);
+                } else {
+                    this.ctx.lineTo(x, y);
+                }
+            }
+
+            // Complete the wave shape
+            this.ctx.lineTo(this.canvas.width, this.canvas.height);
+            this.ctx.lineTo(0, this.canvas.height);
+            this.ctx.closePath();
+            this.ctx.fill();
+
+            // Add wave highlights/foam on crests
+            if (foamDensity > 0 && w < 2) {
+                this.ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+                this.ctx.shadowBlur = glowIntensity * 0.5;
+                this.ctx.shadowColor = '#ffffff';
+
+                for (let i = 0; i < numPoints; i += 3) {
+                    const x = (i / numPoints) * this.canvas.width;
+                    const magIdx = Math.floor((i / numPoints) * magnitudes.length);
+                    const magnitude = magnitudes[magIdx] * intensity;
+
+                    const wave1 = Math.sin(wavePhase + i * 0.05) * 20;
+                    const wave2 = Math.sin(wavePhase * 1.3 + i * 0.03) * 15;
+                    const wave3 = Math.sin(wavePhase * 0.7 + i * 0.08) * 10;
+                    const audioWave = magnitude * 50 * waveHeight * (1 + bass);
+                    const y = baseY + wave1 + wave2 + wave3 + audioWave;
+
+                    // Draw foam highlight at wave peaks
+                    const waveDerivative = Math.cos(wavePhase + i * 0.05);
+                    if (waveDerivative > 0.7) {
+                        const foamSize = 2 + magnitude * 4;
+                        this.ctx.beginPath();
+                        this.ctx.arc(x, y - 5, foamSize, 0, Math.PI * 2);
+                        this.ctx.fill();
+                    }
+                }
+            }
+        }
+
+        // Add foam particles that float on the surface
+        if (foamDensity > 0) {
+            const targetParticleCount = Math.floor(foamDensity * 100);
+
+            // Add new particles based on audio energy
+            if (this.oceanFoamParticles.length < targetParticleCount && Math.random() < energy) {
+                this.oceanFoamParticles.push({
+                    x: Math.random() * this.canvas.width,
+                    y: horizonY + Math.random() * (this.canvas.height - horizonY) * 0.3,
+                    size: 2 + Math.random() * 4,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: Math.random() * 0.5,
+                    life: 1.0
+                });
+            }
+
+            // Update and draw foam particles
+            this.ctx.shadowBlur = glowIntensity * 0.3;
+            for (let i = this.oceanFoamParticles.length - 1; i >= 0; i--) {
+                const particle = this.oceanFoamParticles[i];
+
+                // Update particle
+                particle.x += particle.vx * waveSpeed;
+                particle.y += particle.vy * waveSpeed;
+                particle.life -= 0.01;
+
+                // Remove dead particles or ones off screen
+                if (particle.life <= 0 || particle.x < -10 || particle.x > this.canvas.width + 10) {
+                    this.oceanFoamParticles.splice(i, 1);
+                    continue;
+                }
+
+                // Draw particle
+                this.ctx.fillStyle = `rgba(255, 255, 255, ${particle.life * 0.7})`;
+                this.ctx.shadowColor = '#ffffff';
+                this.ctx.beginPath();
+                this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 1016: Quantum Flux
+     * Minimalist quantum particles phasing between wave and particle states
+     */
+    render1016QuantumFlux(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const intensity = params.intensity || 1;
+        const particleCount = params.particleCount !== undefined ? params.particleCount : 60;
+        const phaseSpeed = params.phaseSpeed !== undefined ? params.phaseSpeed : 1.5;
+        const waveAmplitude = params.waveAmplitude !== undefined ? params.waveAmplitude : 0.7;
+        const coherence = params.coherence !== undefined ? params.coherence : 0.5;
+        const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 20;
+
+        // Use Step 4 settings
+        const barCount = this.settings.barCount || 72;
+        const innerRadius = this.getEffectiveInnerRadius();
+
+        // Initialize animation time
+        this.frameCounter = (this.frameCounter || 0) + phaseSpeed * 0.5;
+
+        // Calculate energy
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Black background for minimalist look
+        this.ctx.fillStyle = '#000000';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Quantum phase state (0 = pure particle, 1 = pure wave)
+        const phaseState = (Math.sin(this.frameCounter * 0.05) + 1) / 2;
+        const quantumCoherence = coherence * (0.7 + energy * 0.3);
+
+        this.ctx.shadowBlur = glowIntensity;
+
+        // Draw particles/waves
+        for (let i = 0; i < particleCount; i++) {
+            const progress = i / particleCount;
+            const magIdx = Math.floor(progress * magnitudes.length);
+            const magnitude = magnitudes[magIdx] * intensity;
+
+            // Base position in a clean grid or orbital pattern
+            const angle = progress * Math.PI * 2 + this.frameCounter * 0.02;
+            const radius = innerRadius + (this.maxRadius - innerRadius) * 0.5;
+
+            const baseX = this.centerX + Math.cos(angle) * radius;
+            const baseY = this.centerY + Math.sin(angle) * radius;
+
+            // Wave-particle duality
+            const waveOffset = Math.sin(this.frameCounter * 0.1 + i * 0.2) * waveAmplitude * 50;
+            const particlePhase = phaseState * quantumCoherence;
+
+            const x = baseX + waveOffset * particlePhase;
+            const y = baseY;
+
+            // Particle size based on observation (coherence)
+            const particleSize = 2 + magnitude * 8 * (1 - particlePhase * 0.5);
+
+            // Color from scheme
+            const color = this.getColor(Math.floor(i * (barCount / particleCount)), barCount);
+            this.ctx.shadowColor = color;
+            this.ctx.fillStyle = color;
+
+            // Opacity based on phase state (particles are solid, waves are translucent)
+            this.ctx.globalAlpha = 0.3 + (1 - particlePhase) * 0.7;
+
+            // Draw particle
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, particleSize, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Wave function visualization (probability cloud)
+            if (particlePhase > 0.3) {
+                this.ctx.globalAlpha = particlePhase * 0.2;
+                for (let w = 0; w < 3; w++) {
+                    const waveX = baseX + Math.sin(this.frameCounter * 0.1 + i * 0.2 + w) * waveAmplitude * 50;
+                    this.ctx.beginPath();
+                    this.ctx.arc(waveX, y, particleSize * 0.5, 0, Math.PI * 2);
+                    this.ctx.fill();
+                }
+            }
+        }
+
+        this.ctx.globalAlpha = 1;
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 1017: Photon Streams
+     * Elegant converging light beams with lens flare and refraction
+     */
+    render1017PhotonStreams(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const intensity = params.intensity || 1;
+        const streamCount = params.streamCount !== undefined ? params.streamCount : 12;
+        const flowSpeed = params.flowSpeed !== undefined ? params.flowSpeed : 1.2;
+        const convergence = params.convergence !== undefined ? params.convergence : 0.6;
+        const beamWidth = params.beamWidth !== undefined ? params.beamWidth : 3;
+        const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 25;
+
+        // Use Step 4 settings
+        const barCount = this.settings.barCount || 72;
+        const innerRadius = this.getEffectiveInnerRadius();
+
+        // Initialize animation time and particles
+        this.frameCounter = (this.frameCounter || 0) + flowSpeed * 0.5;
+
+        if (!this.photonParticles) {
+            this.photonParticles = [];
+        }
+
+        // Calculate energy
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Dark gradient background
+        const gradient = this.ctx.createRadialGradient(
+            this.centerX, this.centerY, 0,
+            this.centerX, this.centerY, this.maxRadius
+        );
+        gradient.addColorStop(0, '#000000');
+        gradient.addColorStop(1, '#0a0a0a');
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Convergence point
+        const convergeX = this.centerX;
+        const convergeY = this.centerY * (0.5 + convergence * 0.5);
+
+        // Draw streams
+        for (let s = 0; s < streamCount; s++) {
+            const progress = s / streamCount;
+            const magIdx = Math.floor(progress * magnitudes.length);
+            const magnitude = magnitudes[magIdx] * intensity;
+
+            // Stream origin (around the edges)
+            const angle = progress * Math.PI * 2;
+            const originX = this.centerX + Math.cos(angle) * this.maxRadius * 1.2;
+            const originY = this.centerY + Math.sin(angle) * this.maxRadius * 1.2;
+
+            // Color from scheme
+            const color = this.getColor(Math.floor(s * (barCount / streamCount)), barCount);
+
+            // Draw beam
+            this.ctx.strokeStyle = color;
+            this.ctx.shadowColor = color;
+            this.ctx.shadowBlur = glowIntensity * (0.5 + magnitude * 0.5);
+            this.ctx.lineWidth = beamWidth + magnitude * 4;
+            this.ctx.globalAlpha = 0.4 + magnitude * 0.4;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(originX, originY);
+            this.ctx.lineTo(convergeX, convergeY);
+            this.ctx.stroke();
+
+            // Add photon particles along the beam
+            const particlesPerStream = 3 + Math.floor(magnitude * 5);
+            for (let p = 0; p < particlesPerStream; p++) {
+                const particleProgress = (this.frameCounter * 0.02 + s * 0.1 + p * 0.15) % 1;
+
+                const px = originX + (convergeX - originX) * particleProgress;
+                const py = originY + (convergeY - originY) * particleProgress;
+                const pSize = 3 + magnitude * 5;
+
+                this.ctx.fillStyle = color;
+                this.ctx.shadowBlur = glowIntensity * 0.8;
+                this.ctx.globalAlpha = 0.8;
+
+                this.ctx.beginPath();
+                this.ctx.arc(px, py, pSize, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+
+        // Central convergence glow (lens flare effect)
+        const centralGlow = energy * intensity;
+        this.ctx.shadowBlur = glowIntensity * 2;
+        for (let i = 0; i < 3; i++) {
+            const glowSize = 15 + i * 10 + centralGlow * 30;
+            const glowColor = this.getColor(Math.floor(barCount / 2), barCount);
+            this.ctx.fillStyle = glowColor;
+            this.ctx.shadowColor = glowColor;
+            this.ctx.globalAlpha = (0.3 - i * 0.08) * (0.5 + centralGlow * 0.5);
+
+            this.ctx.beginPath();
+            this.ctx.arc(convergeX, convergeY, glowSize, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.globalAlpha = 1;
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Mode 1018: Magnetic Field
+     * Minimalist magnetic field lines flowing between reactive poles
+     */
+    render1018MagneticField(magnitudes) {
+        const params = this.settings.modeParameters || {};
+        const intensity = params.intensity || 1;
+        const fieldLines = params.fieldLines !== undefined ? params.fieldLines : 16;
+        const poleDistance = params.poleDistance !== undefined ? params.poleDistance : 0.6;
+        const curvature = params.curvature !== undefined ? params.curvature : 1;
+        const pulseSpeed = params.pulseSpeed !== undefined ? params.pulseSpeed : 1.5;
+        const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 18;
+
+        // Use Step 4 settings
+        const barCount = this.settings.barCount || 72;
+        const innerRadius = this.getEffectiveInnerRadius();
+
+        // Initialize animation time
+        this.frameCounter = (this.frameCounter || 0) + pulseSpeed * 0.5;
+
+        // Calculate energy
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
+        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+
+        // Clean dark background
+        this.ctx.fillStyle = '#000000';
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Pole positions (north and south)
+        const poleSpacing = this.canvas.width * poleDistance;
+        const northPoleX = this.centerX - poleSpacing / 2;
+        const southPoleX = this.centerX + poleSpacing / 2;
+        const poleY = this.centerY;
+
+        // Pole strength based on audio
+        const poleStrength = 1 + energy * intensity;
+
+        // Draw field lines
+        this.ctx.shadowBlur = glowIntensity;
+
+        for (let l = 0; l < fieldLines; l++) {
+            const lineProgress = l / fieldLines;
+            const magIdx = Math.floor(lineProgress * magnitudes.length);
+            const magnitude = magnitudes[magIdx] * intensity;
+
+            // Field line starts from north pole
+            const startAngle = (lineProgress - 0.5) * Math.PI * 0.8;
+            const startDistance = 20 + magnitude * 20;
+
+            const startX = northPoleX + Math.cos(startAngle) * startDistance;
+            const startY = poleY + Math.sin(startAngle) * startDistance;
+
+            // Field line ends at south pole
+            const endAngle = Math.PI + (lineProgress - 0.5) * Math.PI * 0.8;
+            const endDistance = 20 + magnitude * 20;
+
+            const endX = southPoleX + Math.cos(endAngle) * endDistance;
+            const endY = poleY + Math.sin(endAngle) * endDistance;
+
+            // Color from scheme
+            const color = this.getColor(Math.floor(l * (barCount / fieldLines)), barCount);
+            this.ctx.strokeStyle = color;
+            this.ctx.shadowColor = color;
+            this.ctx.lineWidth = 1 + magnitude * 2;
+
+            // Pulsing animation along field lines
+            const pulse = (Math.sin(this.frameCounter * 0.1 + l * 0.3) + 1) / 2;
+            this.ctx.globalAlpha = 0.4 + pulse * 0.4 + magnitude * 0.2;
+
+            // Draw curved field line using quadratic bezier
+            this.ctx.beginPath();
+            this.ctx.moveTo(startX, startY);
+
+            // Control point for curve (higher curvature = more pronounced arc)
+            const controlDistance = poleSpacing * 0.3 * curvature;
+            const controlY = poleY + (lineProgress - 0.5) * controlDistance * (1 + bass);
+
+            this.ctx.quadraticCurveTo(
+                this.centerX,
+                controlY,
+                endX,
+                endY
+            );
+            this.ctx.stroke();
+
+            // Add flowing particles along field lines
+            const particleProgress = (this.frameCounter * 0.02 + l * 0.1) % 1;
+
+            // Calculate particle position on bezier curve
+            const t = particleProgress;
+            const px = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * this.centerX + t * t * endX;
+            const py = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * controlY + t * t * endY;
+
+            this.ctx.fillStyle = color;
+            this.ctx.shadowBlur = glowIntensity * 0.8;
+            this.ctx.globalAlpha = 0.8 + magnitude * 0.2;
+
+            this.ctx.beginPath();
+            this.ctx.arc(px, py, 2 + magnitude * 3, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        // Draw magnetic poles
+        const poleSize = 8 + energy * 10;
+
+        // North pole (blue-ish from color scheme)
+        const northColor = this.getColor(0, barCount);
+        this.ctx.fillStyle = northColor;
+        this.ctx.shadowColor = northColor;
+        this.ctx.shadowBlur = glowIntensity * 1.5;
+        this.ctx.globalAlpha = 1;
+
+        this.ctx.beginPath();
+        this.ctx.arc(northPoleX, poleY, poleSize, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // South pole (opposite end of color scheme)
+        const southColor = this.getColor(barCount / 2, barCount);
+        this.ctx.fillStyle = southColor;
+        this.ctx.shadowColor = southColor;
+
+        this.ctx.beginPath();
+        this.ctx.arc(southPoleX, poleY, poleSize, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        this.ctx.globalAlpha = 1;
         this.ctx.shadowBlur = 0;
     }
 

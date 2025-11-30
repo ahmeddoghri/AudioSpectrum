@@ -1,0 +1,15 @@
+{
+  "mode": {
+    "key": "circular_bars",
+    "id": "circular_bars",
+    "name": "Circular Bars",
+    "category": "Classic"
+  },
+  "videoSettings": {
+    "colorScheme": "apple_blue",
+    "format": "square_1_1",
+    "fps": 30,
+    "background": "transparent"
+  },
+  "timestamp": "2025-11-29T19:28:43.138Z"
+}

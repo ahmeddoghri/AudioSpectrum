@@ -1,130 +1,139 @@
-# 🚀 Quick Start Guide - 100 Hypnotic Modes
+# Quick Start Guide
 
-## Instant Usage
+## Setup (One-time)
 
-### Try a New Hypnotic Mode (51-100)
 ```bash
-cd /Users/ahmeddoghri/Desktop/AudioSpectrum
+# 1. Install dependencies
+npm install
 
-# Example: Fractal Tree (Mode 51)
-python audio_spectrum_creative.py '/Users/ahmeddoghri/Desktop/turkish-national-anthem.wav' output_mode51.mov --mode 51
-
-# Example: Gravity Well (Mode 53)
-python audio_spectrum_creative.py '/Users/ahmeddoghri/Desktop/turkish-national-anthem.wav' output_mode53.mov --mode 53
-
-# Example: AI Latent Walk (Mode 77)
-python audio_spectrum_creative.py '/Users/ahmeddoghri/Desktop/turkish-national-anthem.wav' output_mode77.mov --mode 77
-
-# Example: Sunrise/Sunset (Mode 100)
-python audio_spectrum_creative.py '/Users/ahmeddoghri/Desktop/turkish-national-anthem.wav' output_mode100.mov --mode 100
+# 2. Install Chromium browser
+npm run test:install
 ```
 
-## See All Modes
+## Test Sample (Recommended First)
 
-### List All Available Modes
+Test 3 modes to verify everything works:
+
 ```bash
-python audio_spectrum_creative.py --help
+npm run test:sample
 ```
 
-## Video Preview Gallery
+This will create `test-results-sample/` with results for 3 modes.
 
-### Generate 3-Second Previews (Optional)
+## Run Full Test Suite
+
 ```bash
-# This creates 3-second video previews of ALL modes
-python generate_video_previews.py
+npm run test:visual
 ```
 
-### View Interactive Gallery
+**Testing ~252 non-hidden modes will take ~15-20 hours.** It's designed to be stopped and resumed.
+
+## Control Commands
+
 ```bash
-# Open the beautiful HTML gallery
-open video_preview_viewer.html
+# Stop testing
+Ctrl+C
+
+# Resume testing (just run again)
+npm run test:visual
+
+# Check progress
+npm run test:status
+
+# Clean all test results and start fresh
+npm run test:clean
+npm run test:visual
 ```
 
-Features:
-- **Hover to play** - Videos auto-play when you hover over them!
-- **Search** - Find modes by name, description, or tags
-- **Filter** - View All (120+), Creative (100), or Hypnotic (51-100) modes
-- **NEW badges** - Easily spot the 50 new hypnotic modes
+## What to Expect
 
-## Top 10 Hypnotic Modes to Try First
+### During Testing
 
-1. **Mode 53** - Gravity Well ⚫ (Particles swirling into center)
-2. **Mode 60** - Conway's Life 🧬 (Living cellular automaton)
-3. **Mode 77** - AI Latent Walk 🎨 (Dream-like morphing)
-4. **Mode 85** - Audio-Reactive Shader 🌈 (Full-screen patterns)
-5. **Mode 92** - Swarm Intelligence 🦅 (Flocking behavior)
-6. **Mode 93** - Pendulum Wave ⏰ (Hypnotic pendulums)
-7. **Mode 98** - Voronoi Tessellation 🔷 (Living cells)
-8. **Mode 67** - Pulsing Jellyfish 🪼 (Organic aquatic)
-9. **Mode 82** - Matrix Rain 💚 (Falling code)
-10. **Mode 100** - Sunrise/Sunset 🌅 (Beautiful gradient sky)
+You'll see output like:
+```
+[1/252] Testing: Classic Bars
+----------------------------------------------------------------------
+Selecting mode: Classic Bars (bars)
+Configuring: apple_blue, square_1_1, 30fps, transparent bg
+Generating video...
+Video saved: test-results/bars_Classic_Bars/video_1234567890.webm
+Capturing parameter variations...
+  ✓ Bar Count: 50
+  ✓ Bar Count: 100
+  ✓ Bar Count: 150
+  ✓ Inner Radius: 50
+  ... etc ...
+✅ Mode Classic Bars completed
+```
 
-## All 50 New Modes (51-100)
+### Output Structure
 
-| Mode | Name | Description |
-|------|------|-------------|
-| 51 | Fractal Tree | Generative tree with branches & blooms |
-| 52 | Cityscape Extrusion | 3D buildings extruding |
-| 53 | Gravity Well | Particle physics attraction |
-| 54 | Metaball Fluid | Lava lamp blobs |
-| 55 | Aurora Borealis | Northern lights curtains |
-| 56 | Stained Glass | Glowing window panes |
-| 57 | Neon Nerve Network | Neural synapses firing |
-| 58 | Glitch Artifact | Datamosh corruption |
-| 59 | Warp Tunnel | Hyperspace rings |
-| 60 | Conway's Life | Cellular automaton |
-| 61 | ASCII Art | Text visualizer |
-| 62 | Rippling Water | Water interference |
-| 63 | Terrain Flyover | 3D landscape |
-| 64 | String Art | Geometric lines |
-| 65 | Fire & Embers | Flames with sparks |
-| 66 | Radial Kaleidoscope | Mirrored segments |
-| 67 | Pulsing Jellyfish | Aquatic organism |
-| 68 | Orbital System | Planets & moons |
-| 69 | Spectrum Cube | Rotating 3D cube |
-| 70 | Typographic Flow | Floating words |
-| 71 | Sonar Ping | Radar sweep |
-| 72 | VU Meters | Analog needles |
-| 73 | Lightning Cloud | Storm with lightning |
-| 74 | Bouncing Balls | Physics simulation |
-| 75 | Liquid Ink | Ink in water |
-| 76 | Stereo Landscape | L/R mountains |
-| 77 | AI Latent Walk | Generative morphing |
-| 78 | Pixel Storm | 8-bit blizzard |
-| 79 | Growing Vine | Organic vine growth |
-| 80 | Haunted Faces | Ghostly faces |
-| 81 | Connecting Constellations | Star network |
-| 82 | Matrix Rain | Falling code |
-| 83 | Voxel World | 3D voxel shockwave |
-| 84 | DNA Helix Rungs | Genetic code |
-| 85 | Audio-Reactive Shader | Procedural patterns |
-| 86 | Spirograph | Mathematical curves |
-| 87 | Equalizer Tower | Stacked rings |
-| 88 | Audio-Driven Doodles | Generative art |
-| 89 | Firework Show | Explosive bursts |
-| 90 | Microscopic View | Cellular division |
-| 91 | Burning Paper | Flame bars |
-| 92 | Swarm Intelligence | Boid flocking |
-| 93 | Pendulum Wave | Hypnotic pendulums |
-| 94 | Retro Scanlines | CRT monitor |
-| 95 | Pulsing Polygon | Morphing shape |
-| 96 | Chromatic Orb | 3D sphere shader |
-| 97 | Textured Bars | Scrolling patterns |
-| 98 | Voronoi Tessellation | Cellular diagram |
-| 99 | Shattering Glass | Cracking glass |
-| 100 | Sunrise/Sunset | Gradient sky |
+For each mode, you'll get:
+- 1 video file (webm format)
+- 14 parameter screenshots
+- 1 settings.json (what settings were used for the video)
+
+### Time Per Mode
+
+- Video generation: 1-2 minutes
+- Parameter screenshots: 1-2 minutes
+- **Total per mode: 3-5 minutes**
+
+### Total Time
+
+- 252 modes × 4 minutes average = **~17 hours**
+- Run over 2-3 nights
 
 ## Tips
 
-- **High-quality audio** = Better visualizations
-- **Dark backgrounds** work best for most modes
-- All modes generate **transparent videos** (ProRes 4444)
-- Modes are designed for **hypnosis** - smooth, flowing, mesmerizing
+1. **Test in batches**: Run for a few hours, stop, review some results, then continue
+2. **Monitor disk space**: Can generate 5-10GB of data
+3. **Review progress**: Check `test-progress.json` to see completion percentage
+4. **Browser window**: The script opens a browser window - you can minimize it but don't close it
 
-## Need Help?
+## Reviewing Results
 
-Read `NEW_MODES_README.md` for detailed information about all features!
+After testing, review:
 
----
+1. **Watch videos**: Verify mode generates correctly
+2. **Compare parameter screenshots**: Check if parameters affect the visualization
+   - If screenshots look identical for different values → parameter doesn't affect that mode
+3. **Find broken modes**: Look for error.log files
 
-**Enjoy your 100 hypnotic audio spectrum visualizations!** 🎵✨🌀
+## Troubleshooting
+
+### "Cannot find module 'playwright'"
+```bash
+npm install
+```
+
+### "Browser not found"
+```bash
+npm run test:install
+```
+
+### Videos timeout
+Edit `visual-test-framework.js`, increase timeout:
+```javascript
+timeouts: {
+    videoGeneration: 600000, // 10 minutes
+}
+```
+
+### Want to test specific modes only
+
+Edit the script to filter modes:
+```javascript
+// In visual-test-framework.js main() function
+const modesToTest = allModes.filter(mode =>
+    mode.category === 'Classic' // Only Classic category
+);
+```
+
+## Next Steps
+
+1. Run sample test: `npm run test:sample`
+2. Review sample results in `test-results-sample/`
+3. If satisfied, run full test: `npm run test:visual`
+4. Review results as they come in
+5. Create a spreadsheet tracking which modes have issues

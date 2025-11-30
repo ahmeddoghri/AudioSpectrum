@@ -1376,6 +1376,102 @@ const VISUALIZATION_MODES = {
             density: { min: 0.2, max: 1.5, default: 0.8, label: 'Opacity/Density' }
         }
     },
+    aurora_borealis: {
+        id: 'aurora_borealis',
+        name: 'Aurora Borealis',
+        description: 'Flowing northern lights with audio-reactive waves and shimmer',
+        category: 'Nature',
+        mode: 1010,
+        tags: ['nature', 'aurora', 'northern lights', 'atmospheric', 'flowing'],
+        parameters: {
+            waveCount: { min: 2, max: 8, default: 4, label: 'Number of Waves' },
+            waveHeight: { min: 0.3, max: 2, default: 1, label: 'Wave Height' },
+            flowSpeed: { min: 0.05, max: 1.5, default: 0.3, label: 'Flow Speed' },
+            shimmer: { min: 0, max: 1.5, default: 0.7, label: 'Shimmer Intensity' },
+            colorShift: { min: 0, max: 1, default: 0.5, label: 'Color Variation' },
+            opacity: { min: 0.3, max: 1, default: 0.7, label: 'Opacity' }
+        }
+    },
+    fireflies: {
+        id: 'fireflies',
+        name: 'Fireflies',
+        description: 'Glowing fireflies floating and blinking in the night',
+        category: 'Nature',
+        mode: 1011,
+        tags: ['nature', 'fireflies', 'particles', 'glow', 'night'],
+        parameters: {
+            fireflyCount: { min: 10, max: 100, default: 40, label: 'Number of Fireflies' },
+            glowSize: { min: 2, max: 20, default: 8, label: 'Glow Size' },
+            blinkSpeed: { min: 0.5, max: 3, default: 1.5, label: 'Blink Speed' },
+            floatSpeed: { min: 0.1, max: 2, default: 0.5, label: 'Float Speed' },
+            glowIntensity: { min: 0.3, max: 2, default: 1, label: 'Glow Intensity' },
+            brightness: { min: 0.5, max: 1.5, default: 1, label: 'Brightness' }
+        }
+    },
+    mode_1012_ocean_waves: {
+        id: 'mode_1012_ocean_waves',
+        name: 'Ocean Waves',
+        description: 'Mode 1012: Realistic ocean waves with foam particles and audio-reactive swells',
+        category: 'Nature',
+        mode: 1012,
+        tags: ['nature', 'ocean', 'waves', 'water', 'foam', 'sea'],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            waveHeight: { min: 0.3, max: 2, default: 1, label: 'Wave Height' },
+            waveSpeed: { min: 0.1, max: 2, default: 0.5, label: 'Wave Speed' },
+            foamDensity: { min: 0, max: 1, default: 0.5, label: 'Foam Density' },
+            waveCount: { min: 2, max: 8, default: 4, label: 'Number of Waves' },
+            glowIntensity: { min: 0, max: 30, default: 10, label: 'Glow Intensity' }
+        }
+    },
+    mode_1016_quantum_flux: {
+        id: 'mode_1016_quantum_flux',
+        name: 'Quantum Flux',
+        description: 'Mode 1016: Minimalist quantum particles phasing between wave and particle states',
+        category: 'Energy',
+        mode: 1016,
+        tags: ['energy', 'quantum', 'particles', 'minimal', 'physics', 'modern'],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            particleCount: { min: 20, max: 150, default: 60, label: 'Particle Count' },
+            phaseSpeed: { min: 0.5, max: 3, default: 1.5, label: 'Phase Speed' },
+            waveAmplitude: { min: 0.2, max: 1.5, default: 0.7, label: 'Wave Amplitude' },
+            coherence: { min: 0, max: 1, default: 0.5, label: 'Quantum Coherence' },
+            glowIntensity: { min: 5, max: 40, default: 20, label: 'Glow Intensity' }
+        }
+    },
+    mode_1017_photon_streams: {
+        id: 'mode_1017_photon_streams',
+        name: 'Photon Streams',
+        description: 'Mode 1017: Elegant converging light beams with lens flare and refraction',
+        category: 'Energy',
+        mode: 1017,
+        tags: ['energy', 'light', 'photon', 'minimal', 'elegant', 'modern'],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            streamCount: { min: 4, max: 24, default: 12, label: 'Stream Count' },
+            flowSpeed: { min: 0.3, max: 3, default: 1.2, label: 'Flow Speed' },
+            convergence: { min: 0, max: 1, default: 0.6, label: 'Convergence Point' },
+            beamWidth: { min: 1, max: 8, default: 3, label: 'Beam Width' },
+            glowIntensity: { min: 10, max: 50, default: 25, label: 'Glow Intensity' }
+        }
+    },
+    mode_1018_magnetic_field: {
+        id: 'mode_1018_magnetic_field',
+        name: 'Magnetic Field',
+        description: 'Mode 1018: Minimalist magnetic field lines flowing between reactive poles',
+        category: 'Energy',
+        mode: 1018,
+        tags: ['energy', 'magnetic', 'field', 'minimal', 'physics', 'elegant'],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            fieldLines: { min: 8, max: 32, default: 16, label: 'Field Line Count' },
+            poleDistance: { min: 0.3, max: 0.8, default: 0.6, label: 'Pole Distance' },
+            curvature: { min: 0.3, max: 2, default: 1, label: 'Field Curvature' },
+            pulseSpeed: { min: 0.5, max: 3, default: 1.5, label: 'Pulse Speed' },
+            glowIntensity: { min: 5, max: 35, default: 18, label: 'Glow Intensity' }
+        }
+    },
 
     // Retro & Vintage
     soul_aura: {
@@ -1583,6 +1679,36 @@ const VISUALIZATION_MODES = {
             sparkleCount: { min: 0, max: 40, default: 20, label: 'Sparkle Count' }
         }
     },
+    plasma_vortex: {
+        id: 'plasma_vortex',
+        name: 'Plasma Vortex',
+        description: 'Swirling plasma-like tendrils with spiraling rotation and energy flow',
+        category: 'Fluid',
+        mode: 991,
+        tags: ['plasma', 'vortex', 'spiral', 'energy', 'fluid', 'swirl'],
+        parameters: {
+            vortexRadius: { min: 80, max: 350, default: 180, label: 'Vortex Radius' },
+            tendrilCount: { min: 3, max: 12, default: 6, label: 'Tendril Count' },
+            spiralTightness: { min: 0.5, max: 3, default: 1.5, label: 'Spiral Tightness' },
+            flowSpeed: { min: 0.1, max: 2, default: 0.8, label: 'Flow Speed' },
+            energyIntensity: { min: 20, max: 100, default: 50, label: 'Energy Intensity' }
+        }
+    },
+    bubble_stream: {
+        id: 'bubble_stream',
+        name: 'Bubble Stream',
+        description: 'Rising bubbles with audio-reactive sizes and fluid physics simulation',
+        category: 'Fluid',
+        mode: 990,
+        tags: ['bubbles', 'rising', 'fluid', 'physics', 'organic', 'float'],
+        parameters: {
+            bubbleCount: { min: 5, max: 30, default: 15, label: 'Bubble Count' },
+            minBubbleSize: { min: 10, max: 50, default: 20, label: 'Min Bubble Size' },
+            maxBubbleSize: { min: 50, max: 150, default: 80, label: 'Max Bubble Size' },
+            riseSpeed: { min: 0.5, max: 3, default: 1.5, label: 'Rise Speed' },
+            wobbleIntensity: { min: 0.1, max: 2, default: 0.8, label: 'Wobble Intensity' }
+        }
+    },
     minimal_audio_ring: {
         id: 'minimal_audio_ring',
         name: 'Minimal Audio Ring',
@@ -1754,6 +1880,132 @@ const VISUALIZATION_MODES = {
         mode: 35,
         tags: ['geological', 'waves', 'dramatic']
     },
+    particle_accelerator: {
+        id: 'particle_accelerator',
+        name: 'Particle Accelerator',
+        description: 'Particles racing around a circular accelerator ring with collision effects',
+        category: 'Scientific',
+        mode: 989,
+        tags: ['physics', 'particles', 'collision', 'accelerator', 'energy'],
+        parameters: {
+            ringRadius: { min: 100, max: 350, default: 200, label: 'Ring Radius' },
+            particleCount: { min: 10, max: 50, default: 24, label: 'Particle Count' },
+            particleSpeed: { min: 0.5, max: 3, default: 1.5, label: 'Particle Speed' },
+            collisionEnergy: { min: 20, max: 100, default: 50, label: 'Collision Energy' },
+            beamIntensity: { min: 0.3, max: 2, default: 1, label: 'Beam Intensity' }
+        }
+    },
+    neural_network: {
+        id: 'neural_network',
+        name: 'Neural Network',
+        description: 'Interconnected neurons firing with synaptic pulses based on audio',
+        category: 'Scientific',
+        mode: 988,
+        tags: ['neuroscience', 'brain', 'neurons', 'network', 'biology'],
+        parameters: {
+            neuronCount: { min: 8, max: 30, default: 16, label: 'Neuron Count' },
+            connectionDensity: { min: 0.2, max: 1, default: 0.6, label: 'Connection Density' },
+            fireRate: { min: 0.5, max: 3, default: 1.5, label: 'Fire Rate' },
+            pulseSpeed: { min: 0.5, max: 2.5, default: 1.2, label: 'Pulse Speed' },
+            neuronSize: { min: 8, max: 25, default: 15, label: 'Neuron Size' }
+        }
+    },
+    quantum_entanglement: {
+        id: 'quantum_entanglement',
+        name: 'Quantum Entanglement',
+        description: 'Pairs of entangled particles connected by glowing quantum threads',
+        category: 'Scientific',
+        mode: 1014,
+        tags: ['quantum', 'physics', 'particles', 'entanglement', 'energy'],
+        parameters: {
+            pairCount: { min: 5, max: 30, default: 12, label: 'Particle Pairs' },
+            separation: { min: 0.2, max: 0.8, default: 0.5, label: 'Particle Separation' },
+            oscillation: { min: 0.5, max: 3, default: 1.5, label: 'Oscillation Speed' },
+            connectionGlow: { min: 0, max: 40, default: 20, label: 'Connection Glow' },
+            particleSize: { min: 3, max: 15, default: 8, label: 'Particle Size' },
+            waveEffect: { min: 0, max: 2, default: 1, label: 'Wave Effect' }
+        }
+    },
+    crystal_lattice: {
+        id: 'crystal_lattice',
+        name: 'Crystal Lattice',
+        description: 'Crystalline atomic structure with pulsing nodes and energy bonds',
+        category: 'Scientific',
+        mode: 1015,
+        tags: ['crystal', 'chemistry', 'structure', 'atoms', 'molecular'],
+        parameters: {
+            gridSize: { min: 3, max: 10, default: 6, label: 'Grid Size' },
+            latticeSpacing: { min: 0.5, max: 1.5, default: 1, label: 'Lattice Spacing' },
+            pulseIntensity: { min: 0.3, max: 2, default: 1, label: 'Pulse Intensity' },
+            bondThickness: { min: 1, max: 5, default: 2, label: 'Bond Thickness' },
+            atomSize: { min: 3, max: 12, default: 6, label: 'Atom Size' },
+            rotation: { min: 0, max: 2, default: 0.5, label: 'Rotation Speed' }
+        }
+    },
+    bioluminescence_wave: {
+        id: 'bioluminescence_wave',
+        name: 'Bioluminescence Wave',
+        description: 'Bioluminescent organisms creating rhythmic waves of light',
+        category: 'Scientific',
+        mode: 1019,
+        tags: ['biology', 'ocean', 'bioluminescence', 'wave', 'organic'],
+        parameters: {
+            waveCount: { min: 3, max: 12, default: 6, label: 'Wave Count' },
+            organismDensity: { min: 0.3, max: 1.5, default: 0.8, label: 'Organism Density' },
+            glowIntensity: { min: 0.4, max: 2.5, default: 1.2, label: 'Glow Intensity' },
+            waveSpeed: { min: 0.3, max: 2, default: 1, label: 'Wave Speed' },
+            particleSize: { min: 1, max: 6, default: 2.5, label: 'Particle Size' },
+            trailLength: { min: 0.2, max: 1.5, default: 0.7, label: 'Trail Length' }
+        }
+    },
+    electromagnetic_spectrum: {
+        id: 'electromagnetic_spectrum',
+        name: 'Electromagnetic Spectrum',
+        description: 'Wavelengths of light visualized as flowing energy bands',
+        category: 'Scientific',
+        mode: 1020,
+        tags: ['physics', 'light', 'spectrum', 'electromagnetic', 'wavelength'],
+        parameters: {
+            bandCount: { min: 5, max: 15, default: 9, label: 'Band Count' },
+            waveAmplitude: { min: 0.3, max: 2, default: 1, label: 'Wave Amplitude' },
+            frequency: { min: 0.5, max: 3, default: 1.5, label: 'Frequency' },
+            bandWidth: { min: 0.3, max: 1.2, default: 0.7, label: 'Band Width' },
+            opacity: { min: 0.3, max: 1, default: 0.75, label: 'Opacity' },
+            flowSpeed: { min: 0.2, max: 2.5, default: 1.2, label: 'Flow Speed' }
+        }
+    },
+    solar_corona: {
+        id: 'solar_corona',
+        name: 'Solar Corona',
+        description: 'Sun\'s corona with dynamic plasma loops and magnetic field lines',
+        category: 'Scientific',
+        mode: 1021,
+        tags: ['astronomy', 'solar', 'plasma', 'corona', 'space'],
+        parameters: {
+            loopCount: { min: 4, max: 20, default: 10, label: 'Loop Count' },
+            coreRadius: { min: 50, max: 200, default: 120, label: 'Core Radius' },
+            loopHeight: { min: 0.5, max: 2.5, default: 1.5, label: 'Loop Height' },
+            plasmaFlow: { min: 0.3, max: 2, default: 1.2, label: 'Plasma Flow' },
+            energyIntensity: { min: 0.4, max: 2, default: 1, label: 'Energy Intensity' },
+            turbulence: { min: 0, max: 1.5, default: 0.6, label: 'Turbulence' }
+        }
+    },
+    cytoplasm_flow: {
+        id: 'cytoplasm_flow',
+        name: 'Cytoplasm Flow',
+        description: 'Cellular organelles flowing through cytoplasm in rhythmic patterns',
+        category: 'Scientific',
+        mode: 1022,
+        tags: ['biology', 'cellular', 'organelles', 'cytoplasm', 'microscopic'],
+        parameters: {
+            organelleCount: { min: 8, max: 35, default: 18, label: 'Organelle Count' },
+            flowVelocity: { min: 0.3, max: 2, default: 1, label: 'Flow Velocity' },
+            organelleSize: { min: 3, max: 15, default: 8, label: 'Organelle Size' },
+            membraneThickness: { min: 1, max: 4, default: 2, label: 'Membrane Thickness' },
+            streamCount: { min: 2, max: 8, default: 4, label: 'Stream Count' },
+            cellRadius: { min: 150, max: 350, default: 240, label: 'Cell Radius' }
+        }
+    },
 
     // Tech & Futuristic
     tunnel_vision: {
@@ -1871,6 +2123,86 @@ const VISUALIZATION_MODES = {
         category: 'Energy',
         mode: 45,
         tags: ['rainbow', 'spectrum', 'colorful']
+    },
+    voltage_surge: {
+        id: 'voltage_surge',
+        name: 'Voltage Surge',
+        description: 'Vertical electrical bolts surging upward with crackling energy',
+        category: 'Energy',
+        mode: 1012,
+        tags: ['electric', 'voltage', 'energy', 'bolts', 'intense'],
+        parameters: {
+            boltCount: { min: 5, max: 40, default: 15, label: 'Number of Bolts' },
+            boltHeight: { min: 0.3, max: 1.5, default: 0.8, label: 'Bolt Height' },
+            surgeSpeed: { min: 0.5, max: 3, default: 1.5, label: 'Surge Speed' },
+            crackleIntensity: { min: 0, max: 2, default: 1, label: 'Crackle Intensity' },
+            thickness: { min: 1, max: 8, default: 3, label: 'Bolt Thickness' },
+            glow: { min: 0, max: 50, default: 25, label: 'Glow Amount' }
+        }
+    },
+    particle_accelerator: {
+        id: 'particle_accelerator',
+        name: 'Particle Accelerator',
+        description: 'High-speed particles racing in circular paths with energy trails',
+        category: 'Energy',
+        mode: 1013,
+        tags: ['particles', 'circular', 'speed', 'energy', 'physics'],
+        parameters: {
+            particleCount: { min: 20, max: 200, default: 80, label: 'Particle Count' },
+            orbitRadius: { min: 0.2, max: 0.8, default: 0.4, label: 'Orbit Radius' },
+            speed: { min: 0.5, max: 5, default: 2, label: 'Acceleration Speed' },
+            trailLength: { min: 0, max: 1, default: 0.5, label: 'Trail Length' },
+            particleSize: { min: 1, max: 10, default: 4, label: 'Particle Size' },
+            rings: { min: 1, max: 5, default: 2, label: 'Number of Rings' }
+        }
+    },
+    supernova_burst: {
+        id: 'supernova_burst',
+        name: 'Supernova Burst',
+        description: 'Explosive stellar energy with radiating particles and shockwaves',
+        category: 'Energy',
+        mode: 987,
+        tags: ['explosion', 'star', 'particles', 'energy', 'cosmic', 'burst'],
+        parameters: {
+            burstIntensity: { min: 0.5, max: 3, default: 1.5, label: 'Burst Intensity' },
+            particleDensity: { min: 30, max: 150, default: 80, label: 'Particle Density' },
+            expansionSpeed: { min: 1, max: 5, default: 2.5, label: 'Expansion Speed' },
+            shockwaveCount: { min: 2, max: 8, default: 4, label: 'Shockwave Rings' },
+            coreSize: { min: 20, max: 80, default: 40, label: 'Core Size' },
+            energyDecay: { min: 0.85, max: 0.99, default: 0.95, label: 'Energy Decay' }
+        }
+    },
+    electric_web: {
+        id: 'electric_web',
+        name: 'Electric Web',
+        description: 'Tesla coil network with arcing electricity connecting reactive nodes',
+        category: 'Energy',
+        mode: 986,
+        tags: ['electric', 'tesla', 'arcs', 'network', 'energy', 'voltage'],
+        parameters: {
+            nodeCount: { min: 6, max: 20, default: 12, label: 'Node Count' },
+            arcThreshold: { min: 0.2, max: 0.8, default: 0.4, label: 'Arc Threshold' },
+            arcIntensity: { min: 0.5, max: 2.5, default: 1.5, label: 'Arc Intensity' },
+            pulseSpeed: { min: 0.5, max: 3, default: 1.5, label: 'Pulse Speed' },
+            nodeSize: { min: 5, max: 25, default: 12, label: 'Node Size' },
+            webDensity: { min: 0.3, max: 1, default: 0.6, label: 'Connection Density' }
+        }
+    },
+    kinetic_shockwave: {
+        id: 'kinetic_shockwave',
+        name: 'Kinetic Shockwave',
+        description: 'Powerful circular shockwaves with space distortion and energy ripples',
+        category: 'Energy',
+        mode: 985,
+        tags: ['shockwave', 'impact', 'kinetic', 'force', 'energy', 'ripple'],
+        parameters: {
+            waveCount: { min: 3, max: 12, default: 6, label: 'Wave Count' },
+            waveSpeed: { min: 1, max: 4, default: 2, label: 'Wave Speed' },
+            distortionAmount: { min: 0, max: 50, default: 20, label: 'Distortion Amount' },
+            impactForce: { min: 0.5, max: 2.5, default: 1.5, label: 'Impact Force' },
+            waveThickness: { min: 2, max: 15, default: 6, label: 'Wave Thickness' },
+            particleTrail: { min: 0, max: 40, default: 20, label: 'Particle Trail' }
+        }
     },
 
     // Extended Modes (51-60)
@@ -11832,14 +12164,17 @@ const VISUALIZATION_MODES = {
     mode_874_goddess_energy: {
         id: 'mode_874_goddess_energy',
         name: 'Goddess Energy',
-        description: 'Mode 874: Goddess energy visualization',
+        description: 'Mode 874: Flowing ethereal energy with graceful ribbons and divine aura',
         category: 'Energy',
         mode: 874,
-        tags: ["goddess", "energy"],
+        tags: ["goddess", "energy", "ethereal", "flowing", "divine", "elegant"],
         parameters: {
             intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
-            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            flowSpeed: { min: 0.3, max: 3, default: 1.2, label: 'Flow Speed' },
+            ribbonCount: { min: 3, max: 12, default: 6, label: 'Energy Ribbons' },
+            auraSize: { min: 0.5, max: 2, default: 1, label: 'Aura Size' },
+            gracefulness: { min: 0.3, max: 2, default: 1, label: 'Flow Gracefulness' },
+            glowIntensity: { min: 10, max: 50, default: 30, label: 'Glow Intensity' }
         }
     },
     mode_875_sacred_masculine: {
@@ -13531,6 +13866,34 @@ const VISUALIZATION_MODES = {
             intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
             ledSize: { min: 4, max: 12, default: 8, label: 'LED Size' },
             ledGap: { min: 1, max: 5, default: 2, label: 'LED Gap' }
+        }
+    },
+    mode_1008_boombox_spectrum: {
+        id: 'mode_1008_boombox_spectrum',
+        name: 'Boombox Spectrum',
+        description: 'Mode 1008: Classic 80s boombox with dual speakers and spectrum display',
+        category: 'Retro',
+        mode: 1008,
+        tags: ["retro", "boombox", "80s", "speakers", "stereo"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speakerSize: { min: 0.5, max: 1.5, default: 1, label: 'Speaker Size' },
+            glowIntensity: { min: 0, max: 30, default: 15, label: 'Glow Intensity' },
+            bassResponse: { min: 0.5, max: 2, default: 1, label: 'Bass Response' }
+        }
+    },
+    mode_1009_synthwave_grid: {
+        id: 'mode_1009_synthwave_grid',
+        name: 'Synthwave Grid',
+        description: 'Mode 1009: Classic 1980s synthwave perspective grid with neon sun',
+        category: 'Retro',
+        mode: 1009,
+        tags: ["retro", "synthwave", "80s", "grid", "neon", "vaporwave"],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Grid Speed' },
+            gridLines: { min: 8, max: 24, default: 16, label: 'Grid Lines' },
+            glowIntensity: { min: 5, max: 40, default: 20, label: 'Glow Intensity' }
         }
     },
     mode_1005_v_formation_migration: {

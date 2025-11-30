@@ -1,0 +1,24 @@
+{
+  "name": "audiospectrum-visual-tests",
+  "version": "1.0.0",
+  "description": "Visual testing framework for AudioSpectrum webapp",
+  "main": "visual-test-framework.js",
+  "scripts": {
+    "test:visual": "node visual-test-framework.js",
+    "test:sample": "node test-sample-modes.js",
+    "test:install": "playwright install chromium",
+    "test:clean": "rm -rf test-results test-progress.json",
+    "test:status": "node -e \"console.log(require('./test-progress.json'))\""
+  },
+  "keywords": [
+    "audio",
+    "visualization",
+    "testing",
+    "playwright"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "playwright": "^1.40.0"
+  }
+}

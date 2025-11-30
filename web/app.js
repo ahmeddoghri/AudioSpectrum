@@ -511,7 +511,7 @@ class AudioSpectrumApp {
      */
     populateModeGrid() {
         Object.values(VISUALIZATION_MODES)
-            .filter(mode => !HIDDEN_MODES.includes(mode.id))
+            .filter(mode => !HIDDEN_MODES.includes(mode.id) && !HIDDEN_CATEGORIES.includes(mode.category))
             .forEach(mode => {
             const card = document.createElement('div');
             card.className = 'mode-card';
@@ -660,7 +660,9 @@ class AudioSpectrumApp {
     updateModeCount(count) {
         if (count === undefined) {
             const allModes = Object.values(VISUALIZATION_MODES);
-            const visibleModes = allModes.filter(mode => !HIDDEN_MODES.includes(mode.id));
+            const visibleModes = allModes.filter(
+                mode => !HIDDEN_MODES.includes(mode.id) && !HIDDEN_CATEGORIES.includes(mode.category)
+            );
             count = visibleModes.length;
         }
         this.elements.visibleModeCount.textContent = count;

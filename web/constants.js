@@ -2420,7 +2420,19 @@ const VISUALIZATION_MODES = {
         description: '3D wireframe terrain from audio waveform',
         category: 'Tech',
         mode: 63,
-        tags: ['3d', 'wireframe', 'terrain']
+        tags: ['3d', 'wireframe', 'terrain'],
+        parameters: {
+            terrainWidth: { min: 20, max: 80, default: 50, label: 'Terrain Width' },
+            terrainDepth: { min: 20, max: 60, default: 40, label: 'Terrain Depth' },
+            heightScale: { min: 5, max: 25, default: 15, label: 'Height Scale' },
+            scrollSpeed: { min: 0.1, max: 2, default: 0.8, label: 'Scroll Speed' },
+            wireframeThickness: { min: 0.5, max: 3, default: 1.5, label: 'Line Thickness' },
+            glowIntensity: { min: 0, max: 1, default: 0.5, label: 'Glow Intensity' },
+            peakThreshold: { min: 50, max: 200, default: 100, label: 'Glow Peak Threshold' },
+            horizonOpacity: { min: 0.1, max: 0.5, default: 0.3, label: 'Horizon Opacity' },
+            perspectiveIntensity: { min: 0.3, max: 1, default: 0.7, label: 'Perspective Intensity' },
+            colorVariation: { min: 0, max: 1, default: 0.5, label: 'Color Variation' }
+        }
     },
     string_art: {
         id: 'string_art',
@@ -2476,7 +2488,15 @@ const VISUALIZATION_MODES = {
         description: 'Rotating radar sweep with frequency blips',
         category: 'Tech',
         mode: 71,
-        tags: ['radar', 'sonar', 'sweep']
+        tags: ['radar', 'sonar', 'sweep'],
+        parameters: {
+            sweepSpeed: { min: 0.3, max: 1.5, default: 1.0, label: 'Sweep Speed' },
+            blipSensitivity: { min: 0.2, max: 0.8, default: 0.4, label: 'Blip Sensitivity' },
+            blipSize: { min: 5, max: 30, default: 12, label: 'Blip Size' },
+            gridDensity: { min: 0.3, max: 1.2, default: 1.0, label: 'Grid Density' },
+            trailFade: { min: 0.005, max: 0.1, default: 0.03, label: 'Trail Fade Speed' },
+            glowIntensity: { min: 0.2, max: 2.0, default: 1.0, label: 'Glow Intensity' }
+        }
     },
     vu_meters: {
         id: 'vu_meters',
@@ -2572,7 +2592,13 @@ const VISUALIZATION_MODES = {
         description: 'Falling Matrix-style characters with audio-reactive speed',
         category: 'Tech',
         mode: 82,
-        tags: ['matrix', 'digital', 'rain']
+        tags: ['matrix', 'digital', 'rain'],
+        parameters: {
+            intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
+            speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
+            glowAmount: { min: 0, max: 1, default: 0.5, label: 'Glow Effect' },
+            characterDensity: { min: 0.5, max: 2, default: 1, label: 'Character Density' }
+        }
     },
     voxel_world: {
         id: 'voxel_world',
@@ -2580,7 +2606,17 @@ const VISUALIZATION_MODES = {
         description: '3D voxel grid with audio shockwave',
         category: 'Tech',
         mode: 83,
-        tags: ['3d', 'voxel', 'grid']
+        tags: ['3d', 'voxel', 'grid'],
+        parameters: {
+            gridSize: { min: 4, max: 16, default: 8, label: 'Grid Size' },
+            voxelSize: { min: 15, max: 60, default: 30, label: 'Voxel Size' },
+            heightScale: { min: 20, max: 200, default: 100, label: 'Height Scale' },
+            shockwaveIntensity: { min: 100, max: 400, default: 300, label: 'Shockwave Intensity' },
+            shockwaveWidth: { min: 20, max: 100, default: 50, label: 'Shockwave Width' },
+            glowIntensity: { min: 0, max: 1, default: 0.6, label: 'Glow Intensity' },
+            rotationSpeed: { min: 0, max: 0.05, default: 0.01, label: 'Rotation Speed' },
+            perspectiveIntensity: { min: 0.3, max: 1.5, default: 0.5, label: 'Perspective Intensity' }
+        }
     },
     dna_helix_rungs: {
         id: 'dna_helix_rungs',
@@ -2596,7 +2632,44 @@ const VISUALIZATION_MODES = {
         description: 'Procedural shader-like effect with audio modulation',
         category: 'Tech',
         mode: 85,
-        tags: ['shader', 'procedural', 'abstract']
+        tags: ['shader', 'procedural', 'abstract'],
+        parameters: {
+            intensity: {
+                min: 0.1,
+                max: 2.0,
+                default: 1.0,
+                label: 'Intensity',
+                description: 'Overall brightness and color intensity'
+            },
+            speed: {
+                min: 0.1,
+                max: 3.0,
+                default: 1.0,
+                label: 'Animation Speed',
+                description: 'Speed of pattern animation'
+            },
+            scale: {
+                min: 0.1,
+                max: 3.0,
+                default: 1.0,
+                label: 'Pattern Scale',
+                description: 'Size of procedural patterns'
+            },
+            complexity: {
+                min: 0.5,
+                max: 3.0,
+                default: 1.5,
+                label: 'Pattern Complexity',
+                description: 'Number of wave layers and detail'
+            },
+            radialFalloff: {
+                min: 0.0,
+                max: 1.0,
+                default: 0.7,
+                label: 'Radial Falloff',
+                description: 'Edge darkening effect (0=no falloff, 1=sharp edges)'
+            }
+        }
     },
     spirograph: {
         id: 'spirograph',
@@ -2652,7 +2725,19 @@ const VISUALIZATION_MODES = {
         description: 'Spectrum bars as flames, embers on high freq, paper curls on bass',
         category: 'Energy',
         mode: 91,
-        tags: ['fire', 'flames', 'heat']
+        tags: ['fire', 'flames', 'heat'],
+        parameters: {
+            flameHeight: { min: 0.3, max: 1.5, default: 0.7, label: 'Flame Height' },
+            flameIntensity: { min: 0.3, max: 1.5, default: 1.0, label: 'Flame Intensity' },
+            layerCount: { min: 1, max: 5, default: 3, label: 'Flame Layers' },
+            layerSpacing: { min: 5, max: 30, default: 15, label: 'Layer Spacing' },
+            flickerAmount: { min: 0, max: 10, default: 5, label: 'Flicker Amount' },
+            emberIntensity: { min: 0, max: 3, default: 1, label: 'Ember Intensity' },
+            emberSize: { min: 1, max: 5, default: 2, label: 'Ember Size' },
+            paperCurlStrength: { min: 0, max: 1, default: 0.5, label: 'Paper Curl Strength' },
+            backgroundFade: { min: 0.05, max: 0.5, default: 0.3, label: 'Background Fade' },
+            glowIntensity: { min: 0, max: 1, default: 0.6, label: 'Glow Intensity' }
+        }
     },
     swarm_intelligence: {
         id: 'swarm_intelligence',

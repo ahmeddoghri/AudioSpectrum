@@ -14396,35 +14396,88 @@ class Visualizer {
      * Mode 119: Matrix code rain
      */
         render119MatrixRain(magnitudes) {
+        // Mode 119: Matrix code rain with rainbow particles and audio reactivity
         const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const speed = params.speed || 1;
         const complexity = params.complexity || 5;
 
+        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
+
+        // Dark background with gradient
+        const bgGradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+        bgGradient.addColorStop(0, 'rgba(0, 10, 20, 0.8)');
+        bgGradient.addColorStop(0.5, 'rgba(0, 5, 15, 0.9)');
+        bgGradient.addColorStop(1, 'rgba(0, 10, 20, 0.8)');
+        this.ctx.fillStyle = bgGradient;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Initialize matrix particles on first run
+        if (!this.matrix119Particles) {
+            this.matrix119Particles = [];
+        }
 
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        const numElements = Math.floor(20 * complexity);
-        for (let i = 0; i < numElements; i++) {
-            const magnitude = magnitudes[i % magnitudes.length];
-            const angle = (i / numElements) * Math.PI * 2 + this.frameCounter * 0.01 * speed;
-            const radius = this.maxRadius * (0.3 + magnitude * 0.5) * intensity;
-
-            const x = this.centerX + Math.cos(angle) * radius;
-            const y = this.centerY + Math.sin(angle) * radius;
-
-            const size = 2 + magnitude * 8 * intensity;
-            const hue = ((i * 15 + this.frameCounter) % 360) / 360;
-            const rgb = this.hsvToRgb(hue, 0.7, 0.8);
-
-            this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${0.4 + magnitude * 0.6})`;
-            this.ctx.beginPath();
-            this.ctx.arc(x, y, size, 0, Math.PI * 2);
-            this.ctx.fill();
+        // Add new particles based on complexity and audio intensity
+        const particlesPerFrame = Math.floor(5 * complexity * (0.5 + avgMagnitude * 0.5));
+        for (let i = 0; i < particlesPerFrame; i++) {
+            if (this.matrix119Particles.length < 200 * (complexity / 5)) {
+                this.matrix119Particles.push({
+                    x: Math.random() * this.canvas.width,
+                    y: -10,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: 2 + Math.random() * 3 * speed,
+                    life: 1,
+                    hue: Math.random(),
+                    size: 2 + Math.random() * 4,
+                    char: ['0', '1', 'a', 'b', 'c', 'd', 'e', 'f', 'x', 'y', 'z', '!', '@', '#'][Math.floor(Math.random() * 14)]
+                });
+            }
         }
+
+        // Update and draw particles
+        for (let i = this.matrix119Particles.length - 1; i >= 0; i--) {
+            const p = this.matrix119Particles[i];
+
+            // Update position
+            p.x += p.vx;
+            p.y += p.vy * speed * intensity;
+            p.life -= 0.01;
+
+            // Remove dead particles
+            if (p.life <= 0 || p.y > this.canvas.height + 20) {
+                this.matrix119Particles.splice(i, 1);
+                continue;
+            }
+
+            // Get rainbow color with time variation
+            const hueVar = (this.frameCounter * 0.002 + p.hue) % 1;
+            const rgb = this.hsvToRgb(hueVar, 0.8 + treble * 0.2, 0.7 + p.life * 0.3);
+
+            // Draw particle with glow
+            const alpha = p.life * (0.6 + treble * 0.4);
+            this.ctx.shadowBlur = Math.floor(6 * p.life * intensity);
+            this.ctx.shadowColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${0.5})`;
+
+            // Draw as text character
+            this.ctx.font = `bold ${Math.floor(p.size)}px 'Courier New', monospace`;
+            this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+            this.ctx.textAlign = 'center';
+            this.ctx.fillText(p.char, p.x, p.y);
+
+            // Draw a subtle glow circle behind
+            if (p.life > 0.5) {
+                this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha * 0.3})`;
+                this.ctx.beginPath();
+                this.ctx.arc(p.x, p.y, p.size * 1.5, 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+
+        this.ctx.shadowBlur = 0;
     }
 
     /**

@@ -363,28 +363,37 @@ class Modes851_900(BaseModeVisualizer):
 
     def draw_mode_874_goddess_energy(self, frame, magnitudes):
         """Mode 874: Goddess energy visualization"""
+        # Get parameters from configuration
+        intensity = getattr(self, 'intensity', 1.0)
+        flow_speed = getattr(self, 'flowSpeed', 1.2)
+        ribbon_count = int(getattr(self, 'ribbonCount', 6))
+        aura_size = getattr(self, 'auraSize', 1.0)
+        gracefulness = getattr(self, 'gracefulness', 1.0)
+        glow_intensity = getattr(self, 'glowIntensity', 30)
+
         # Get overall energy for pulsing effect
         energy = self.get_energy(magnitudes)
         bass = self.get_bass(magnitudes)
 
-        # Dynamic number of rings based on energy (3-7 rings)
-        num_rings = int(3 + energy * 4)
+        # Dynamic number of rings based on energy and aura_size
+        num_rings = int((3 + energy * 4) * aura_size)
+        num_rings = max(2, min(num_rings, 12))  # Clamp between 2 and 12
 
         for ring in range(num_rings):
             # Dynamic radius that responds to bass
-            base_radius = 40 + ring * 50
-            radius = base_radius + bass * 60
+            base_radius = int(40 + ring * 50)
+            radius = int(base_radius + bass * 60)
 
             # More points in outer rings for goddess mandala effect
-            num_points = 8 + ring * 6
+            num_points = int(8 + ring * 6)
 
             for i in range(num_points):
-                # Slow rotation over time
-                angle = (i / num_points) * 2 * np.pi + self.frame_count * 0.02
+                # Slow rotation over time with flow speed control
+                angle = (i / num_points) * 2 * np.pi + self.frame_count * 0.02 * flow_speed
 
                 # Get magnitude for this specific point
                 mag_idx = (ring * 10 + i) % len(magnitudes)
-                mag = magnitudes[mag_idx]
+                mag = magnitudes[mag_idx] * intensity
 
                 # Radius varies with individual magnitude
                 point_radius = radius + mag * 40
@@ -393,11 +402,11 @@ class Modes851_900(BaseModeVisualizer):
                 y = int(self.center_y + np.sin(angle) * point_radius)
 
                 # Dynamic size based on magnitude (larger range: 8-45 pixels)
-                size = 8 + int(mag * 37)
+                size = max(1, int(8 + mag * 37))
 
                 # Goddess colors: flowing through purples, magentas, and warm tones
-                # Hue shifts over time and varies per ring
-                hue = int((ring * 25 + i * 8 + self.frame_count * 0.5)) % 180
+                # Hue shifts over time and varies per ring with gracefulness control
+                hue = int((ring * 25 + i * 8 + self.frame_count * 0.5 * gracefulness)) % 180
 
                 # High saturation for vibrant goddess energy
                 saturation = int(200 + mag * 55)
@@ -408,14 +417,16 @@ class Modes851_900(BaseModeVisualizer):
                 color = self.hsv_to_bgr(hue, saturation, value)
 
                 # Add glow effect for stronger frequencies
-                if mag > 0.6:
-                    cv2.circle(frame, (x, y), size + 5, color, 2)
+                glow_threshold = 0.6 / intensity  # Adjust threshold based on intensity
+                if mag > glow_threshold:
+                    glow_width = max(1, int((glow_intensity / 30) * 2))  # Scale glow based on glowIntensity
+                    cv2.circle(frame, (x, y), size + glow_width, color, glow_width)
 
                 cv2.circle(frame, (x, y), size, color, -1)
 
         # Central goddess focal point that pulses with bass
         center_size = int(15 + bass * 25)
-        center_hue = int(self.frame_count * 2) % 180
+        center_hue = int(self.frame_count * 2 * gracefulness) % 180
         center_color = self.hsv_to_bgr(center_hue, 255, 255)
         cv2.circle(frame, (self.center_x, self.center_y), center_size, center_color, -1)
 

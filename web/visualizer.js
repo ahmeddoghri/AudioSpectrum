@@ -9408,22 +9408,25 @@ class Visualizer {
             const alpha = wave.life * wave.strength;
 
             if (alpha > 0 && wave.radius < this.maxRadius * 2) {
-                // Draw distortion effect (multiple rings)
-                const distortionRings = 3;
+                // Draw primary shockwave with distortion effect
+                const distortionRings = Math.ceil(4 + distortionAmount / 15);
                 for (let d = 0; d < distortionRings; d++) {
-                    const distOffset = (d - 1) * distortionAmount * this.scaleFactor * wave.strength;
+                    const distOffset = (d - distortionRings / 2) * distortionAmount * this.scaleFactor * 0.8;
                     const distRadius = wave.radius + distOffset;
 
                     if (distRadius > 0) {
                         const colorIndex = Math.floor((w / waveCount) * magnitudes.length);
                         const color = this.getColor(colorIndex, magnitudes.length);
                         const rgb = this.parseRgbColor(color);
-                        const distAlpha = alpha * (0.3 + (1 - d / distortionRings) * 0.7);
+                        const distAlpha = alpha * (0.4 + (1 - Math.abs(d - distortionRings / 2) / (distortionRings / 2)) * 0.8);
 
+                        // Enhanced wave thickness based on parameter
+                        const baseThickness = (waveThickness / 6) * 2;
                         this.ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${distAlpha})`;
-                        this.ctx.lineWidth = waveThickness * this.scaleFactor * (1 + wave.strength);
-                        this.ctx.shadowBlur = 25 * this.scaleFactor * wave.strength;
+                        this.ctx.lineWidth = Math.max(2, baseThickness * this.scaleFactor * (1.5 + wave.strength * 2));
+                        this.ctx.shadowBlur = 35 * this.scaleFactor * wave.strength * Math.max(1, waveThickness / 6);
                         this.ctx.shadowColor = color;
+                        this.ctx.lineCap = 'round';
 
                         this.ctx.beginPath();
                         this.ctx.arc(this.centerX, this.centerY, distRadius, 0, Math.PI * 2);
@@ -9431,22 +9434,45 @@ class Visualizer {
                     }
                 }
 
-                // Draw particle trail around the wave
+                // Draw energy ripples that follow the distortion
+                const rippleCount = Math.ceil(particleTrail / 4);
+                for (let r = 0; r < rippleCount; r++) {
+                    const rippleRadius = wave.radius * (1 + (r / rippleCount) * 0.3);
+                    const rippleAlpha = alpha * (0.6 - r / rippleCount * 0.5);
+                    const colorIndex = Math.floor((w / waveCount + r / rippleCount) * magnitudes.length) % magnitudes.length;
+                    const color = this.getColor(colorIndex, magnitudes.length);
+                    const rgb = this.parseRgbColor(color);
+
+                    this.ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${rippleAlpha})`;
+                    this.ctx.lineWidth = Math.max(1, (waveThickness / 6) * this.scaleFactor * wave.strength);
+                    this.ctx.shadowBlur = 15 * this.scaleFactor;
+                    this.ctx.shadowColor = color;
+
+                    this.ctx.beginPath();
+                    this.ctx.arc(this.centerX, this.centerY, rippleRadius, 0, Math.PI * 2);
+                    this.ctx.stroke();
+                }
+
+                // Draw particle trail with enhanced behavior
                 if (particleTrail > 0) {
                     for (let p = 0; p < wave.particleAngles.length; p++) {
                         const angle = wave.particleAngles[p];
-                        const x = this.centerX + Math.cos(angle) * wave.radius;
-                        const y = this.centerY + Math.sin(angle) * wave.radius;
+                        // Add distortion movement to particles
+                        const distortionPhase = Math.sin(p / wave.particleAngles.length * Math.PI * 2 + time * 2);
+                        const radiusVariation = wave.radius * (1 + distortionPhase * (distortionAmount / 100));
+
+                        const x = this.centerX + Math.cos(angle) * radiusVariation;
+                        const y = this.centerY + Math.sin(angle) * radiusVariation;
 
                         const colorIndex = Math.floor((p / wave.particleAngles.length) * magnitudes.length);
                         const color = this.getColor(colorIndex, magnitudes.length);
                         const rgb = this.parseRgbColor(color);
 
-                        this.ctx.shadowBlur = 10 * this.scaleFactor;
+                        this.ctx.shadowBlur = 15 * this.scaleFactor * Math.max(1, waveThickness / 6);
                         this.ctx.shadowColor = color;
-                        this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+                        this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha * 0.8})`;
 
-                        const size = (3 + wave.strength * 5) * this.scaleFactor;
+                        const size = Math.max(2, (4 + wave.strength * 7) * this.scaleFactor * (particleTrail / 20));
                         this.ctx.beginPath();
                         this.ctx.arc(x, y, size, 0, Math.PI * 2);
                         this.ctx.fill();
@@ -9455,10 +9481,10 @@ class Visualizer {
             }
         }
 
-        // Draw impact center
-        const centerPulse = avgMagnitude;
-        if (centerPulse > 0.1) {
-            const centerRadius = 20 * this.scaleFactor * centerPulse * impactForce;
+        // Draw impact center with enhanced effect
+        const centerPulse = avgMagnitude * impactForce;
+        if (centerPulse > 0.05) {
+            const centerRadius = 25 * this.scaleFactor * centerPulse * impactForce;
 
             const gradient = this.ctx.createRadialGradient(
                 this.centerX, this.centerY, 0,
@@ -9467,16 +9493,27 @@ class Visualizer {
 
             const centerColor = this.getColor(0, 1);
             const centerRgb = this.parseRgbColor(centerColor);
-            gradient.addColorStop(0, `rgba(255, 255, 255, ${centerPulse})`);
-            gradient.addColorStop(0.5, `rgba(${centerRgb[0]}, ${centerRgb[1]}, ${centerRgb[2]}, ${centerPulse * 0.6})`);
+            gradient.addColorStop(0, `rgba(255, 255, 255, ${centerPulse * 1.2})`);
+            gradient.addColorStop(0.3, `rgba(${centerRgb[0]}, ${centerRgb[1]}, ${centerRgb[2]}, ${centerPulse * 0.8})`);
             gradient.addColorStop(1, `rgba(${centerRgb[0]}, ${centerRgb[1]}, ${centerRgb[2]}, 0)`);
 
-            this.ctx.shadowBlur = 30 * this.scaleFactor;
+            this.ctx.shadowBlur = 40 * this.scaleFactor * Math.max(1, waveThickness / 6);
             this.ctx.shadowColor = centerColor;
             this.ctx.fillStyle = gradient;
             this.ctx.beginPath();
             this.ctx.arc(this.centerX, this.centerY, centerRadius, 0, Math.PI * 2);
             this.ctx.fill();
+
+            // Draw additional energy rings from center
+            for (let i = 1; i <= 3; i++) {
+                const ringRadius = centerRadius * (i / 3);
+                const ringAlpha = centerPulse * (1 - i / 3) * 0.6;
+                this.ctx.strokeStyle = `rgba(${centerRgb[0]}, ${centerRgb[1]}, ${centerRgb[2]}, ${ringAlpha})`;
+                this.ctx.lineWidth = 2 * this.scaleFactor;
+                this.ctx.beginPath();
+                this.ctx.arc(this.centerX, this.centerY, ringRadius, 0, Math.PI * 2);
+                this.ctx.stroke();
+            }
         }
 
         this.ctx.shadowBlur = 0;
@@ -27880,16 +27917,8 @@ class Visualizer {
         const mids = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (Math.floor(3 * magnitudes.length / 4) - Math.floor(magnitudes.length / 4));
         const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
-        // Ethereal gradient background (dark with soft glow)
-        const gradient = this.ctx.createRadialGradient(
-            this.centerX, this.centerY, 0,
-            this.centerX, this.centerY, this.maxRadius
-        );
-        gradient.addColorStop(0, '#0a0015');
-        gradient.addColorStop(0.5, '#1a0033');
-        gradient.addColorStop(1, '#000000');
-        this.ctx.fillStyle = gradient;
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        // Clear canvas for transparent background (no background fill)
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Divine aura (central glow that pulses with energy)
         const auraPulse = (Math.sin(this.frameCounter * 0.1) + 1) / 2;

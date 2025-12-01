@@ -9382,7 +9382,11 @@ class Visualizer {
                 strength: peakMagnitude * impactForce,
                 life: 1,
                 startTime: time,
-                particleAngles: Array.from({length: particleTrail}, () => Math.random() * Math.PI * 2)
+                particleAngles: Array.from({length: particleTrail}, () => Math.random() * Math.PI * 2),
+                waveFormation: Array.from({length: 360}, (_, i) => ({
+                    angle: (i / 360) * Math.PI * 2,
+                    distortion: Math.sin(i * 0.1 + time) * distortionAmount * 0.5
+                }))
             });
         }
 
@@ -33486,10 +33490,6 @@ class Visualizer {
         // Calculate energy
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
         const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
-
-        // Clean dark background
-        this.ctx.fillStyle = '#000000';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Pole positions (north and south)
         const poleSpacing = this.canvas.width * poleDistance;

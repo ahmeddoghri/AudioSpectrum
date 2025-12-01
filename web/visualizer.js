@@ -9013,34 +9013,103 @@ class Visualizer {
 
     /**
      * Mode 44: Energy Pulses
+     * Radiating shockwaves from center with audio-responsive dynamics
      */
     renderEnergyPulses(magnitudes) {
         // Get parameters with defaults
-        const numPulses = this.settings.energyPulsesNumPulses || 6;
-        const pulseSpeed = this.settings.energyPulsesPulseSpeed || 0.1;
-        const pulseSpread = this.settings.energyPulsesPulseSpread || 100;
-        const baseLineWidth = this.settings.energyPulsesLineWidth || 3;
-        const lineWidthRange = this.settings.energyPulsesLineWidthRange || 8;
+        const params = this.settings.modeParameters || {};
+        const numPulses = params.numPulses || 6;
+        const pulseSpeed = params.pulseSpeed || 0.1;
+        const pulseSpread = params.pulseSpread || 100;
+        const baseLineWidth = params.lineWidth || 3;
+        const lineWidthRange = params.lineWidthRange || 8;
 
+        // Calculate average magnitude for audio responsiveness
+        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        const peakMagnitude = Math.max(...magnitudes);
+
+        // Dynamic time with audio influence
         const time = this.frameCounter * pulseSpeed;
+        const energyMultiplier = 0.8 + peakMagnitude * 0.4; // Scale between 0.8 and 1.2
 
-        this.ctx.shadowBlur = 25;
+        // Draw background glow for enhanced effect
+        const bgGradient = this.ctx.createRadialGradient(
+            this.centerX, this.centerY, 0,
+            this.centerX, this.centerY, this.getEffectiveInnerRadius() + pulseSpread * 2
+        );
+
+        const centerColor = this.getColor(0, numPulses);
+        const centerRgb = this.parseRgbColor(centerColor);
+        bgGradient.addColorStop(0, `rgba(${centerRgb[0]}, ${centerRgb[1]}, ${centerRgb[2]}, ${avgMagnitude * 0.1})`);
+        bgGradient.addColorStop(1, `rgba(${centerRgb[0]}, ${centerRgb[1]}, ${centerRgb[2]}, 0)`);
+
+        this.ctx.fillStyle = bgGradient;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Draw expanding pulses
+        this.ctx.shadowBlur = 20 + avgMagnitude * 15;
 
         for (let p = 0; p < numPulses; p++) {
             const phase = (time + p * 0.5) % 3;
-            const radius = this.getEffectiveInnerRadius() + phase * pulseSpread;
+            const pulseProgress = phase / 3; // 0 to 1
+
+            // Radius expands from inner radius to outer
+            const radius = this.getEffectiveInnerRadius() + pulseProgress * pulseSpread * energyMultiplier;
+
+            // Get magnitude for this pulse
             const magnitude = magnitudes[Math.floor(p * (magnitudes.length / numPulses)) % magnitudes.length];
 
-            const color = this.getColor(p * 10, numPulses * 10);
+            // Alternate colors for visual interest
+            const colorIndex = p * 10 + Math.floor(time * 2) % 5;
+            const color = this.getColor(colorIndex, numPulses * 10);
+            const rgb = this.parseRgbColor(color);
+
+            // Pulsing alpha - strongest at center, fades at edges
+            const alpha = Math.max(0, (1 - pulseProgress) * (0.5 + magnitude * 0.5));
+
+            // Line width responds to audio
+            const lineWidth = baseLineWidth + magnitude * lineWidthRange * energyMultiplier;
+
+            // Create gradient for each pulse ring
+            const pulseGradient = this.ctx.createRadialGradient(
+                this.centerX, this.centerY, Math.max(0, radius - lineWidth * 2),
+                this.centerX, this.centerY, radius + lineWidth * 2
+            );
+
+            pulseGradient.addColorStop(0, `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0)`);
+            pulseGradient.addColorStop(0.5, `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`);
+            pulseGradient.addColorStop(1, `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0)`);
+
             this.ctx.shadowColor = color;
-            this.ctx.strokeStyle = color;
-            this.ctx.lineWidth = baseLineWidth + magnitude * lineWidthRange;
-            this.ctx.globalAlpha = Math.max(0, 1 - phase / 3);
+            this.ctx.strokeStyle = pulseGradient;
+            this.ctx.lineWidth = lineWidth;
+            this.ctx.globalAlpha = alpha;
 
             this.ctx.beginPath();
             this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
             this.ctx.stroke();
         }
+
+        // Draw energetic center core
+        const coreSize = (10 + avgMagnitude * 30) * this.scaleFactor;
+        const coreGradient = this.ctx.createRadialGradient(
+            this.centerX, this.centerY, 0,
+            this.centerX, this.centerY, coreSize
+        );
+
+        const coreColor = this.getColor(0, 1);
+        const coreRgb = this.parseRgbColor(coreColor);
+        coreGradient.addColorStop(0, `rgba(255, 255, 255, ${Math.min(1, avgMagnitude * 1.5)})`);
+        coreGradient.addColorStop(0.4, `rgba(${coreRgb[0]}, ${coreRgb[1]}, ${coreRgb[2]}, ${avgMagnitude})`);
+        coreGradient.addColorStop(1, `rgba(${coreRgb[0]}, ${coreRgb[1]}, ${coreRgb[2]}, 0)`);
+
+        this.ctx.shadowBlur = 30 + avgMagnitude * 20;
+        this.ctx.shadowColor = coreColor;
+        this.ctx.fillStyle = coreGradient;
+        this.ctx.globalAlpha = 1;
+        this.ctx.beginPath();
+        this.ctx.arc(this.centerX, this.centerY, coreSize, 0, Math.PI * 2);
+        this.ctx.fill();
 
         this.ctx.globalAlpha = 1;
         this.ctx.shadowBlur = 0;
@@ -11754,46 +11823,58 @@ class Visualizer {
 
     renderMatrixRain(magnitudes) {
         // Mode 82: Falling Matrix-style characters with audio-reactive speed
+        const params = this.settings.modeParameters || {};
+        const intensity = params.intensity || 1;
+        const speed = params.speed || 1;
+        const glowAmount = params.glowAmount || 0.5;
+        const characterDensity = params.characterDensity || 1;
+
         const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
         const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75)).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25)).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
 
-        // Use settings
-        const circleCount = this.settings.circleCount || 50;
-        const barCount = this.settings.barCount || 72;
-
-        // Number of columns controlled by barCount
-        const numColumns = Math.max(10, Math.min(80, Math.floor(barCount * 0.8)));
+        // Dynamically calculate number of columns based on canvas width and character density
+        const charWidth = 10;
+        const numColumns = Math.max(5, Math.floor((this.canvas.width / charWidth) * characterDensity));
         const columnSpacing = this.canvas.width / numColumns;
 
-        // Initialize columns - reinitialize if count changed
-        if (!this.matrixColumns || this.matrixColumns.length !== numColumns) {
+        // Initialize columns array with proper canvas dimensions
+        if (!this.matrixColumns || this.matrixColumns.length !== numColumns || this.lastCanvasWidth !== this.canvas.width) {
             this.matrixColumns = [];
+            this.lastCanvasWidth = this.canvas.width;
             for (let i = 0; i < numColumns; i++) {
                 this.matrixColumns.push({
-                    x: i * columnSpacing,
-                    y: -Math.random() * this.canvas.height,
-                    speed: 2 + Math.random() * 3,
-                    colorIndex: i % 10
+                    x: (i + 0.5) * columnSpacing,
+                    y: -Math.random() * this.canvas.height * 2,
+                    speed: 1.5 + Math.random() * 2.5,
+                    colorIndex: i % 10,
+                    characters: this.generateMatrixCharacters(8 + Math.floor(Math.random() * 8))
                 });
             }
         }
 
-        // Clear with fade for trail effect
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+        // Clear with fade for trail effect (semi-transparent background)
+        this.ctx.fillStyle = `rgba(0, 0, 0, ${0.15 + bass * 0.1})`;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Trail length controlled by circleCount
-        const trailLength = Math.max(10, Math.min(30, Math.floor(circleCount / 2.5)));
+        // Calculate trail length based on intensity
+        const trailLength = Math.max(8, Math.floor(15 * intensity));
+        const charHeight = 14 * intensity;
+
+        // Set up font
+        this.ctx.font = `bold ${Math.floor(charHeight)}px 'Courier New', monospace`;
+        this.ctx.textAlign = 'center';
 
         // Update and draw columns
-        this.ctx.font = '16px monospace';
         for (const column of this.matrixColumns) {
-            // Speed modulated by volume
-            column.y += column.speed * (1 + avgMagnitude);
+            // Speed modulated by volume and speed parameter
+            const speedMult = speed * (1 + avgMagnitude * intensity * 0.5);
+            column.y += column.speed * speedMult;
 
-            // Reset when off screen
-            if (column.y > this.canvas.height + 200) {
-                column.y = -100;
+            // Regenerate characters periodically
+            if (column.y > this.canvas.height + 100) {
+                column.y = -trailLength * charHeight;
+                column.characters = this.generateMatrixCharacters(8 + Math.floor(Math.random() * 8));
             }
 
             // Get column color from scheme
@@ -11806,76 +11887,213 @@ class Visualizer {
                 b = parseInt(match[3]);
             }
 
-            // Draw trail of characters
+            // Draw trail of characters with fade effect
             for (let i = 0; i < trailLength; i++) {
-                const charY = column.y - i * 16;
-                if (charY < 0 || charY > this.canvas.height) continue;
+                const charY = column.y - i * charHeight;
+                if (charY < -charHeight || charY > this.canvas.height) continue;
 
-                // Brightness fades towards tail, treble adds flash
+                // Brightness fades towards tail
                 const fadeFactor = 1 - (i / trailLength);
-                const trebleBrightness = treble * 0.5;
-                const brightnessFactor = (0.6 + fadeFactor * 0.4 + trebleBrightness);
+                const trebleFactor = 0.4 + treble * 0.6;
+                const brightnessFactor = 0.4 + fadeFactor * 0.6 + trebleFactor * 0.2;
 
+                // Apply glow effect
+                if (glowAmount > 0 && i < trailLength / 2) {
+                    this.ctx.shadowBlur = Math.floor(8 * glowAmount * (1 - i / (trailLength / 2)));
+                    this.ctx.shadowColor = `rgba(${r}, ${g}, ${b}, ${glowAmount * 0.7})`;
+                } else {
+                    this.ctx.shadowBlur = 0;
+                }
+
+                // Calculate final color with brightness
                 const finalR = Math.max(0, Math.min(255, Math.floor(r * brightnessFactor)));
                 const finalG = Math.max(0, Math.min(255, Math.floor(g * brightnessFactor)));
                 const finalB = Math.max(0, Math.min(255, Math.floor(b * brightnessFactor)));
 
-                const char = String.fromCharCode(33 + Math.floor(Math.random() * 94));
+                // Get character from sequence
+                const char = column.characters[i % column.characters.length];
+                const alpha = 0.3 + fadeFactor * 0.7;
 
-                this.ctx.fillStyle = `rgb(${finalR}, ${finalG}, ${finalB})`;
+                this.ctx.fillStyle = `rgba(${finalR}, ${finalG}, ${finalB}, ${alpha})`;
                 this.ctx.fillText(char, column.x, charY);
             }
         }
+
+        // Reset shadow
+        this.ctx.shadowBlur = 0;
+    }
+
+    // Helper function to generate matrix-style characters
+    generateMatrixCharacters(length) {
+        const matrixChars = ['ａ', 'ｂ', 'ｃ', 'ｄ', 'ｅ', 'ｆ', 'ｇ', 'ｈ', 'ｉ', 'ｊ', 'ｋ', 'ｌ', 'ｍ', 'ｎ', 'ｏ', 'ｐ', 'ｑ', 'ｒ', 'ｓ', 'ｔ', 'ｕ', 'ｖ', 'ｗ', 'ｘ', 'ｙ', 'ｚ', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '!', '@', '#', '$', '%', '^', '&', '*'];
+        const result = [];
+        for (let i = 0; i < length; i++) {
+            result.push(matrixChars[Math.floor(Math.random() * matrixChars.length)]);
+        }
+        return result;
     }
 
     renderVoxelWorld(magnitudes) {
-        // Mode 83: 3D voxel grid with audio shockwave
+        // Mode 83: 3D voxel grid with audio shockwave - Enhanced with parameters and visual effects
         const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25)).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75)).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
 
-        this.ctx.fillStyle = 'rgb(10, 10, 30)';
+        // Get parameters with defaults
+        const gridSize = this.settings.voxelWorldGridSize || 8;
+        const voxelSize = this.settings.voxelWorldVoxelSize || 30;
+        const heightScale = this.settings.voxelWorldHeightScale || 100;
+        const shockwaveIntensity = this.settings.voxelWorldShockwaveIntensity || 300;
+        const shockwaveWidth = this.settings.voxelWorldShockwaveWidth || 50;
+        const glowIntensity = this.settings.voxelWorldGlowIntensity || 0.6;
+        const rotationSpeed = this.settings.voxelWorldRotationSpeed || 0.01;
+        const perspectiveIntensity = this.settings.voxelWorldPerspectiveIntensity || 0.5;
+
+        // Initialize rotation phase
+        if (this.voxelRotation === undefined) {
+            this.voxelRotation = 0;
+        }
+        this.voxelRotation += rotationSpeed;
+
+        // Draw dark background with gradient
+        const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+        gradient.addColorStop(0, 'rgba(5, 5, 20, 1)');
+        gradient.addColorStop(0.5, 'rgba(10, 10, 30, 1)');
+        gradient.addColorStop(1, 'rgba(5, 5, 20, 1)');
+        this.ctx.fillStyle = gradient;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // 3D grid parameters
-        const gridSize = 8;
-        const voxelSize = 30;
+        // Calculate center position (accounting for different canvas sizes)
         const centerX = this.canvas.width / 2;
         const centerY = this.canvas.height / 2;
 
-        // Shockwave radius from bass
-        const shockwave = bass * 300;
+        // Shockwave radius from bass with intensity parameter
+        const shockwave = bass * shockwaveIntensity;
 
-        // Draw voxel grid with 3D perspective
+        // Initialize voxel data array for depth sorting
+        const voxels = [];
+
+        // Collect all voxels with their properties
         for (let x = 0; x < gridSize; x++) {
             for (let z = 0; z < gridSize; z++) {
                 const worldX = (x - gridSize / 2) * voxelSize;
                 const worldZ = (z - gridSize / 2) * voxelSize;
 
-                // Distance from center for shockwave
-                const dist = Math.sqrt(worldX * worldX + worldZ * worldZ);
+                // Apply rotation
+                const rotX = worldX * Math.cos(this.voxelRotation) - worldZ * Math.sin(this.voxelRotation);
+                const rotZ = worldX * Math.sin(this.voxelRotation) + worldZ * Math.cos(this.voxelRotation);
+
+                // Distance from center for shockwave effect
+                const dist = Math.sqrt(rotX * rotX + rotZ * rotZ);
 
                 // Height based on frequency and distance from shockwave
                 const freqIdx = Math.floor(((x + z * gridSize) / (gridSize * gridSize)) * magnitudes.length);
                 const magnitude = magnitudes[freqIdx];
-                const shockwaveEffect = Math.max(0, 1 - Math.abs(dist - shockwave) / 50);
-                const height = (magnitude + shockwaveEffect) * 100;
+                const shockwaveEffect = Math.max(0, 1 - Math.abs(dist - shockwave) / shockwaveWidth);
+                const height = (magnitude + shockwaveEffect * 0.5) * heightScale;
 
-                // 3D to 2D projection (simple isometric)
-                const screenX = centerX + worldX - worldZ * 0.5;
-                const screenY = centerY + worldZ * 0.5 - height;
+                // 3D to 2D projection with adjustable perspective
+                const screenX = centerX + rotX - rotZ * perspectiveIntensity;
+                const screenY = centerY + rotZ * perspectiveIntensity - height;
 
-                // Color based on height - use color scheme
-                const colorIndex = Math.floor(((x + z * gridSize) / (gridSize * gridSize)) * magnitudes.length);
-                this.ctx.fillStyle = this.getColor(colorIndex, magnitudes.length);
-                this.ctx.beginPath();
-                this.ctx.moveTo(screenX, screenY);
-                this.ctx.lineTo(screenX + voxelSize / 2, screenY + voxelSize / 4);
-                this.ctx.lineTo(screenX, screenY + voxelSize / 2);
-                this.ctx.lineTo(screenX - voxelSize / 2, screenY + voxelSize / 4);
-                this.ctx.closePath();
-                this.ctx.fill();
+                // Calculate brightness based on shockwave proximity and frequency
+                const brightness = Math.min(1, magnitude + shockwaveEffect * 0.3);
+
+                voxels.push({
+                    x: screenX,
+                    y: screenY,
+                    voxelSize: voxelSize,
+                    colorIndex: freqIdx,
+                    brightness: brightness,
+                    magnitude: magnitude,
+                    shockwaveEffect: shockwaveEffect,
+                    depth: rotZ  // For sorting (render back to front)
+                });
             }
         }
+
+        // Sort voxels by depth (back to front rendering)
+        voxels.sort((a, b) => a.depth - b.depth);
+
+        // Draw voxels with glow effects
+        for (const voxel of voxels) {
+            this.drawVoxelWithGlow(voxel, magnitudes.length, glowIntensity);
+        }
+
+        // Add subtle shimmer effect based on treble
+        if (treble > 0.1) {
+            this.ctx.fillStyle = `rgba(255, 255, 255, ${treble * 0.05 * glowIntensity})`;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+    }
+
+    drawVoxelWithGlow(voxel, numColors, glowIntensity) {
+        // Helper function to draw a voxel with glow effect
+        const colorStr = this.getColor(voxel.colorIndex, numColors);
+        const colorMatch = colorStr.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+
+        let r = 100, g = 150, b = 255;
+        if (colorMatch) {
+            r = parseInt(colorMatch[1]);
+            g = parseInt(colorMatch[2]);
+            b = parseInt(colorMatch[3]);
+        }
+
+        // Apply brightness and shockwave effect to color
+        const brighten = 1 + voxel.shockwaveEffect * 0.5;
+        const finalR = Math.min(255, r * brighten);
+        const finalG = Math.min(255, g * brighten);
+        const finalB = Math.min(255, b * brighten);
+
+        // Draw glow halos
+        if (glowIntensity > 0) {
+            const glowSize = voxel.voxelSize / 2 + voxel.magnitude * 8;
+
+            // First glow layer (larger, more transparent)
+            this.ctx.fillStyle = `rgba(${finalR}, ${finalG}, ${finalB}, ${0.1 * glowIntensity})`;
+            this.ctx.beginPath();
+            this.ctx.moveTo(voxel.x, voxel.y - glowSize);
+            this.ctx.lineTo(voxel.x + glowSize, voxel.y);
+            this.ctx.lineTo(voxel.x, voxel.y + glowSize);
+            this.ctx.lineTo(voxel.x - glowSize, voxel.y);
+            this.ctx.closePath();
+            this.ctx.fill();
+
+            // Second glow layer (medium)
+            this.ctx.fillStyle = `rgba(${finalR}, ${finalG}, ${finalB}, ${0.15 * glowIntensity})`;
+            this.ctx.beginPath();
+            this.ctx.moveTo(voxel.x, voxel.y - glowSize * 0.6);
+            this.ctx.lineTo(voxel.x + glowSize * 0.6, voxel.y);
+            this.ctx.lineTo(voxel.x, voxel.y + glowSize * 0.6);
+            this.ctx.lineTo(voxel.x - glowSize * 0.6, voxel.y);
+            this.ctx.closePath();
+            this.ctx.fill();
+        }
+
+        // Draw main voxel with enhanced styling
+        this.ctx.fillStyle = `rgb(${finalR}, ${finalG}, ${finalB})`;
+        this.ctx.lineWidth = 1.5;
+        this.ctx.strokeStyle = `rgba(${finalR}, ${finalG}, ${finalB}, ${0.8 * voxel.brightness})`;
+
+        this.ctx.beginPath();
+        this.ctx.moveTo(voxel.x, voxel.y - voxel.voxelSize / 4);
+        this.ctx.lineTo(voxel.x + voxel.voxelSize / 2, voxel.y);
+        this.ctx.lineTo(voxel.x, voxel.y + voxel.voxelSize / 2);
+        this.ctx.lineTo(voxel.x - voxel.voxelSize / 2, voxel.y);
+        this.ctx.closePath();
+
+        this.ctx.fill();
+        this.ctx.stroke();
+
+        // Add highlight on top edge for 3D effect
+        const highlightColor = `rgba(255, 255, 255, ${voxel.shockwaveEffect * 0.4})`;
+        this.ctx.strokeStyle = highlightColor;
+        this.ctx.lineWidth = 2;
+        this.ctx.beginPath();
+        this.ctx.moveTo(voxel.x - voxel.voxelSize / 4, voxel.y - voxel.voxelSize / 8);
+        this.ctx.lineTo(voxel.x, voxel.y - voxel.voxelSize / 4);
+        this.ctx.lineTo(voxel.x + voxel.voxelSize / 4, voxel.y - voxel.voxelSize / 8);
+        this.ctx.stroke();
     }
 
     renderDNAHelixRungs(magnitudes) {
@@ -12568,65 +12786,222 @@ class Visualizer {
      * Spectrum bars as flames, embers on high freq, paper curls on bass
      */
     renderBurningPaper(magnitudes) {
+        // Get parameters from settings with defaults
+        const params = this.settings.modeParameters || {};
+        const flameHeight = params.flameHeight !== undefined ? params.flameHeight : 0.7;
+        const flameIntensity = params.flameIntensity !== undefined ? params.flameIntensity : 1.0;
+        const layerCount = Math.round(params.layerCount !== undefined ? params.layerCount : 3);
+        const layerSpacing = params.layerSpacing !== undefined ? params.layerSpacing : 15;
+        const flickerAmount = params.flickerAmount !== undefined ? params.flickerAmount : 5;
+        const emberIntensity = params.emberIntensity !== undefined ? params.emberIntensity : 1;
+        const emberSize = params.emberSize !== undefined ? params.emberSize : 2;
+        const paperCurlStrength = params.paperCurlStrength !== undefined ? params.paperCurlStrength : 0.5;
+        const backgroundFade = params.backgroundFade !== undefined ? params.backgroundFade : 0.3;
+        const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 0.6;
+
+        // Extract frequency bands
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
             .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const mids = magnitudes.slice(Math.floor(magnitudes.length * 0.25), Math.floor(magnitudes.length * 0.75))
+            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.5);
         const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
             .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const avgEnergy = (bass + mids + treble) / 3;
 
-        // Fade background
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+        // Initialize ember state if needed
+        if (!this.burningPaperState) {
+            this.burningPaperState = {
+                embers: []
+            };
+        }
+
+        // Fade background with glow effect
+        this.ctx.fillStyle = `rgba(0, 0, 0, ${backgroundFade})`;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Draw flame bars
+        // Add subtle glow to background based on energy
+        const glowAlpha = avgEnergy * glowIntensity * 0.2;
+        const bgGradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+        bgGradient.addColorStop(0, `rgba(255, 100, 0, ${glowAlpha * 0.3})`);
+        bgGradient.addColorStop(1, `rgba(255, 50, 0, ${glowAlpha * 0.1})`);
+        this.ctx.fillStyle = bgGradient;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Calculate base position (percentage-based for shape compatibility)
+        const yBasePercent = 0.1; // 10% from bottom
+        const yBase = this.canvas.height * (1 - yBasePercent);
+
+        // Draw flame bars with enhanced effects
         const barWidth = this.canvas.width / magnitudes.length;
         for (let i = 0; i < magnitudes.length; i++) {
             const magnitude = magnitudes[i];
-            const barHeight = magnitude * this.canvas.height * 0.7;
+            const barHeight = magnitude * this.canvas.height * flameHeight * flameIntensity;
             const x = i * barWidth;
-            const yBase = this.canvas.height - 50;
 
-            // Flame effect (multiple layers)
-            for (let layer = 0; layer < 3; layer++) {
-                const yOffset = layer * 15;
+            // Draw layers from back to front
+            for (let layer = 0; layer < layerCount; layer++) {
+                const yOffset = layer * layerSpacing;
                 const layerHeight = barHeight - yOffset;
+
                 if (layerHeight > 0) {
                     const y = yBase - layerHeight;
 
-                    // Flame color gradient - use color scheme
+                    // Create gradient for flame appearance
                     const colorIndex = (i + layer) % magnitudes.length;
-                    this.ctx.fillStyle = this.getColor(colorIndex, magnitudes.length);
+                    const baseColor = this.getColor(colorIndex, magnitudes.length);
+                    const layerAlpha = 1 - (layer / (layerCount + 1)); // Fade back layers
 
-                    // Flickering width
-                    const flicker = Math.floor((Math.random() - 0.5) * 5);
-                    this.ctx.fillRect(x + flicker, y, barWidth - 2, yBase - y);
+                    // Draw main flame bar
+                    const flickerOffset = (Math.random() - 0.5) * flickerAmount;
+                    const barX = x + flickerOffset;
+                    const barW = barWidth - 2;
+
+                    // Create gradient from hot (yellow/white) to cool (red/orange)
+                    const flameGradient = this.ctx.createLinearGradient(barX, yBase, barX, y);
+                    const colorMatch = baseColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+
+                    if (colorMatch) {
+                        const [_, r, g, b] = colorMatch;
+                        // Hot center (lighter)
+                        flameGradient.addColorStop(0, `rgba(${Math.min(255, r + 50)}, ${Math.min(255, g + 50)}, ${Math.min(255, b + 20)}, ${layerAlpha})`);
+                        // Cool edges (darker)
+                        flameGradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, ${layerAlpha * 0.7})`);
+                    } else {
+                        flameGradient.addColorStop(0, `rgba(255, 200, 100, ${layerAlpha})`);
+                        flameGradient.addColorStop(1, `rgba(255, 100, 50, ${layerAlpha * 0.7})`);
+                    }
+
+                    this.ctx.fillStyle = flameGradient;
+                    this.ctx.fillRect(barX, y, barW, yBase - y);
+
+                    // Add glow effect to flames
+                    if (glowIntensity > 0) {
+                        this.ctx.shadowColor = baseColor;
+                        this.ctx.shadowBlur = 10 * glowIntensity * layerAlpha;
+                        this.ctx.shadowOffsetX = 0;
+                        this.ctx.shadowOffsetY = 0;
+                        this.ctx.fillRect(barX, y, barW, yBase - y);
+                        this.ctx.shadowBlur = 0;
+                    }
                 }
             }
         }
 
-        // Embers on treble
-        if (treble > 0.5) {
-            for (let i = 0; i < treble * 20; i++) {
-                const emberX = Math.random() * this.canvas.width;
-                const emberY = this.canvas.height - 50 - Math.random() * 100;
-                const emberColorIndex = Math.floor(Math.random() * magnitudes.length);
-                this.ctx.fillStyle = this.getColor(emberColorIndex, magnitudes.length);
-                this.ctx.beginPath();
-                this.ctx.arc(emberX, emberY, 2, 0, Math.PI * 2);
-                this.ctx.fill();
-            }
-        }
+        // Update and draw ember particles
+        this._updateBurningPaperEmbers(magnitudes, yBase, treble, mids, emberIntensity, emberSize, glowIntensity);
 
-        // Paper curl effect on bass (darken corners)
-        if (bass > 0.4) {
-            const curlAlpha = bass * 0.5;
-            this.ctx.fillStyle = `rgba(10, 20, 20, ${curlAlpha})`;
+        // Paper curl effect (bass-responsive corner darkening)
+        if (bass > 0.1) {
+            const curlAlpha = bass * paperCurlStrength;
+            const curlSize = 0.15 + (bass * 0.1); // Dynamic size based on bass
+
+            // Top-left curl
+            const tlGradient = this.ctx.createLinearGradient(0, 0, this.canvas.width * curlSize, this.canvas.height * curlSize);
+            tlGradient.addColorStop(0, `rgba(20, 10, 5, ${curlAlpha * 0.8})`);
+            tlGradient.addColorStop(1, `rgba(20, 10, 5, 0)`);
+
+            this.ctx.fillStyle = tlGradient;
             this.ctx.beginPath();
             this.ctx.moveTo(0, 0);
-            this.ctx.lineTo(this.canvas.width * 0.2, 0);
-            this.ctx.lineTo(0, this.canvas.height * 0.2);
+            this.ctx.lineTo(this.canvas.width * curlSize, 0);
+            this.ctx.lineTo(0, this.canvas.height * curlSize);
+            this.ctx.closePath();
+            this.ctx.fill();
+
+            // Bottom-right curl
+            const brGradient = this.ctx.createLinearGradient(
+                this.canvas.width,
+                this.canvas.height,
+                this.canvas.width - this.canvas.width * curlSize,
+                this.canvas.height - this.canvas.height * curlSize
+            );
+            brGradient.addColorStop(0, `rgba(20, 10, 5, ${curlAlpha * 0.8})`);
+            brGradient.addColorStop(1, `rgba(20, 10, 5, 0)`);
+
+            this.ctx.fillStyle = brGradient;
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.canvas.width, this.canvas.height);
+            this.ctx.lineTo(this.canvas.width - this.canvas.width * curlSize, this.canvas.height);
+            this.ctx.lineTo(this.canvas.width, this.canvas.height - this.canvas.height * curlSize);
             this.ctx.closePath();
             this.ctx.fill();
         }
+
+        // Reset shadow for next frame
+        this.ctx.shadowBlur = 0;
+    }
+
+    /**
+     * Helper: Update and render ember particles for Burning Paper mode
+     */
+    _updateBurningPaperEmbers(magnitudes, yBase, treble, mids, emberIntensity, emberSize, glowIntensity) {
+        const state = this.burningPaperState;
+        const emberThreshold = 0.3; // Spawn threshold
+
+        // Spawn new embers based on treble
+        const emberSpawnRate = Math.floor(treble * 30 * emberIntensity);
+        for (let i = 0; i < emberSpawnRate; i++) {
+            // Spawn embers from top of flame bars
+            const barIndex = Math.floor(Math.random() * magnitudes.length);
+            const barWidth = this.canvas.width / magnitudes.length;
+            const magnitude = magnitudes[barIndex];
+            const spawnHeight = magnitude * this.canvas.height * 0.7;
+
+            state.embers.push({
+                x: barIndex * barWidth + Math.random() * barWidth,
+                y: yBase - spawnHeight + Math.random() * 20,
+                vx: (Math.random() - 0.5) * 2,
+                vy: -2 - Math.random() * 1,
+                life: 1,
+                maxLife: 0.5 + Math.random() * 0.5,
+                colorIndex: barIndex
+            });
+        }
+
+        // Update and draw embers
+        const newEmbers = [];
+        for (let ember of state.embers) {
+            ember.x += ember.vx;
+            ember.y += ember.vy;
+            ember.vy += 0.05; // Gravity
+            ember.life -= 1 / (60 * ember.maxLife); // Decay
+
+            if (ember.life > 0) {
+                const alpha = ember.life;
+                const color = this.getColor(ember.colorIndex, magnitudes.length);
+
+                // Draw ember with glow
+                const colorMatch = color.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+                const r = colorMatch ? colorMatch[1] : 255;
+                const g = colorMatch ? colorMatch[2] : 150;
+                const b = colorMatch ? colorMatch[3] : 50;
+
+                // Glow effect
+                if (glowIntensity > 0) {
+                    const glowGradient = this.ctx.createRadialGradient(
+                        ember.x, ember.y, 0,
+                        ember.x, ember.y, emberSize * 3 * (1 + glowIntensity)
+                    );
+                    glowGradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha * 0.6})`);
+                    glowGradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+                    this.ctx.fillStyle = glowGradient;
+                    this.ctx.beginPath();
+                    this.ctx.arc(ember.x, ember.y, emberSize * 3 * (1 + glowIntensity), 0, Math.PI * 2);
+                    this.ctx.fill();
+                }
+
+                // Core ember
+                this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
+                this.ctx.beginPath();
+                this.ctx.arc(ember.x, ember.y, emberSize, 0, Math.PI * 2);
+                this.ctx.fill();
+
+                newEmbers.push(ember);
+            }
+        }
+
+        // Limit ember count to prevent performance issues
+        state.embers = newEmbers.slice(-1000);
     }
 
     /**
@@ -33310,6 +33685,9 @@ class Visualizer {
      * Minimalist quantum particles phasing between wave and particle states
      */
     render1016QuantumFlux(magnitudes) {
+        // Draw background (respects Step 4 background parameter)
+        this.drawBackground();
+
         const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const particleCount = params.particleCount !== undefined ? params.particleCount : 60;
@@ -33318,84 +33696,368 @@ class Visualizer {
         const coherence = params.coherence !== undefined ? params.coherence : 0.5;
         const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 20;
 
-        // Use Step 4 settings
+        // Use Step 4 settings (respects background, colorScheme, barCount, innerRadius, smoothing)
         const barCount = this.settings.barCount || 72;
         const innerRadius = this.getEffectiveInnerRadius();
+        const scale = Math.min(this.canvas.width, this.canvas.height) / 1080;
+        const smoothing = this.settings.smoothing || 0.85;
 
         // Initialize animation time
         this.frameCounter = (this.frameCounter || 0) + phaseSpeed * 0.5;
 
-        // Calculate energy
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        // Initialize particle trails for enhanced visuals
+        if (!this.quantumParticles) {
+            this.quantumParticles = [];
+        }
 
-        // Black background for minimalist look
-        this.ctx.fillStyle = '#000000';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        // Calculate energy and frequency analysis
+        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
+        const mid = magnitudes.slice(Math.floor(magnitudes.length / 4), Math.floor(magnitudes.length / 2)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
+        const treble = magnitudes.slice(Math.floor(magnitudes.length / 2)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 2);
+        const energy = (bass + mid + treble) / 3;
 
         // Quantum phase state (0 = pure particle, 1 = pure wave)
+        // More responsive to audio energy
         const phaseState = (Math.sin(this.frameCounter * 0.05) + 1) / 2;
-        const quantumCoherence = coherence * (0.7 + energy * 0.3);
+        const quantumCoherence = coherence * (0.5 + energy * 0.5);
 
-        this.ctx.shadowBlur = glowIntensity;
+        // Scale wave amplitude based on canvas size for video shape compatibility
+        const scaledWaveAmplitude = waveAmplitude * 50 * scale;
 
-        // Draw particles/waves
+        // Draw quantum particles with enhanced effects
         for (let i = 0; i < particleCount; i++) {
             const progress = i / particleCount;
             const magIdx = Math.floor(progress * magnitudes.length);
             const magnitude = magnitudes[magIdx] * intensity;
 
-            // Base position in a clean grid or orbital pattern
+            // Orbital pattern with rotation
             const angle = progress * Math.PI * 2 + this.frameCounter * 0.02;
-            const radius = innerRadius + (this.maxRadius - innerRadius) * 0.5;
+            const radius = innerRadius + (this.maxRadius - innerRadius) * (0.4 + 0.4 * Math.sin(this.frameCounter * 0.01 + progress * Math.PI));
 
             const baseX = this.centerX + Math.cos(angle) * radius;
             const baseY = this.centerY + Math.sin(angle) * radius;
 
-            // Wave-particle duality
-            const waveOffset = Math.sin(this.frameCounter * 0.1 + i * 0.2) * waveAmplitude * 50;
+            // Wave-particle duality with enhanced motion
+            const waveOffsetX = Math.sin(this.frameCounter * 0.1 + i * 0.2) * scaledWaveAmplitude;
+            const waveOffsetY = Math.cos(this.frameCounter * 0.08 + i * 0.25) * scaledWaveAmplitude * 0.5;
             const particlePhase = phaseState * quantumCoherence;
 
-            const x = baseX + waveOffset * particlePhase;
-            const y = baseY;
+            const x = baseX + waveOffsetX * particlePhase;
+            const y = baseY + waveOffsetY * particlePhase;
 
-            // Particle size based on observation (coherence)
-            const particleSize = 2 + magnitude * 8 * (1 - particlePhase * 0.5);
+            // Particle size based on observation (coherence) and audio energy
+            const particleSize = (2 + magnitude * 8 * (1 - particlePhase * 0.5)) * scale;
 
-            // Color from scheme
+            // Color from scheme (respects Step 4 color scheme)
             const color = this.getColor(Math.floor(i * (barCount / particleCount)), barCount);
-            this.ctx.shadowColor = color;
-            this.ctx.fillStyle = color;
 
-            // Opacity based on phase state (particles are solid, waves are translucent)
-            this.ctx.globalAlpha = 0.3 + (1 - particlePhase) * 0.7;
+            // Draw particle with enhanced glow
+            this._drawQuantumParticle(x, y, particleSize, color, particlePhase, magnitude, glowIntensity * scale);
 
-            // Draw particle
-            this.ctx.beginPath();
-            this.ctx.arc(x, y, particleSize, 0, Math.PI * 2);
-            this.ctx.fill();
+            // Quantum wave function visualization (probability cloud)
+            if (particlePhase > 0.2) {
+                this._drawWaveFunctionCloud(baseX, baseY, particleSize, color, particlePhase, waveOffsetX, waveOffsetY, magnitude, scaledWaveAmplitude);
+            }
 
-            // Wave function visualization (probability cloud)
-            if (particlePhase > 0.3) {
-                this.ctx.globalAlpha = particlePhase * 0.2;
-                for (let w = 0; w < 3; w++) {
-                    const waveX = baseX + Math.sin(this.frameCounter * 0.1 + i * 0.2 + w) * waveAmplitude * 50;
-                    this.ctx.beginPath();
-                    this.ctx.arc(waveX, y, particleSize * 0.5, 0, Math.PI * 2);
-                    this.ctx.fill();
-                }
+            // Draw particle trails for motion visualization
+            if (Math.random() < 0.3 && particlePhase > 0.1) {
+                this._drawParticleTrail(baseX, baseY, x, y, color, particlePhase, scale);
             }
         }
 
+        // Draw energy-responsive central quantum well
+        this._drawQuantumWell(energy, intensity, glowIntensity * scale, barCount);
+
+        // Reset canvas state
         this.ctx.globalAlpha = 1;
         this.ctx.shadowBlur = 0;
+        this.ctx.shadowColor = 'rgba(0,0,0,0)';
+    }
+
+    /**
+     * Helper: Draw individual quantum particle with glow
+     */
+    _drawQuantumParticle(x, y, size, color, phase, magnitude, glowIntensity) {
+        // Outer glow halo
+        this.ctx.shadowBlur = glowIntensity * 1.5;
+        this.ctx.shadowColor = color;
+        this.ctx.fillStyle = color;
+        this.ctx.globalAlpha = 0.15 + (1 - phase) * 0.25;
+
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, size * 3, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Middle glow layer
+        this.ctx.shadowBlur = glowIntensity * 0.8;
+        this.ctx.globalAlpha = 0.25 + (1 - phase) * 0.35;
+
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, size * 2, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Core particle
+        this.ctx.shadowBlur = glowIntensity;
+        this.ctx.globalAlpha = 0.4 + (1 - phase) * 0.6;
+
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, size, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Bright center core
+        this.ctx.shadowBlur = glowIntensity * 1.2;
+        this.ctx.globalAlpha = 0.8 + (1 - phase) * 0.2;
+
+        this.ctx.beginPath();
+        this.ctx.arc(x, y, size * 0.6, 0, Math.PI * 2);
+        this.ctx.fill();
+    }
+
+    /**
+     * Helper: Draw quantum wave function probability cloud
+     */
+    _drawWaveFunctionCloud(baseX, baseY, particleSize, color, phase, offsetX, offsetY, magnitude, waveAmplitude) {
+        const cloudLayers = 4;
+        for (let w = 0; w < cloudLayers; w++) {
+            const layerAngle = (w / cloudLayers) * Math.PI * 2;
+            const layerDistance = waveAmplitude * (0.3 + w * 0.2);
+
+            const waveX = baseX + Math.cos(layerAngle) * layerDistance + offsetX * 0.5;
+            const waveY = baseY + Math.sin(layerAngle) * layerDistance + offsetY * 0.5;
+
+            this.ctx.shadowBlur = (particleSize * 2) * phase;
+            this.ctx.shadowColor = color;
+            this.ctx.fillStyle = color;
+            this.ctx.globalAlpha = phase * (0.15 - w * 0.03);
+
+            this.ctx.beginPath();
+            this.ctx.arc(waveX, waveY, particleSize * 1.5, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+    }
+
+    /**
+     * Helper: Draw particle motion trails
+     */
+    _drawParticleTrail(baseX, baseY, x, y, color, phase, scale) {
+        const trailLength = 3;
+        const trailDistance = Math.sqrt((x - baseX) ** 2 + (y - baseY) ** 2);
+
+        if (trailDistance > 2) {
+            const trailX = baseX + (x - baseX) * 0.7;
+            const trailY = baseY + (y - baseY) * 0.7;
+
+            this.ctx.strokeStyle = color;
+            this.ctx.lineWidth = 1 * scale;
+            this.ctx.globalAlpha = 0.3 * phase;
+            this.ctx.shadowBlur = 3 * scale;
+            this.ctx.shadowColor = color;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(baseX, baseY);
+            this.ctx.lineTo(trailX, trailY);
+            this.ctx.stroke();
+        }
+    }
+
+    /**
+     * Helper: Draw central quantum well (energy-responsive core)
+     */
+    _drawQuantumWell(energy, intensity, glowIntensity, barCount) {
+        const wellEnergy = energy * intensity;
+        const wellSize = 15 + wellEnergy * 40;
+        const wellColor = this.getColor(Math.floor(barCount / 2), barCount);
+
+        // Quantum well rings
+        for (let i = 0; i < 3; i++) {
+            const ringSize = wellSize * (1 - i * 0.25);
+            this.ctx.shadowBlur = glowIntensity * (1.5 - i * 0.3);
+            this.ctx.shadowColor = wellColor;
+            this.ctx.strokeStyle = wellColor;
+            this.ctx.lineWidth = 2;
+            this.ctx.globalAlpha = 0.5 - i * 0.15;
+
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, ringSize, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+
+        // Bright quantum well center
+        this.ctx.shadowBlur = glowIntensity * 2;
+        this.ctx.shadowColor = wellColor;
+        this.ctx.fillStyle = wellColor;
+        this.ctx.globalAlpha = 0.6 + wellEnergy * 0.4;
+
+        this.ctx.beginPath();
+        this.ctx.arc(this.centerX, this.centerY, wellSize * 0.3, 0, Math.PI * 2);
+        this.ctx.fill();
     }
 
     /**
      * Mode 1017: Photon Streams
      * Elegant converging light beams with lens flare and refraction
      */
+    /**
+     * Helper: Calculate stream origin position with Step 4 integration
+     */
+    _calculateStreamOrigin(streamIndex, streamCount, maxRadius, innerRadius, rotation, barWidthMultiplier) {
+        const progress = streamIndex / streamCount;
+        const angle = progress * Math.PI * 2 + rotation;
+
+        // Origin distance scaled by video shape and parameters
+        const originDistance = maxRadius * (1.1 + barWidthMultiplier * 0.15);
+
+        const originX = this.centerX + Math.cos(angle) * originDistance;
+        const originY = this.centerY + Math.sin(angle) * originDistance;
+
+        return { originX, originY, angle };
+    }
+
+    /**
+     * Helper: Calculate convergence point respecting video shape
+     */
+    _calculateConvergencePoint(convergenceParam, centerX, centerY, maxRadius) {
+        // Convergence point with proper centering and shape respect
+        // convergenceParam ranges from 0 (top) to 1 (bottom)
+        const verticalRange = maxRadius * 0.8;
+        const convergeX = centerX;
+        const convergeY = centerY - verticalRange * 0.5 + verticalRange * convergenceParam;
+
+        return { convergeX, convergeY };
+    }
+
+    /**
+     * Helper: Draw a photon beam with refraction effect
+     */
+    _drawPhotonBeam(fromX, fromY, toX, toY, color, lineWidth, opacity, glowIntensity, refractionAmount) {
+        this.ctx.strokeStyle = color;
+        this.ctx.shadowColor = color;
+        this.ctx.lineWidth = lineWidth;
+        this.ctx.globalAlpha = opacity;
+
+        // Main beam with slight refraction curve
+        const controlX = (fromX + toX) / 2 + refractionAmount;
+        const controlY = (fromY + toY) / 2;
+
+        this.ctx.beginPath();
+        this.ctx.moveTo(fromX, fromY);
+        this.ctx.quadraticCurveTo(controlX, controlY, toX, toY);
+        this.ctx.stroke();
+
+        // Additional refraction rings for visual interest
+        this.ctx.globalAlpha = opacity * 0.5;
+        const ringCount = 2;
+        for (let r = 0; r < ringCount; r++) {
+            const ringOffset = refractionAmount * (r + 1) / (ringCount + 1);
+            this.ctx.globalAlpha = opacity * 0.3 * (1 - r / ringCount);
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(fromX + ringOffset * 0.5, fromY);
+            this.ctx.quadraticCurveTo(controlX + ringOffset, controlY, toX + ringOffset * 0.5, toY);
+            this.ctx.stroke();
+        }
+    }
+
+    /**
+     * Helper: Draw photon particles along a beam
+     */
+    _drawPhotonParticles(fromX, fromY, toX, toY, color, magnitude, frameCounter, streamIndex, glowIntensity, sizeMultiplier) {
+        const particlesPerStream = 3 + Math.floor(magnitude * 8);
+
+        for (let p = 0; p < particlesPerStream; p++) {
+            const particleProgress = (frameCounter * 0.02 + streamIndex * 0.1 + p * 0.15) % 1;
+
+            // Curved path for particles
+            const px = fromX + (toX - fromX) * particleProgress;
+            const py = fromY + (toY - fromY) * particleProgress;
+            const pSize = (3 + magnitude * 6) * sizeMultiplier;
+
+            this.ctx.fillStyle = color;
+            this.ctx.shadowColor = color;
+            this.ctx.shadowBlur = glowIntensity * 0.8;
+            this.ctx.globalAlpha = 0.8 + Math.sin(frameCounter * 0.1 + p) * 0.2;
+
+            this.ctx.beginPath();
+            this.ctx.arc(px, py, pSize, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Particle glow trail
+            this.ctx.globalAlpha = 0.3;
+            for (let t = 1; t <= 2; t++) {
+                const trailProgress = Math.max(0, particleProgress - t * 0.1);
+                const trailX = fromX + (toX - fromX) * trailProgress;
+                const trailY = fromY + (toY - fromY) * trailProgress;
+
+                this.ctx.beginPath();
+                this.ctx.arc(trailX, trailY, pSize * (1 - t / 3), 0, Math.PI * 2);
+                this.ctx.fill();
+            }
+        }
+    }
+
+    /**
+     * Helper: Draw enhanced lens flare at convergence point
+     */
+    _drawLensFlare(convergeX, convergeY, energy, intensity, glowIntensity, barCount) {
+        const centralGlow = energy * intensity;
+
+        // Primary glow rings
+        this.ctx.shadowBlur = glowIntensity * 2;
+        const glowLayers = 4;
+
+        for (let i = 0; i < glowLayers; i++) {
+            const glowSize = 10 + i * 8 + centralGlow * 35;
+            const glowColor = this.getColor(Math.floor(barCount / 2 + i * 5) % barCount, barCount);
+
+            this.ctx.fillStyle = glowColor;
+            this.ctx.shadowColor = glowColor;
+
+            // Pulsing opacity
+            const pulseOpacity = (0.4 - i * 0.08) * (0.6 + Math.sin(this.frameCounter * 0.15) * 0.4);
+            this.ctx.globalAlpha = pulseOpacity * (0.5 + centralGlow * 0.5);
+
+            this.ctx.beginPath();
+            this.ctx.arc(convergeX, convergeY, glowSize, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        // Bright core
+        this.ctx.globalAlpha = 0.9 + centralGlow * 0.1;
+        const coreColor = this.getColor(Math.floor(barCount * 0.25), barCount);
+        this.ctx.fillStyle = coreColor;
+        this.ctx.shadowColor = coreColor;
+
+        this.ctx.beginPath();
+        this.ctx.arc(convergeX, convergeY, 5 + centralGlow * 15, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        // Refraction spike effect
+        this.ctx.shadowBlur = glowIntensity;
+        this.ctx.globalAlpha = 0.6;
+        const spikeLength = 40 + centralGlow * 30;
+
+        for (let spike = 0; spike < 4; spike++) {
+            const spikeAngle = (spike * Math.PI / 2) + this.frameCounter * 0.02;
+            const spikeEndX = convergeX + Math.cos(spikeAngle) * spikeLength;
+            const spikeEndY = convergeY + Math.sin(spikeAngle) * spikeLength;
+
+            this.ctx.strokeStyle = coreColor;
+            this.ctx.lineWidth = 2;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(convergeX, convergeY);
+            this.ctx.lineTo(spikeEndX, spikeEndY);
+            this.ctx.stroke();
+        }
+    }
+
+    /**
+     * Mode 1017: Elegant converging light beams with lens flare and refraction
+     */
     render1017PhotonStreams(magnitudes) {
+        // Draw background using theme settings
+        this.drawBackground();
+
         const params = this.settings.modeParameters || {};
         const intensity = params.intensity || 1;
         const streamCount = params.streamCount !== undefined ? params.streamCount : 12;
@@ -33404,93 +34066,53 @@ class Visualizer {
         const beamWidth = params.beamWidth !== undefined ? params.beamWidth : 3;
         const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 25;
 
-        // Use Step 4 settings
+        // Step 4 parameters affecting visualization
         const barCount = this.settings.barCount || 72;
         const innerRadius = this.getEffectiveInnerRadius();
+        const rotation = (this.settings.rotation || 0) * Math.PI / 180;
+        const sizeMultiplier = this.settings.barWidthMultiplier || 1;
 
-        // Initialize animation time and particles
+        // Initialize animation time
         this.frameCounter = (this.frameCounter || 0) + flowSpeed * 0.5;
 
-        if (!this.photonParticles) {
-            this.photonParticles = [];
-        }
-
-        // Calculate energy
+        // Calculate audio energy
         const energy = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
-        // Dark gradient background
-        const gradient = this.ctx.createRadialGradient(
-            this.centerX, this.centerY, 0,
-            this.centerX, this.centerY, this.maxRadius
+        // Calculate convergence point with proper shape respect
+        const { convergeX, convergeY } = this._calculateConvergencePoint(
+            convergence, this.centerX, this.centerY, this.maxRadius
         );
-        gradient.addColorStop(0, '#000000');
-        gradient.addColorStop(1, '#0a0a0a');
-        this.ctx.fillStyle = gradient;
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Convergence point
-        const convergeX = this.centerX;
-        const convergeY = this.centerY * (0.5 + convergence * 0.5);
-
-        // Draw streams
+        // Draw streams with beams and particles
         for (let s = 0; s < streamCount; s++) {
             const progress = s / streamCount;
             const magIdx = Math.floor(progress * magnitudes.length);
             const magnitude = magnitudes[magIdx] * intensity;
 
-            // Stream origin (around the edges)
-            const angle = progress * Math.PI * 2;
-            const originX = this.centerX + Math.cos(angle) * this.maxRadius * 1.2;
-            const originY = this.centerY + Math.sin(angle) * this.maxRadius * 1.2;
+            // Get stream origin with Step 4 parameters
+            const { originX, originY } = this._calculateStreamOrigin(
+                s, streamCount, this.maxRadius, innerRadius, rotation, sizeMultiplier
+            );
 
             // Color from scheme
             const color = this.getColor(Math.floor(s * (barCount / streamCount)), barCount);
 
-            // Draw beam
-            this.ctx.strokeStyle = color;
-            this.ctx.shadowColor = color;
+            // Calculate refraction amount based on magnitude
+            const refractionAmount = magnitude * 20 * sizeMultiplier;
+
+            // Draw beam with refraction
             this.ctx.shadowBlur = glowIntensity * (0.5 + magnitude * 0.5);
-            this.ctx.lineWidth = beamWidth + magnitude * 4;
-            this.ctx.globalAlpha = 0.4 + magnitude * 0.4;
+            const beamOpacity = 0.5 + magnitude * 0.5;
+            const scaledBeamWidth = (beamWidth + magnitude * 4) * sizeMultiplier;
 
-            this.ctx.beginPath();
-            this.ctx.moveTo(originX, originY);
-            this.ctx.lineTo(convergeX, convergeY);
-            this.ctx.stroke();
+            this._drawPhotonBeam(originX, originY, convergeX, convergeY, color, scaledBeamWidth, beamOpacity, glowIntensity, refractionAmount);
 
-            // Add photon particles along the beam
-            const particlesPerStream = 3 + Math.floor(magnitude * 5);
-            for (let p = 0; p < particlesPerStream; p++) {
-                const particleProgress = (this.frameCounter * 0.02 + s * 0.1 + p * 0.15) % 1;
-
-                const px = originX + (convergeX - originX) * particleProgress;
-                const py = originY + (convergeY - originY) * particleProgress;
-                const pSize = 3 + magnitude * 5;
-
-                this.ctx.fillStyle = color;
-                this.ctx.shadowBlur = glowIntensity * 0.8;
-                this.ctx.globalAlpha = 0.8;
-
-                this.ctx.beginPath();
-                this.ctx.arc(px, py, pSize, 0, Math.PI * 2);
-                this.ctx.fill();
-            }
+            // Draw photon particles
+            this._drawPhotonParticles(originX, originY, convergeX, convergeY, color, magnitude, this.frameCounter, s, glowIntensity, sizeMultiplier);
         }
 
-        // Central convergence glow (lens flare effect)
-        const centralGlow = energy * intensity;
-        this.ctx.shadowBlur = glowIntensity * 2;
-        for (let i = 0; i < 3; i++) {
-            const glowSize = 15 + i * 10 + centralGlow * 30;
-            const glowColor = this.getColor(Math.floor(barCount / 2), barCount);
-            this.ctx.fillStyle = glowColor;
-            this.ctx.shadowColor = glowColor;
-            this.ctx.globalAlpha = (0.3 - i * 0.08) * (0.5 + centralGlow * 0.5);
-
-            this.ctx.beginPath();
-            this.ctx.arc(convergeX, convergeY, glowSize, 0, Math.PI * 2);
-            this.ctx.fill();
-        }
+        // Draw enhanced lens flare at convergence point
+        this._drawLensFlare(convergeX, convergeY, energy, intensity, glowIntensity, barCount);
 
         this.ctx.globalAlpha = 1;
         this.ctx.shadowBlur = 0;

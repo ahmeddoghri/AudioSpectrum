@@ -12263,46 +12263,87 @@ class Visualizer {
     }
 
     renderAudioReactiveShader(magnitudes) {
-        // Mode 85: Procedural shader-like effect with audio modulation
+        // Mode 85: Enhanced procedural shader with audio modulation and parameters
+
+        // Extract frequency bands
         const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25)).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
-        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75)).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const quarterPoint = Math.floor(magnitudes.length * 0.25);
+        const midPoint = Math.floor(magnitudes.length * 0.5);
+        const threeQuarterPoint = Math.floor(magnitudes.length * 0.75);
+
+        const bass = magnitudes.slice(0, quarterPoint).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const lowerMids = magnitudes.slice(quarterPoint, midPoint).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const upperMids = magnitudes.slice(midPoint, threeQuarterPoint).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const treble = magnitudes.slice(threeQuarterPoint).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const mids = (lowerMids + upperMids) / 2;
+
+        // Get mode parameters with defaults
+        const params = this.settings.modeParameters || {};
+        const intensity = params.intensity !== undefined ? params.intensity : 1.0;
+        const speed = params.speed !== undefined ? params.speed : 1.0;
+        const patternScale = params.scale !== undefined ? params.scale : 1.0;
+        const complexity = params.complexity !== undefined ? params.complexity : 1.5;
+        const radialFalloff = params.radialFalloff !== undefined ? params.radialFalloff : 0.7;
 
         // Pixel-based shader effect
         const imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
         const data = imageData.data;
 
-        const time = this.frameCounter * 0.01;
-        const scale = 0.02 + avgMagnitude * 0.02;
+        // Time animation controlled by speed parameter
+        const time = this.frameCounter * 0.01 * speed;
+        const baseScale = 0.02 + avgMagnitude * 0.02;
+        const finalScale = baseScale * patternScale;
 
-        for (let y = 0; y < this.canvas.height; y += 2) {
-            for (let x = 0; x < this.canvas.width; x += 2) {
+        // Render each pixel
+        for (let y = 0; y < this.canvas.height; y++) {
+            for (let x = 0; x < this.canvas.width; x++) {
                 const idx = (y * this.canvas.width + x) * 4;
 
-                // Normalized coordinates
+                // Normalized coordinates (-0.5 to 0.5)
                 const nx = x / this.canvas.width - 0.5;
                 const ny = y / this.canvas.height - 0.5;
 
-                // Distance from center
+                // Distance from center for radial effects
                 const dist = Math.sqrt(nx * nx + ny * ny);
 
-                // Procedural pattern
-                const wave1 = Math.sin(nx * 10 * scale + time + bass * 5) * 0.5 + 0.5;
-                const wave2 = Math.cos(ny * 10 * scale + time + treble * 5) * 0.5 + 0.5;
-                const pattern = wave1 * wave2;
+                // Layer 1: Primary wave interference
+                const wave1 = Math.sin(nx * 10 * finalScale + time + bass * 5) * 0.5 + 0.5;
+                const wave2 = Math.cos(ny * 10 * finalScale + time + treble * 5) * 0.5 + 0.5;
+                const pattern1 = wave1 * wave2;
 
-                // Radial influence
-                const radialEffect = 1 - dist;
+                // Layer 2: Secondary diagonal waves for added complexity
+                const wave3 = Math.sin((nx + ny) * 8 * finalScale + time * 0.7 + mids * 4) * 0.5 + 0.5;
+                const wave4 = Math.cos((nx - ny) * 8 * finalScale - time * 0.5 + avgMagnitude * 3) * 0.5 + 0.5;
+                const pattern2 = wave3 * wave4;
 
-                // Color based on pattern and audio
-                const r = pattern * 255 * (1 + bass);
-                const g = (1 - pattern) * 255 * avgMagnitude;
-                const b = Math.sin(dist * 20 + time) * 127 + 128;
+                // Layer 3: Radial wave pattern for center focus
+                const radialWave = Math.sin(dist * 15 * finalScale + time + bass * 3) * 0.5 + 0.5;
+                const pattern3 = radialWave * Math.max(0, 1 - dist * 2);
 
-                data[idx] = Math.min(255, r * radialEffect);
-                data[idx + 1] = Math.min(255, g * radialEffect);
-                data[idx + 2] = Math.min(255, b * radialEffect * (1 + treble));
-                data[idx + 3] = 255;
+                // Blend patterns based on complexity parameter
+                const complexityFactor = Math.min(complexity, 3);
+                const blendWeight2 = Math.max(0, complexityFactor - 1) * 0.5;
+                const blendWeight3 = Math.max(0, complexityFactor - 1.5) * 0.3;
+                const totalWeight = 1 + blendWeight2 + blendWeight3;
+                const pattern = (pattern1 + pattern2 * blendWeight2 + pattern3 * blendWeight3) / totalWeight;
+
+                // Radial falloff: controls edge vignetting
+                const radialEffect = Math.pow(Math.max(0, 1 - dist), 1 + radialFalloff * 2);
+
+                // Enhanced color with audio reactivity
+                const r = pattern * 255 * (1 + bass * 0.8) * intensity;
+                const g = (1 - pattern) * 255 * (1 + mids * 0.6) * avgMagnitude * intensity;
+                const b = (Math.sin(dist * 20 + time) * 0.5 + 0.5) * 255 * (1 + treble * 0.8) * intensity;
+
+                // Apply radial falloff and clamp values
+                const finalR = Math.min(255, Math.max(0, r * radialEffect));
+                const finalG = Math.min(255, Math.max(0, g * radialEffect));
+                const finalB = Math.min(255, Math.max(0, b * radialEffect));
+
+                data[idx] = finalR;
+                data[idx + 1] = finalG;
+                data[idx + 2] = finalB;
+                data[idx + 3] = 255; // Full opacity
             }
         }
 

@@ -8,6 +8,7 @@ class Visualizer {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.settings = { ...DEFAULT_SETTINGS, ...settings };
+        this.colorPaletteCache = {};
 
         // Map parameters to modeParameters for consistency
         if (settings.parameters) {
@@ -28,12 +29,19 @@ class Visualizer {
         this.frameCounter = 0;
         this.animationId = null;
 
+        // Timebase tracking to keep preview and encoding timelines in sync
+        this.elapsedTime = 0;
+        this.lastRenderTimestamp = null;
+        this.externalTime = null;
+
         // Mode-specific particle systems
         this.rainParticles = [];
         this.fireworkParticles = [];
 
         // Mode-specific state
         this.cassetteReelAngle = 0;
+        this.neuralPulseState = null;
+        this.matrixRainState = null;
     }
 
     /**
@@ -67,6 +75,117 @@ class Visualizer {
         }
 
         return effectiveRadius;
+    }
+
+    /**
+     * Resolve mode parameters with defaults and numeric coercion
+     */
+    getModeParams(defaults = {}) {
+        const params = this.settings.modeParameters || {};
+        const resolved = { ...defaults };
+
+        Object.keys(defaults).forEach(key => {
+            const value = params[key];
+            if (value !== undefined && value !== null) {
+                const numericValue = parseFloat(value);
+                resolved[key] = Number.isNaN(numericValue) ? value : numericValue;
+            }
+        });
+
+        return resolved;
+    }
+
+    /**
+     * Reset state for terrain flyover mode
+     */
+    resetTerrainState(width, depth) {
+        this.terrainState = {
+            width,
+            depth,
+            history: [],
+            scroll: 0,
+            canvasW: this.canvas.width,
+            canvasH: this.canvas.height
+        };
+    }
+
+    /**
+     * Calculate layout values for the terrain flyover so preview and export stay in sync
+     */
+    getTerrainLayout(params) {
+        const aspectRatio = this.canvas.width / this.canvas.height;
+        const horizonY = this.canvas.height * (aspectRatio >= 1 ? 0.56 : 0.5);
+        const xMargin = Math.max(this.canvas.width * 0.08, 32 * this.scaleFactor);
+        const availableWidth = Math.max(1, this.canvas.width - xMargin * 2);
+        const xSpacing = availableWidth / Math.max(1, Math.max(2, params.terrainWidth) - 1);
+        const perspectiveFactor = 0.72 + params.perspectiveIntensity * 0.55;
+        const zSpacing = Math.max(
+            4 * this.scaleFactor,
+            Math.min(this.canvas.width, this.canvas.height) * 0.008 * perspectiveFactor
+        );
+        const sizeNormalizer = Utils.clamp(
+            Math.min(this.canvas.width, this.canvas.height) / 900,
+            0.6,
+            1.35
+        );
+        const heightScale = params.heightScale * 7.5 * (0.85 + this.scaleFactor * 0.4) * sizeNormalizer;
+        const wireThickness = Math.max(0.4, params.wireframeThickness * this.scaleFactor);
+
+        return {
+            aspectRatio,
+            horizonY,
+            xMargin,
+            availableWidth,
+            xSpacing,
+            zSpacing,
+            heightScale,
+            wireThickness
+        };
+    }
+
+    /**
+     * Render the sky/ground layers for Terrain Flyover while respecting transparent background choice
+     */
+    renderTerrainBackdrop(horizonY, accentRgb, baseBg, params, isTransparent) {
+        if (isTransparent) {
+            return; // Keep canvas alpha untouched for transparent mode
+        }
+
+        const [bgR, bgG, bgB] = baseBg;
+
+        // Sky gradient that reacts to the chosen color scheme
+        const skyGradient = this.ctx.createLinearGradient(0, 0, 0, horizonY);
+        skyGradient.addColorStop(
+            0,
+            `rgba(${accentRgb[0]}, ${accentRgb[1]}, ${accentRgb[2]}, ${0.16 + params.colorVariation * 0.28})`
+        );
+        skyGradient.addColorStop(1, `rgba(${bgR}, ${bgG}, ${bgB}, 0.94)`);
+        this.ctx.fillStyle = skyGradient;
+        this.ctx.fillRect(0, 0, this.canvas.width, horizonY);
+
+        // Ground gradient with a soft lift near the bottom to avoid banding on tall canvases
+        const groundGradient = this.ctx.createLinearGradient(0, horizonY, this.canvas.width, this.canvas.height);
+        groundGradient.addColorStop(0, `rgba(${bgR}, ${bgG}, ${bgB}, 0.92)`);
+        groundGradient.addColorStop(
+            1,
+            `rgba(${Math.min(255, bgR + 24)}, ${Math.min(255, bgG + 24)}, ${Math.min(255, bgB + 24)}, 0.9)`
+        );
+        this.ctx.fillStyle = groundGradient;
+        this.ctx.fillRect(0, horizonY, this.canvas.width, this.canvas.height - horizonY);
+
+        // Subtle glow at the horizon for depth
+        const horizonGlow = this.ctx.createRadialGradient(
+            this.centerX,
+            horizonY,
+            Math.max(40, this.canvas.width * 0.12),
+            this.centerX,
+            horizonY,
+            Math.max(this.canvas.width, this.canvas.height) * 0.7
+        );
+        horizonGlow.addColorStop(0, `rgba(${accentRgb[0]}, ${accentRgb[1]}, ${accentRgb[2]}, ${0.2 + params.glowIntensity * 0.25})`);
+        horizonGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        this.ctx.fillStyle = horizonGlow;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
     /**
@@ -117,6 +236,17 @@ class Visualizer {
     }
 
     /**
+     * Current background info (color + transparency flag)
+     */
+    getBackgroundInfo() {
+        const bgStyle = BACKGROUND_STYLES[this.settings.background] || BACKGROUND_STYLES.transparent;
+        return {
+            rgb: bgStyle.color,
+            isTransparent: this.settings.background === 'transparent'
+        };
+    }
+
+    /**
      * Apply vignette effect
      */
     applyVignette(strength = 0.3) {
@@ -142,6 +272,123 @@ class Visualizer {
             return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])];
         }
         return [255, 255, 255]; // Default to white if parsing fails
+    }
+
+    /**
+     * Read a numeric mode parameter with a fallback
+     */
+    getModeParamValue(key, fallback) {
+        const params = this.settings.modeParameters || {};
+        const raw = params[key];
+        const value = typeof raw === 'number' ? raw : parseFloat(raw);
+        return Number.isFinite(value) ? value : fallback;
+    }
+
+    /**
+     * Extract RGB channels from a CSS rgb() string
+     */
+    getColorChannels(colorString, fallback = [255, 255, 255]) {
+        const match = colorString?.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+        if (match) {
+            return [parseInt(match[1]), parseInt(match[2]), parseInt(match[3])];
+        }
+        return fallback;
+    }
+
+    /**
+     * Blend two colors
+     */
+    mixColors(colorA = [0, 0, 0], colorB = [0, 0, 0], t = 0.5) {
+        const clampedT = Utils.clamp(t, 0, 1);
+        return [
+            Math.round(Utils.lerp(colorA[0], colorB[0], clampedT)),
+            Math.round(Utils.lerp(colorA[1], colorB[1], clampedT)),
+            Math.round(Utils.lerp(colorA[2], colorB[2], clampedT))
+        ];
+    }
+
+    /**
+     * Apply brightness scale to color
+     */
+    scaleColor(color = [0, 0, 0], factor = 1) {
+        const safeFactor = Math.max(0, factor);
+        return [
+            Math.round(Utils.clamp(color[0] * safeFactor, 0, 255)),
+            Math.round(Utils.clamp(color[1] * safeFactor, 0, 255)),
+            Math.round(Utils.clamp(color[2] * safeFactor, 0, 255))
+        ];
+    }
+
+    /**
+     * Convert RGB array to RGBA string
+     */
+    toRgba(color = [255, 255, 255], alpha = 1) {
+        const clampedAlpha = Utils.clamp(alpha, 0, 1);
+        return `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${clampedAlpha})`;
+    }
+
+    /**
+     * Keep a shared timebase for preview and video generation
+     */
+    setExternalTime(timeSeconds) {
+        if (timeSeconds === null || timeSeconds === undefined) {
+            this.externalTime = null;
+            this.lastRenderTimestamp = null;
+            return;
+        }
+
+        if (typeof timeSeconds === 'number' && !Number.isNaN(timeSeconds)) {
+            this.externalTime = timeSeconds;
+            this.elapsedTime = timeSeconds;
+            this.lastRenderTimestamp = null;
+        }
+    }
+
+    /**
+     * Returns a stable timeline value in seconds regardless of render FPS
+     */
+    getTimelineTime(multiplier = 1) {
+        let baseTime;
+
+        if (typeof this.externalTime === 'number') {
+            baseTime = this.externalTime;
+        } else {
+            const now = (typeof performance !== 'undefined' && performance.now)
+                ? performance.now()
+                : Date.now();
+
+            if (this.lastRenderTimestamp === null) {
+                this.lastRenderTimestamp = now;
+                baseTime = this.elapsedTime;
+            } else {
+                const deltaSeconds = Math.max(0, (now - this.lastRenderTimestamp) / 1000);
+                this.lastRenderTimestamp = now;
+                this.elapsedTime += deltaSeconds;
+                baseTime = this.elapsedTime;
+            }
+        }
+
+        return baseTime * multiplier;
+    }
+
+    /**
+     * Compute basic frequency band energies
+     */
+    getFrequencyEnergy(magnitudes) {
+        if (!magnitudes || magnitudes.length === 0) {
+            return { avg: 0, bass: 0, mids: 0, treble: 0 };
+        }
+
+        const len = magnitudes.length;
+        const quarter = Math.max(1, Math.floor(len / 4));
+
+        const avg = magnitudes.reduce((a, b) => a + b, 0) / len;
+        const bass = magnitudes.slice(0, quarter).reduce((a, b) => a + b, 0) / quarter;
+        const treble = magnitudes.slice(len - quarter).reduce((a, b) => a + b, 0) / quarter;
+        const mids = magnitudes.slice(quarter, len - quarter).reduce((a, b) => a + b, 0) /
+            Math.max(1, len - (quarter * 2));
+
+        return { avg, bass, mids, treble };
     }
 
     /**
@@ -195,10 +442,99 @@ class Visualizer {
     }
 
     /**
+     * Cache color palettes so modes that sample many colors don't re-parse every frame
+     */
+    getCachedPalette(total) {
+        const key = `${this.settings.colorScheme}-${this.settings.gradient}-${total}`;
+        if (!this.colorPaletteCache) this.colorPaletteCache = {};
+        if (this.colorPaletteCache[key]) {
+            return this.colorPaletteCache[key];
+        }
+
+        const palette = new Array(total).fill(0).map((_, idx) => {
+            return this.parseRgbColor(this.getColor(idx, total));
+        });
+
+        this.colorPaletteCache[key] = palette;
+        return palette;
+    }
+
+    /**
      * Apply easing function
      */
     ease(t) {
         return ANIMATION.easing.easeOutCubic(t);
+    }
+
+    /**
+     * Resolve mode parameters with defaults
+     */
+    getModeParams(defaults = {}) {
+        const params = this.settings.modeParameters || {};
+        const resolved = {};
+
+        Object.keys(defaults).forEach((key) => {
+            const value = params[key];
+            resolved[key] = typeof value === 'number' && !Number.isNaN(value) ? value : defaults[key];
+        });
+
+        return resolved;
+    }
+
+    /**
+     * Frequency band helpers for shader-style modes
+     */
+    getFrequencyBands(magnitudes) {
+        if (!magnitudes || !magnitudes.length) {
+            return {
+                avg: 0,
+                bass: 0,
+                lowerMids: 0,
+                upperMids: 0,
+                mids: 0,
+                treble: 0
+            };
+        }
+
+        const len = magnitudes.length;
+        const quarterPoint = Math.max(1, Math.floor(len * 0.25));
+        const midPoint = Math.max(quarterPoint + 1, Math.floor(len * 0.5));
+        const threeQuarterPoint = Math.max(midPoint + 1, Math.floor(len * 0.75));
+
+        const sumRange = (start, end) => magnitudes.slice(start, end).reduce((a, b) => a + b, 0);
+
+        const bass = sumRange(0, quarterPoint) / quarterPoint;
+        const lowerMids = sumRange(quarterPoint, midPoint) / (midPoint - quarterPoint);
+        const upperMids = sumRange(midPoint, threeQuarterPoint) / (threeQuarterPoint - midPoint);
+        const treble = sumRange(threeQuarterPoint, len) / Math.max(1, len - threeQuarterPoint);
+        const mids = (lowerMids + upperMids) / 2;
+        const avg = magnitudes.reduce((a, b) => a + b, 0) / len;
+
+        return { avg, bass, lowerMids, upperMids, mids, treble };
+    }
+
+    /**
+     * Build a palette from the current color scheme for shader mixing
+     */
+    getShaderPalette() {
+        const scheme = COLOR_SCHEMES[this.settings.colorScheme] || COLOR_SCHEMES.apple_blue;
+        const primary = scheme.primary || COLORS.PRIMARY_BLUE;
+        const secondary = this.settings.gradient && scheme.gradient ? (scheme.secondary || primary) : primary;
+        const tertiary = this.settings.gradient && scheme.gradient ? (scheme.tertiary || secondary) : secondary;
+
+        return { primary, secondary, tertiary };
+    }
+
+    /**
+     * Simple color lerp helper
+     */
+    lerpColor(colorA, colorB, t) {
+        const clampedT = Utils.clamp(t, 0, 1);
+        return [
+            Math.round(Utils.lerp(colorA[0], colorB[0], clampedT)),
+            Math.round(Utils.lerp(colorA[1], colorB[1], clampedT)),
+            Math.round(Utils.lerp(colorA[2], colorB[2], clampedT))
+        ];
     }
 
     /**
@@ -6016,52 +6352,193 @@ class Visualizer {
     /**
      * Bioluminescence Wave - Mode 1019
      */
-    renderBioluminescenceWave(magnitudes) {
-        const params = this.settings.modeParameters || {};
-        const waveCount = Math.floor(params.waveCount || 6);
-        const organismDensity = params.organismDensity || 0.8;
-        const glowIntensity = params.glowIntensity || 1.2;
-        const waveSpeed = params.waveSpeed || 1;
-        const particleSize = params.particleSize || 2.5;
-        const trailLength = params.trailLength || 0.7;
+    applyBioluminescenceTrailFade(trailLength, backgroundInfo) {
+        const fade = Utils.clamp(0.14 / Math.max(trailLength, 0.35), 0.06, 0.32);
 
-        const time = this.frameCounter * 0.02 * waveSpeed;
-        const centerY = this.canvas.height / 2;
+        if (backgroundInfo.isTransparent) {
+            // Fade pixels out without painting a color to preserve transparency
+            this.ctx.globalCompositeOperation = 'destination-out';
+            this.ctx.fillStyle = `rgba(0, 0, 0, ${fade})`;
+        } else {
+            const [r, g, b] = backgroundInfo.rgb;
+            this.ctx.globalCompositeOperation = 'source-over';
+            this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${fade})`;
+        }
 
-        // Fade effect for trails
-        this.ctx.fillStyle = `rgba(0, 0, 0, ${0.3 / trailLength})`;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.globalCompositeOperation = 'source-over';
+    }
 
-        this.ctx.shadowBlur = 20 * glowIntensity;
+    /**
+     * Draw a soft ribbon representing the wave crest for added structure
+     */
+    drawBioluminescenceRibbon(baseY, amplitude, colorStr, time, waveOffset, waveIndex, waveCount, glowIntensity, energy) {
+        const [r, g, b] = this.parseRgbColor(colorStr);
+        const segments = Math.max(24, Math.round(this.canvas.width / 42));
+        const sway = Math.cos(time * 0.6 + waveIndex) * amplitude * 0.12;
+        const crestY = baseY + sway;
 
-        // Create wave particles
-        const particlesPerWave = Math.floor(50 * organismDensity);
+        const gradient = this.ctx.createLinearGradient(0, crestY - amplitude * 1.2, 0, crestY + amplitude * 1.2);
+        gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0)`);
+        gradient.addColorStop(0.5, `rgba(${r}, ${g}, ${b}, ${0.25 + energy.avg * 0.3 + energy.treble * 0.15})`);
+        gradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
+
+        this.ctx.lineWidth = Math.max(1.4, 2.8 * this.scaleFactor * (1 + glowIntensity * 0.12));
+        this.ctx.strokeStyle = gradient;
+        this.ctx.shadowColor = `rgba(${r}, ${g}, ${b}, ${0.7 * glowIntensity})`;
+        this.ctx.globalAlpha = 0.9;
+
+        this.ctx.beginPath();
+        for (let i = 0; i <= segments; i++) {
+            const t = i / segments;
+            const x = t * this.canvas.width;
+            const phase = (x / this.canvas.width) * Math.PI * 3.5 + time + waveOffset;
+            const y = crestY +
+                Math.sin(phase) * amplitude +
+                Math.sin(phase * 0.5 + waveIndex) * amplitude * 0.15 +
+                Math.sin(waveOffset + waveIndex / Math.max(1, waveCount)) * amplitude * 0.05;
+
+            if (i === 0) {
+                this.ctx.moveTo(x, y);
+            } else {
+                this.ctx.lineTo(x, y);
+            }
+        }
+        this.ctx.stroke();
+        this.ctx.globalAlpha = 1;
+    }
+
+    /**
+     * Ambient glow for non-transparent backgrounds to keep preview/export parity
+     */
+    drawBioluminescenceAmbient(accentRgb, backgroundInfo, glowIntensity, energyLevel) {
+        if (backgroundInfo.isTransparent) return;
+
+        const [r, g, b] = accentRgb || [255, 255, 255];
+        const radius = Math.max(this.canvas.width, this.canvas.height);
+        const inner = Math.max(60 * this.scaleFactor, radius * 0.2);
+
+        const gradient = this.ctx.createRadialGradient(
+            this.centerX,
+            this.centerY,
+            inner * 0.35,
+            this.centerX,
+            this.centerY,
+            radius
+        );
+
+        gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${0.16 + glowIntensity * 0.05 + energyLevel * 0.3})`);
+        gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+        this.ctx.globalAlpha = 0.85;
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.globalAlpha = 1;
+    }
+
+    renderBioluminescenceWave(magnitudes) {
+        const {
+            waveCount,
+            organismDensity,
+            glowIntensity,
+            waveSpeed,
+            particleSize,
+            trailLength
+        } = this.getModeParams({
+            waveCount: 6,
+            organismDensity: 0.8,
+            glowIntensity: 1.2,
+            waveSpeed: 1,
+            particleSize: 2.5,
+            trailLength: 0.7
+        });
+
+        const backgroundInfo = this.getBackgroundInfo();
+        const time = this.getTimelineTime(Math.max(0.45, waveSpeed * 1.1));
+        const energy = this.getFrequencyEnergy(magnitudes);
+        const accentColor = this.parseRgbColor(
+            this.getColor(
+                Math.floor(Math.max(1, magnitudes.length) * 0.35),
+                Math.max(1, magnitudes.length)
+            )
+        );
+
+        // Respect Step 4 background while fading trails
+        this.applyBioluminescenceTrailFade(trailLength, backgroundInfo);
+
+        // Subtle ambient tint for opaque backgrounds
+        if (!backgroundInfo.isTransparent) {
+            this.drawBioluminescenceAmbient(accentColor, backgroundInfo, glowIntensity, energy.avg);
+        }
+
+        const density = Utils.clamp(organismDensity, 0.3, 1.5);
+        const particlesPerWave = Math.max(
+            14,
+            Math.round(70 * density * (0.9 + this.scaleFactor * 0.35))
+        );
+
+        const paddingY = Math.max(this.canvas.height * 0.1, 36 * this.scaleFactor);
+        const verticalSpan = Math.max(1, this.canvas.height - paddingY * 2);
+        const waveSpacing = verticalSpan / Math.max(1, waveCount);
+        const amplitudeBase = Math.min(
+            waveSpacing * 0.7,
+            Math.max(this.canvas.height * 0.14, 70 * this.scaleFactor)
+        );
+
+        this.ctx.globalCompositeOperation = 'lighter';
+        this.ctx.shadowBlur = 18 * (1 + glowIntensity) * this.scaleFactor;
 
         for (let w = 0; w < waveCount; w++) {
+            const magIndex = Math.floor((w / waveCount) * magnitudes.length);
+            const magnitude = magnitudes[magIndex] || 0;
+            const baseY = paddingY + waveSpacing * (w + 0.5);
+            const amplitude = Utils.clamp(
+                amplitudeBase * (1 + magnitude * 0.8 + energy.bass * 0.5),
+                amplitudeBase * 0.6,
+                waveSpacing * 0.85
+            );
+
             const waveOffset = (w / waveCount) * Math.PI * 2;
-            const magnitude = magnitudes[Math.floor((w / waveCount) * magnitudes.length)];
+            const crestColorStr = this.getColor(w * particlesPerWave, waveCount * particlesPerWave);
+
+            this.drawBioluminescenceRibbon(
+                baseY,
+                amplitude,
+                crestColorStr,
+                time,
+                waveOffset,
+                w,
+                waveCount,
+                glowIntensity,
+                energy
+            );
 
             for (let p = 0; p < particlesPerWave; p++) {
-                const x = (p / particlesPerWave) * this.canvas.width;
-                const wavePhase = (x / this.canvas.width) * Math.PI * 4 + time + waveOffset;
-                const amplitude = (50 + magnitude * 100) * (1 + w * 0.1);
-                const y = centerY + Math.sin(wavePhase) * amplitude + (w - waveCount/2) * 30;
+                const x = (p / Math.max(1, particlesPerWave - 1)) * this.canvas.width;
+                const wavePhase = (x / this.canvas.width) * Math.PI * 3.5 + time + waveOffset;
+                const y =
+                    baseY +
+                    Math.sin(wavePhase) * amplitude +
+                    Math.cos(time * 0.8 + w) * waveSpacing * 0.08;
 
-                // Pulsing effect
-                const pulse = Math.sin(time * 2 + p * 0.1) * 0.5 + 0.5;
-                const size = (particleSize + magnitude * particleSize) * this.scaleFactor;
+                const pulse = Math.sin(time * 1.2 + p * 0.18) * 0.5 + 0.5;
+                const size =
+                    (particleSize +
+                        magnitude * particleSize * 1.4 +
+                        energy.treble * 1.8 +
+                        pulse) * this.scaleFactor;
 
                 const color = this.getColor(w * particlesPerWave + p, waveCount * particlesPerWave);
-                this.ctx.shadowColor = color;
+                const [r, g, b] = this.parseRgbColor(color);
 
-                // Draw glowing particle
-                const gradient = this.ctx.createRadialGradient(x, y, 0, x, y, size * 4);
-                gradient.addColorStop(0, color);
-                gradient.addColorStop(0.3, color.replace('rgb', 'rgba').replace(')', `, ${0.6 * glowIntensity})`));
+                const gradient = this.ctx.createRadialGradient(x, y, 0, x, y, size * 5);
+                gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, 1)`);
+                gradient.addColorStop(0.35, `rgba(${r}, ${g}, ${b}, ${0.55 * glowIntensity})`);
                 gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
 
                 this.ctx.fillStyle = gradient;
-                this.ctx.globalAlpha = 0.7 + magnitude * 0.3 + pulse * 0.2;
+                this.ctx.shadowColor = `rgba(${r}, ${g}, ${b}, ${0.8 * glowIntensity})`;
+                this.ctx.globalAlpha = 0.6 + magnitude * 0.3 + pulse * 0.25 + energy.avg * 0.2;
                 this.ctx.beginPath();
                 this.ctx.arc(x, y, size * 4, 0, Math.PI * 2);
                 this.ctx.fill();
@@ -6070,6 +6547,7 @@ class Visualizer {
 
         this.ctx.globalAlpha = 1;
         this.ctx.shadowBlur = 0;
+        this.ctx.globalCompositeOperation = 'source-over';
     }
 
     /**
@@ -6145,127 +6623,326 @@ class Visualizer {
     }
 
     /**
+     * Resolve Solar Corona parameters with proper clamping (Step 4 integration)
+     */
+    getSolarCoronaParams() {
+        const config = VISUALIZATION_MODES.solar_corona?.parameters || {};
+        const params = this.settings.modeParameters || {};
+        const defaults = {
+            loopCount: 10,
+            coreRadius: 120,
+            loopHeight: 1.5,
+            plasmaFlow: 1.2,
+            energyIntensity: 1,
+            turbulence: 0.6
+        };
+
+        const resolve = (key) => {
+            const def = config[key]?.default ?? defaults[key];
+            const min = config[key]?.min ?? def;
+            const max = config[key]?.max ?? def;
+            const raw = params[key];
+            const parsed = raw !== undefined ? parseFloat(raw) : def;
+            const safeValue = Number.isFinite(parsed) ? parsed : def;
+            return Utils.clamp(safeValue, min, max);
+        };
+
+        return {
+            loopCount: Math.max(3, Math.round(resolve('loopCount'))),
+            coreRadius: resolve('coreRadius'),
+            loopHeight: resolve('loopHeight'),
+            plasmaFlow: resolve('plasmaFlow'),
+            energyIntensity: resolve('energyIntensity'),
+            turbulence: resolve('turbulence')
+        };
+    }
+
+    /**
+     * Layout helper for Solar Corona to keep scaling consistent across shapes
+     */
+    getSolarCoronaLayout(params) {
+        const minDim = Math.min(this.canvas.width, this.canvas.height);
+        const coreRadius = Utils.clamp(
+            params.coreRadius * this.scaleFactor,
+            Math.max(40 * this.scaleFactor, minDim * 0.08),
+            Math.max(60 * this.scaleFactor, minDim * 0.32)
+        );
+
+        const haloRadius = coreRadius * (1.3 + params.energyIntensity * 0.35);
+        const orbitLimit = Math.min(this.maxRadius, minDim * 0.48);
+        const loopLengthBase = Utils.clamp(
+            minDim * 0.12 * params.loopHeight,
+            coreRadius * 0.9,
+            orbitLimit
+        );
+
+        return { coreRadius, haloRadius, orbitLimit, loopLengthBase };
+    }
+
+    /**
+     * Draw Solar Corona backdrop respecting background selection
+     */
+    renderSolarBackdrop(accentColor, secondaryColor, layout, params) {
+        const bgStyle = BACKGROUND_STYLES[this.settings.background] || BACKGROUND_STYLES.soft_gray;
+        const isTransparent = this.settings.background === 'transparent';
+        const [bgR, bgG, bgB] = bgStyle.color || [0, 0, 0];
+
+        // Subtle base tint so background selection is visible (skip for transparent)
+        if (!isTransparent) {
+            const baseGradient = this.ctx.createRadialGradient(
+                this.centerX,
+                this.centerY,
+                layout.coreRadius * 0.6,
+                this.centerX,
+                this.centerY,
+                Math.max(this.canvas.width, this.canvas.height) * 0.65
+            );
+            baseGradient.addColorStop(0, `rgba(${bgR}, ${bgG}, ${bgB}, ${0.08 + params.energyIntensity * 0.04})`);
+            baseGradient.addColorStop(1, `rgba(${bgR}, ${bgG}, ${bgB}, 0.92)`);
+            this.ctx.fillStyle = baseGradient;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+
+        // Solar glow overlay driven by color scheme
+        const glow = this.ctx.createRadialGradient(
+            this.centerX,
+            this.centerY,
+            layout.coreRadius * 0.4,
+            this.centerX,
+            this.centerY,
+            layout.haloRadius * 1.4
+        );
+        glow.addColorStop(0, this.toRgba(accentColor, 0.25 + params.energyIntensity * 0.15));
+        glow.addColorStop(0.55, this.toRgba(secondaryColor, 0.14));
+        glow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+        this.ctx.fillStyle = glow;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    /**
      * Solar Corona - Mode 1021
      */
     renderSolarCorona(magnitudes) {
-        const params = this.settings.modeParameters || {};
-        const loopCount = Math.floor(params.loopCount || 10);
-        const coreRadius = params.coreRadius || 120;
-        const loopHeight = params.loopHeight || 1.5;
-        const plasmaFlow = params.plasmaFlow || 1.2;
-        const energyIntensity = params.energyIntensity || 1;
-        const turbulence = params.turbulence || 0.6;
+        const params = this.getSolarCoronaParams();
+        const palette = this.getShaderPalette();
+        const primary = palette.primary || COLORS.PRIMARY_ORANGE;
+        const secondary = palette.secondary || primary;
+        const tertiary = palette.tertiary || secondary;
 
-        const time = this.frameCounter * 0.02 * plasmaFlow;
-        const centerX = this.canvas.width / 2;
-        const centerY = this.canvas.height / 2;
+        const layout = this.getSolarCoronaLayout(params);
+        const time = this.getTimelineTime(0.7 * params.plasmaFlow);
+        const centerX = this.centerX;
+        const centerY = this.centerY;
 
-        // Fade background
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        // Respect background choice and add solar glow
+        this.renderSolarBackdrop(primary, secondary, layout, params);
 
-        // Draw sun core
-        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
-        const coreSize = (coreRadius + avgMagnitude * 40) * this.scaleFactor;
+        // Audio-reactive averages
+        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / Math.max(1, magnitudes.length);
+        const bass = magnitudes[0] || avgMagnitude;
 
-        const coreGradient = this.ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, coreSize);
-        coreGradient.addColorStop(0, `rgba(255, 255, 200, ${energyIntensity})`);
-        coreGradient.addColorStop(0.5, `rgba(255, 220, 100, ${0.8 * energyIntensity})`);
-        coreGradient.addColorStop(1, 'rgba(255, 150, 0, 0)');
+        // Draw sun core with palette-driven gradient
+        const coreRadius = layout.coreRadius * (0.95 + avgMagnitude * 0.4);
+        const coreGradient = this.ctx.createRadialGradient(centerX, centerY, coreRadius * 0.15, centerX, centerY, coreRadius * 1.15);
+        coreGradient.addColorStop(0, this.toRgba(primary, 0.9 * params.energyIntensity));
+        coreGradient.addColorStop(0.45, this.toRgba(secondary, 0.7 * params.energyIntensity));
+        coreGradient.addColorStop(1, this.toRgba(secondary, 0));
 
-        this.ctx.fillStyle = coreGradient;
+        this.ctx.save();
         this.ctx.globalAlpha = 1;
+        this.ctx.fillStyle = coreGradient;
         this.ctx.beginPath();
-        this.ctx.arc(centerX, centerY, coreSize, 0, Math.PI * 2);
+        this.ctx.arc(centerX, centerY, coreRadius, 0, Math.PI * 2);
         this.ctx.fill();
 
-        this.ctx.shadowBlur = 30;
+        // Corona halo ring
+        this.ctx.strokeStyle = this.toRgba(primary, 0.35 + bass * 0.3);
+        this.ctx.lineWidth = Math.max(2.5 * this.scaleFactor, layout.coreRadius * 0.04);
+        this.ctx.shadowBlur = 25 * this.scaleFactor;
+        this.ctx.shadowColor = this.toRgba(primary, 0.9);
+        this.ctx.beginPath();
+        this.ctx.arc(centerX, centerY, layout.haloRadius * (0.9 + bass * 0.25), 0, Math.PI * 2);
+        this.ctx.stroke();
 
-        // Draw plasma loops
-        for (let i = 0; i < loopCount; i++) {
-            const magnitude = magnitudes[Math.floor((i / loopCount) * magnitudes.length)];
-            const angle = (i / loopCount) * Math.PI * 2 + time * 0.5;
-            const loopLength = (100 + magnitude * 150) * loopHeight;
+        // Magnetic field ribbons
+        const fieldLineCount = 24;
+        this.ctx.shadowBlur = 18 * this.scaleFactor;
+        for (let i = 0; i < fieldLineCount; i++) {
+            const pct = i / fieldLineCount;
+            const angle = pct * Math.PI * 2 + Math.sin(time * 0.35 + pct * 6) * 0.25;
+            const wobble = Math.sin(time * 0.4 + pct * 10) * params.turbulence * 8 * this.scaleFactor;
+            const radius = layout.haloRadius * (0.7 + pct * 0.4) + wobble;
+            const x = centerX + Math.cos(angle) * radius;
+            const y = centerY + Math.sin(angle) * radius;
 
-            const startX = centerX + Math.cos(angle) * coreRadius * this.scaleFactor;
-            const startY = centerY + Math.sin(angle) * coreRadius * this.scaleFactor;
+            this.ctx.strokeStyle = this.toRgba(tertiary, 0.12 + avgMagnitude * 0.12);
+            this.ctx.lineWidth = Math.max(0.8, 1.4 * this.scaleFactor);
+            this.ctx.beginPath();
+            this.ctx.moveTo(centerX + Math.cos(angle) * layout.coreRadius * 0.9, centerY + Math.sin(angle) * layout.coreRadius * 0.9);
+            this.ctx.quadraticCurveTo(
+                centerX + Math.cos(angle + 0.3) * (layout.haloRadius * 0.9),
+                centerY + Math.sin(angle + 0.3) * (layout.haloRadius * 0.9),
+                x,
+                y
+            );
+            this.ctx.stroke();
+        }
 
-            const endAngle = angle + Math.PI * 0.3 + Math.sin(time + i) * turbulence;
-            const endX = centerX + Math.cos(endAngle) * coreRadius * this.scaleFactor;
-            const endY = centerY + Math.sin(endAngle) * coreRadius * this.scaleFactor;
+        // Plasma loops
+        this.ctx.shadowBlur = 28 * this.scaleFactor;
+        for (let i = 0; i < params.loopCount; i++) {
+            const magnitude = magnitudes[Math.floor((i / params.loopCount) * magnitudes.length)] ?? avgMagnitude;
+            const angle = (i / params.loopCount) * Math.PI * 2 + time * 0.6;
+            const loopSpan = Utils.clamp(
+                layout.loopLengthBase * (0.8 + magnitude * 1.25),
+                layout.coreRadius * 0.9,
+                layout.orbitLimit
+            );
 
-            const controlDist = loopLength * this.scaleFactor;
+            const startRadius = layout.coreRadius * (0.96 + Math.sin(time * 0.7 + i) * 0.06);
+            const startX = centerX + Math.cos(angle) * startRadius;
+            const startY = centerY + Math.sin(angle) * startRadius;
+
+            const endAngle = angle + Math.PI * 0.26 + Math.sin(time + i * 0.5) * params.turbulence * 0.6;
+            const endRadius = startRadius + loopSpan * 0.4;
+            const endX = centerX + Math.cos(endAngle) * endRadius;
+            const endY = centerY + Math.sin(endAngle) * endRadius;
+
+            const controlDist = loopSpan * (0.7 + params.turbulence * 0.4);
             const controlAngle = (angle + endAngle) / 2 + Math.PI / 2;
-            const controlX = (startX + endX) / 2 + Math.cos(controlAngle) * controlDist;
-            const controlY = (startY + endY) / 2 + Math.sin(controlAngle) * controlDist;
+            const controlX = Utils.clamp((startX + endX) / 2 + Math.cos(controlAngle) * controlDist, 0, this.canvas.width);
+            const controlY = Utils.clamp((startY + endY) / 2 + Math.sin(controlAngle) * controlDist, 0, this.canvas.height);
 
-            const color = this.getColor(i, loopCount);
+            const color = this.getColor(i, params.loopCount);
             this.ctx.strokeStyle = color;
             this.ctx.shadowColor = color;
-            this.ctx.lineWidth = (3 + magnitude * 4) * this.scaleFactor * energyIntensity;
-            this.ctx.globalAlpha = 0.6 + magnitude * 0.4;
+            this.ctx.lineWidth = (2.2 + magnitude * 5) * this.scaleFactor * params.energyIntensity;
+            this.ctx.globalAlpha = 0.58 + magnitude * 0.35;
 
-            // Draw the loop
             this.ctx.beginPath();
             this.ctx.moveTo(startX, startY);
             this.ctx.quadraticCurveTo(controlX, controlY, endX, endY);
             this.ctx.stroke();
 
-            // Add flowing particles along the loop
-            const particlePos = (time * 2 + i * 0.3) % 1;
-            const t = particlePos;
-            const px = (1-t)*(1-t)*startX + 2*(1-t)*t*controlX + t*t*endX;
-            const py = (1-t)*(1-t)*startY + 2*(1-t)*t*controlY + t*t*endY;
+            // Flowing plasma bead
+            const t = (time * 0.35 + i * 0.18) % 1;
+            const px = (1 - t) * (1 - t) * startX + 2 * (1 - t) * t * controlX + t * t * endX;
+            const py = (1 - t) * (1 - t) * startY + 2 * (1 - t) * t * controlY + t * t * endY;
 
-            this.ctx.globalAlpha = 0.9;
-            const particleGradient = this.ctx.createRadialGradient(px, py, 0, px, py, 10 * this.scaleFactor);
+            const particleGradient = this.ctx.createRadialGradient(px, py, 0, px, py, 14 * this.scaleFactor);
             particleGradient.addColorStop(0, color);
             particleGradient.addColorStop(1, color.replace('rgb', 'rgba').replace(')', ', 0)'));
             this.ctx.fillStyle = particleGradient;
+            this.ctx.globalAlpha = 0.9;
             this.ctx.beginPath();
-            this.ctx.arc(px, py, 10 * this.scaleFactor, 0, Math.PI * 2);
+            this.ctx.arc(px, py, 9 * this.scaleFactor, 0, Math.PI * 2);
             this.ctx.fill();
         }
 
+        // Floating coronal dust for depth
+        const particleCount = 40;
+        this.ctx.globalAlpha = 0.35 + avgMagnitude * 0.3;
+        this.ctx.fillStyle = this.toRgba(secondary, 0.5);
+        this.ctx.shadowBlur = 12 * this.scaleFactor;
+        this.ctx.shadowColor = this.toRgba(secondary, 0.7);
+
+        for (let i = 0; i < particleCount; i++) {
+            const orbit = layout.coreRadius + (layout.orbitLimit - layout.coreRadius) * (i / particleCount);
+            const angle = time * 0.2 + i * 0.35 + Math.sin(time * 0.5 + i) * 0.2;
+            const x = centerX + Math.cos(angle) * orbit;
+            const y = centerY + Math.sin(angle) * orbit * (0.9 + params.turbulence * 0.2);
+            const size = (1.4 + (i % 5)) * this.scaleFactor;
+
+            this.ctx.beginPath();
+            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.fill();
+        }
+
+        this.ctx.restore();
         this.ctx.globalAlpha = 1;
         this.ctx.shadowBlur = 0;
     }
 
-    /**
-     * Cytoplasm Flow - Mode 1022
-     */
-    renderCytoplasmFlow(magnitudes) {
-        const params = this.settings.modeParameters || {};
-        const organelleCount = Math.floor(params.organelleCount || 18);
-        const flowVelocity = params.flowVelocity || 1;
-        const organelleSize = params.organelleSize || 8;
-        const membraneThickness = params.membraneThickness || 2;
-        const streamCount = Math.floor(params.streamCount || 4);
-        const cellRadius = params.cellRadius || 240;
+    getCytoplasmPalette() {
+        const primary = this.parseRgbColor(this.getColor(0, 1));
+        const secondary = this.parseRgbColor(this.getColor(1, 2));
+        const tertiary = this.parseRgbColor(this.getColor(2, 3));
+        return {
+            primary,
+            secondary,
+            tertiary,
+            midtone: this.mixColors(primary, secondary, 0.5)
+        };
+    }
 
-        const time = this.frameCounter * 0.02 * flowVelocity;
-        const centerX = this.canvas.width / 2;
-        const centerY = this.canvas.height / 2;
-        const scaledRadius = cellRadius * this.scaleFactor;
+    renderCytoplasmBackdrop(palette, energy) {
+        const bgStyle = BACKGROUND_STYLES[this.settings.background] || BACKGROUND_STYLES.soft_gray;
+        const [bgR, bgG, bgB] = bgStyle.color;
+        const isTransparent = this.settings.background === 'transparent';
 
-        // Clear background
-        this.ctx.fillStyle = 'rgba(5, 5, 15, 0.2)';
+        // Cytoplasm haze that borrows the chosen color scheme instead of forcing gray
+        const radial = this.ctx.createRadialGradient(
+            this.centerX,
+            this.centerY,
+            Math.max(30, this.maxRadius * 0.25),
+            this.centerX,
+            this.centerY,
+            Math.max(this.canvas.width, this.canvas.height) * 0.65
+        );
+
+        const centerAlpha = 0.32 + energy.avg * 0.35;
+        const edgeAlpha = isTransparent ? 0 : 0.85;
+
+        radial.addColorStop(0, `rgba(${palette.primary[0]}, ${palette.primary[1]}, ${palette.primary[2]}, ${centerAlpha})`);
+        radial.addColorStop(1, `rgba(${bgR}, ${bgG}, ${bgB}, ${edgeAlpha})`);
+
+        this.ctx.save();
+        this.ctx.globalAlpha = 0.9;
+        this.ctx.fillStyle = radial;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Draw cell membrane
-        this.ctx.strokeStyle = 'rgba(100, 150, 200, 0.3)';
-        this.ctx.lineWidth = membraneThickness * this.scaleFactor;
-        this.ctx.globalAlpha = 0.5;
-        this.ctx.shadowBlur = 10;
-        this.ctx.shadowColor = 'rgba(100, 150, 200, 0.5)';
-        this.ctx.beginPath();
+        const sweep = this.ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
+        sweep.addColorStop(0, `rgba(${palette.secondary[0]}, ${palette.secondary[1]}, ${palette.secondary[2]}, ${0.2 + energy.treble * 0.25})`);
+        sweep.addColorStop(1, `rgba(${palette.tertiary[0]}, ${palette.tertiary[1]}, ${palette.tertiary[2]}, ${0.16 + energy.mids * 0.2})`);
 
-        // Create organic membrane shape
-        for (let a = 0; a <= Math.PI * 2; a += 0.1) {
-            const wobble = Math.sin(a * 5 + time) * 10 + Math.sin(a * 3 - time * 0.5) * 8;
-            const r = scaledRadius + wobble;
-            const x = centerX + Math.cos(a) * r;
-            const y = centerY + Math.sin(a) * r;
+        this.ctx.globalAlpha = 0.6;
+        this.ctx.fillStyle = sweep;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Faint cytoskeleton rings to keep the cell centered across shapes
+        this.ctx.globalAlpha = 0.4;
+        this.ctx.strokeStyle = `rgba(${palette.midtone[0]}, ${palette.midtone[1]}, ${palette.midtone[2]}, 0.35)`;
+        this.ctx.lineWidth = Math.max(0.75, 1.5 * this.scaleFactor);
+        const ringCount = 3;
+        for (let i = 0; i < ringCount; i++) {
+            const radius = Math.min(this.maxRadius * 0.85, Math.min(this.canvas.width, this.canvas.height) * (0.28 + i * 0.08));
+            this.ctx.beginPath();
+            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.stroke();
+        }
+
+        this.ctx.restore();
+    }
+
+    renderCytoplasmMembrane(cx, cy, radius, thickness, palette, time, energy) {
+        const wobbleAmplitude = (10 + energy.bass * 30 + energy.mids * 18) * this.scaleFactor;
+        const wobbleFrequency = 4.5 + energy.avg * 2;
+        const stroke = palette.midtone;
+
+        this.ctx.save();
+        this.ctx.strokeStyle = `rgba(${stroke[0]}, ${stroke[1]}, ${stroke[2]}, ${0.55 + energy.avg * 0.25})`;
+        this.ctx.lineWidth = Math.max(1, thickness * this.scaleFactor);
+        this.ctx.shadowBlur = 25 * (0.7 + energy.avg);
+        this.ctx.shadowColor = `rgba(${stroke[0]}, ${stroke[1]}, ${stroke[2]}, 0.6)`;
+
+        this.ctx.beginPath();
+        for (let a = 0; a <= Math.PI * 2 + 0.01; a += 0.08) {
+            const wobble = Math.sin(a * wobbleFrequency + time * 1.4) * wobbleAmplitude +
+                           Math.sin(a * 2.3 - time * 0.9) * wobbleAmplitude * 0.4;
+            const r = radius + wobble;
+            const x = cx + Math.cos(a) * r;
+            const y = cy + Math.sin(a) * r;
             if (a === 0) {
                 this.ctx.moveTo(x, y);
             } else {
@@ -6275,84 +6952,154 @@ class Visualizer {
         this.ctx.closePath();
         this.ctx.stroke();
 
-        // Draw cytoplasm flow streams
-        this.ctx.shadowBlur = 15;
+        // Soft inner glow
+        const glow = this.ctx.createRadialGradient(cx, cy, radius * 0.2, cx, cy, radius * 1.1);
+        glow.addColorStop(0, `rgba(${stroke[0]}, ${stroke[1]}, ${stroke[2]}, 0.35)`);
+        glow.addColorStop(1, `rgba(${stroke[0]}, ${stroke[1]}, ${stroke[2]}, 0)`);
+
+        this.ctx.globalAlpha = 0.9;
+        this.ctx.fillStyle = glow;
+        this.ctx.beginPath();
+        this.ctx.arc(cx, cy, radius * 1.12, 0, Math.PI * 2);
+        this.ctx.fill();
+
+        this.ctx.restore();
+    }
+
+    renderCytoplasmStreams(cx, cy, radius, streamCount, magnitudes, time, energy) {
+        const streamRadius = radius * (0.55 + energy.avg * 0.15);
+
         for (let s = 0; s < streamCount; s++) {
-            const streamAngle = (s / streamCount) * Math.PI * 2 + time * 0.3;
-            const magnitude = magnitudes[Math.floor((s / streamCount) * magnitudes.length)];
+            this.ctx.save();
+            const magnitude = magnitudes[Math.floor((s / Math.max(1, streamCount)) * magnitudes.length)] || 0;
+            const colorStr = this.getColor(s, streamCount);
+            const [r, g, b] = this.parseRgbColor(colorStr);
+            const baseAlpha = 0.35 + magnitude * 0.5;
 
-            const streamRadius = scaledRadius * 0.7;
-            const color = this.getColor(s, streamCount);
-            this.ctx.strokeStyle = color.replace('rgb', 'rgba').replace(')', ', 0.2)');
-            this.ctx.lineWidth = 2 * this.scaleFactor;
+            this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${baseAlpha})`;
+            this.ctx.lineWidth = (1.4 + magnitude * 3.5) * this.scaleFactor;
+            this.ctx.shadowBlur = 18 * (1 + magnitude + energy.avg);
+            this.ctx.shadowColor = `rgba(${r}, ${g}, ${b}, 0.75)`;
 
-            // Create circular flow path
+            const baseAngle = (s / streamCount) * Math.PI * 2 + time * 0.8;
+            const twist = Math.sin(time * 0.6 + s) * 0.35;
+
             this.ctx.beginPath();
-            for (let a = 0; a <= Math.PI * 2; a += 0.1) {
-                const flow = Math.sin(a * 3 + time * 2) * 20 * magnitude;
-                const r = streamRadius + flow;
-                const offsetAngle = a + streamAngle;
-                const x = centerX + Math.cos(offsetAngle) * r;
-                const y = centerY + Math.sin(offsetAngle) * r;
+            for (let a = 0; a <= Math.PI * 2 + 0.01; a += 0.06) {
+                const audioFlow = Math.sin(a * 3 + time * (1.2 + magnitude * 1.8)) *
+                    (12 + magnitude * 34) * this.scaleFactor;
+                const rOffset = streamRadius + audioFlow;
+                const offsetAngle = a + baseAngle + twist * energy.mids;
+                const x = cx + Math.cos(offsetAngle) * rOffset;
+                const y = cy + Math.sin(offsetAngle) * rOffset;
                 if (a === 0) {
                     this.ctx.moveTo(x, y);
                 } else {
                     this.ctx.lineTo(x, y);
                 }
             }
-            this.ctx.globalAlpha = 0.4;
             this.ctx.stroke();
+
+            // Trail glow
+            this.ctx.globalAlpha = baseAlpha * 0.35;
+            this.ctx.lineWidth *= 1.8;
+            this.ctx.stroke();
+
+            this.ctx.restore();
         }
+    }
 
-        // Draw organelles
-        for (let i = 0; i < organelleCount; i++) {
-            const magnitude = magnitudes[i % magnitudes.length];
-            const angle = (i / organelleCount) * Math.PI * 2 + time;
-            const orbitRadius = (scaledRadius * 0.6) * (0.5 + (i % 3) * 0.25);
+    renderCytoplasmOrganelles(cx, cy, radius, count, baseSize, magnitudes, time, palette, energy) {
+        const orbitBase = radius * 0.38;
 
-            const x = centerX + Math.cos(angle) * orbitRadius;
-            const y = centerY + Math.sin(angle) * orbitRadius;
+        for (let i = 0; i < count; i++) {
+            this.ctx.save();
+            const magnitude = magnitudes[i % magnitudes.length] || 0;
+            const orbitLayer = 0.55 + (i % 4) * 0.1;
+            const orbitRadius = orbitBase * orbitLayer;
+            const angle = (i / count) * Math.PI * 2 + time * (0.9 + magnitude * 1.2);
 
-            const size = (organelleSize + magnitude * organelleSize * 0.5) * this.scaleFactor;
-            const color = this.getColor(i, organelleCount);
+            const x = cx + Math.cos(angle) * orbitRadius;
+            const y = cy + Math.sin(angle) * orbitRadius;
+            const organelleRadius = (baseSize + magnitude * baseSize) * this.scaleFactor * (0.7 + energy.avg * 0.35);
 
-            // Draw organelle with membrane
-            this.ctx.shadowColor = color;
-            this.ctx.shadowBlur = 10;
+            const colorStr = this.getColor(i, count);
+            const [r, g, b] = this.parseRgbColor(colorStr);
 
-            // Outer membrane
-            const membraneGradient = this.ctx.createRadialGradient(x, y, size * 0.5, x, y, size);
-            membraneGradient.addColorStop(0, color);
-            membraneGradient.addColorStop(0.7, color.replace('rgb', 'rgba').replace(')', ', 0.6)'));
-            membraneGradient.addColorStop(1, color.replace('rgb', 'rgba').replace(')', ', 0.2)'));
+            const halo = this.ctx.createRadialGradient(x, y, organelleRadius * 0.25, x, y, organelleRadius * 1.1);
+            halo.addColorStop(0, `rgba(${r}, ${g}, ${b}, 0.95)`);
+            halo.addColorStop(0.6, `rgba(${r}, ${g}, ${b}, 0.45)`);
+            halo.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
 
-            this.ctx.fillStyle = membraneGradient;
-            this.ctx.globalAlpha = 0.8;
+            this.ctx.globalAlpha = 0.9;
+            this.ctx.fillStyle = halo;
+            this.ctx.shadowBlur = 12 * (1 + magnitude);
+            this.ctx.shadowColor = `rgba(${r}, ${g}, ${b}, 0.8)`;
             this.ctx.beginPath();
-            this.ctx.arc(x, y, size, 0, Math.PI * 2);
+            this.ctx.arc(x, y, organelleRadius, 0, Math.PI * 2);
             this.ctx.fill();
 
-            // Inner core
-            this.ctx.fillStyle = color;
-            this.ctx.globalAlpha = 0.9 + magnitude * 0.1;
+            this.ctx.globalAlpha = 0.8 + magnitude * 0.2;
+            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
             this.ctx.beginPath();
-            this.ctx.arc(x, y, size * 0.4, 0, Math.PI * 2);
+            this.ctx.arc(x, y, organelleRadius * 0.45, 0, Math.PI * 2);
             this.ctx.fill();
 
-            // Organelle details (varies by type)
+            // Minor detail variation
             if (i % 3 === 0) {
-                // Mitochondria-like cristae
-                this.ctx.strokeStyle = color;
-                this.ctx.lineWidth = 1 * this.scaleFactor;
-                this.ctx.globalAlpha = 0.6;
+                this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, 0.6)`;
+                this.ctx.lineWidth = Math.max(0.6, 1 * this.scaleFactor);
                 for (let c = 0; c < 3; c++) {
                     this.ctx.beginPath();
-                    this.ctx.moveTo(x - size * 0.3, y - size * 0.2 + c * size * 0.2);
-                    this.ctx.lineTo(x + size * 0.3, y - size * 0.2 + c * size * 0.2);
+                    this.ctx.moveTo(x - organelleRadius * 0.32, y - organelleRadius * 0.2 + c * organelleRadius * 0.2);
+                    this.ctx.lineTo(x + organelleRadius * 0.32, y - organelleRadius * 0.2 + c * organelleRadius * 0.2);
                     this.ctx.stroke();
                 }
+            } else if (i % 3 === 1) {
+                this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.5)`;
+                this.ctx.beginPath();
+                this.ctx.arc(x + organelleRadius * 0.2, y - organelleRadius * 0.1, organelleRadius * 0.18, 0, Math.PI * 2);
+                this.ctx.fill();
             }
+
+            this.ctx.restore();
         }
+    }
+
+    /**
+     * Cytoplasm Flow - Mode 1022
+     */
+    renderCytoplasmFlow(magnitudes) {
+        const {
+            organelleCount = 18,
+            flowVelocity = 1,
+            organelleSize = 8,
+            membraneThickness = 2,
+            streamCount = 4,
+            cellRadius = 240
+        } = this.getModeParams({
+            organelleCount: 18,
+            flowVelocity: 1,
+            organelleSize: 8,
+            membraneThickness: 2,
+            streamCount: 4,
+            cellRadius: 240
+        });
+
+        const time = this.getTimelineTime(flowVelocity * 0.6);
+        const energy = this.getFrequencyEnergy(magnitudes);
+        const palette = this.getCytoplasmPalette();
+        const organelleTotal = Math.max(1, Math.floor(organelleCount));
+        const streamTotal = Math.max(1, Math.floor(streamCount));
+
+        const minDimension = Math.min(this.canvas.width, this.canvas.height);
+        const safeRadius = Math.min(this.maxRadius, minDimension * 0.42);
+        const scaledRadius = Math.min(cellRadius * this.scaleFactor, safeRadius);
+
+        this.renderCytoplasmBackdrop(palette, energy);
+        this.renderCytoplasmMembrane(this.centerX, this.centerY, scaledRadius, membraneThickness, palette, time, energy);
+        this.renderCytoplasmStreams(this.centerX, this.centerY, scaledRadius, streamTotal, magnitudes, time, energy);
+        this.renderCytoplasmOrganelles(this.centerX, this.centerY, scaledRadius, organelleTotal, organelleSize, magnitudes, time, palette, energy);
 
         this.ctx.globalAlpha = 1;
         this.ctx.shadowBlur = 0;
@@ -9016,59 +9763,80 @@ class Visualizer {
      * Radiating shockwaves from center with audio-responsive dynamics
      */
     renderEnergyPulses(magnitudes) {
-        // Get parameters with defaults
+        // Read parameters with nullish coalescing so zero values are respected
         const params = this.settings.modeParameters || {};
-        const numPulses = params.numPulses || 6;
-        const pulseSpeed = params.pulseSpeed || 0.1;
-        const pulseSpread = params.pulseSpread || 100;
-        const baseLineWidth = params.lineWidth || 3;
-        const lineWidthRange = params.lineWidthRange || 8;
+        const numPulses = params.numPulses ?? 6;
+        const pulseSpeed = params.pulseSpeed ?? 0.1;
+        const pulseSpread = params.pulseSpread ?? 100;
+        const baseLineWidth = params.lineWidth ?? 3;
+        const lineWidthRange = params.lineWidthRange ?? 8;
+        const colorDriftSpeed = params.colorDriftSpeed ?? 1.2;
+        const glowIntensity = params.glowIntensity ?? 1;
+        const backgroundPulse = params.backgroundPulse ?? 0.6;
+
+        const previousLineCap = this.ctx.lineCap;
+
+        const innerRadius = this.getEffectiveInnerRadius();
+        const maxRadius = this.maxRadius * 0.92;
+        const availableSpread = Math.max(12 * this.scaleFactor, maxRadius - innerRadius);
+        const scaledSpread = Math.min(pulseSpread * this.scaleFactor, availableSpread);
 
         // Calculate average magnitude for audio responsiveness
         const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
         const peakMagnitude = Math.max(...magnitudes);
+        const energyMultiplier = 0.85 + peakMagnitude * 0.55; // Scale between ~0.85 and ~1.4
 
-        // Dynamic time with audio influence
-        const time = this.frameCounter * pulseSpeed;
-        const energyMultiplier = 0.8 + peakMagnitude * 0.4; // Scale between 0.8 and 1.2
+        // Shared timeline so preview and render use the same pacing
+        const timeSeconds = this.getTimelineTime(1);
+        const time = timeSeconds * pulseSpeed;
 
-        // Draw background glow for enhanced effect
-        const bgGradient = this.ctx.createRadialGradient(
-            this.centerX, this.centerY, 0,
-            this.centerX, this.centerY, this.getEffectiveInnerRadius() + pulseSpread * 2
-        );
-
+        // Background glow respects chosen background while pulsing with audio
+        const bgStyle = BACKGROUND_STYLES[this.settings.background] || BACKGROUND_STYLES.transparent;
+        const bgColor = bgStyle.color || [0, 0, 0];
         const centerColor = this.getColor(0, numPulses);
         const centerRgb = this.parseRgbColor(centerColor);
-        bgGradient.addColorStop(0, `rgba(${centerRgb[0]}, ${centerRgb[1]}, ${centerRgb[2]}, ${avgMagnitude * 0.1})`);
-        bgGradient.addColorStop(1, `rgba(${centerRgb[0]}, ${centerRgb[1]}, ${centerRgb[2]}, 0)`);
+        const bgGradient = this.ctx.createRadialGradient(
+            this.centerX, this.centerY, 0,
+            this.centerX, this.centerY, innerRadius + scaledSpread * 2
+        );
+
+        const backgroundAlpha = Utils.clamp((avgMagnitude * 0.5 + 0.1) * backgroundPulse, 0, 0.7);
+        bgGradient.addColorStop(0, this.toRgba(centerRgb, backgroundAlpha));
+        bgGradient.addColorStop(0.35, this.toRgba(bgColor, backgroundAlpha * 0.7));
+        bgGradient.addColorStop(1, this.toRgba(bgColor, 0));
 
         this.ctx.fillStyle = bgGradient;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Draw expanding pulses
-        this.ctx.shadowBlur = 20 + avgMagnitude * 15;
+        const glowScale = (0.65 + glowIntensity * 0.6) * this.scaleFactor;
+        this.ctx.lineCap = 'round';
 
         for (let p = 0; p < numPulses; p++) {
-            const phase = (time + p * 0.5) % 3;
+            const phase = (time + p * 0.45) % 3;
             const pulseProgress = phase / 3; // 0 to 1
 
-            // Radius expands from inner radius to outer
-            const radius = this.getEffectiveInnerRadius() + pulseProgress * pulseSpread * energyMultiplier;
+            // Radius expands from inner radius to outer with clamping to viewport
+            const spread = scaledSpread * energyMultiplier;
+            const radius = innerRadius + pulseProgress * spread;
 
             // Get magnitude for this pulse
-            const magnitude = magnitudes[Math.floor(p * (magnitudes.length / numPulses)) % magnitudes.length];
+            const magIndex = Math.floor(p * (magnitudes.length / numPulses)) % magnitudes.length;
+            const magnitude = magnitudes[magIndex];
 
-            // Alternate colors for visual interest
-            const colorIndex = p * 10 + Math.floor(time * 2) % 5;
-            const color = this.getColor(colorIndex, numPulses * 10);
+            // Dynamic color drift tied to audio and time
+            const colorIndex = (p * 12) + Math.floor(timeSeconds * 12 * colorDriftSpeed);
+            const color = this.getColor(colorIndex, numPulses * 12);
             const rgb = this.parseRgbColor(color);
 
             // Pulsing alpha - strongest at center, fades at edges
-            const alpha = Math.max(0, (1 - pulseProgress) * (0.5 + magnitude * 0.5));
+            const alpha = Math.max(0, (1 - pulseProgress) * (0.55 + magnitude * 0.7));
 
-            // Line width responds to audio
-            const lineWidth = baseLineWidth + magnitude * lineWidthRange * energyMultiplier;
+            // Line width responds to audio and canvas scale
+            const lineWidth = Math.max(
+                1.5 * this.scaleFactor,
+                (baseLineWidth + magnitude * lineWidthRange * energyMultiplier) * this.scaleFactor
+            );
 
             // Create gradient for each pulse ring
             const pulseGradient = this.ctx.createRadialGradient(
@@ -9076,22 +9844,25 @@ class Visualizer {
                 this.centerX, this.centerY, radius + lineWidth * 2
             );
 
-            pulseGradient.addColorStop(0, `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0)`);
-            pulseGradient.addColorStop(0.5, `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`);
-            pulseGradient.addColorStop(1, `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, 0)`);
+            pulseGradient.addColorStop(0, this.toRgba(rgb, 0));
+            pulseGradient.addColorStop(0.48, this.toRgba(rgb, alpha * 0.9));
+            pulseGradient.addColorStop(0.7, this.toRgba(rgb, alpha));
+            pulseGradient.addColorStop(1, this.toRgba(rgb, 0));
 
-            this.ctx.shadowColor = color;
+            const shadowStrength = (14 + magnitude * 26) * glowScale;
+            this.ctx.shadowColor = this.toRgba(rgb, 0.85);
+            this.ctx.shadowBlur = shadowStrength;
             this.ctx.strokeStyle = pulseGradient;
             this.ctx.lineWidth = lineWidth;
             this.ctx.globalAlpha = alpha;
 
             this.ctx.beginPath();
-            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.arc(this.centerX, this.centerY, Math.min(radius, maxRadius), 0, Math.PI * 2);
             this.ctx.stroke();
         }
 
         // Draw energetic center core
-        const coreSize = (10 + avgMagnitude * 30) * this.scaleFactor;
+        const coreSize = (12 + avgMagnitude * 32) * this.scaleFactor;
         const coreGradient = this.ctx.createRadialGradient(
             this.centerX, this.centerY, 0,
             this.centerX, this.centerY, coreSize
@@ -9099,11 +9870,13 @@ class Visualizer {
 
         const coreColor = this.getColor(0, 1);
         const coreRgb = this.parseRgbColor(coreColor);
-        coreGradient.addColorStop(0, `rgba(255, 255, 255, ${Math.min(1, avgMagnitude * 1.5)})`);
-        coreGradient.addColorStop(0.4, `rgba(${coreRgb[0]}, ${coreRgb[1]}, ${coreRgb[2]}, ${avgMagnitude})`);
-        coreGradient.addColorStop(1, `rgba(${coreRgb[0]}, ${coreRgb[1]}, ${coreRgb[2]}, 0)`);
+        const coreHighlight = Math.min(1, avgMagnitude * 1.6);
+        coreGradient.addColorStop(0, `rgba(255, 255, 255, ${coreHighlight})`);
+        coreGradient.addColorStop(0.32, this.toRgba(coreRgb, 0.9));
+        coreGradient.addColorStop(0.75, this.toRgba(coreRgb, 0.15 + glowIntensity * 0.1));
+        coreGradient.addColorStop(1, this.toRgba(coreRgb, 0));
 
-        this.ctx.shadowBlur = 30 + avgMagnitude * 20;
+        this.ctx.shadowBlur = (28 + avgMagnitude * 24) * glowScale;
         this.ctx.shadowColor = coreColor;
         this.ctx.fillStyle = coreGradient;
         this.ctx.globalAlpha = 1;
@@ -9113,6 +9886,7 @@ class Visualizer {
 
         this.ctx.globalAlpha = 1;
         this.ctx.shadowBlur = 0;
+        this.ctx.lineCap = previousLineCap;
     }
 
     /**
@@ -9434,6 +10208,7 @@ class Visualizer {
         const impactForce = params.impactForce || 1.5;
         const waveThickness = params.waveThickness || 6;
         const particleTrail = Math.floor(params.particleTrail || 20);
+        const visualScaleBoost = 1.6; // inflate overall presence so the mode is readable in preview/export
 
         const time = this.frameCounter * 0.02;
         const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
@@ -9447,7 +10222,7 @@ class Visualizer {
         // Create new shockwave on strong beats
         if (peakMagnitude > 0.6 && this.frameCounter % Math.max(10, 40 - peakMagnitude * 30) === 0) {
             this.shockwaves.push({
-                radius: 0,
+                radius: this.maxRadius * 0.08 * visualScaleBoost,
                 strength: peakMagnitude * impactForce,
                 life: 1,
                 startTime: time,
@@ -9471,16 +10246,16 @@ class Visualizer {
             const wave = this.shockwaves[w];
 
             // Update wave
-            wave.radius += waveSpeed * this.scaleFactor * 5 * wave.strength;
+            wave.radius += waveSpeed * this.scaleFactor * 8 * wave.strength * visualScaleBoost;
             wave.life -= 0.01 / wave.strength;
 
             const alpha = wave.life * wave.strength;
 
-            if (alpha > 0 && wave.radius < this.maxRadius * 2) {
+            if (alpha > 0 && wave.radius < this.maxRadius * 3 * visualScaleBoost) {
                 // Draw primary shockwave with distortion effect
                 const distortionRings = Math.ceil(4 + distortionAmount / 15);
                 for (let d = 0; d < distortionRings; d++) {
-                    const distOffset = (d - distortionRings / 2) * distortionAmount * this.scaleFactor * 0.8;
+                    const distOffset = (d - distortionRings / 2) * distortionAmount * this.scaleFactor * 0.8 * visualScaleBoost;
                     const distRadius = wave.radius + distOffset;
 
                     if (distRadius > 0) {
@@ -9490,7 +10265,7 @@ class Visualizer {
                         const distAlpha = alpha * (0.4 + (1 - Math.abs(d - distortionRings / 2) / (distortionRings / 2)) * 0.8);
 
                         // Enhanced wave thickness based on parameter
-                        const baseThickness = (waveThickness / 6) * 2;
+                        const baseThickness = (waveThickness / 6) * 2 * visualScaleBoost;
                         this.ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${distAlpha})`;
                         this.ctx.lineWidth = Math.max(2, baseThickness * this.scaleFactor * (1.5 + wave.strength * 2));
                         this.ctx.shadowBlur = 35 * this.scaleFactor * wave.strength * Math.max(1, waveThickness / 6);
@@ -9513,7 +10288,7 @@ class Visualizer {
                     const rgb = this.parseRgbColor(color);
 
                     this.ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${rippleAlpha})`;
-                    this.ctx.lineWidth = Math.max(1, (waveThickness / 6) * this.scaleFactor * wave.strength);
+                    this.ctx.lineWidth = Math.max(1, (waveThickness / 6) * this.scaleFactor * wave.strength * visualScaleBoost);
                     this.ctx.shadowBlur = 15 * this.scaleFactor;
                     this.ctx.shadowColor = color;
 
@@ -9541,7 +10316,7 @@ class Visualizer {
                         this.ctx.shadowColor = color;
                         this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha * 0.8})`;
 
-                        const size = Math.max(2, (4 + wave.strength * 7) * this.scaleFactor * (particleTrail / 20));
+                        const size = Math.max(2, (6 + wave.strength * 9) * this.scaleFactor * (particleTrail / 20) * visualScaleBoost);
                         this.ctx.beginPath();
                         this.ctx.arc(x, y, size, 0, Math.PI * 2);
                         this.ctx.fill();
@@ -9551,9 +10326,9 @@ class Visualizer {
         }
 
         // Draw impact center with enhanced effect
-        const centerPulse = avgMagnitude * impactForce;
+        const centerPulse = Math.max(avgMagnitude * impactForce, 0.08);
         if (centerPulse > 0.05) {
-            const centerRadius = 25 * this.scaleFactor * centerPulse * impactForce;
+            const centerRadius = (35 * this.scaleFactor * visualScaleBoost) + (45 * this.scaleFactor * centerPulse * impactForce * visualScaleBoost);
 
             const gradient = this.ctx.createRadialGradient(
                 this.centerX, this.centerY, 0,
@@ -10229,82 +11004,134 @@ class Visualizer {
      * Mode 63: Terrain Flyover
      */
     renderTerrainFlyover(magnitudes) {
-        // Use Step 4 settings
-        const numBars = this.settings.numBars || 72;
+        const defaultParams = {
+            terrainWidth: 50,
+            terrainDepth: 40,
+            heightScale: 15,
+            scrollSpeed: 0.8,
+            wireframeThickness: 1.5,
+            glowIntensity: 0.5,
+            peakThreshold: 100,
+            horizonOpacity: 0.3,
+            perspectiveIntensity: 0.7,
+            colorVariation: 0.5
+        };
+        const params = this.getModeParams(defaultParams);
 
-        const terrainWidth = Math.floor(50 * (numBars / 72)); // Scale with numBars
-        const terrainDepth = 40;
-        const scale = 15;
-        const offsetX = this.canvas.width / 2;
-        const offsetY = this.canvas.height - 150;
+        const terrainWidth = Math.max(8, Math.floor(params.terrainWidth));
+        const terrainDepth = Math.max(8, Math.floor(params.terrainDepth));
 
-        // Initialize terrain history for scrolling effect
-        if (!this.terrainHistory) {
-            this.terrainHistory = [];
-            this.terrainScroll = 0;
+        // Reset state if dimensions or canvas size changed
+        if (
+            !this.terrainState ||
+            this.terrainState.width !== terrainWidth ||
+            this.terrainState.depth !== terrainDepth ||
+            this.terrainState.canvasW !== this.canvas.width ||
+            this.terrainState.canvasH !== this.canvas.height
+        ) {
+            this.resetTerrainState(terrainWidth, terrainDepth);
         }
 
-        // Audio features
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
-            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
-        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
+        // Audio features for motion and color dynamics
+        const { avg: avgMagnitude, bass, mids, treble } = this.getFrequencyEnergy(magnitudes);
 
-        // Add current magnitude slice to history
-        this.terrainHistory.push([...magnitudes]);
-        if (this.terrainHistory.length > terrainDepth) {
-            this.terrainHistory.shift();
+        const layout = this.getTerrainLayout({
+            ...params,
+            terrainWidth,
+            terrainDepth
+        });
+        const amplitudeBoost = 0.7 + bass * 0.6;
+        const smoothingStrength = Utils.clamp(0.45 + bass * 0.35, 0.4, 0.85);
+
+        // Build current height row with smoothing
+        const previousFrontRow = this.terrainState.history[0];
+        const currentRow = [];
+        for (let x = 0; x < terrainWidth; x++) {
+            const freqIdx = Math.floor((x / Math.max(1, terrainWidth - 1)) * (magnitudes.length - 1));
+            const magnitude = magnitudes[Math.max(0, Math.min(freqIdx, magnitudes.length - 1))] || 0;
+            const targetHeight = magnitude * layout.heightScale * (0.9 + mids * 0.4);
+            const smoothedHeight = previousFrontRow
+                ? Utils.lerp(previousFrontRow[x] || 0, targetHeight, smoothingStrength)
+                : targetHeight;
+            currentRow.push(smoothedHeight);
         }
 
-        // Continuous scrolling
-        this.terrainScroll += 0.3 + avgMagnitude * 0.5;
+        // Insert new row at the front to keep motion moving "forward"
+        this.terrainState.history.unshift(currentRow);
+        if (this.terrainState.history.length > terrainDepth) {
+            this.terrainState.history.pop();
+        }
 
-        // Fade background for depth
-        this.ctx.fillStyle = 'rgba(0, 0, 10, 0.3)';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        // Gentle scroll to avoid static stacking
+        const scrollVelocity = (params.scrollSpeed * 1.5 + avgMagnitude * 1.3) *
+            (0.9 + params.perspectiveIntensity * 0.35);
+        this.terrainState.scroll += scrollVelocity;
+        while (this.terrainState.scroll > layout.zSpacing) {
+            this.terrainState.scroll -= layout.zSpacing;
+        }
+
+        // Dynamic background that respects user background selection
+        const bgStyle = BACKGROUND_STYLES[this.settings.background] || BACKGROUND_STYLES.transparent;
+        const baseBg = bgStyle.color;
+        const isTransparentBg = this.settings.background === 'transparent';
+        const accentColorStr = this.getColor(Math.floor(magnitudes.length * 0.6), magnitudes.length);
+        const accentRgb = this.parseRgbColor(accentColorStr);
+
+        this.renderTerrainBackdrop(layout.horizonY, accentRgb, baseBg, params, isTransparentBg);
 
         // Draw wireframe terrain from history
-        for (let z = 0; z < this.terrainHistory.length - 1; z++) {
-            const depthFactor = 1 - z / terrainDepth;
-            const currentRow = this.terrainHistory[z];
-            const nextRow = this.terrainHistory[z + 1];
+        const halfWidth = (terrainWidth - 1) / 2;
+        this.ctx.save();
+        this.ctx.lineJoin = 'round';
+        this.ctx.lineCap = 'round';
+        this.ctx.shadowBlur = 14 * params.glowIntensity * (0.5 + treble);
+        this.ctx.shadowColor = `rgba(${accentRgb[0]}, ${accentRgb[1]}, ${accentRgb[2]}, ${0.35 + params.glowIntensity * 0.4})`;
+        const glowThreshold = (params.peakThreshold / 200) *
+            layout.heightScale *
+            (0.8 + amplitudeBoost * 0.4);
 
-            // Get color from scheme based on depth
-            const colorIndex = Math.floor(z / terrainDepth * numBars);
-            const baseColor = this.getColor(colorIndex, numBars);
-            const colorMatch = baseColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+        for (let z = 0; z < this.terrainState.history.length - 1; z++) {
+            const depthNorm = z / Math.max(1, terrainDepth - 1);
+            const depthFactor = 1 - depthNorm;
+            const perspectiveScale = Utils.lerp(1.1, 0.55, depthNorm * params.perspectiveIntensity);
+            const zPos = z * layout.zSpacing * perspectiveScale - this.terrainState.scroll;
+
+            const current = this.terrainState.history[z];
+            const next = this.terrainState.history[z + 1];
 
             for (let x = 0; x < terrainWidth - 1; x++) {
-                const freqIdx = Math.floor((x / terrainWidth) * currentRow.length);
-                const nextFreqIdx = Math.floor(((x + 1) / terrainWidth) * currentRow.length);
+                const height1 = current[x] * amplitudeBoost;
+                const height2 = current[x + 1] * amplitudeBoost;
+                const height3 = next[x] * amplitudeBoost;
 
-                const height1 = currentRow[Math.min(freqIdx, currentRow.length - 1)] * 150 * (0.5 + bass * 0.5);
-                const height2 = currentRow[Math.min(nextFreqIdx, currentRow.length - 1)] * 150 * (0.5 + bass * 0.5);
-                const height3 = nextRow[Math.min(freqIdx, nextRow.length - 1)] * 150 * (0.5 + bass * 0.5);
+                const wobble = Math.sin((this.frameCounter * 0.04) + z * 0.5 + x * 0.2) *
+                    1.2 * params.perspectiveIntensity;
 
-                const zPos = z * 8 - this.terrainScroll;
+                const x1 = this.centerX + (x - halfWidth) * layout.xSpacing * perspectiveScale;
+                const y1 = layout.horizonY - height1 * perspectiveScale + zPos + wobble;
 
-                const x1 = offsetX + (x - terrainWidth / 2) * scale;
-                const y1 = offsetY - height1 + zPos;
+                const x2 = this.centerX + (x + 1 - halfWidth) * layout.xSpacing * perspectiveScale;
+                const y2 = layout.horizonY - height2 * perspectiveScale + zPos + wobble;
 
-                const x2 = offsetX + (x + 1 - terrainWidth / 2) * scale;
-                const y2 = offsetY - height2 + zPos;
+                const x3 = this.centerX + (x - halfWidth) * layout.xSpacing * perspectiveScale;
+                const y3 = layout.horizonY - height3 * perspectiveScale + zPos + layout.zSpacing * perspectiveScale + wobble;
 
-                const x3 = offsetX + (x - terrainWidth / 2) * scale;
-                const y3 = offsetY - height3 + zPos + 8;
+                // Color reacts to depth, audio energy, and colorVariation control
+                const colorBlend = Utils.clamp(
+                    (x / Math.max(1, terrainWidth - 1)) +
+                    (params.colorVariation - 0.5) * 0.8 +
+                    treble * 0.25 +
+                    depthNorm * 0.25,
+                    0,
+                    1
+                );
+                const colorIndex = Math.floor(colorBlend * (magnitudes.length - 1));
+                const wireColorStr = this.getColor(colorIndex, magnitudes.length);
+                const wireRgb = this.parseRgbColor(wireColorStr);
+                const depthAlpha = Utils.clamp(0.18 + depthFactor * 0.65 + bass * 0.15, 0.12, 0.95);
 
-                // Apply color with depth fading
-                if (colorMatch) {
-                    const [_, r, g, b] = colorMatch;
-                    const fadedR = Math.floor(parseInt(r) * depthFactor);
-                    const fadedG = Math.floor(parseInt(g) * depthFactor);
-                    const fadedB = Math.floor(parseInt(b) * depthFactor);
-                    this.ctx.strokeStyle = `rgb(${fadedR}, ${fadedG}, ${fadedB})`;
-                } else {
-                    this.ctx.strokeStyle = `rgb(${100 * depthFactor}, ${200 * depthFactor}, ${100 * depthFactor})`;
-                }
-
-                // Line width based on depth (thicker in front)
-                this.ctx.lineWidth = Math.max(0.5, depthFactor * 2);
+                this.ctx.strokeStyle = `rgba(${wireRgb[0]}, ${wireRgb[1]}, ${wireRgb[2]}, ${depthAlpha})`;
+                this.ctx.lineWidth = Math.max(0.5, layout.wireThickness * (0.65 + depthFactor * 0.8));
 
                 // Draw horizontal line
                 this.ctx.beginPath();
@@ -10319,40 +11146,33 @@ class Visualizer {
                 this.ctx.stroke();
 
                 // Add glow effect on peaks
-                if (height1 > 100) {
-                    if (colorMatch) {
-                        const [_, r, g, b] = colorMatch;
-                        const glowAlpha = (height1 / 150) * depthFactor * 0.5;
-                        this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${glowAlpha})`;
-                    } else {
-                        this.ctx.fillStyle = `rgba(255, 255, 255, ${(height1 / 150) * depthFactor * 0.3})`;
-                    }
+                if (height1 > glowThreshold) {
+                    const glowAlpha = Math.min(
+                        1,
+                        ((height1 - glowThreshold) / glowThreshold) * params.glowIntensity * depthFactor
+                    );
+                    this.ctx.fillStyle = `rgba(${wireRgb[0]}, ${wireRgb[1]}, ${wireRgb[2]}, ${glowAlpha})`;
                     this.ctx.beginPath();
-                    this.ctx.arc(x1, y1, 3 * depthFactor, 0, Math.PI * 2);
+                    this.ctx.arc(x1, y1, 3 * depthFactor * (1 + treble * 0.5), 0, Math.PI * 2);
                     this.ctx.fill();
                 }
             }
         }
+        this.ctx.restore();
 
-        // Reset scroll when it gets too far
-        if (this.terrainScroll > 8) {
-            this.terrainScroll -= 8;
-        }
-
-        // Draw horizon line for reference
-        const horizonColor = this.getColor(Math.floor(numBars * 0.8), numBars);
-        const horizonMatch = horizonColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
-        if (horizonMatch) {
-            const [_, r, g, b] = horizonMatch;
-            this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, 0.3)`;
-        } else {
-            this.ctx.strokeStyle = 'rgba(100, 150, 200, 0.3)';
-        }
-        this.ctx.lineWidth = 1;
+        // Horizon line for grounding
+        this.ctx.shadowBlur = 0;
+        this.ctx.strokeStyle = `rgba(${accentRgb[0]}, ${accentRgb[1]}, ${accentRgb[2]}, ${params.horizonOpacity})`;
+        this.ctx.lineWidth = Math.max(1, layout.wireThickness * 0.8);
         this.ctx.beginPath();
-        this.ctx.moveTo(0, offsetY);
-        this.ctx.lineTo(this.canvas.width, offsetY);
+        this.ctx.moveTo(layout.xMargin * 0.25, layout.horizonY);
+        this.ctx.lineTo(this.canvas.width - layout.xMargin * 0.25, layout.horizonY);
         this.ctx.stroke();
+
+        // Slight vignette for depth without hiding background choice
+        if (!isTransparentBg) {
+            this.applyVignette(0.12 + 0.08 * (1 - params.perspectiveIntensity));
+        }
     }
 
     /**
@@ -10739,204 +11559,262 @@ class Visualizer {
      * Mode 71: Sonar Ping
      */
     renderSonarPing(magnitudes) {
-        // Use Step 4 settings
-        const numBars = this.settings.numBars || 72;
-
-        // Audio features
+        const numBars = Math.max(48, this.settings.numBars || 72);
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
             .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
         const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
 
-        // Initialize blip history for trail effects
+        const params = {
+            sweepSpeed: Utils.clamp(this.getModeParamValue('sweepSpeed', 1.0), 0.3, 1.5),
+            blipSensitivity: Utils.clamp(this.getModeParamValue('blipSensitivity', 0.4), 0.05, 0.95),
+            blipSize: Utils.clamp(this.getModeParamValue('blipSize', 12), 4, 60),
+            gridDensity: Utils.clamp(this.getModeParamValue('gridDensity', 1.0), 0.3, 1.5),
+            trailFade: Utils.clamp(this.getModeParamValue('trailFade', 0.03), 0.005, 0.12),
+            glowIntensity: Utils.clamp(this.getModeParamValue('glowIntensity', 1.0), 0.2, 2.5)
+        };
+
+        const radarRadius = this.maxRadius * 0.92;
+        const bgStyle = BACKGROUND_STYLES[this.settings.background] || BACKGROUND_STYLES.dark;
+        const bgColor = bgStyle.color || [0, 0, 0];
+
         if (!this.sonarBlips) {
             this.sonarBlips = [];
             this.sweepTrail = [];
         }
 
-        // Rotating sweep line (speed modulated by audio)
-        const sweepSpeed = 0.04 + avgMagnitude * 0.03;
-        const sweepAngle = (this.frameCounter * sweepSpeed) % (Math.PI * 2);
-        const sweepEndX = this.centerX + Math.cos(sweepAngle) * this.maxRadius;
-        const sweepEndY = this.centerY + Math.sin(sweepAngle) * this.maxRadius;
+        // Colors respond to the current scheme for dynamic parts
+        const sweepColorStr = this.getColor(0, numBars);
+        const gridColorStr = this.getColor(Math.floor(numBars * 0.3), numBars);
+        const accentColorStr = this.getColor(Math.floor(numBars * 0.6), numBars);
+        const sweepColor = this.getColorChannels(sweepColorStr, [120, 255, 160]);
+        const gridColor = this.getColorChannels(gridColorStr, [80, 160, 120]);
+        const accentColor = this.getColorChannels(accentColorStr, sweepColor);
 
-        // Fade background for trail effect
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+        // Fade for trails that respects background choice (including transparent)
+        this.applySonarFade(bgColor, params.trailFade);
+
+        // Ambient glow to lift the scene and keep center visible on all shapes
+        const ambientGlow = this.ctx.createRadialGradient(
+            this.centerX, this.centerY, radarRadius * 0.05,
+            this.centerX, this.centerY, radarRadius * 1.15
+        );
+        ambientGlow.addColorStop(0, `rgba(${accentColor[0]}, ${accentColor[1]}, ${accentColor[2]}, ${0.28 * params.glowIntensity})`);
+        ambientGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+        this.ctx.save();
+        this.ctx.globalCompositeOperation = 'lighter';
+        this.ctx.fillStyle = ambientGlow;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.restore();
 
-        // Get colors from scheme
-        const sweepColor = this.getColor(0, numBars);
-        const gridColor = this.getColor(Math.floor(numBars * 0.3), numBars);
+        // Radar grid and crosshairs
+        this.drawSonarGrid(radarRadius, params.gridDensity, gridColor, bass, params.glowIntensity);
 
-        // Draw concentric circles (radar grid) - number scales with numBars
-        const numRings = Math.max(3, Math.min(8, Math.floor(5 * (numBars / 72))));
+        // Rotating sweep line (audio reactive)
+        const sweepSpeed = (0.018 + params.sweepSpeed * 0.02) * (1 + avgMagnitude * 0.8);
+        const sweepAngle = (this.frameCounter * sweepSpeed) % (Math.PI * 2);
 
-        const gridMatch = gridColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
-        if (gridMatch) {
-            const [_, r, g, b] = gridMatch;
-            this.ctx.strokeStyle = `rgba(${Math.floor(parseInt(r) * 0.5)}, ${Math.floor(parseInt(g) * 0.5)}, ${Math.floor(parseInt(b) * 0.5)}, 0.5)`;
+        // Store sweep history for light trails
+        this.sweepTrail.push({ angle: sweepAngle, life: 1 });
+
+        this.drawSonarSweepTrail(radarRadius, sweepColor, params.glowIntensity, params.trailFade);
+        this.drawSonarSweepLine(sweepAngle, radarRadius, sweepColor, params.glowIntensity);
+
+        // Frequency blips that trigger when the sweep passes a loud band
+        this.updateSonarBlips(
+            magnitudes,
+            sweepAngle,
+            radarRadius,
+            params.blipSensitivity,
+            params.blipSize,
+            params.glowIntensity,
+            params.trailFade
+        );
+
+        // Center marker
+        this.drawSonarCenterDot(sweepColor, params.glowIntensity);
+    }
+
+    /**
+     * Fade existing strokes without hiding user-selected backgrounds
+     */
+    applySonarFade(bgColor, trailFade) {
+        const fadeAlpha = Utils.clamp(trailFade * 6, 0.01, 0.25);
+
+        if (this.settings.background === 'transparent') {
+            this.ctx.save();
+            this.ctx.globalCompositeOperation = 'destination-out';
+            this.ctx.fillStyle = `rgba(0, 0, 0, ${fadeAlpha})`;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+            this.ctx.restore();
         } else {
-            this.ctx.strokeStyle = 'rgba(50, 100, 50, 0.5)';
+            this.ctx.fillStyle = `rgba(${bgColor[0]}, ${bgColor[1]}, ${bgColor[2]}, ${fadeAlpha})`;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         }
+    }
 
-        this.ctx.lineWidth = 1;
-        for (let ring = 1; ring <= numRings; ring++) {
-            const radius = (this.maxRadius * ring) / numRings;
+    drawSonarGrid(radius, density, gridColor, bass, glowIntensity) {
+        const ringCount = Math.max(3, Math.min(9, Math.round(4 * density + radius / 280)));
+        const radialLines = Math.max(4, Math.round(6 * density));
+        const pulseAlpha = Utils.clamp(0.25 + bass * 0.5, 0.2, 0.8);
+
+        this.ctx.save();
+        this.ctx.lineWidth = Math.max(1, 1.2 * this.scaleFactor);
+        this.ctx.strokeStyle = `rgba(${gridColor[0]}, ${gridColor[1]}, ${gridColor[2]}, 0.35)`;
+        this.ctx.shadowBlur = 10 * glowIntensity * this.scaleFactor;
+        this.ctx.shadowColor = `rgba(${gridColor[0]}, ${gridColor[1]}, ${gridColor[2]}, 0.45)`;
+
+        for (let ring = 1; ring <= ringCount; ring++) {
+            const ringRadius = (radius * ring) / ringCount;
             this.ctx.beginPath();
-            this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+            this.ctx.arc(this.centerX, this.centerY, ringRadius, 0, Math.PI * 2);
             this.ctx.stroke();
 
-            // Pulsing rings on bass
-            if (bass > 0.6) {
-                const pulseAlpha = bass * 0.3;
-                if (gridMatch) {
-                    const [_, r, g, b] = gridMatch;
-                    this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${pulseAlpha})`;
-                } else {
-                    this.ctx.strokeStyle = `rgba(100, 200, 100, ${pulseAlpha})`;
-                }
-                this.ctx.lineWidth = 2;
+            // bass-responsive pulse
+            if (bass > 0.45) {
+                this.ctx.strokeStyle = `rgba(${gridColor[0]}, ${gridColor[1]}, ${gridColor[2]}, ${pulseAlpha})`;
+                this.ctx.lineWidth = 1.5 + bass * 2;
                 this.ctx.beginPath();
-                this.ctx.arc(this.centerX, this.centerY, radius, 0, Math.PI * 2);
+                this.ctx.arc(this.centerX, this.centerY, ringRadius, 0, Math.PI * 2);
                 this.ctx.stroke();
+                this.ctx.lineWidth = Math.max(1, 1.2 * this.scaleFactor);
+                this.ctx.strokeStyle = `rgba(${gridColor[0]}, ${gridColor[1]}, ${gridColor[2]}, 0.35)`;
             }
         }
 
-        // Draw sweep trail (fading gradient)
-        this.sweepTrail.push({ angle: sweepAngle, life: 1 });
+        // crosshair grid lines
+        this.ctx.lineWidth = Math.max(1, 0.8 * this.scaleFactor);
+        for (let i = 0; i < radialLines; i++) {
+            const angle = (i / radialLines) * Math.PI * 2;
+            const endX = this.centerX + Math.cos(angle) * radius;
+            const endY = this.centerY + Math.sin(angle) * radius;
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.centerX, this.centerY);
+            this.ctx.lineTo(endX, endY);
+            this.ctx.stroke();
+        }
+
+        this.ctx.restore();
+    }
+
+    drawSonarSweepTrail(radius, sweepColor, glowIntensity, trailFade) {
+        const fadeStep = Utils.clamp(trailFade * 1.8, 0.006, 0.08);
         this.sweepTrail = this.sweepTrail.filter(trail => {
-            trail.life -= 0.03;
+            trail.life -= fadeStep;
             return trail.life > 0;
         });
 
-        // Draw sweep trails
-        const sweepMatch = sweepColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+        this.ctx.save();
         for (const trail of this.sweepTrail) {
-            const trailEndX = this.centerX + Math.cos(trail.angle) * this.maxRadius;
-            const trailEndY = this.centerY + Math.sin(trail.angle) * this.maxRadius;
-
-            if (sweepMatch) {
-                const [_, r, g, b] = sweepMatch;
-                this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${trail.life * 0.4})`;
-            } else {
-                this.ctx.strokeStyle = `rgba(100, 255, 100, ${trail.life * 0.4})`;
-            }
-
-            this.ctx.lineWidth = 1 + trail.life;
+            const endX = this.centerX + Math.cos(trail.angle) * radius;
+            const endY = this.centerY + Math.sin(trail.angle) * radius;
+            const alpha = Utils.clamp(trail.life * 0.5, 0, 0.5);
+            this.ctx.strokeStyle = `rgba(${sweepColor[0]}, ${sweepColor[1]}, ${sweepColor[2]}, ${alpha})`;
+            this.ctx.lineWidth = 1 + trail.life * 4 * this.scaleFactor;
+            this.ctx.shadowBlur = 14 * trail.life * glowIntensity * this.scaleFactor;
+            this.ctx.shadowColor = `rgba(${sweepColor[0]}, ${sweepColor[1]}, ${sweepColor[2]}, ${0.6 * trail.life})`;
             this.ctx.beginPath();
             this.ctx.moveTo(this.centerX, this.centerY);
-            this.ctx.lineTo(trailEndX, trailEndY);
+            this.ctx.lineTo(endX, endY);
             this.ctx.stroke();
         }
+        this.ctx.restore();
+    }
 
-        // Draw main sweep line with glow
-        if (sweepMatch) {
-            const [_, r, g, b] = sweepMatch;
-            // Glow
-            this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, 0.5)`;
-            this.ctx.lineWidth = 6;
-            this.ctx.beginPath();
-            this.ctx.moveTo(this.centerX, this.centerY);
-            this.ctx.lineTo(sweepEndX, sweepEndY);
-            this.ctx.stroke();
+    drawSonarSweepLine(sweepAngle, radius, sweepColor, glowIntensity) {
+        const sweepEndX = this.centerX + Math.cos(sweepAngle) * radius;
+        const sweepEndY = this.centerY + Math.sin(sweepAngle) * radius;
 
-            // Main line
-            this.ctx.strokeStyle = `rgb(${r}, ${g}, ${b})`;
-        } else {
-            this.ctx.strokeStyle = 'rgba(100, 255, 100, 0.5)';
-            this.ctx.lineWidth = 6;
-            this.ctx.beginPath();
-            this.ctx.moveTo(this.centerX, this.centerY);
-            this.ctx.lineTo(sweepEndX, sweepEndY);
-            this.ctx.stroke();
-
-            this.ctx.strokeStyle = 'rgb(100, 255, 100)';
-        }
-
-        this.ctx.lineWidth = 2;
+        this.ctx.save();
+        this.ctx.strokeStyle = `rgba(${sweepColor[0]}, ${sweepColor[1]}, ${sweepColor[2]}, ${0.45 * glowIntensity})`;
+        this.ctx.lineWidth = 6 * this.scaleFactor;
+        this.ctx.shadowBlur = 18 * glowIntensity * this.scaleFactor;
+        this.ctx.shadowColor = `rgba(${sweepColor[0]}, ${sweepColor[1]}, ${sweepColor[2]}, 0.6)`;
         this.ctx.beginPath();
         this.ctx.moveTo(this.centerX, this.centerY);
         this.ctx.lineTo(sweepEndX, sweepEndY);
         this.ctx.stroke();
 
-        // Frequency blips appear when sweep passes
+        this.ctx.strokeStyle = `rgb(${sweepColor[0]}, ${sweepColor[1]}, ${sweepColor[2]})`;
+        this.ctx.lineWidth = 2 * this.scaleFactor;
+        this.ctx.shadowBlur = 0;
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.centerX, this.centerY);
+        this.ctx.lineTo(sweepEndX, sweepEndY);
+        this.ctx.stroke();
+        this.ctx.restore();
+    }
+
+    updateSonarBlips(magnitudes, sweepAngle, radius, sensitivity, blipSize, glowIntensity, trailFade) {
+        const detectionWindow = 0.32 - Math.min(0.18, sensitivity * 0.18);
+        const blipFade = Utils.clamp(0.01 + trailFade * 1.8, 0.01, 0.08);
+
         magnitudes.forEach((magnitude, i) => {
-            if (magnitude > 0.4) {
-                const distance = (i / magnitudes.length) * this.maxRadius;
+            if (magnitude > sensitivity) {
+                const distance = (i / magnitudes.length) * radius;
                 const targetAngle = (i / magnitudes.length) * Math.PI * 2;
 
-                // Check if sweep is near this angle
                 let angleDiff = Math.abs(sweepAngle - targetAngle);
                 if (angleDiff > Math.PI) angleDiff = Math.PI * 2 - angleDiff;
 
-                if (angleDiff < 0.3) { // Sweep detection window
+                if (angleDiff < detectionWindow) {
                     const blipX = this.centerX + Math.cos(targetAngle) * distance;
                     const blipY = this.centerY + Math.sin(targetAngle) * distance;
 
-                    // Add blip to persistent array
                     this.sonarBlips.push({
                         x: blipX,
                         y: blipY,
-                        size: 3 + magnitude * 12,
+                        size: (2 + magnitude * blipSize) * this.scaleFactor,
                         life: 1,
                         colorIndex: i,
-                        magnitude: magnitude
+                        magnitude
                     });
                 }
             }
         });
 
-        // Update and draw persistent blips
         this.sonarBlips = this.sonarBlips.filter(blip => {
-            blip.life -= 0.015;
+            blip.life -= blipFade;
 
             if (blip.life > 0) {
-                const blipColor = this.getColor(blip.colorIndex, magnitudes.length);
-                const blipMatch = blipColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+                const blipColorStr = this.getColor(blip.colorIndex, magnitudes.length);
+                const blipColor = this.getColorChannels(blipColorStr, [200, 255, 200]);
 
-                // Outer glow
-                if (blipMatch) {
-                    const [_, r, g, b] = blipMatch;
-                    this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${blip.life * 0.3})`;
-                } else {
-                    this.ctx.fillStyle = `rgba(255, 255, 255, ${blip.life * 0.3})`;
-                }
+                this.ctx.save();
+                this.ctx.fillStyle = `rgba(${blipColor[0]}, ${blipColor[1]}, ${blipColor[2]}, ${blip.life * 0.35})`;
+                this.ctx.shadowBlur = 24 * blip.life * glowIntensity * this.scaleFactor;
+                this.ctx.shadowColor = `rgba(${blipColor[0]}, ${blipColor[1]}, ${blipColor[2]}, ${0.55 * blip.life})`;
                 this.ctx.beginPath();
-                this.ctx.arc(blip.x, blip.y, blip.size * 2, 0, Math.PI * 2);
+                this.ctx.arc(blip.x, blip.y, blip.size * 1.8, 0, Math.PI * 2);
                 this.ctx.fill();
 
-                // Inner bright blip
-                if (blipMatch) {
-                    const [_, r, g, b] = blipMatch;
-                    const brightness = Math.min(255, parseInt(r) + 100);
-                    this.ctx.fillStyle = `rgba(${brightness}, ${Math.min(255, parseInt(g) + 100)}, ${Math.min(255, parseInt(b) + 100)}, ${blip.life})`;
-                } else {
-                    const brightness = 200 + blip.magnitude * 55;
-                    this.ctx.fillStyle = `rgba(${brightness}, 255, ${brightness}, ${blip.life})`;
-                }
+                const brightR = Math.min(255, blipColor[0] + 80);
+                const brightG = Math.min(255, blipColor[1] + 80);
+                const brightB = Math.min(255, blipColor[2] + 80);
+                this.ctx.fillStyle = `rgba(${brightR}, ${brightG}, ${brightB}, ${blip.life})`;
                 this.ctx.beginPath();
-                this.ctx.arc(blip.x, blip.y, blip.size, 0, Math.PI * 2);
+                this.ctx.arc(blip.x, blip.y, blip.size * 0.9, 0, Math.PI * 2);
                 this.ctx.fill();
+                this.ctx.restore();
 
                 return true;
             }
             return false;
         });
 
-        // Limit blip count
-        if (this.sonarBlips.length > 200) {
-            this.sonarBlips = this.sonarBlips.slice(-200);
+        if (this.sonarBlips.length > 220) {
+            this.sonarBlips = this.sonarBlips.slice(-220);
         }
+    }
 
-        // Draw center dot
-        if (sweepMatch) {
-            const [_, r, g, b] = sweepMatch;
-            this.ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
-        } else {
-            this.ctx.fillStyle = 'rgb(100, 255, 100)';
-        }
+    drawSonarCenterDot(color, glowIntensity) {
+        this.ctx.save();
+        this.ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+        this.ctx.shadowBlur = 12 * glowIntensity * this.scaleFactor;
+        this.ctx.shadowColor = `rgba(${color[0]}, ${color[1]}, ${color[2]}, 0.8)`;
         this.ctx.beginPath();
-        this.ctx.arc(this.centerX, this.centerY, 5, 0, Math.PI * 2);
+        this.ctx.arc(this.centerX, this.centerY, 5 * this.scaleFactor, 0, Math.PI * 2);
         this.ctx.fill();
+        this.ctx.restore();
     }
 
     /**
@@ -11823,104 +12701,217 @@ class Visualizer {
 
     renderMatrixRain(magnitudes) {
         // Mode 82: Falling Matrix-style characters with audio-reactive speed
-        const params = this.settings.modeParameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const glowAmount = params.glowAmount || 0.5;
-        const characterDensity = params.characterDensity || 1;
+        const {
+            intensity,
+            speed,
+            glowAmount,
+            characterDensity,
+            trailLength,
+            characterSize,
+            colorDrift
+        } = this.getModeParams({
+            intensity: 1,
+            speed: 1,
+            glowAmount: 0.5,
+            characterDensity: 1,
+            trailLength: 14,
+            characterSize: 22,
+            colorDrift: 0.35
+        });
 
-        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
-        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75)).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25)).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        const energy = this.getFrequencyEnergy(magnitudes);
+        this.frameCounter = (this.frameCounter || 0) + speed * (1 + energy.avg * 0.6);
 
-        // Dynamically calculate number of columns based on canvas width and character density
-        const charWidth = 10;
-        const numColumns = Math.max(5, Math.floor((this.canvas.width / charWidth) * characterDensity));
-        const columnSpacing = this.canvas.width / numColumns;
+        const palette = this.getMatrixRainPalette(energy, colorDrift);
+        const charSizeBase = Utils.clamp(characterSize * this.scaleFactor, 10, 72 * this.scaleFactor);
+        const charSizePx = charSizeBase * (0.95 + energy.treble * 0.25);
+        const trail = Math.max(6, Math.round(trailLength * (0.85 + intensity * 0.35)));
+        const density = Utils.clamp(characterDensity, 0.4, 2.2);
+        const layout = this.computeMatrixRainLayout(charSizeBase, density);
 
-        // Initialize columns array with proper canvas dimensions
-        if (!this.matrixColumns || this.matrixColumns.length !== numColumns || this.lastCanvasWidth !== this.canvas.width) {
-            this.matrixColumns = [];
-            this.lastCanvasWidth = this.canvas.width;
-            for (let i = 0; i < numColumns; i++) {
-                this.matrixColumns.push({
-                    x: (i + 0.5) * columnSpacing,
-                    y: -Math.random() * this.canvas.height * 2,
-                    speed: 1.5 + Math.random() * 2.5,
-                    colorIndex: i % 10,
-                    characters: this.generateMatrixCharacters(8 + Math.floor(Math.random() * 8))
-                });
-            }
-        }
+        this.ensureMatrixRainColumns(layout, trail);
+        this.fadeMatrixRainBackground(energy, palette, colorDrift);
 
-        // Clear with fade for trail effect (semi-transparent background)
-        this.ctx.fillStyle = `rgba(0, 0, 0, ${0.15 + bass * 0.1})`;
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-        // Calculate trail length based on intensity
-        const trailLength = Math.max(8, Math.floor(15 * intensity));
-        const charHeight = 14 * intensity;
-
-        // Set up font
-        this.ctx.font = `bold ${Math.floor(charHeight)}px 'Courier New', monospace`;
+        this.ctx.save();
+        this.ctx.font = `600 ${Math.floor(charSizePx)}px "SFMono-Regular", "Courier New", monospace`;
         this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
 
-        // Update and draw columns
-        for (const column of this.matrixColumns) {
-            // Speed modulated by volume and speed parameter
-            const speedMult = speed * (1 + avgMagnitude * intensity * 0.5);
+        const trailStride = layout.charStride;
+        const height = this.canvas.height;
+        const magnitudesLength = magnitudes?.length || 1;
+        const glowBase = Utils.clamp(glowAmount, 0, 1);
+
+        for (const column of this.matrixRainClassicState.columns) {
+            const bandIndex = Math.min(magnitudesLength - 1, Math.floor(Utils.mapRange(column.x, 0, this.canvas.width, 0, magnitudesLength - 1)));
+            const bandEnergy = (magnitudes && magnitudes[bandIndex] !== undefined)
+                ? magnitudes[bandIndex]
+                : energy.avg;
+
+            const speedMult = speed * (0.65 + bandEnergy * 1.4 + energy.bass * 0.8);
             column.y += column.speed * speedMult;
 
-            // Regenerate characters periodically
-            if (column.y > this.canvas.height + 100) {
-                column.y = -trailLength * charHeight;
-                column.characters = this.generateMatrixCharacters(8 + Math.floor(Math.random() * 8));
+            if (column.y - trail * trailStride > height + trailStride) {
+                this.resetMatrixRainColumn(column, layout, trail);
             }
 
-            // Get column color from scheme
-            const baseColor = this.getColor(column.colorIndex, 10);
-            const match = baseColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
-            let r = 50, g = 255, b = 50;
-            if (match) {
-                r = parseInt(match[1]);
-                g = parseInt(match[2]);
-                b = parseInt(match[3]);
+            if (Math.random() < 0.12 + energy.treble * 0.5) {
+                const idx = Math.floor(Math.random() * column.chars.length);
+                column.chars[idx] = this.randomMatrixChar();
             }
 
-            // Draw trail of characters with fade effect
-            for (let i = 0; i < trailLength; i++) {
-                const charY = column.y - i * charHeight;
-                if (charY < -charHeight || charY > this.canvas.height) continue;
+            const colorMix = Utils.clamp(column.colorT + energy.treble * colorDrift, 0, 1);
+            const baseColor = this.mixColors(palette.primary, palette.secondary, colorMix);
+            const headColor = this.scaleColor(this.mixColors(baseColor, palette.glow, 0.6), 1.05 + bandEnergy * (0.65 + intensity * 0.2));
+            const shadow = this.toRgba(palette.glow, 0.24 + bandEnergy * 0.35 + glowBase * 0.3);
 
-                // Brightness fades towards tail
-                const fadeFactor = 1 - (i / trailLength);
-                const trebleFactor = 0.4 + treble * 0.6;
-                const brightnessFactor = 0.4 + fadeFactor * 0.6 + trebleFactor * 0.2;
+            for (let i = 0; i < trail; i++) {
+                const y = column.y - i * trailStride;
+                if (y < -trailStride || y > height + trailStride) continue;
 
-                // Apply glow effect
-                if (glowAmount > 0 && i < trailLength / 2) {
-                    this.ctx.shadowBlur = Math.floor(8 * glowAmount * (1 - i / (trailLength / 2)));
-                    this.ctx.shadowColor = `rgba(${r}, ${g}, ${b}, ${glowAmount * 0.7})`;
-                } else {
-                    this.ctx.shadowBlur = 0;
-                }
+                const fade = 1 - (i / trail);
+                const alpha = Utils.clamp(0.2 + fade * (0.65 + bandEnergy * 0.4), 0, 1);
+                const glowFalloff = 1 - Math.min(1, i / (trail * 0.6));
+                const shadowBlur = glowBase * charSizePx * (0.45 + glowFalloff * (0.8 + bandEnergy * 0.6));
 
-                // Calculate final color with brightness
-                const finalR = Math.max(0, Math.min(255, Math.floor(r * brightnessFactor)));
-                const finalG = Math.max(0, Math.min(255, Math.floor(g * brightnessFactor)));
-                const finalB = Math.max(0, Math.min(255, Math.floor(b * brightnessFactor)));
+                this.ctx.shadowBlur = shadowBlur;
+                this.ctx.shadowColor = shadow;
 
-                // Get character from sequence
-                const char = column.characters[i % column.characters.length];
-                const alpha = 0.3 + fadeFactor * 0.7;
+                const color = i === 0
+                    ? this.toRgba(headColor, alpha)
+                    : this.toRgba(this.scaleColor(baseColor, 0.82 + bandEnergy * 0.35), alpha * (0.9 + energy.avg * 0.1));
 
-                this.ctx.fillStyle = `rgba(${finalR}, ${finalG}, ${finalB}, ${alpha})`;
-                this.ctx.fillText(char, column.x, charY);
+                this.ctx.fillStyle = color;
+                this.ctx.fillText(column.chars[i % column.chars.length], column.x, y);
             }
         }
 
-        // Reset shadow
+        this.ctx.restore();
         this.ctx.shadowBlur = 0;
+    }
+
+    getMatrixRainPalette(energy, drift) {
+        const scheme = COLOR_SCHEMES[this.settings.colorScheme] || COLOR_SCHEMES.apple_blue;
+        const primaryBase = scheme.primary || [0, 255, 90];
+        const secondaryBase = scheme.secondary || primaryBase;
+        const mixAmount = Utils.clamp(0.25 + (scheme.gradient ? 0.35 : 0.15) + energy.treble * 0.25 + drift * 0.4, 0, 1);
+
+        const primary = this.scaleColor(primaryBase, 0.7 + energy.avg * 0.6);
+        const secondary = this.scaleColor(this.mixColors(primaryBase, secondaryBase, mixAmount), 0.65 + energy.mids * 0.4);
+        const glow = this.scaleColor(this.mixColors(primary, secondary, 0.55 + energy.treble * 0.25), 1 + energy.avg * 0.5);
+
+        return { primary, secondary, glow };
+    }
+
+    computeMatrixRainLayout(charSize, density) {
+        const safeDensity = Utils.clamp(density, 0.4, 2.2);
+        const targetSpacing = Math.max(charSize * 1.05, 8 * this.scaleFactor);
+        const estimatedCols = Math.max(8, Math.floor((this.canvas.width / targetSpacing) * safeDensity));
+        const columnCount = Math.min(160, estimatedCols);
+        const spacing = this.canvas.width / columnCount;
+        const padding = Math.max(charSize * 0.5, 6 * this.scaleFactor);
+        const charStride = Math.max(charSize * 1.08, 8);
+
+        return { columnCount, spacing, padding, charStride };
+    }
+
+    ensureMatrixRainColumns(layout, trailLength) {
+        if (!this.matrixRainClassicState) {
+            this.matrixRainClassicState = { columns: [] };
+        }
+
+        const needsReset =
+            !this.matrixRainClassicState.columns ||
+            this.matrixRainClassicState.columns.length !== layout.columnCount ||
+            this.matrixRainClassicState.width !== this.canvas.width ||
+            this.matrixRainClassicState.height !== this.canvas.height ||
+            this.matrixRainClassicState.trailLength !== trailLength ||
+            this.matrixRainClassicState.charStride !== layout.charStride;
+
+        if (needsReset) {
+            this.matrixRainClassicState.columns = [];
+            for (let i = 0; i < layout.columnCount; i++) {
+                this.matrixRainClassicState.columns.push(this.createMatrixRainColumn(i, layout, trailLength));
+            }
+        }
+
+        this.matrixRainClassicState.columns.forEach((column, idx) => {
+            column.index = idx;
+            column.x = this.getMatrixRainX(idx, layout, column.offset);
+            this.ensureMatrixRainTrail(column, trailLength);
+        });
+
+        this.matrixRainClassicState.width = this.canvas.width;
+        this.matrixRainClassicState.height = this.canvas.height;
+        this.matrixRainClassicState.trailLength = trailLength;
+        this.matrixRainClassicState.charStride = layout.charStride;
+    }
+
+    getMatrixRainX(index, layout, offset = 0) {
+        const raw = (index + 0.5) * layout.spacing + offset;
+        return Utils.clamp(raw, layout.padding, this.canvas.width - layout.padding);
+    }
+
+    createMatrixRainColumn(index, layout, trailLength) {
+        const offset = (Math.random() - 0.5) * layout.spacing * 0.3;
+        return {
+            index,
+            offset,
+            x: this.getMatrixRainX(index, layout, offset),
+            y: -Math.random() * this.canvas.height * 1.5,
+            speed: 1.1 + Math.random() * 1.4,
+            colorT: Math.random(),
+            chars: this.generateMatrixCharacters(trailLength + 4)
+        };
+    }
+
+    ensureMatrixRainTrail(column, trailLength) {
+        if (!column.chars) {
+            column.chars = [];
+        }
+
+        while (column.chars.length < trailLength) {
+            column.chars.push(this.randomMatrixChar());
+        }
+
+        if (column.chars.length > trailLength) {
+            column.chars.length = trailLength;
+        }
+    }
+
+    resetMatrixRainColumn(column, layout, trailLength) {
+        column.y = -Math.random() * this.canvas.height * 0.8;
+        column.speed = 1.1 + Math.random() * 1.4;
+        column.colorT = Math.random();
+        column.offset = (Math.random() - 0.5) * layout.spacing * 0.3;
+        column.x = this.getMatrixRainX(column.index, layout, column.offset);
+        column.chars = this.generateMatrixCharacters(trailLength + 4);
+    }
+
+    fadeMatrixRainBackground(energy, palette, drift) {
+        const fadeAlpha = Utils.clamp(0.08 + energy.bass * 0.2, 0.08, 0.32);
+        const backgroundStyle = BACKGROUND_STYLES[this.settings.background];
+        const bgColor = backgroundStyle?.color || [0, 0, 0];
+
+        this.ctx.save();
+        if (this.settings.background === 'transparent') {
+            this.ctx.globalCompositeOperation = 'destination-out';
+            this.ctx.fillStyle = `rgba(0, 0, 0, ${fadeAlpha})`;
+        } else {
+            const tinted = this.mixColors(bgColor, palette.primary, 0.15 + drift * 0.35);
+            this.ctx.globalCompositeOperation = 'source-over';
+            this.ctx.fillStyle = this.toRgba(tinted, fadeAlpha * 0.9);
+        }
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.restore();
+
+        if (this.settings.background !== 'transparent') {
+            const overlay = this.ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
+            overlay.addColorStop(0, this.toRgba(palette.primary, 0.08 + energy.avg * 0.12));
+            overlay.addColorStop(1, this.toRgba(palette.secondary, 0.08 + energy.treble * 0.12));
+            this.ctx.fillStyle = overlay;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
     }
 
     // Helper function to generate matrix-style characters
@@ -11935,43 +12926,62 @@ class Visualizer {
 
     renderVoxelWorld(magnitudes) {
         // Mode 83: 3D voxel grid with audio shockwave - Enhanced with parameters and visual effects
+        const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
+
         const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
         const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25)).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
         const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75)).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
 
-        // Get parameters with defaults
-        const gridSize = this.settings.voxelWorldGridSize || 8;
-        const voxelSize = this.settings.voxelWorldVoxelSize || 30;
-        const heightScale = this.settings.voxelWorldHeightScale || 100;
-        const shockwaveIntensity = this.settings.voxelWorldShockwaveIntensity || 300;
-        const shockwaveWidth = this.settings.voxelWorldShockwaveWidth || 50;
-        const glowIntensity = this.settings.voxelWorldGlowIntensity || 0.6;
-        const rotationSpeed = this.settings.voxelWorldRotationSpeed || 0.01;
-        const perspectiveIntensity = this.settings.voxelWorldPerspectiveIntensity || 0.5;
+        // Get parameters with defaults (Step 4)
+        const params = this.settings.modeParameters || {};
+        const gridSize = clamp(Math.round(params.gridSize ?? this.settings.voxelWorldGridSize ?? 8), 4, 24);
+        const baseVoxelSize = params.voxelSize ?? this.settings.voxelWorldVoxelSize ?? 30;
+        const baseHeightScale = params.heightScale ?? this.settings.voxelWorldHeightScale ?? 100;
+        const baseShockwaveIntensity = params.shockwaveIntensity ?? this.settings.voxelWorldShockwaveIntensity ?? 300;
+        const baseShockwaveWidth = params.shockwaveWidth ?? this.settings.voxelWorldShockwaveWidth ?? 50;
+        const glowIntensity = params.glowIntensity ?? this.settings.voxelWorldGlowIntensity ?? 0.6;
+        const rotationSpeed = params.rotationSpeed ?? this.settings.voxelWorldRotationSpeed ?? 0.01;
+        const perspectiveIntensity = params.perspectiveIntensity ?? this.settings.voxelWorldPerspectiveIntensity ?? 0.5;
+        const colorBoost = clamp(params.colorBoost ?? 1.0, 0.5, 2.0);
+
+        // Fit visualization to any aspect ratio
+        const minSide = Math.min(this.canvas.width, this.canvas.height);
+        const maxSide = Math.max(this.canvas.width, this.canvas.height);
+        const aspectCompensation = clamp(minSide / maxSide, 0.55, 1);
+        const targetExtent = minSide * 0.82;
+        const voxelScale = clamp(targetExtent / (gridSize * baseVoxelSize), 0.35, 1.25);
+        const voxelSize = baseVoxelSize * voxelScale;
+        const heightScale = baseHeightScale * voxelScale;
+        const shockwaveIntensity = baseShockwaveIntensity * voxelScale * aspectCompensation;
+        const shockwaveWidth = baseShockwaveWidth * voxelScale;
 
         // Initialize rotation phase
-        if (this.voxelRotation === undefined) {
-            this.voxelRotation = 0;
+        if (!this.voxelWorldState) {
+            this.voxelWorldState = { rotation: 0 };
         }
-        this.voxelRotation += rotationSpeed;
+        this.voxelWorldState.rotation += rotationSpeed;
 
-        // Draw dark background with gradient
-        const gradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
-        gradient.addColorStop(0, 'rgba(5, 5, 20, 1)');
-        gradient.addColorStop(0.5, 'rgba(10, 10, 30, 1)');
-        gradient.addColorStop(1, 'rgba(5, 5, 20, 1)');
-        this.ctx.fillStyle = gradient;
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-        // Calculate center position (accounting for different canvas sizes)
+        // Background respects Step 4 background & color scheme
+        this.drawBackground();
+        const scheme = COLOR_SCHEMES[this.settings.colorScheme] || COLOR_SCHEMES.apple_blue;
+        const primary = scheme.primary || [20, 40, 80];
+        const secondary = scheme.secondary || primary;
         const centerX = this.canvas.width / 2;
         const centerY = this.canvas.height / 2;
+        if (this.settings.background !== 'transparent') {
+            const ambientGradient = this.ctx.createRadialGradient(centerX, centerY, minSide * 0.1, centerX, centerY, Math.max(this.canvas.width, this.canvas.height));
+            ambientGradient.addColorStop(0, `rgba(${primary[0]}, ${primary[1]}, ${primary[2]}, ${0.28 + avgMagnitude * 0.25})`);
+            ambientGradient.addColorStop(1, `rgba(${secondary[0]}, ${secondary[1]}, ${secondary[2]}, 0.08)`);
+            this.ctx.fillStyle = ambientGradient;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
 
         // Shockwave radius from bass with intensity parameter
         const shockwave = bass * shockwaveIntensity;
 
         // Initialize voxel data array for depth sorting
         const voxels = [];
+        const totalVoxels = gridSize * gridSize;
 
         // Collect all voxels with their properties
         for (let x = 0; x < gridSize; x++) {
@@ -11980,24 +12990,24 @@ class Visualizer {
                 const worldZ = (z - gridSize / 2) * voxelSize;
 
                 // Apply rotation
-                const rotX = worldX * Math.cos(this.voxelRotation) - worldZ * Math.sin(this.voxelRotation);
-                const rotZ = worldX * Math.sin(this.voxelRotation) + worldZ * Math.cos(this.voxelRotation);
+                const rotX = worldX * Math.cos(this.voxelWorldState.rotation) - worldZ * Math.sin(this.voxelWorldState.rotation);
+                const rotZ = worldX * Math.sin(this.voxelWorldState.rotation) + worldZ * Math.cos(this.voxelWorldState.rotation);
 
                 // Distance from center for shockwave effect
                 const dist = Math.sqrt(rotX * rotX + rotZ * rotZ);
 
                 // Height based on frequency and distance from shockwave
-                const freqIdx = Math.floor(((x + z * gridSize) / (gridSize * gridSize)) * magnitudes.length);
+                const freqIdx = Math.floor(((x + z * gridSize) / totalVoxels) * magnitudes.length);
                 const magnitude = magnitudes[freqIdx];
-                const shockwaveEffect = Math.max(0, 1 - Math.abs(dist - shockwave) / shockwaveWidth);
-                const height = (magnitude + shockwaveEffect * 0.5) * heightScale;
+                const shockwaveEffect = Math.max(0, 1 - Math.abs(dist - shockwave) / Math.max(10, shockwaveWidth));
+                const height = clamp((magnitude + shockwaveEffect * 0.65) * heightScale, -minSide * 0.35, minSide * 0.5);
 
                 // 3D to 2D projection with adjustable perspective
                 const screenX = centerX + rotX - rotZ * perspectiveIntensity;
                 const screenY = centerY + rotZ * perspectiveIntensity - height;
 
                 // Calculate brightness based on shockwave proximity and frequency
-                const brightness = Math.min(1, magnitude + shockwaveEffect * 0.3);
+                const brightness = Math.min(1.2, magnitude * 1.1 + shockwaveEffect * 0.4);
 
                 voxels.push({
                     x: screenX,
@@ -12017,40 +13027,51 @@ class Visualizer {
 
         // Draw voxels with glow effects
         for (const voxel of voxels) {
-            this.drawVoxelWithGlow(voxel, magnitudes.length, glowIntensity);
+            this.drawVoxelWithGlow(voxel, magnitudes.length, glowIntensity, colorBoost);
         }
 
-        // Add subtle shimmer effect based on treble
-        if (treble > 0.1) {
-            this.ctx.fillStyle = `rgba(255, 255, 255, ${treble * 0.05 * glowIntensity})`;
+        // Add audio-reactive shockwave ring and shimmer based on treble
+        const ringAlpha = Math.min(0.35, bass * 0.9);
+        if (ringAlpha > 0.02) {
+            const ringGradient = this.ctx.createRadialGradient(centerX, centerY, Math.max(10, shockwave - shockwaveWidth * 0.5), centerX, centerY, shockwave + shockwaveWidth * 0.9);
+            ringGradient.addColorStop(0, `rgba(${primary[0]}, ${primary[1]}, ${primary[2]}, 0)`);
+            ringGradient.addColorStop(0.5, `rgba(${secondary[0]}, ${secondary[1]}, ${secondary[2]}, ${ringAlpha})`);
+            ringGradient.addColorStop(1, `rgba(${secondary[0]}, ${secondary[1]}, ${secondary[2]}, 0)`);
+            this.ctx.fillStyle = ringGradient;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+
+        if (treble > 0.08) {
+            this.ctx.fillStyle = `rgba(255, 255, 255, ${treble * 0.04 * glowIntensity})`;
             this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
         }
     }
 
-    drawVoxelWithGlow(voxel, numColors, glowIntensity) {
+    drawVoxelWithGlow(voxel, numColors, glowIntensity, colorBoost = 1) {
         // Helper function to draw a voxel with glow effect
         const colorStr = this.getColor(voxel.colorIndex, numColors);
         const colorMatch = colorStr.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
 
         let r = 100, g = 150, b = 255;
         if (colorMatch) {
-            r = parseInt(colorMatch[1]);
-            g = parseInt(colorMatch[2]);
-            b = parseInt(colorMatch[3]);
+            r = parseInt(colorMatch[1], 10);
+            g = parseInt(colorMatch[2], 10);
+            b = parseInt(colorMatch[3], 10);
         }
 
-        // Apply brightness and shockwave effect to color
-        const brighten = 1 + voxel.shockwaveEffect * 0.5;
-        const finalR = Math.min(255, r * brighten);
-        const finalG = Math.min(255, g * brighten);
-        const finalB = Math.min(255, b * brighten);
+        // Apply brightness, audio-driven color boost, and shockwave effect to color
+        const brighten = 1 + voxel.shockwaveEffect * 0.55;
+        const dynamicBoost = 0.6 + voxel.magnitude * 0.8 * colorBoost;
+        const finalR = Math.min(255, r * brighten * dynamicBoost);
+        const finalG = Math.min(255, g * brighten * dynamicBoost);
+        const finalB = Math.min(255, b * brighten * dynamicBoost);
 
         // Draw glow halos
         if (glowIntensity > 0) {
-            const glowSize = voxel.voxelSize / 2 + voxel.magnitude * 8;
+            const glowSize = voxel.voxelSize / 2 + voxel.magnitude * 10;
 
             // First glow layer (larger, more transparent)
-            this.ctx.fillStyle = `rgba(${finalR}, ${finalG}, ${finalB}, ${0.1 * glowIntensity})`;
+            this.ctx.fillStyle = `rgba(${finalR}, ${finalG}, ${finalB}, ${0.12 * glowIntensity})`;
             this.ctx.beginPath();
             this.ctx.moveTo(voxel.x, voxel.y - glowSize);
             this.ctx.lineTo(voxel.x + glowSize, voxel.y);
@@ -12060,7 +13081,7 @@ class Visualizer {
             this.ctx.fill();
 
             // Second glow layer (medium)
-            this.ctx.fillStyle = `rgba(${finalR}, ${finalG}, ${finalB}, ${0.15 * glowIntensity})`;
+            this.ctx.fillStyle = `rgba(${finalR}, ${finalG}, ${finalB}, ${0.18 * glowIntensity})`;
             this.ctx.beginPath();
             this.ctx.moveTo(voxel.x, voxel.y - glowSize * 0.6);
             this.ctx.lineTo(voxel.x + glowSize * 0.6, voxel.y);
@@ -12086,7 +13107,7 @@ class Visualizer {
         this.ctx.stroke();
 
         // Add highlight on top edge for 3D effect
-        const highlightColor = `rgba(255, 255, 255, ${voxel.shockwaveEffect * 0.4})`;
+        const highlightColor = `rgba(255, 255, 255, ${voxel.shockwaveEffect * 0.45})`;
         this.ctx.strokeStyle = highlightColor;
         this.ctx.lineWidth = 2;
         this.ctx.beginPath();
@@ -12264,86 +13285,114 @@ class Visualizer {
 
     renderAudioReactiveShader(magnitudes) {
         // Mode 85: Enhanced procedural shader with audio modulation and parameters
+        const { avg, bass, lowerMids, upperMids, mids, treble } = this.getFrequencyBands(magnitudes);
+        const {
+            intensity,
+            speed,
+            scale: patternScale,
+            complexity,
+            radialFalloff,
+            glow,
+            colorDrift,
+            backgroundBlend
+        } = this.getModeParams({
+            intensity: 1.0,
+            speed: 1.0,
+            scale: 1.0,
+            complexity: 1.5,
+            radialFalloff: 0.7,
+            glow: 0.6,
+            colorDrift: 0.55,
+            backgroundBlend: 0.35
+        });
 
-        // Extract frequency bands
-        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
-        const quarterPoint = Math.floor(magnitudes.length * 0.25);
-        const midPoint = Math.floor(magnitudes.length * 0.5);
-        const threeQuarterPoint = Math.floor(magnitudes.length * 0.75);
+        const width = this.canvas.width;
+        const height = this.canvas.height;
+        const aspect = width / height;
+        const aspectMax = Math.max(aspect, 1);
+        const palette = this.getShaderPalette();
 
-        const bass = magnitudes.slice(0, quarterPoint).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
-        const lowerMids = magnitudes.slice(quarterPoint, midPoint).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
-        const upperMids = magnitudes.slice(midPoint, threeQuarterPoint).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
-        const treble = magnitudes.slice(threeQuarterPoint).reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
-        const mids = (lowerMids + upperMids) / 2;
-
-        // Get mode parameters with defaults
-        const params = this.settings.modeParameters || {};
-        const intensity = params.intensity !== undefined ? params.intensity : 1.0;
-        const speed = params.speed !== undefined ? params.speed : 1.0;
-        const patternScale = params.scale !== undefined ? params.scale : 1.0;
-        const complexity = params.complexity !== undefined ? params.complexity : 1.5;
-        const radialFalloff = params.radialFalloff !== undefined ? params.radialFalloff : 0.7;
-
-        // Pixel-based shader effect
-        const imageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+        // Use existing background (including vignette) so background choices show through
+        const imageData = this.ctx.getImageData(0, 0, width, height);
         const data = imageData.data;
 
-        // Time animation controlled by speed parameter
-        const time = this.frameCounter * 0.01 * speed;
-        const baseScale = 0.02 + avgMagnitude * 0.02;
-        const finalScale = baseScale * patternScale;
+        // Animation pacing and spatial scale (timeline aware so preview == final encode)
+        const time = this.getTimelineTime(Math.max(0.1, speed));
+        const waveTime = time * 1.05;
+        const spatialScale = (0.55 + avg * 0.85) * patternScale;
+        const complexityClamped = Utils.clamp(complexity, 0.5, 3);
+        const blendWeight2 = Math.max(0, complexityClamped - 1) * 0.55;
+        const blendWeight3 = Math.max(0, complexityClamped - 1.25) * 0.4;
+        const totalWeight = 1 + blendWeight2 + blendWeight3;
+        const chromaDrift = Math.sin(waveTime * 0.65 + mids * 4) * 0.5 + 0.5;
+        const driftAmount = Utils.clamp(colorDrift, 0, 1);
+        const bloomBase = 0.16 + treble * 0.4 + glow * 0.35;
+        const midSpark = 0.18 + upperMids * 0.65;
 
-        // Render each pixel
-        for (let y = 0; y < this.canvas.height; y++) {
-            for (let x = 0; x < this.canvas.width; x++) {
-                const idx = (y * this.canvas.width + x) * 4;
+        for (let y = 0; y < height; y++) {
+            const normY = (y / height) * 2 - 1;
 
-                // Normalized coordinates (-0.5 to 0.5)
-                const nx = x / this.canvas.width - 0.5;
-                const ny = y / this.canvas.height - 0.5;
+            for (let x = 0; x < width; x++) {
+                const idx = (y * width + x) * 4;
 
-                // Distance from center for radial effects
-                const dist = Math.sqrt(nx * nx + ny * ny);
+                // Preserve background so background selection remains visible
+                const baseR = data[idx];
+                const baseG = data[idx + 1];
+                const baseB = data[idx + 2];
+                const baseA = data[idx + 3] / 255;
 
-                // Layer 1: Primary wave interference
-                const wave1 = Math.sin(nx * 10 * finalScale + time + bass * 5) * 0.5 + 0.5;
-                const wave2 = Math.cos(ny * 10 * finalScale + time + treble * 5) * 0.5 + 0.5;
+                // Normalized coordinates with aspect correction for all video shapes
+                const normX = (x / width) * 2 - 1;
+                const scaledX = normX * aspect;
+                const scaledY = normY;
+                const distanceRaw = Math.sqrt(scaledX * scaledX + scaledY * scaledY);
+                const distance = distanceRaw / aspectMax;
+                const angle = Math.atan2(scaledY, scaledX + 0.0001);
+
+                // Layered patterns
+                const wave1 = Math.sin(scaledX * 10 * spatialScale + waveTime + bass * 6) * 0.5 + 0.5;
+                const wave2 = Math.cos(scaledY * 11 * spatialScale - waveTime * 0.8 + treble * 5) * 0.5 + 0.5;
+                const diagonal = Math.sin((scaledX + scaledY) * 9 * spatialScale + waveTime * 0.6 + (mids + upperMids) * 3) * 0.5 + 0.5;
+                const spiral = Math.sin((scaledX - scaledY) * 7 * spatialScale - waveTime * 0.9 + avg * 3 + angle * 2) * 0.5 + 0.5;
+                const radial = Math.sin(distanceRaw * 14 * spatialScale - waveTime * 1.3 + bass * 4) * 0.5 + 0.5;
+                const halo = Math.max(0, 1 - Math.abs(distance - 0.35) * 5);
+                const angularSweep = Math.sin(angle * 4 + waveTime * 0.4 + bass * 3) * 0.5 + 0.5;
+
+                // Blend based on complexity parameter
                 const pattern1 = wave1 * wave2;
-
-                // Layer 2: Secondary diagonal waves for added complexity
-                const wave3 = Math.sin((nx + ny) * 8 * finalScale + time * 0.7 + mids * 4) * 0.5 + 0.5;
-                const wave4 = Math.cos((nx - ny) * 8 * finalScale - time * 0.5 + avgMagnitude * 3) * 0.5 + 0.5;
-                const pattern2 = wave3 * wave4;
-
-                // Layer 3: Radial wave pattern for center focus
-                const radialWave = Math.sin(dist * 15 * finalScale + time + bass * 3) * 0.5 + 0.5;
-                const pattern3 = radialWave * Math.max(0, 1 - dist * 2);
-
-                // Blend patterns based on complexity parameter
-                const complexityFactor = Math.min(complexity, 3);
-                const blendWeight2 = Math.max(0, complexityFactor - 1) * 0.5;
-                const blendWeight3 = Math.max(0, complexityFactor - 1.5) * 0.3;
-                const totalWeight = 1 + blendWeight2 + blendWeight3;
+                const pattern2 = diagonal * spiral;
+                const pattern3 = radial * Math.max(0, 1 - distance * 0.95);
                 const pattern = (pattern1 + pattern2 * blendWeight2 + pattern3 * blendWeight3) / totalWeight;
 
-                // Radial falloff: controls edge vignetting
-                const radialEffect = Math.pow(Math.max(0, 1 - dist), 1 + radialFalloff * 2);
+                // Palette-driven color so user-selected colors influence the dynamic shader
+                const paletteMix = Utils.clamp(0.25 + pattern * 0.55 + chromaDrift * 0.2 + treble * 0.15, 0, 1);
+                const baseColor = this.lerpColor(palette.primary, palette.secondary, paletteMix);
+                const accentColor = this.lerpColor(
+                    baseColor,
+                    palette.tertiary,
+                    Utils.clamp(0.25 + halo * 0.35 + driftAmount * (0.25 + bass * 0.3) + treble * 0.2, 0, 1)
+                );
 
-                // Enhanced color with audio reactivity
-                const r = pattern * 255 * (1 + bass * 0.8) * intensity;
-                const g = (1 - pattern) * 255 * (1 + mids * 0.6) * avgMagnitude * intensity;
-                const b = (Math.sin(dist * 20 + time) * 0.5 + 0.5) * 255 * (1 + treble * 0.8) * intensity;
+                // Audio-driven energy and glow
+                const energy = (0.38 + pattern * 0.72 + angularSweep * 0.18) * (1 + avg * 0.9) * intensity;
+                const radialEffect = Math.pow(Math.max(0, 1 - distance), 1 + radialFalloff * 2.2);
+                const glowWave = (bloomBase + halo * 0.55 + midSpark * 0.25) * radialEffect;
+                const overlayAlphaUnclamped = 0.18 + energy * 0.32 + glowWave * 0.4;
+                const overlayAlpha = Utils.clamp(overlayAlphaUnclamped * (1 - backgroundBlend * 0.85), 0, 0.95);
 
-                // Apply radial falloff and clamp values
-                const finalR = Math.min(255, Math.max(0, r * radialEffect));
-                const finalG = Math.min(255, Math.max(0, g * radialEffect));
-                const finalB = Math.min(255, Math.max(0, b * radialEffect));
+                // Composite with background so background choice remains visible
+                const overlayR = Math.min(255, (accentColor[0] * (0.8 + chromaDrift * 0.2) + glowWave * 180 + bass * 70) * radialEffect);
+                const overlayG = Math.min(255, (accentColor[1] * (0.9 + driftAmount * 0.25) + glowWave * 170 + (lowerMids + upperMids) * 70) * radialEffect);
+                const overlayB = Math.min(255, (accentColor[2] * (0.95 + driftAmount * 0.2) + glowWave * 210 + treble * 95 + midSpark * 50) * radialEffect);
 
-                data[idx] = finalR;
-                data[idx + 1] = finalG;
-                data[idx + 2] = finalB;
-                data[idx + 3] = 255; // Full opacity
+                const bgWeight = 1 - overlayAlpha;
+                data[idx] = Math.max(0, Math.min(255, baseR * bgWeight + overlayR * overlayAlpha));
+                data[idx + 1] = Math.max(0, Math.min(255, baseG * bgWeight + overlayG * overlayAlpha));
+                data[idx + 2] = Math.max(0, Math.min(255, baseB * bgWeight + overlayB * overlayAlpha));
+
+                // Preserve transparency for transparent backgrounds instead of forcing opaque
+                const finalAlpha = baseA + (1 - baseA) * overlayAlpha;
+                data[idx + 3] = Math.round(Utils.clamp(finalAlpha, 0, 1) * 255);
             }
         }
 
@@ -12395,28 +13444,112 @@ class Visualizer {
 
     renderEqualizerTower(magnitudes) {
         // Mode 87: 3D tower of stacked glowing rings
-        this.ctx.fillStyle = 'rgb(0, 0, 0)';
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        const params = this.settings.modeParameters || {};
+        const requestedRings = params.ringCount ?? 42;
+        const spectrumSize = Math.max(1, magnitudes.length);
+        const ringCount = Math.max(
+            6,
+            Math.min(Math.floor(requestedRings), Math.max(spectrumSize, 6))
+        );
+        const radiusScale = params.radiusScale ?? 0.45;
+        const heightScale = params.heightScale ?? 0.9;
+        const baseThickness = params.ringThickness ?? 5.5;
+        const glow = params.glow ?? 18;
+        const tilt = params.tilt ?? 0.22;
+        const colorDrift = params.colorDrift ?? 0.45;
+        const rotationSpeed = params.rotationSpeed ?? 0.35;
 
-        const numRings = Math.min(magnitudes.length, 40);
-        const ringHeight = this.canvas.height / numRings;
-        const centerX = this.canvas.width / 2;
+        const minDimension = Math.min(this.canvas.width, this.canvas.height);
+        const maxRadius = Math.max(
+            12 * this.scaleFactor,
+            Math.min(
+                (this.canvas.width - glow * 2) / 2,
+                (this.canvas.height - glow * 2) / 2,
+                minDimension * radiusScale
+            )
+        );
 
-        for (let i = 0; i < numRings; i++) {
-            const magnitude = magnitudes[i];
-            const y = this.canvas.height - (i + 1) * ringHeight;
-            const radius = magnitude * (this.canvas.width / 3);
+        // Stack rings with breathing room near the base so nothing gets clipped in any format
+        const towerHeight = Math.min(this.canvas.height * heightScale, this.canvas.height * 0.95);
+        const baseY = this.canvas.height - this.canvas.height * 0.08;
+        const startY = Math.max(this.canvas.height * 0.05, baseY - towerHeight);
+        const ringSpacing = (baseY - startY) / ringCount;
 
-            // Color gradient - use color scheme
-            this.ctx.strokeStyle = this.getColor(i, numRings);
+        const time = this.frameCounter * 0.02 * (0.3 + rotationSpeed);
+        const colorOffset = (time * 12 * (1 + colorDrift)) % spectrumSize;
 
-            // Ring thickness
-            const thickness = 2 + magnitude * 10;
+        // Cache a palette for the frame to avoid repeated rgb parsing
+        const palette = this.getCachedPalette(spectrumSize);
+        const anchorColor = palette[ringCount % palette.length];
+
+        // Ambient glow that respects the chosen background and color scheme
+        const towerGlow = this.ctx.createLinearGradient(0, startY, 0, baseY + ringSpacing * 1.5);
+        towerGlow.addColorStop(0, `rgba(${anchorColor[0]}, ${anchorColor[1]}, ${anchorColor[2]}, ${0.08 + colorDrift * 0.12})`);
+        towerGlow.addColorStop(1, `rgba(${anchorColor[0]}, ${anchorColor[1]}, ${anchorColor[2]}, 0)`);
+        this.ctx.fillStyle = towerGlow;
+        this.ctx.fillRect(0, startY, this.canvas.width, (baseY - startY) + ringSpacing * 1.5);
+
+        // Grounded bloom at the base so the tower feels anchored
+        const floorGlowRadius = Math.max(60 * this.scaleFactor, maxRadius * 0.6);
+        const floorGlow = this.ctx.createRadialGradient(
+            this.centerX, baseY,
+            floorGlowRadius * 0.25,
+            this.centerX, baseY,
+            floorGlowRadius
+        );
+        floorGlow.addColorStop(0, `rgba(${anchorColor[0]}, ${anchorColor[1]}, ${anchorColor[2]}, ${0.35 + colorDrift * 0.25})`);
+        floorGlow.addColorStop(1, `rgba(${anchorColor[0]}, ${anchorColor[1]}, ${anchorColor[2]}, 0)`);
+        this.ctx.fillStyle = floorGlow;
+        this.ctx.fillRect(0, baseY - floorGlowRadius, this.canvas.width, floorGlowRadius * 2);
+
+        this.ctx.save();
+        this.ctx.lineCap = 'round';
+        this.ctx.globalCompositeOperation = 'lighter';
+        const maxShadowBlur = Math.max(4 * this.scaleFactor, glow * 0.75); // cap blur for faster previews
+
+        for (let i = 0; i < ringCount; i++) {
+            const normalizedIndex = i / ringCount;
+            const spectrumIndex = Math.floor(normalizedIndex * (spectrumSize - 1));
+            const magnitude = Math.max(0, Math.min(1, magnitudes[spectrumIndex] || 0));
+            const easedMagnitude = this.ease(magnitude);
+
+            const wobble = Math.sin(time + i * 0.35) * ringSpacing * 0.1 * (0.4 + colorDrift);
+            const y = baseY - (i + 0.5) * ringSpacing + wobble;
+
+            const ringRadius = Math.max(
+                6 * this.scaleFactor,
+                maxRadius * (0.35 + easedMagnitude * 0.95)
+            );
+
+            const thickness = Math.max(
+                1.5,
+                baseThickness * (0.65 + easedMagnitude * 1.1)
+            );
+
+            // Perspective squash for a subtle 3D tilt
+            const squash = Math.max(0.35, 1 - tilt * (1 - normalizedIndex));
+
+            const colorIndex = (i + colorOffset) % spectrumSize;
+            const rgb = palette[Math.floor(colorIndex) % palette.length];
+            const alpha = 0.45 + easedMagnitude * 0.55;
+
+            this.ctx.shadowBlur = Math.min(maxShadowBlur, glow * (0.4 + easedMagnitude));
+            this.ctx.shadowColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${0.22 + easedMagnitude * (0.3 + colorDrift * 0.35)})`;
+            this.ctx.strokeStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
             this.ctx.lineWidth = thickness;
+
+            this.ctx.save();
+            this.ctx.translate(this.centerX, y);
+            this.ctx.scale(1, squash);
             this.ctx.beginPath();
-            this.ctx.arc(centerX, y, radius, 0, Math.PI * 2);
+            this.ctx.arc(0, 0, ringRadius, 0, Math.PI * 2);
             this.ctx.stroke();
+            this.ctx.restore();
         }
+
+        this.ctx.restore();
+        this.ctx.globalCompositeOperation = 'source-over';
+        this.ctx.shadowBlur = 0;
     }
 
     renderAudioDrivenDoodles(magnitudes) {
@@ -12822,151 +13955,270 @@ class Visualizer {
         this.microscopicCells = newCells.slice(0, maxCells);
     }
 
+    _getBurningPaperParams() {
+        const readParam = (key, fallback, min, max) => {
+            const value = this.getModeParamValue(key, fallback);
+            return Utils.clamp(value, min, max);
+        };
+
+        const layerCount = Math.round(readParam('layerCount', 3, 1, 5));
+
+        return {
+            flameHeight: readParam('flameHeight', 0.7, 0.3, 1.5),
+            flameIntensity: readParam('flameIntensity', 1.0, 0.3, 1.5),
+            layerCount,
+            layerSpacing: readParam('layerSpacing', 15, 4, 40),
+            flickerAmount: readParam('flickerAmount', 5, 0, 18),
+            emberIntensity: readParam('emberIntensity', 1, 0, 3),
+            emberSize: readParam('emberSize', 2, 0.5, 8),
+            paperCurlStrength: readParam('paperCurlStrength', 0.5, 0, 1),
+            backgroundFade: readParam('backgroundFade', 0.3, 0, 0.7),
+            glowIntensity: readParam('glowIntensity', 0.6, 0, 1.4)
+        };
+    }
+
+    _getBurningPaperBands(magnitudes) {
+        const quarter = Math.floor(magnitudes.length * 0.25);
+        const threeQuarter = Math.floor(magnitudes.length * 0.75);
+
+        const bass = magnitudes.slice(0, quarter).reduce((a, b) => a + b, 0) / quarter;
+        const mids = magnitudes.slice(quarter, threeQuarter).reduce((a, b) => a + b, 0) / (threeQuarter - quarter);
+        const treble = magnitudes.slice(threeQuarter).reduce((a, b) => a + b, 0) / (magnitudes.length - threeQuarter);
+        const avgEnergy = (bass + mids + treble) / 3;
+
+        return { bass, mids, treble, avgEnergy };
+    }
+
+    _getBurningPaperLayout(barCount) {
+        const aspect = this.canvas.width / Math.max(1, this.canvas.height);
+        const minPadding = Math.max(1.5 * this.scaleFactor, 2);
+        const edgePadding = this.canvas.width * (aspect > 1 ? 0.01 : 0.008);
+        const horizontalPadding = Math.max(minPadding, edgePadding);
+        const usableWidth = Math.max(1, this.canvas.width - horizontalPadding * 2);
+        const barWidth = usableWidth / barCount;
+
+        const verticalPadding = Math.max(minPadding, this.canvas.height * 0.012);
+        const yBase = this.canvas.height - verticalPadding;
+        const maxBarHeight = Math.max(this.canvas.height - verticalPadding * 1.1, this.canvas.height * 0.75);
+
+        return { barWidth, horizontalPadding, yBase, maxBarHeight };
+    }
+
+    _getBurningPaperColor(index, total) {
+        const baseColor = this.getColor(index, total);
+        const parsed = this.parseRgbColor(baseColor) || [220, 120, 60];
+
+        // Force palette into a warm/flame range so no cold blues leak into the bars
+        const warmR = Math.min(255, Math.max(185, parsed[0] * 0.45 + 150));
+        const warmG = Math.min(200, Math.max(70, parsed[1] * 0.55 + 70));
+        const warmB = Math.min(145, parsed[2] * 0.35 + 22);
+
+        const colorStr = `rgb(${Math.round(warmR)}, ${Math.round(warmG)}, ${Math.round(warmB)})`;
+        return { colorStr, values: [Math.round(warmR), Math.round(warmG), Math.round(warmB)] };
+    }
+
+    _renderBurningPaperBackground(params, bands, colorCount) {
+        const baseBg = BACKGROUND_STYLES[this.settings.background] || BACKGROUND_STYLES.transparent;
+        const [br, bg, bb] = baseBg.color;
+        const isTransparent = this.settings.background === 'transparent';
+
+        // Respect background selection while keeping the default canvas transparent
+        if (!isTransparent) {
+            const baseAlpha = Math.min(0.95, params.backgroundFade + bands.avgEnergy * 0.35);
+            this.ctx.fillStyle = `rgba(${br}, ${bg}, ${bb}, ${baseAlpha})`;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+
+        // Energy-driven glow that mirrors the selected color scheme
+        const glowSampleIndex = Math.floor(colorCount * 0.66);
+        const accentColor = this._getBurningPaperColor(glowSampleIndex, colorCount);
+        const [ar, ag, ab] = accentColor.values;
+
+        if (isTransparent) {
+            const glowStrength = Math.max(0, params.glowIntensity * 0.35 + bands.avgEnergy * 0.45 - 0.12);
+            if (glowStrength > 0.01) {
+                const localizedGlow = this.ctx.createRadialGradient(
+                    this.centerX,
+                    this.canvas.height * 0.92,
+                    this.canvas.width * 0.1,
+                    this.centerX,
+                    this.canvas.height * 0.55,
+                    Math.max(this.canvas.width, this.canvas.height) * 0.6
+                );
+                localizedGlow.addColorStop(0, `rgba(${ar}, ${ag}, ${ab}, ${glowStrength})`);
+                localizedGlow.addColorStop(1, `rgba(${ar}, ${ag}, ${ab}, 0)`);
+
+                this.ctx.save();
+                this.ctx.globalCompositeOperation = 'lighter';
+                this.ctx.fillStyle = localizedGlow;
+                this.ctx.fillRect(0, this.canvas.height * 0.35, this.canvas.width, this.canvas.height * 0.65);
+                this.ctx.restore();
+            }
+            return; // keep full transparency elsewhere
+        }
+
+        const glowStrength = Math.min(0.9, 0.18 + params.glowIntensity * 0.35 + bands.avgEnergy * 0.45);
+
+        const baseGlow = this.ctx.createRadialGradient(
+            this.centerX,
+            this.canvas.height,
+            this.canvas.width * 0.12,
+            this.centerX,
+            this.canvas.height * 0.35,
+            Math.max(this.canvas.width, this.canvas.height)
+        );
+        baseGlow.addColorStop(0, `rgba(${ar}, ${ag}, ${ab}, ${glowStrength})`);
+        baseGlow.addColorStop(1, `rgba(${ar}, ${ag}, ${ab}, 0)`);
+
+        this.ctx.save();
+        this.ctx.globalCompositeOperation = isTransparent ? 'screen' : 'lighter';
+        this.ctx.fillStyle = baseGlow;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.restore();
+
+        // Light haze to fill the full frame height and keep top edges alive
+        const hazeStrength = Math.min(
+            0.5,
+            (params.backgroundFade * 0.6 + bands.treble * 0.35 + bands.mids * 0.2) *
+            (isTransparent ? 0.35 : 1)
+        );
+        if (hazeStrength > 0.01) {
+            const haze = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
+            haze.addColorStop(0, `rgba(${ar}, ${ag}, ${ab}, ${hazeStrength})`);
+            haze.addColorStop(1, `rgba(${ar}, ${ag}, ${ab}, 0)`);
+            this.ctx.fillStyle = haze;
+            this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+
+        if (!isTransparent) {
+            this.applyVignette(0.18);
+        }
+    }
+
+    _renderBurningPaperFlames(magnitudes, params, bands, layout) {
+        const { barWidth, horizontalPadding, yBase, maxBarHeight } = layout;
+        const layerSpacing = params.layerSpacing * this.scaleFactor;
+        const flicker = params.flickerAmount * this.scaleFactor * (1 + bands.treble * 0.8 + bands.mids * 0.35);
+        const glowScale = params.glowIntensity * this.scaleFactor;
+        const baseColor = this._getBurningPaperColor(Math.floor(magnitudes.length * 0.55), magnitudes.length);
+        const [gr, gg, gb] = baseColor.values;
+
+        // Ground glow to anchor the flames and fill the frame height
+        const groundGlowHeight = Math.max(this.canvas.height * 0.12, maxBarHeight * 0.18);
+        const groundGlow = this.ctx.createLinearGradient(0, yBase, 0, yBase - groundGlowHeight);
+        groundGlow.addColorStop(0, `rgba(${gr}, ${gg}, ${gb}, ${0.25 + params.glowIntensity * 0.35 + bands.bass * 0.35})`);
+        groundGlow.addColorStop(1, `rgba(${gr}, ${gg}, ${gb}, 0)`);
+        this.ctx.fillStyle = groundGlow;
+        this.ctx.fillRect(0, Math.max(0, yBase - groundGlowHeight), this.canvas.width, groundGlowHeight);
+
+        for (let i = 0; i < magnitudes.length; i++) {
+            const magnitude = magnitudes[i];
+            const barEnergy = magnitude * params.flameHeight * params.flameIntensity * (1 + bands.bass * 0.25);
+            const barHeight = Math.min(maxBarHeight, barEnergy * this.canvas.height);
+            const x = horizontalPadding + i * barWidth;
+
+            for (let layer = 0; layer < params.layerCount; layer++) {
+                const layerHeight = barHeight - layer * layerSpacing;
+                if (layerHeight <= 0) continue;
+
+                const y = yBase - layerHeight;
+                const barX = Math.max(
+                    horizontalPadding,
+                    Math.min(this.canvas.width - barWidth - horizontalPadding, x + (Math.random() - 0.5) * flicker)
+                );
+                const barW = Math.max(barWidth * 0.9, this.scaleFactor * 2.2);
+
+                // Color driven by user-selected scheme so palette changes affect the flames
+                const colorIndex = (i + layer) % magnitudes.length;
+                const layerColor = this._getBurningPaperColor(colorIndex, magnitudes.length);
+                const [r, g, b] = layerColor.values;
+                const heatBoost = Math.min(140, (bands.treble + bands.mids * 0.6 + magnitude) * 120);
+                const layerAlpha = 1 - (layer / (params.layerCount + 1));
+
+                const flameGradient = this.ctx.createLinearGradient(barX, yBase, barX, y);
+                flameGradient.addColorStop(0, `rgba(${Math.min(255, r + heatBoost)}, ${Math.min(255, g + heatBoost * 0.7)}, ${Math.min(255, b + heatBoost * 0.4)}, ${layerAlpha})`);
+                flameGradient.addColorStop(1, `rgba(${Math.max(0, r - 10)}, ${Math.max(0, g - 20)}, ${Math.max(0, b - 30)}, ${layerAlpha * 0.8})`);
+
+                this.ctx.fillStyle = flameGradient;
+                this.ctx.fillRect(barX, y, barW, yBase - y);
+
+                // Subtle inner core to keep spectrum legible
+                this.ctx.fillStyle = `rgba(255, 255, 255, ${0.05 + magnitude * 0.15})`;
+                this.ctx.fillRect(barX + barW * 0.35, y, barW * 0.3, yBase - y);
+
+                if (glowScale > 0) {
+                    this.ctx.shadowColor = layerColor.colorStr;
+                    this.ctx.shadowBlur = (10 + magnitude * 35) * glowScale * layerAlpha;
+                    this.ctx.fillRect(barX, y, barW, yBase - y);
+                    this.ctx.shadowBlur = 0;
+                }
+            }
+        }
+    }
+
+    _renderBurningPaperCurls(params, bands, colorCount) {
+        if (bands.bass <= 0.1) return;
+
+        const curlAlpha = bands.bass * params.paperCurlStrength;
+        const curlSize = 0.15 + bands.bass * 0.1;
+        const curlColor = this._getBurningPaperColor(Math.floor(colorCount * 0.15), colorCount);
+        const [cr, cg, cb] = curlColor.values;
+
+        const tlGradient = this.ctx.createLinearGradient(0, 0, this.canvas.width * curlSize, this.canvas.height * curlSize);
+        tlGradient.addColorStop(0, `rgba(${cr}, ${cg}, ${cb}, ${curlAlpha * 0.85})`);
+        tlGradient.addColorStop(1, `rgba(${cr}, ${cg}, ${cb}, 0)`);
+
+        this.ctx.fillStyle = tlGradient;
+        this.ctx.beginPath();
+        this.ctx.moveTo(0, 0);
+        this.ctx.lineTo(this.canvas.width * curlSize, 0);
+        this.ctx.lineTo(0, this.canvas.height * curlSize);
+        this.ctx.closePath();
+        this.ctx.fill();
+
+        const brGradient = this.ctx.createLinearGradient(
+            this.canvas.width,
+            this.canvas.height,
+            this.canvas.width - this.canvas.width * curlSize,
+            this.canvas.height - this.canvas.height * curlSize
+        );
+        brGradient.addColorStop(0, `rgba(${cr}, ${cg}, ${cb}, ${curlAlpha * 0.85})`);
+        brGradient.addColorStop(1, `rgba(${cr}, ${cg}, ${cb}, 0)`);
+
+        this.ctx.fillStyle = brGradient;
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.canvas.width, this.canvas.height);
+        this.ctx.lineTo(this.canvas.width - this.canvas.width * curlSize, this.canvas.height);
+        this.ctx.lineTo(this.canvas.width, this.canvas.height - this.canvas.height * curlSize);
+        this.ctx.closePath();
+        this.ctx.fill();
+    }
+
     /**
      * Mode 91: Burning Paper
      * Spectrum bars as flames, embers on high freq, paper curls on bass
      */
     renderBurningPaper(magnitudes) {
-        // Get parameters from settings with defaults
-        const params = this.settings.modeParameters || {};
-        const flameHeight = params.flameHeight !== undefined ? params.flameHeight : 0.7;
-        const flameIntensity = params.flameIntensity !== undefined ? params.flameIntensity : 1.0;
-        const layerCount = Math.round(params.layerCount !== undefined ? params.layerCount : 3);
-        const layerSpacing = params.layerSpacing !== undefined ? params.layerSpacing : 15;
-        const flickerAmount = params.flickerAmount !== undefined ? params.flickerAmount : 5;
-        const emberIntensity = params.emberIntensity !== undefined ? params.emberIntensity : 1;
-        const emberSize = params.emberSize !== undefined ? params.emberSize : 2;
-        const paperCurlStrength = params.paperCurlStrength !== undefined ? params.paperCurlStrength : 0.5;
-        const backgroundFade = params.backgroundFade !== undefined ? params.backgroundFade : 0.3;
-        const glowIntensity = params.glowIntensity !== undefined ? params.glowIntensity : 0.6;
+        const params = this._getBurningPaperParams();
+        const bands = this._getBurningPaperBands(magnitudes);
+        const layout = this._getBurningPaperLayout(magnitudes.length);
 
-        // Extract frequency bands
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
-            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length * 0.25), Math.floor(magnitudes.length * 0.75))
-            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.5);
-        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
-            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
-        const avgEnergy = (bass + mids + treble) / 3;
-
-        // Initialize ember state if needed
-        if (!this.burningPaperState) {
+        if (!this.burningPaperState ||
+            this.burningPaperState.width !== this.canvas.width ||
+            this.burningPaperState.height !== this.canvas.height ||
+            this.burningPaperState.barCount !== magnitudes.length) {
             this.burningPaperState = {
-                embers: []
+                embers: [],
+                width: this.canvas.width,
+                height: this.canvas.height,
+                barCount: magnitudes.length
             };
         }
 
-        // Fade background with glow effect
-        this.ctx.fillStyle = `rgba(0, 0, 0, ${backgroundFade})`;
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-        // Add subtle glow to background based on energy
-        const glowAlpha = avgEnergy * glowIntensity * 0.2;
-        const bgGradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
-        bgGradient.addColorStop(0, `rgba(255, 100, 0, ${glowAlpha * 0.3})`);
-        bgGradient.addColorStop(1, `rgba(255, 50, 0, ${glowAlpha * 0.1})`);
-        this.ctx.fillStyle = bgGradient;
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-        // Calculate base position (percentage-based for shape compatibility)
-        const yBasePercent = 0.1; // 10% from bottom
-        const yBase = this.canvas.height * (1 - yBasePercent);
-
-        // Draw flame bars with enhanced effects
-        const barWidth = this.canvas.width / magnitudes.length;
-        for (let i = 0; i < magnitudes.length; i++) {
-            const magnitude = magnitudes[i];
-            const barHeight = magnitude * this.canvas.height * flameHeight * flameIntensity;
-            const x = i * barWidth;
-
-            // Draw layers from back to front
-            for (let layer = 0; layer < layerCount; layer++) {
-                const yOffset = layer * layerSpacing;
-                const layerHeight = barHeight - yOffset;
-
-                if (layerHeight > 0) {
-                    const y = yBase - layerHeight;
-
-                    // Create gradient for flame appearance
-                    const colorIndex = (i + layer) % magnitudes.length;
-                    const baseColor = this.getColor(colorIndex, magnitudes.length);
-                    const layerAlpha = 1 - (layer / (layerCount + 1)); // Fade back layers
-
-                    // Draw main flame bar
-                    const flickerOffset = (Math.random() - 0.5) * flickerAmount;
-                    const barX = x + flickerOffset;
-                    const barW = barWidth - 2;
-
-                    // Create gradient from hot (yellow/white) to cool (red/orange)
-                    const flameGradient = this.ctx.createLinearGradient(barX, yBase, barX, y);
-                    const colorMatch = baseColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
-
-                    if (colorMatch) {
-                        const [_, r, g, b] = colorMatch;
-                        // Hot center (lighter)
-                        flameGradient.addColorStop(0, `rgba(${Math.min(255, r + 50)}, ${Math.min(255, g + 50)}, ${Math.min(255, b + 20)}, ${layerAlpha})`);
-                        // Cool edges (darker)
-                        flameGradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, ${layerAlpha * 0.7})`);
-                    } else {
-                        flameGradient.addColorStop(0, `rgba(255, 200, 100, ${layerAlpha})`);
-                        flameGradient.addColorStop(1, `rgba(255, 100, 50, ${layerAlpha * 0.7})`);
-                    }
-
-                    this.ctx.fillStyle = flameGradient;
-                    this.ctx.fillRect(barX, y, barW, yBase - y);
-
-                    // Add glow effect to flames
-                    if (glowIntensity > 0) {
-                        this.ctx.shadowColor = baseColor;
-                        this.ctx.shadowBlur = 10 * glowIntensity * layerAlpha;
-                        this.ctx.shadowOffsetX = 0;
-                        this.ctx.shadowOffsetY = 0;
-                        this.ctx.fillRect(barX, y, barW, yBase - y);
-                        this.ctx.shadowBlur = 0;
-                    }
-                }
-            }
-        }
-
-        // Update and draw ember particles
-        this._updateBurningPaperEmbers(magnitudes, yBase, treble, mids, emberIntensity, emberSize, glowIntensity);
-
-        // Paper curl effect (bass-responsive corner darkening)
-        if (bass > 0.1) {
-            const curlAlpha = bass * paperCurlStrength;
-            const curlSize = 0.15 + (bass * 0.1); // Dynamic size based on bass
-
-            // Top-left curl
-            const tlGradient = this.ctx.createLinearGradient(0, 0, this.canvas.width * curlSize, this.canvas.height * curlSize);
-            tlGradient.addColorStop(0, `rgba(20, 10, 5, ${curlAlpha * 0.8})`);
-            tlGradient.addColorStop(1, `rgba(20, 10, 5, 0)`);
-
-            this.ctx.fillStyle = tlGradient;
-            this.ctx.beginPath();
-            this.ctx.moveTo(0, 0);
-            this.ctx.lineTo(this.canvas.width * curlSize, 0);
-            this.ctx.lineTo(0, this.canvas.height * curlSize);
-            this.ctx.closePath();
-            this.ctx.fill();
-
-            // Bottom-right curl
-            const brGradient = this.ctx.createLinearGradient(
-                this.canvas.width,
-                this.canvas.height,
-                this.canvas.width - this.canvas.width * curlSize,
-                this.canvas.height - this.canvas.height * curlSize
-            );
-            brGradient.addColorStop(0, `rgba(20, 10, 5, ${curlAlpha * 0.8})`);
-            brGradient.addColorStop(1, `rgba(20, 10, 5, 0)`);
-
-            this.ctx.fillStyle = brGradient;
-            this.ctx.beginPath();
-            this.ctx.moveTo(this.canvas.width, this.canvas.height);
-            this.ctx.lineTo(this.canvas.width - this.canvas.width * curlSize, this.canvas.height);
-            this.ctx.lineTo(this.canvas.width, this.canvas.height - this.canvas.height * curlSize);
-            this.ctx.closePath();
-            this.ctx.fill();
-        }
+        this._renderBurningPaperBackground(params, bands, magnitudes.length);
+        this._renderBurningPaperFlames(magnitudes, params, bands, layout);
+        this._updateBurningPaperEmbers(magnitudes, layout, bands, params);
+        this._renderBurningPaperCurls(params, bands, magnitudes.length);
 
         // Reset shadow for next frame
         this.ctx.shadowBlur = 0;
@@ -12975,74 +14227,71 @@ class Visualizer {
     /**
      * Helper: Update and render ember particles for Burning Paper mode
      */
-    _updateBurningPaperEmbers(magnitudes, yBase, treble, mids, emberIntensity, emberSize, glowIntensity) {
+    _updateBurningPaperEmbers(magnitudes, layout, bands, params) {
         const state = this.burningPaperState;
-        const emberThreshold = 0.3; // Spawn threshold
+        const { barWidth, horizontalPadding, yBase } = layout;
+        const emberSpawnRate = Math.floor((bands.treble * 30 + bands.mids * 10) * params.emberIntensity);
+        const emberSize = params.emberSize * this.scaleFactor;
+        const glowIntensity = params.glowIntensity;
 
-        // Spawn new embers based on treble
-        const emberSpawnRate = Math.floor(treble * 30 * emberIntensity);
+        if (params.emberIntensity <= 0.01) {
+            state.embers = [];
+            return;
+        }
+
         for (let i = 0; i < emberSpawnRate; i++) {
-            // Spawn embers from top of flame bars
             const barIndex = Math.floor(Math.random() * magnitudes.length);
-            const barWidth = this.canvas.width / magnitudes.length;
             const magnitude = magnitudes[barIndex];
-            const spawnHeight = magnitude * this.canvas.height * 0.7;
+            const spawnHeight = Math.max(10, magnitude * this.canvas.height * params.flameHeight * params.flameIntensity);
+            const xStart = horizontalPadding + barIndex * barWidth;
 
             state.embers.push({
-                x: barIndex * barWidth + Math.random() * barWidth,
-                y: yBase - spawnHeight + Math.random() * 20,
-                vx: (Math.random() - 0.5) * 2,
-                vy: -2 - Math.random() * 1,
+                x: xStart + Math.random() * barWidth,
+                y: yBase - spawnHeight + Math.random() * 25,
+                vx: (Math.random() - 0.5) * (1.5 + bands.mids * 2),
+                vy: -2.2 - Math.random() * 1.2 - bands.treble * 1.5,
                 life: 1,
-                maxLife: 0.5 + Math.random() * 0.5,
+                maxLife: 0.6 + Math.random() * 0.5,
                 colorIndex: barIndex
             });
         }
 
-        // Update and draw embers
         const newEmbers = [];
         for (let ember of state.embers) {
             ember.x += ember.vx;
             ember.y += ember.vy;
-            ember.vy += 0.05; // Gravity
-            ember.life -= 1 / (60 * ember.maxLife); // Decay
+            ember.vy += 0.04;
+            ember.life -= 1 / (60 * ember.maxLife);
+            ember.x = Math.max(horizontalPadding, Math.min(this.canvas.width - horizontalPadding, ember.x));
 
             if (ember.life > 0) {
-                const alpha = ember.life;
-                const color = this.getColor(ember.colorIndex, magnitudes.length);
+                const alpha = Math.max(0, ember.life);
+                const emberColor = this._getBurningPaperColor(ember.colorIndex, magnitudes.length);
+                const [r, g, b] = emberColor.values;
 
-                // Draw ember with glow
-                const colorMatch = color.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
-                const r = colorMatch ? colorMatch[1] : 255;
-                const g = colorMatch ? colorMatch[2] : 150;
-                const b = colorMatch ? colorMatch[3] : 50;
-
-                // Glow effect
                 if (glowIntensity > 0) {
                     const glowGradient = this.ctx.createRadialGradient(
                         ember.x, ember.y, 0,
-                        ember.x, ember.y, emberSize * 3 * (1 + glowIntensity)
+                        ember.x, ember.y, emberSize * 4 * (1 + glowIntensity)
                     );
-                    glowGradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha * 0.6})`);
+                    glowGradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${alpha * 0.55})`);
                     glowGradient.addColorStop(1, `rgba(${r}, ${g}, ${b}, 0)`);
                     this.ctx.fillStyle = glowGradient;
                     this.ctx.beginPath();
-                    this.ctx.arc(ember.x, ember.y, emberSize * 3 * (1 + glowIntensity), 0, Math.PI * 2);
+                    this.ctx.arc(ember.x, ember.y, emberSize * 4 * (1 + glowIntensity), 0, Math.PI * 2);
                     this.ctx.fill();
                 }
 
-                // Core ember
                 this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
                 this.ctx.beginPath();
-                this.ctx.arc(ember.x, ember.y, emberSize, 0, Math.PI * 2);
+                this.ctx.arc(ember.x, ember.y, emberSize * (0.8 + bands.treble * 0.5), 0, Math.PI * 2);
                 this.ctx.fill();
 
                 newEmbers.push(ember);
             }
         }
 
-        // Limit ember count to prevent performance issues
-        state.embers = newEmbers.slice(-1000);
+        state.embers = newEmbers.slice(-900);
     }
 
     /**
@@ -13727,87 +14976,310 @@ class Visualizer {
      * Mode 101: Neural Pulse
      * Neural network with pulsing nodes and lighting connections
      */
-    renderNeuralPulse(magnitudes) {
-        // Get parameters from settings
-        const nodeCount = this.settings.neuralPulseNodeCount || 30;
-        const layerCount = this.settings.neuralPulseLayerCount || 3;
-        const connectionThreshold = this.settings.neuralPulseConnectionThreshold || 50;
-        const nodeSize = (this.settings.neuralPulseNodeSize || 8) * this.scaleFactor;
-        const pulseIntensity = (this.settings.neuralPulsePulseIntensity || 20) * this.scaleFactor;
-        const trailFade = this.settings.neuralPulseTrailFade || 0.1;
-        const glowRadius = (this.settings.neuralPulseGlowRadius || 3) * this.scaleFactor;
+    getNeuralPulseParams() {
+        const config = VISUALIZATION_MODES.neural_pulse?.parameters || {};
+        const params = this.settings.modeParameters || {};
+        const resolve = (key, fallback) => {
+            const definition = config[key];
+            const defaultValue = definition?.default ?? fallback;
+            const min = definition?.min ?? defaultValue;
+            const max = definition?.max ?? defaultValue;
+            const raw = params[key];
+            return Utils.clamp(
+                raw !== undefined ? parseFloat(raw) : defaultValue,
+                min,
+                max
+            );
+        };
 
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length * 0.25))
-            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
-        const mids = magnitudes.slice(Math.floor(magnitudes.length * 0.25), Math.floor(magnitudes.length * 0.75))
-            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.5);
-        const treble = magnitudes.slice(Math.floor(magnitudes.length * 0.75))
-            .reduce((a, b) => a + b, 0) / (magnitudes.length * 0.25);
+        return {
+            nodeCount: Math.round(resolve('nodeCount', 30)),
+            layerCount: Math.round(resolve('layerCount', 3)),
+            connectionThreshold: resolve('connectionThreshold', 50),
+            nodeSize: resolve('nodeSize', 8) * this.scaleFactor,
+            pulseIntensity: resolve('pulseIntensity', 20) * this.scaleFactor,
+            trailFade: resolve('trailFade', 0.1),
+            glowRadius: resolve('glowRadius', 3) * this.scaleFactor
+        };
+    }
 
-        // Initialize neural network nodes (reinitialize if parameters changed)
-        if (!this.neuralNodes || this.neuralNodes.length !== nodeCount || this.lastLayerCount !== layerCount) {
-            this.neuralNodes = [];
-            this.lastLayerCount = layerCount;
-            for (let i = 0; i < nodeCount; i++) {
-                this.neuralNodes.push({
-                    x: 100 * this.scaleFactor + Math.random() * (this.canvas.width - 200 * this.scaleFactor),
-                    y: 100 * this.scaleFactor + Math.random() * (this.canvas.height - 200 * this.scaleFactor),
-                    layer: i % layerCount,
-                    active: 0
+    computeNeuralPulseBands(magnitudes) {
+        if (!magnitudes || magnitudes.length === 0) {
+            return { bass: 0, mids: 0, treble: 0 };
+        }
+
+        const quarter = Math.max(1, Math.floor(magnitudes.length * 0.25));
+        const half = Math.max(1, Math.floor(magnitudes.length * 0.5));
+
+        const bass = magnitudes.slice(0, quarter)
+            .reduce((a, b) => a + b, 0) / quarter;
+        const mids = magnitudes.slice(quarter, quarter + half)
+            .reduce((a, b) => a + b, 0) / half;
+        const treble = magnitudes.slice(quarter + half)
+            .reduce((a, b) => a + b, 0) / Math.max(1, magnitudes.length - quarter - half);
+
+        return {
+            bass: Utils.clamp(bass, 0, 1),
+            mids: Utils.clamp(mids, 0, 1),
+            treble: Utils.clamp(treble, 0, 1)
+        };
+    }
+
+    ensureNeuralPulseNodes(params) {
+        const layoutKey = [
+            params.nodeCount,
+            params.layerCount,
+            Math.round(this.canvas.width),
+            Math.round(this.canvas.height),
+            Math.round(this.scaleFactor * 1000),
+            this.settings.colorScheme
+        ].join('-');
+
+        if (this.neuralPulseState?.layoutKey === layoutKey) {
+            return;
+        }
+
+        const minDim = Math.min(this.canvas.width, this.canvas.height);
+        const padding = Math.max(minDim * 0.1, 60 * this.scaleFactor);
+        const areaWidth = Math.max(120 * this.scaleFactor, this.canvas.width - padding * 2);
+        const areaHeight = Math.max(120 * this.scaleFactor, this.canvas.height - padding * 2);
+        const layerSpacing = params.layerCount > 1 ? areaWidth / (params.layerCount - 1) : 0;
+        const jitterX = layerSpacing * 0.25;
+        const jitterY = areaHeight * 0.18;
+
+        const nodes = [];
+        for (let i = 0; i < params.nodeCount; i++) {
+            const layerIndex = i % Math.max(params.layerCount, 1);
+            const baseX = this.centerX - areaWidth / 2 + layerSpacing * layerIndex;
+            const x = baseX + (Math.random() - 0.5) * jitterX;
+            const y = this.centerY - areaHeight / 2 +
+                Math.random() * areaHeight +
+                (Math.random() - 0.5) * jitterY;
+
+            nodes.push({
+                x,
+                y,
+                layer: layerIndex,
+                active: 0,
+                drift: (Math.random() - 0.5) * 0.6 * this.scaleFactor
+            });
+        }
+
+        const { connections, layerPairColors } = this.buildNeuralPulseConnections(nodes, params);
+
+        this.neuralPulseState = {
+            layoutKey,
+            nodes,
+            areaHeight,
+            connections,
+            layerPairColors
+        };
+    }
+
+    buildNeuralPulseConnections(nodes, params) {
+        const layerBuckets = new Map();
+        nodes.forEach((node, idx) => {
+            if (!layerBuckets.has(node.layer)) {
+                layerBuckets.set(node.layer, []);
+            }
+            layerBuckets.get(node.layer).push(idx);
+        });
+
+        const safeLayerCount = Math.max(params.layerCount, 2);
+        const layerPairColors = {};
+        for (let a = 0; a < safeLayerCount; a++) {
+            for (let b = a; b < safeLayerCount; b++) {
+                const key = `${a}-${b}`;
+                layerPairColors[key] = this.parseRgbColor(this.getColor((a + b) / 2, safeLayerCount));
+            }
+        }
+
+        const maxConnectionsPerNode = Math.max(
+            4,
+            Math.min(10, Math.round(params.nodeCount / safeLayerCount) + 2)
+        );
+
+        const getCandidates = (layer) => {
+            const candidates = [];
+            for (let l = layer - 1; l <= layer + 1; l++) {
+                const bucket = layerBuckets.get(l);
+                if (bucket) candidates.push(...bucket);
+            }
+            return candidates;
+        };
+
+        const connections = [];
+        const seen = new Set();
+
+        nodes.forEach((node, idx) => {
+            const candidates = getCandidates(node.layer)
+                .filter(i => i !== idx)
+                .map(i => ({
+                    idx: i,
+                    weight: Math.abs(nodes[i].y - node.y) + Math.abs(nodes[i].x - node.x) * 0.35
+                }))
+                .sort((a, b) => a.weight - b.weight)
+                .slice(0, maxConnectionsPerNode);
+
+            candidates.forEach(({ idx: otherIdx }) => {
+                const key = idx < otherIdx ? `${idx}-${otherIdx}` : `${otherIdx}-${idx}`;
+                if (seen.has(key)) return;
+                seen.add(key);
+
+                const layerKey = node.layer <= nodes[otherIdx].layer
+                    ? `${node.layer}-${nodes[otherIdx].layer}`
+                    : `${nodes[otherIdx].layer}-${node.layer}`;
+
+                connections.push({
+                    a: idx,
+                    b: otherIdx,
+                    layerKey
                 });
-            }
-        }
+            });
+        });
 
-        // Fade background with configurable trail
-        this.ctx.fillStyle = `rgba(0, 0, 0, ${trailFade})`;
+        return { connections, layerPairColors };
+    }
+
+    fadeNeuralPulseBackground(trailFade) {
+        const bgStyle = BACKGROUND_STYLES[this.settings.background];
+        const [r, g, b] = bgStyle?.color || [0, 0, 0];
+        const alpha = this.settings.background === 'transparent' ? trailFade * 0.75 : trailFade;
+
+        this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, ${alpha})`;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
 
-        // Update node activation based on frequency bands
-        for (const node of this.neuralNodes) {
-            const layerIndex = node.layer % 3;
-            if (layerIndex === 0) node.active = bass;
-            else if (layerIndex === 1) node.active = mids;
-            else node.active = treble;
+    updateNeuralPulseActivations(params, bands) {
+        if (!this.neuralPulseState?.nodes) return;
+
+        const minY = this.centerY - this.neuralPulseState.areaHeight / 2;
+        const maxY = this.centerY + this.neuralPulseState.areaHeight / 2;
+
+        this.neuralPulseState.nodes.forEach((node, idx) => {
+            const bandIdx = node.layer % 3;
+            const band = bandIdx === 0 ? bands.bass : bandIdx === 1 ? bands.mids : bands.treble;
+            node.active = this.ease(Utils.clamp(band, 0, 1));
+
+            // Subtle vertical drift to keep the network alive
+            const drift = Math.sin(this.frameCounter * 0.02 + idx * 0.3) * 0.8 * this.scaleFactor + node.drift;
+            node.y = Utils.clamp(node.y + drift, minY, maxY);
+        });
+    }
+
+    drawNeuralPulseConnections(params, bands) {
+        if (!this.neuralPulseState?.nodes) return;
+
+        this.ctx.save();
+        this.ctx.globalCompositeOperation = 'lighter';
+
+        const nodes = this.neuralPulseState.nodes;
+        const connections = this.neuralPulseState.connections || [];
+        const layerPairColors = this.neuralPulseState.layerPairColors || {};
+        const defaultColor = layerPairColors['0-0'] || [255, 255, 255];
+        const shadowBlur = params.glowRadius * 1.6;
+
+        for (let k = 0; k < connections.length; k++) {
+            const conn = connections[k];
+            const node1 = nodes[conn.a];
+            const node2 = nodes[conn.b];
+
+            const energy = (node1.active + node2.active) * 0.5;
+            const intensity = energy * 255;
+
+            if (intensity < params.connectionThreshold) continue;
+
+            const color = layerPairColors[conn.layerKey] || defaultColor;
+
+            const alpha = Utils.clamp(0.25 + energy * 0.65, 0.2, 0.95);
+            const lineWidth = Utils.mapRange(intensity, 0, 255, 0.75, 3.2) * this.scaleFactor;
+
+            this.ctx.strokeStyle = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${alpha})`;
+            this.ctx.lineWidth = lineWidth;
+            this.ctx.shadowBlur = shadowBlur;
+            this.ctx.shadowColor = `rgba(${color[0]}, ${color[1]}, ${color[2]}, ${Math.min(1, alpha + 0.12)})`;
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(node1.x, node1.y);
+            this.ctx.lineTo(node2.x, node2.y);
+            this.ctx.stroke();
         }
 
-        // Draw connections that flash with amplitude
-        for (let i = 0; i < this.neuralNodes.length; i++) {
-            const node1 = this.neuralNodes[i];
-            for (let j = i + 1; j < this.neuralNodes.length; j++) {
-                const node2 = this.neuralNodes[j];
-                if (Math.abs(node1.layer - node2.layer) === 1) {
-                    const intensity = (node1.active + node2.active) * 127.5;
-                    if (intensity > connectionThreshold) {
-                        const thickness = intensity < 150 ? 1 : 2;
-                        this.ctx.strokeStyle = `rgb(${intensity}, ${intensity * 0.5}, ${intensity + 50})`;
-                        this.ctx.lineWidth = thickness * this.scaleFactor;
-                        this.ctx.beginPath();
-                        this.ctx.moveTo(node1.x, node1.y);
-                        this.ctx.lineTo(node2.x, node2.y);
-                        this.ctx.stroke();
-                    }
-                }
-            }
-        }
+        this.ctx.restore();
+    }
 
-        // Draw pulsing nodes
-        for (const node of this.neuralNodes) {
-            const radius = nodeSize + node.active * pulseIntensity;
-            const hue = 140 + node.layer * (180 / layerCount);
-            const intensity = 200 + node.active * 55;
-            const color = this.hsvToRgb(hue, 100, intensity / 255 * 100);
+    drawNeuralPulseNodes(params, bands) {
+        if (!this.neuralPulseState?.nodes) return;
 
-            this.ctx.fillStyle = `rgb(${color.r}, ${color.g}, ${color.b})`;
+        this.ctx.save();
+        const palette = this.getCachedPalette(this.neuralPulseState.nodes.length);
+
+        this.neuralPulseState.nodes.forEach((node, index) => {
+            const energy = node.active;
+            const radius = params.nodeSize + energy * params.pulseIntensity;
+            const baseColor = palette[index % palette.length];
+            const brightness = 0.65 + energy * 0.45;
+
+            const r = Math.min(255, Math.floor(baseColor[0] * brightness + bands.treble * 80));
+            const g = Math.min(255, Math.floor(baseColor[1] * brightness + bands.mids * 60));
+            const b = Math.min(255, Math.floor(baseColor[2] * brightness + bands.bass * 40));
+
+            this.ctx.fillStyle = `rgba(${r}, ${g}, ${b}, 0.9)`;
+            this.ctx.shadowBlur = params.glowRadius * 2.6;
+            this.ctx.shadowColor = `rgba(${r}, ${g}, ${b}, 0.7)`;
             this.ctx.beginPath();
             this.ctx.arc(node.x, node.y, radius, 0, Math.PI * 2);
             this.ctx.fill();
 
-            this.ctx.strokeStyle = 'rgb(255, 255, 255)';
-            this.ctx.lineWidth = 1 * this.scaleFactor;
+            // Inner core
+            this.ctx.fillStyle = `rgba(255, 255, 255, ${0.2 + energy * 0.4})`;
             this.ctx.beginPath();
-            this.ctx.arc(node.x, node.y, radius + glowRadius, 0, Math.PI * 2);
+            this.ctx.arc(node.x, node.y, radius * 0.35, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Outer ring
+            this.ctx.strokeStyle = `rgba(${r}, ${g}, ${b}, ${0.35 + energy * 0.4})`;
+            this.ctx.lineWidth = 1.5 * this.scaleFactor;
+            this.ctx.beginPath();
+            this.ctx.arc(node.x, node.y, radius + params.glowRadius, 0, Math.PI * 2);
             this.ctx.stroke();
-        }
+        });
+
+        this.ctx.restore();
+    }
+
+    drawNeuralPulseHalo(params, bands) {
+        const outerRadius = Math.min(this.canvas.width, this.canvas.height) * 0.55;
+        const innerRadius = Math.max(params.nodeSize * 2, outerRadius * 0.25);
+        const startColor = this.parseRgbColor(this.getColor(0, Math.max(params.layerCount, 2)));
+        const endColor = this.parseRgbColor(this.getColor(params.layerCount - 1, Math.max(params.layerCount, 2)));
+
+        const gradient = this.ctx.createRadialGradient(
+            this.centerX, this.centerY, innerRadius * 0.4,
+            this.centerX, this.centerY, outerRadius
+        );
+
+        gradient.addColorStop(0, `rgba(${startColor[0]}, ${startColor[1]}, ${startColor[2]}, ${0.08 + bands.bass * 0.2})`);
+        gradient.addColorStop(0.6, `rgba(${endColor[0]}, ${endColor[1]}, ${endColor[2]}, ${0.04 + bands.mids * 0.15})`);
+        gradient.addColorStop(1, `rgba(${endColor[0]}, ${endColor[1]}, ${endColor[2]}, ${0.02 + bands.treble * 0.12})`);
+
+        this.ctx.save();
+        this.ctx.globalCompositeOperation = 'screen';
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.restore();
+    }
+
+    renderNeuralPulse(magnitudes) {
+        const params = this.getNeuralPulseParams();
+        const bands = this.computeNeuralPulseBands(magnitudes);
+
+        this.ensureNeuralPulseNodes(params);
+        this.fadeNeuralPulseBackground(params.trailFade);
+        this.updateNeuralPulseActivations(params, bands);
+        this.drawNeuralPulseConnections(params, bands);
+        this.drawNeuralPulseNodes(params, bands);
+        this.drawNeuralPulseHalo(params, bands);
     }
 
     /**
@@ -14437,88 +15909,205 @@ class Visualizer {
      * Mode 119: Matrix code rain
      */
         render119MatrixRain(magnitudes) {
-        // Mode 119: Matrix code rain with rainbow particles and audio reactivity
-        const params = this.settings.modeParameters || {};
-        const intensity = params.intensity || 1;
-        const speed = params.speed || 1;
-        const complexity = params.complexity || 5;
+        const params = this.settings.modeParameters || this.settings.parameters || {};
+        const intensity = params.intensity ?? 1;
+        const speed = params.speed ?? 1;
+        const complexity = params.complexity ?? 5;
+        const trailLength = params.trailLength ?? 12;
+        const characterSize = params.characterSize ?? 24;
+        const glow = params.glow ?? 6;
 
-        const avgMagnitude = magnitudes.reduce((a, b) => a + b, 0) / magnitudes.length;
-        const bass = magnitudes.slice(0, Math.floor(magnitudes.length / 4)).reduce((a, b) => a + b, 0) / Math.floor(magnitudes.length / 4);
-        const treble = magnitudes.slice(Math.floor(3 * magnitudes.length / 4)).reduce((a, b) => a + b, 0) / (magnitudes.length - Math.floor(3 * magnitudes.length / 4));
-
-        // Dark background with gradient
-        const bgGradient = this.ctx.createLinearGradient(0, 0, 0, this.canvas.height);
-        bgGradient.addColorStop(0, 'rgba(0, 10, 20, 0.8)');
-        bgGradient.addColorStop(0.5, 'rgba(0, 5, 15, 0.9)');
-        bgGradient.addColorStop(1, 'rgba(0, 10, 20, 0.8)');
-        this.ctx.fillStyle = bgGradient;
-        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
-
-        // Initialize matrix particles on first run
-        if (!this.matrix119Particles) {
-            this.matrix119Particles = [];
-        }
-
+        const spectrum = (magnitudes && magnitudes.length > 0) ? magnitudes : new Float32Array([0]);
+        const energy = this.getFrequencyEnergy(spectrum);
         this.frameCounter = (this.frameCounter || 0) + speed;
 
-        // Add new particles based on complexity and audio intensity
-        const particlesPerFrame = Math.floor(5 * complexity * (0.5 + avgMagnitude * 0.5));
-        for (let i = 0; i < particlesPerFrame; i++) {
-            if (this.matrix119Particles.length < 200 * (complexity / 5)) {
-                this.matrix119Particles.push({
-                    x: Math.random() * this.canvas.width,
-                    y: -10,
-                    vx: (Math.random() - 0.5) * 2,
-                    vy: 2 + Math.random() * 3 * speed,
-                    life: 1,
-                    hue: Math.random(),
-                    size: 2 + Math.random() * 4,
-                    char: ['0', '1', 'a', 'b', 'c', 'd', 'e', 'f', 'x', 'y', 'z', '!', '@', '#'][Math.floor(Math.random() * 14)]
-                });
+        const scheme = COLOR_SCHEMES[this.settings.colorScheme] || COLOR_SCHEMES.apple_blue;
+        const primaryBase = scheme.primary || [0, 255, 90];
+        const secondaryBase = scheme.tertiary || scheme.secondary || primaryBase;
+
+        const primary = this.scaleColor(primaryBase, 0.7 + (energy.treble * 0.5));
+        const secondary = this.scaleColor(
+            this.mixColors(primaryBase, secondaryBase, (this.settings.gradient && scheme.gradient) ? 0.6 : 0.2),
+            0.65 + energy.avg * 0.5
+        );
+        const glowColor = this.mixColors(primary, secondary, 0.35 + energy.treble * 0.25);
+
+        const clampedTrail = Math.round(Utils.clamp(trailLength, 4, 30));
+        const charSize = Utils.clamp(characterSize * this.scaleFactor, 10, 64);
+        const baseSpacing = Math.max(charSize * 0.9, this.canvas.width / Math.max(8, Math.floor((this.settings.numBars || 80) * 0.55)));
+        const densityFactor = Utils.mapRange(complexity, 1, 10, 0.7, 1.4);
+        const streamSpacing = baseSpacing / densityFactor;
+        const streamCount = Math.max(8, Math.floor(this.canvas.width / Math.max(streamSpacing, 6)));
+        const speedMultiplier = (0.8 + speed) * this.scaleFactor;
+
+        this.ensureMatrixRainState(streamCount, streamSpacing, clampedTrail);
+        this.applyMatrixBackgroundOverlay(primary, secondary, glowColor, energy, charSize);
+
+        this.ctx.save();
+        this.ctx.font = `bold ${charSize}px "SFMono-Regular", "Courier New", monospace`;
+        this.ctx.textAlign = 'center';
+        this.ctx.textBaseline = 'middle';
+
+        const trailSpacing = charSize * 1.18;
+        const maxWidth = this.canvas.width;
+        const maxHeight = this.canvas.height;
+
+        for (let i = 0; i < this.matrixRainState.streams.length; i++) {
+            const stream = this.matrixRainState.streams[i];
+            const bandIndex = spectrum.length > 1
+                ? Math.min(spectrum.length - 1, Math.max(0, Math.floor(Utils.mapRange(stream.x, 0, maxWidth, 0, spectrum.length - 1))))
+                : 0;
+            const bandEnergy = spectrum[bandIndex] ?? energy.avg;
+
+            const speedBoost = 0.65 + bandEnergy * 1.4 + energy.bass * 0.7;
+            stream.y += stream.speed * speedMultiplier * speedBoost;
+
+            if (stream.y - clampedTrail * trailSpacing > maxHeight + trailSpacing) {
+                this.resetMatrixStream(stream, clampedTrail);
+            }
+
+            if (Math.random() < 0.18 + energy.treble * 0.45) {
+                const idx = Math.floor(Math.random() * stream.chars.length);
+                stream.chars[idx] = this.randomMatrixChar();
+            }
+
+            const streamColor = this.mixColors(primary, secondary, stream.gradientT);
+            const leadColor = this.scaleColor(this.mixColors(streamColor, glowColor, 0.5), 1.15 + bandEnergy * intensity);
+
+            for (let j = 0; j < stream.chars.length; j++) {
+                const y = stream.y - j * trailSpacing;
+                if (y < -trailSpacing || y > maxHeight + trailSpacing) continue;
+
+                const fade = 1 - (j / stream.chars.length);
+                const alpha = Utils.clamp(0.2 + fade * (0.8 + bandEnergy * 0.5), 0, 1);
+                const shadowAlpha = Utils.clamp(0.25 + fade * 0.6, 0, 1);
+
+                const color = j === 0
+                    ? this.toRgba(leadColor, alpha)
+                    : this.toRgba(this.scaleColor(streamColor, 0.85 + bandEnergy * 0.35), alpha);
+
+                this.ctx.shadowBlur = glow * this.scaleFactor * (0.6 + fade);
+                this.ctx.shadowColor = this.toRgba(glowColor, shadowAlpha * (0.6 + intensity * 0.4));
+                this.ctx.fillStyle = color;
+                this.ctx.fillText(stream.chars[j], stream.x, y);
             }
         }
 
-        // Update and draw particles
-        for (let i = this.matrix119Particles.length - 1; i >= 0; i--) {
-            const p = this.matrix119Particles[i];
+        this.ctx.restore();
+    }
 
-            // Update position
-            p.x += p.vx;
-            p.y += p.vy * speed * intensity;
-            p.life -= 0.01;
-
-            // Remove dead particles
-            if (p.life <= 0 || p.y > this.canvas.height + 20) {
-                this.matrix119Particles.splice(i, 1);
-                continue;
-            }
-
-            // Get rainbow color with time variation
-            const hueVar = (this.frameCounter * 0.002 + p.hue) % 1;
-            const rgb = this.hsvToRgb(hueVar, 0.8 + treble * 0.2, 0.7 + p.life * 0.3);
-
-            // Draw particle with glow
-            const alpha = p.life * (0.6 + treble * 0.4);
-            this.ctx.shadowBlur = Math.floor(6 * p.life * intensity);
-            this.ctx.shadowColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${0.5})`;
-
-            // Draw as text character
-            this.ctx.font = `bold ${Math.floor(p.size)}px 'Courier New', monospace`;
-            this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
-            this.ctx.textAlign = 'center';
-            this.ctx.fillText(p.char, p.x, p.y);
-
-            // Draw a subtle glow circle behind
-            if (p.life > 0.5) {
-                this.ctx.fillStyle = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha * 0.3})`;
-                this.ctx.beginPath();
-                this.ctx.arc(p.x, p.y, p.size * 1.5, 0, Math.PI * 2);
-                this.ctx.fill();
-            }
+    /**
+     * Initialize/update Matrix Rain streams
+     */
+    ensureMatrixRainState(targetCount, spacing, trailLength) {
+        if (!this.matrixRainState) {
+            this.matrixRainState = { width: this.canvas.width, height: this.canvas.height, streams: [] };
         }
 
-        this.ctx.shadowBlur = 0;
+        const spacingClamped = Math.max(spacing, 6);
+        this.matrixRainState.spacing = spacingClamped;
+
+        if (this.matrixRainState.width !== this.canvas.width || this.matrixRainState.height !== this.canvas.height) {
+            this.matrixRainState.width = this.canvas.width;
+            this.matrixRainState.height = this.canvas.height;
+            this.matrixRainState.streams = [];
+        }
+
+        while (this.matrixRainState.streams.length < targetCount) {
+            const idx = this.matrixRainState.streams.length;
+            this.matrixRainState.streams.push(this.createMatrixStream(idx, spacingClamped, trailLength));
+        }
+
+        if (this.matrixRainState.streams.length > targetCount) {
+            this.matrixRainState.streams.length = targetCount;
+        }
+
+        this.matrixRainState.streams.forEach((stream, idx) => {
+            stream.column = idx;
+            stream.x = this.computeMatrixStreamX(idx, spacingClamped, stream.offset);
+            this.ensureMatrixTrail(stream, trailLength);
+        });
+    }
+
+    computeMatrixStreamX(index, spacing, offset = 0) {
+        const rawX = (index + 0.5) * spacing + offset;
+        const padding = Math.max(8 * this.scaleFactor, spacing * 0.2);
+        return Utils.clamp(rawX, padding, this.canvas.width - padding);
+    }
+
+    createMatrixStream(index, spacing, trailLength) {
+        const offset = (Math.random() - 0.5) * spacing * 0.4;
+        const chars = this.buildMatrixChars(trailLength);
+
+        return {
+            column: index,
+            offset,
+            x: this.computeMatrixStreamX(index, spacing, offset),
+            y: -Math.random() * this.canvas.height,
+            speed: 0.8 + Math.random() * 0.7,
+            gradientT: Math.random(),
+            chars
+        };
+    }
+
+    ensureMatrixTrail(stream, trailLength) {
+        if (!stream.chars) {
+            stream.chars = [];
+        }
+        while (stream.chars.length < trailLength) {
+            stream.chars.push(this.randomMatrixChar());
+        }
+        if (stream.chars.length > trailLength) {
+            stream.chars.length = trailLength;
+        }
+    }
+
+    resetMatrixStream(stream, trailLength) {
+        stream.y = -Math.random() * (this.canvas.height * 0.6);
+        stream.speed = 0.8 + Math.random() * 0.7;
+        stream.gradientT = Math.random();
+        stream.offset = (Math.random() - 0.5) * (this.matrixRainState.spacing || 10) * 0.4;
+        stream.chars = this.buildMatrixChars(trailLength);
+    }
+
+    buildMatrixChars(length) {
+        const chars = [];
+        for (let i = 0; i < length; i++) {
+            chars.push(this.randomMatrixChar());
+        }
+        return chars;
+    }
+
+    randomMatrixChar() {
+        const charPool = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz#$%&*+-<>?';
+        return charPool[Math.floor(Math.random() * charPool.length)];
+    }
+
+    /**
+     * Subtle overlay to honor background selection while adding Matrix depth
+     */
+    applyMatrixBackgroundOverlay(primary, secondary, glowColor, energy, charSize) {
+        const gradient = this.ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
+        gradient.addColorStop(0, this.toRgba(this.scaleColor(primary, 0.35 + energy.avg * 0.3), 0.25));
+        gradient.addColorStop(1, this.toRgba(this.scaleColor(secondary, 0.3 + energy.treble * 0.35), 0.25));
+        this.ctx.fillStyle = gradient;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        const innerRadius = Math.max(20 * this.scaleFactor, this.getEffectiveInnerRadius() * 0.8);
+        const radial = this.ctx.createRadialGradient(
+            this.centerX, this.centerY, innerRadius * 0.3,
+            this.centerX, this.centerY, innerRadius * 1.4
+        );
+        radial.addColorStop(0, this.toRgba(glowColor, 0.25 + energy.bass * 0.3));
+        radial.addColorStop(1, this.toRgba(this.scaleColor(secondary, 0.4), 0));
+        this.ctx.fillStyle = radial;
+        this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        this.ctx.fillStyle = this.toRgba([0, 0, 0], 0.12);
+        const lineHeight = Math.max(2, Math.floor(charSize / 2.5));
+        for (let y = 0; y < this.canvas.height; y += lineHeight * 2.4) {
+            this.ctx.fillRect(0, y, this.canvas.width, lineHeight * 0.35);
+        }
     }
 
     /**
@@ -48128,8 +49717,8 @@ class Visualizer {
             case 5: // Geometric patterns
                 this.renderGeometricPattern(magnitudes, bass, mids, treble, intensity, speed, complexity, seed);
                 break;
-            case 6: // Energy pulses
-                this.renderEnergyPulses(magnitudes, bass, mids, treble, intensity, speed, complexity, seed);
+            case 6: // Energy pulses (variant used for stubbed modes)
+                this.renderEnergyPulseVariant(magnitudes, bass, mids, treble, intensity, speed, complexity, seed);
                 break;
             case 7: // Frequency bands
                 this.renderFrequencyBands(magnitudes, bass, mids, treble, intensity, speed, complexity, seed);
@@ -48285,7 +49874,9 @@ class Visualizer {
         }
     }
 
-    renderEnergyPulses(magnitudes, bass, mids, treble, intensity, speed, complexity, seed) {
+    // Stub variant used for the generic 401-500 renderer; keep separate from the real
+    // Energy Pulses mode (mode 44) to avoid overriding its implementation.
+    renderEnergyPulseVariant(magnitudes, bass, mids, treble, intensity, speed, complexity, seed) {
         const numPulses = 5 + Math.floor(complexity / 2);
         for (let i = 0; i < numPulses; i++) {
             const mag = bass * (i % 2) + mids * ((i + 1) % 2);

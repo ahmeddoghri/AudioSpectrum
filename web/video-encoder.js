@@ -78,6 +78,7 @@ class VideoEncoder {
             // Create visualizer instance for rendering
             const offscreenVisualizer = new Visualizer(canvas, settings);
             console.log('[VideoEncoder] Created offscreen visualizer');
+            offscreenVisualizer.setExternalTime(0);
 
             // Reset audio processor smoothing
             audioProcessor.resetSmoothing();
@@ -119,6 +120,7 @@ class VideoEncoder {
                     console.log('[VideoEncoder] Canvas before render - width:', canvas.width, 'height:', canvas.height);
                 }
 
+                offscreenVisualizer.setExternalTime(time);
                 offscreenVisualizer.render(magnitudes);
 
                 if (frame === 0) {

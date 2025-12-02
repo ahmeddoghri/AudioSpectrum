@@ -2225,7 +2225,10 @@ const VISUALIZATION_MODES = {
             pulseSpeed: { min: 0.05, max: 0.3, default: 0.1, label: 'Pulse Speed' },
             pulseSpread: { min: 50, max: 200, default: 100, label: 'Pulse Spread' },
             lineWidth: { min: 1, max: 10, default: 3, label: 'Base Line Width' },
-            lineWidthRange: { min: 2, max: 15, default: 8, label: 'Line Width Range' }
+            lineWidthRange: { min: 2, max: 15, default: 8, label: 'Line Width Range' },
+            colorDriftSpeed: { min: 0, max: 4, default: 1.2, label: 'Color Drift Speed' },
+            glowIntensity: { min: 0.2, max: 2, default: 1, label: 'Glow Intensity' },
+            backgroundPulse: { min: 0, max: 1, default: 0.6, label: 'Background Pulse Blend' }
         }
     },
     rainbow_prism: {
@@ -2597,7 +2600,10 @@ const VISUALIZATION_MODES = {
             intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
             glowAmount: { min: 0, max: 1, default: 0.5, label: 'Glow Effect' },
-            characterDensity: { min: 0.5, max: 2, default: 1, label: 'Character Density' }
+            characterDensity: { min: 0.5, max: 2, default: 1, label: 'Character Density' },
+            trailLength: { min: 6, max: 30, default: 14, label: 'Trail Length' },
+            characterSize: { min: 12, max: 48, default: 22, label: 'Character Size' },
+            colorDrift: { min: 0, max: 1, default: 0.35, label: 'Color Drift' }
         }
     },
     voxel_world: {
@@ -2615,7 +2621,8 @@ const VISUALIZATION_MODES = {
             shockwaveWidth: { min: 20, max: 100, default: 50, label: 'Shockwave Width' },
             glowIntensity: { min: 0, max: 1, default: 0.6, label: 'Glow Intensity' },
             rotationSpeed: { min: 0, max: 0.05, default: 0.01, label: 'Rotation Speed' },
-            perspectiveIntensity: { min: 0.3, max: 1.5, default: 0.5, label: 'Perspective Intensity' }
+            perspectiveIntensity: { min: 0.3, max: 1.5, default: 0.5, label: 'Perspective Intensity' },
+            colorBoost: { min: 0.5, max: 2, default: 1, label: 'Emissive Color Boost' }
         }
     },
     dna_helix_rungs: {
@@ -2668,6 +2675,27 @@ const VISUALIZATION_MODES = {
                 default: 0.7,
                 label: 'Radial Falloff',
                 description: 'Edge darkening effect (0=no falloff, 1=sharp edges)'
+            },
+            glow: {
+                min: 0.0,
+                max: 1.2,
+                default: 0.6,
+                label: 'Glow Intensity',
+                description: 'Bloom strength on bright reactive areas'
+            },
+            colorDrift: {
+                min: 0.0,
+                max: 1.0,
+                default: 0.55,
+                label: 'Color Drift',
+                description: 'How far hues shift with audio energy'
+            },
+            backgroundBlend: {
+                min: 0.0,
+                max: 1.0,
+                default: 0.35,
+                label: 'Background Blend',
+                description: 'Balance between shader and selected background'
             }
         }
     },
@@ -2685,7 +2713,57 @@ const VISUALIZATION_MODES = {
         description: '3D tower of stacked glowing rings',
         category: 'Tech',
         mode: 87,
-        tags: ['3d', 'tower', 'rings']
+        tags: ['3d', 'tower', 'rings'],
+        parameters: {
+            ringCount: {
+                min: 12,
+                max: 80,
+                default: 42,
+                label: 'Ring Count'
+            },
+            radiusScale: {
+                min: 0.3,
+                max: 0.65,
+                default: 0.45,
+                label: 'Radius Scale'
+            },
+            heightScale: {
+                min: 0.6,
+                max: 1.1,
+                default: 0.9,
+                label: 'Tower Height'
+            },
+            ringThickness: {
+                min: 1,
+                max: 10,
+                default: 5.5,
+                label: 'Ring Thickness'
+            },
+            glow: {
+                min: 0,
+                max: 40,
+                default: 18,
+                label: 'Glow Intensity'
+            },
+            tilt: {
+                min: 0,
+                max: 0.55,
+                default: 0.22,
+                label: 'Perspective Tilt'
+            },
+            colorDrift: {
+                min: 0,
+                max: 1,
+                default: 0.45,
+                label: 'Color Drift'
+            },
+            rotationSpeed: {
+                min: 0,
+                max: 1.5,
+                default: 0.35,
+                label: 'Rotation Speed'
+            }
+        }
     },
     audio_driven_doodles: {
         id: 'audio_driven_doodles',
@@ -3049,7 +3127,10 @@ const VISUALIZATION_MODES = {
         parameters: {
             intensity: { min: 0.1, max: 2, default: 1, label: 'Intensity' },
             speed: { min: 0.1, max: 3, default: 1, label: 'Animation Speed' },
-            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' }
+            complexity: { min: 1, max: 10, default: 5, label: 'Complexity' },
+            trailLength: { min: 4, max: 24, default: 12, label: 'Trail Length' },
+            characterSize: { min: 12, max: 48, default: 26, label: 'Character Size' },
+            glow: { min: 0, max: 12, default: 6, label: 'Glow Intensity' }
         }
     },
     mode_120_fire_mandala: {

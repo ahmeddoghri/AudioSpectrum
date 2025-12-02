@@ -28,6 +28,9 @@ class AudioSpectrumApp {
         // Preview animation state
         this.previewAnimationId = null;
         this.previewTime = 0;
+        this.previewElapsedSeconds = 0;
+        this.previewLastTimestamp = null;
+        this.previewFrameCount = 0;
 
         // Preview selection window state
         this.previewSelectionState = {
@@ -1241,6 +1244,9 @@ class AudioSpectrumApp {
         const existingDynamicParams = settingsGrid.querySelectorAll('.setting-item[data-dynamic="true"]');
         existingDynamicParams.forEach(el => el.remove());
 
+        // Reset parameter bag to avoid stale values affecting other modes
+        this.state.settings.parameters = {};
+
         if (!mode || !mode.parameters) {
             // No custom parameters for this mode
             return;
@@ -1409,29 +1415,50 @@ class AudioSpectrumApp {
         console.log('[Preview] Canvas dimensions:', this.elements.previewCanvas.width, 'x', this.elements.previewCanvas.height);
         console.log('[Preview] Settings:', JSON.stringify(this.state.settings, null, 2));
 
-        const animate = () => {
+        // Reset preview timeline and sync with visualizer timebase
+        this.previewElapsedSeconds = 0;
+        this.previewLastTimestamp = null;
+        this.previewFrameCount = 0;
+        this.visualizer.setExternalTime(0);
+
+        const animate = (timestamp) => {
             try {
+                const now = typeof timestamp === 'number'
+                    ? timestamp
+                    : (performance?.now ? performance.now() : Date.now());
+
+                if (this.previewLastTimestamp === null) {
+                    this.previewLastTimestamp = now;
+                }
+
+                const deltaSeconds = Math.min((now - this.previewLastTimestamp) / 1000, 0.1);
+                this.previewLastTimestamp = now;
+                this.previewElapsedSeconds += deltaSeconds;
+
                 // Generate animated demo magnitudes
                 const magnitudes = new Float32Array(this.state.settings.numBars);
+                const animationTick = this.previewElapsedSeconds * 60; // Keep legacy pacing visually similar
 
                 for (let i = 0; i < magnitudes.length; i++) {
                     // Create smooth, animated waves
-                    const wave1 = Math.sin(this.previewTime * 0.02 + i * 0.1) * 0.2;
-                    const wave2 = Math.sin(this.previewTime * 0.03 - i * 0.08) * 0.15;
-                    const wave3 = Math.cos(this.previewTime * 0.015 + i * 0.12) * 0.1;
+                    const wave1 = Math.sin(animationTick * 0.02 + i * 0.1) * 0.2;
+                    const wave2 = Math.sin(animationTick * 0.03 - i * 0.08) * 0.15;
+                    const wave3 = Math.cos(animationTick * 0.015 + i * 0.12) * 0.1;
                     const base = 0.3;
-                    const randomness = Math.sin(i * 0.15 + this.previewTime * 0.05) * 0.05;
+                    const randomness = Math.sin(i * 0.15 + animationTick * 0.05) * 0.05;
 
                     const value = base + wave1 + wave2 + wave3 + randomness;
                     magnitudes[i] = Math.min(Math.max(value, 0.1), 0.9);
                 }
 
-                if (this.previewTime === 0) {
+                if (this.previewFrameCount === 0) {
                     console.log('[Preview] First frame - magnitudes sample:', magnitudes.slice(0, 5));
                 }
 
+                this.visualizer.setExternalTime(this.previewElapsedSeconds);
                 this.visualizer.render(magnitudes);
-                this.previewTime++;
+
+                this.previewFrameCount++;
 
                 this.previewAnimationId = requestAnimationFrame(animate);
             } catch (error) {
@@ -1441,7 +1468,7 @@ class AudioSpectrumApp {
             }
         };
 
-        animate();
+        this.previewAnimationId = requestAnimationFrame(animate);
     }
 
     /**
@@ -1451,6 +1478,14 @@ class AudioSpectrumApp {
         if (this.previewAnimationId) {
             cancelAnimationFrame(this.previewAnimationId);
             this.previewAnimationId = null;
+        }
+
+        this.previewLastTimestamp = null;
+        this.previewElapsedSeconds = 0;
+        this.previewFrameCount = 0;
+
+        if (this.visualizer) {
+            this.visualizer.setExternalTime(null);
         }
     }
 
@@ -1499,6 +1534,12 @@ class AudioSpectrumApp {
         // Stop the demo animation when playing real audio
         this.stopPreviewAnimation();
 
+        // Reset timeline tracking for audio-driven preview
+        this.previewElapsedSeconds = 0;
+        this.previewLastTimestamp = null;
+        this.previewFrameCount = 0;
+        this.visualizer.setExternalTime(0);
+
         // Play audio
         this.audioProcessor.play();
         this.elements.previewPlayBtn.innerHTML = `
@@ -1510,10 +1551,24 @@ class AudioSpectrumApp {
         `;
 
         // Animate preview with real audio
-        const animate = () => {
+        const animate = (timestamp) => {
             if (this.audioProcessor.isPlaying) {
+                const now = typeof timestamp === 'number'
+                    ? timestamp
+                    : (performance?.now ? performance.now() : Date.now());
+
+                if (this.previewLastTimestamp === null) {
+                    this.previewLastTimestamp = now;
+                }
+
+                const deltaSeconds = Math.min((now - this.previewLastTimestamp) / 1000, 0.1);
+                this.previewLastTimestamp = now;
+                this.previewElapsedSeconds += deltaSeconds;
+                this.previewFrameCount++;
+
                 const magnitudes = this.audioProcessor.getRealTimeMagnitudes(this.state.settings.numBars);
                 if (magnitudes) {
+                    this.visualizer.setExternalTime(this.previewElapsedSeconds);
                     this.visualizer.render(magnitudes);
                 }
                 requestAnimationFrame(animate);
@@ -1529,7 +1584,7 @@ class AudioSpectrumApp {
             }
         };
 
-        animate();
+        requestAnimationFrame(animate);
     }
 
     /**
